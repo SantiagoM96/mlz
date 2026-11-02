@@ -17,6 +17,9 @@ export interface BreadcrumbsProps {
  * último ítem Bold 18, separadores de 24 px y gap horizontal de 8 px.
  */
 export function Breadcrumbs({ items, className = '', tone = 'primary' }: BreadcrumbsProps) {
+  const linkColor = tone === 'neutral'
+    ? 'text-grey-900 visited:text-grey-900 hover:text-grey-900'
+    : 'text-primary-600 visited:text-primary-600 hover:text-primary-600';
   return (
     <nav
       aria-label="Ruta de navegación"
@@ -32,7 +35,7 @@ export function Breadcrumbs({ items, className = '', tone = 'primary' }: Breadcr
               {index > 0 && <MaterialIcon name="chevron_right" size={24} />}
               {item.to && !isLast ? (
                 <Link
-                  className={`${classes} underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600`}
+                  className={`${classes} ${linkColor} underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600`}
                   to={item.to}
                 >
                   {item.label}
