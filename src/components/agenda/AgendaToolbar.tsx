@@ -67,20 +67,22 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         onChange={date => onFilters({ ...filters, date })} />
 
       <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters" onClick={() => setOpen(v => !v)}
-        className="flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f2f7fc] focus-visible:outline-2">
+        className="agenda-motion-control flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f2f7fc] focus-visible:outline-2">
         <span className="whitespace-nowrap">Más Filtros</span>
         <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>
     </div>
 
-    {selectedCount > 0 && <div aria-label="Filtros seleccionados" className="mt-4 flex flex-wrap items-center gap-2">
+    {selectedCount > 0 && <div aria-label="Filtros seleccionados" className="agenda-filter-chips mt-4 flex flex-wrap items-center gap-2">
+      <div className="agenda-filter-chips-scroll">
       {(['type','category','locality','date'] as const).flatMap(group => filters[group].map(value => (
         <button type="button" key={group+value} onClick={() => onFilters({ ...filters, [group]: filters[group].filter(x => x !== value) })}
-          data-agenda-chip="selected" className="inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
+          data-agenda-chip="selected" className="agenda-filter-chip inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
           {value}<MaterialIcon name="close" size={15}/>
         </button>
       )))}
-      <button type="button" onClick={onReset} className="min-h-[30px] px-2 font-bold text-primary-600 underline-offset-2 hover:underline">Limpiar</button>
+      </div>
+      <button type="button" onClick={onReset} className="agenda-filter-clear min-h-[30px] px-2 font-bold text-primary-600 underline-offset-2 hover:underline">Limpiar</button>
     </div>}
 
     {open && <AgendaFilterPanel value={filters} onChange={onFilters} onApply={() => setOpen(false)}

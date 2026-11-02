@@ -103,7 +103,7 @@ export function AgendaPage() {
 
       {filtered.length === 0 ? (
         <section data-testid="agenda-empty-state"
-          className="flex min-h-[355px] flex-col items-center justify-center text-center" aria-live="polite">
+          className="agenda-motion-empty flex min-h-[355px] flex-col items-center justify-center text-center" aria-live="polite">
           <img src={import.meta.env.BASE_URL + 'assets/agenda/no-results.png'}
             alt="" width={194} height={207}
             className="h-[207px] w-[194px] shrink-0 object-contain" />
@@ -119,7 +119,7 @@ export function AgendaPage() {
         </section>
       ) : (
         <>
-          <div data-testid="agenda-grid" className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div key={JSON.stringify({ filters, sort, limit })} data-testid="agenda-grid" className="agenda-motion-grid mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {visible.map(activity => <ActivityCard key={activity.id} activity={activity} />)}
           </div>
           {hasMore && <div className="mt-7 text-center">

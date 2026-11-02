@@ -36,13 +36,13 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
         {groups.map(group => (
           <section key={group} className="mb-4 last:mb-0">
-            <button type="button" className="flex w-full items-center justify-between text-left text-[18px] font-bold text-primary-600"
+            <button type="button" className="agenda-motion-control flex min-h-10 w-full items-center justify-between text-left text-[18px] font-bold text-primary-600"
               aria-expanded={expanded.includes(group)}
               onClick={() => setExpanded(prev => prev.includes(group) ? prev.filter(x => x !== group) : [...prev, group])}>
-              {filterTitles[group]} <MaterialIcon name="expand_more" size={24} className={`transition-transform duration-150 ${expanded.includes(group) ? '': '-rotate-90'}`} />
+              {filterTitles[group]} <MaterialIcon name="expand_more" size={24} className={`agenda-motion-chevron ${expanded.includes(group) ? '': '-rotate-90'}`} />
             </button>
             {expanded.includes(group) &&
-              <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
+              <div className="agenda-motion-accordion mt-3 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
                 {filterOptions[group].map(option => (
                   <label key={option} className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] leading-6 text-grey-900">
                     <input type="checkbox" className="size-4 accent-[#006eff]" checked={value[group].includes(option)} onChange={() => toggleItem(group, option)} />

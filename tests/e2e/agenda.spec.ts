@@ -514,3 +514,45 @@ test('copiar enlace en una ficha muestra confirmación y copia la URL actual', a
   const copied = await page.evaluate(() => (window as Window & { __testCopiedLink?: string }).__testCopiedLink);
   expect(copied).toBe(page.url());
 });
+
+test('motion UX: desktop popovers y mobile sheets tienen duraciones coherentes', async ({ page }, info) => {
+  await page.goto(activities);
+  const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
+  await page.getByRole('button', { name: 'Fecha', exact: true }).click();
+  const dateSheet = page.getByRole('dialog', { name: 'Opciones de Fecha' });
+  await expect(dateSheet).toBeVisible();
+  const motion = await dateSheet.evaluate(node => {
+    const styles = getComputedStyle(node);
+    return { animationName: styles.animationName, duration: styles.animationDuration };
+  });
+  expect(motion.animationName).toContain(mobile ? 'agenda-sheet-in' : 'agenda-popover-in');
+  expect(motion.duration).toBe(mobile ? '0.3s' : '0.22s');
+  await dateSheet.getByRole('button', { name: 'Ver resultados' }).click();
+  await expect(dateSheet).toHaveCount(0);
+
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await panel.getByRole('button', { name: 'Tipo de actividad' }).click();
+  await panel.getByRole('button', { name: 'Tipo de actividad' }).click();
+  await expect(panel.locator('.agenda-motion-accordion')).toBeVisible();
+  await panel.getByRole('button', { name: 'Ver resultados' }).click();
+  await expect(panel).toHaveCount(0);
+});
+
+test('motion UX mobile: chips deslizables con acción Limpiar visible', async ({ page }, info) => {
+  if ((info.project.use.viewport?.width ?? 0) > 680) return;
+  await page.goto(activities);
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await panel.getByRole('checkbox', { name: 'Teatro', exact: true }).check();
+  await panel.getByRole('checkbox', { name: 'Taller', exact: true }).check();
+  await panel.getByRole('button', { name: 'Categoría' }).click();
+  await panel.getByRole('checkbox', { name: 'Cultural' }).check();
+  await panel.getByRole('button', { name: 'Ver resultados' }).click();
+  await expect(panel).toHaveCount(0);
+  const chips = page.getByLabel('Filtros seleccionados');
+  await expect(chips.locator('.agenda-filter-chips-scroll')).toHaveCSS('overflow-x', 'auto');
+  await expect(chips.getByRole('button', { name: 'Limpiar' })).toBeVisible();
+  const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
+  expect(fits).toBe(true);
+});

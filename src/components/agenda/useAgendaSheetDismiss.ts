@@ -23,16 +23,21 @@ export function useAgendaSheetDismiss<T extends HTMLElement>(
     const mobile = window.matchMedia('(max-width: 680px)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const sheet = sheetRef.current;
-    if (!mobile || reduced || !sheet) {
+    if (reduced || !sheet) {
       onDismissRef.current();
       return;
     }
 
     isClosing.current = true;
-    sheet.classList.add('agenda-sheet-exit');
-    const backdrop = sheet.parentElement?.querySelector<HTMLElement>('.agenda-mobile-backdrop');
-    backdrop?.classList.add('agenda-backdrop-exit');
-    closeTimer.current = window.setTimeout(() => onDismissRef.current(), 200);
+    if (mobile) {
+      sheet.classList.remove('agenda-sheet-dragging');
+      sheet.classList.add('agenda-sheet-exit');
+      const backdrop = sheet.parentElement?.querySelector<HTMLElement>('.agenda-mobile-backdrop');
+      backdrop?.classList.add('agenda-backdrop-exit');
+    } else {
+      sheet.classList.add('agenda-dropdown-exit');
+    }
+    closeTimer.current = window.setTimeout(() => onDismissRef.current(), mobile ? 220 : 150);
   }, []);
 
   return { sheetRef, dismiss };

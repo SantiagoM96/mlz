@@ -78,8 +78,8 @@ export function AgendaDropdown({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        onClick={() => { setSearch(''); setIsOpen(open => !open); }}
-        className={`flex h-12 w-full min-w-0 items-center gap-3 rounded border border-[#80baff] bg-white
+        onClick={() => { if (isOpen) dismiss(); else { setSearch(''); setIsOpen(true); } }}
+        className={`agenda-motion-control flex h-12 w-full min-w-0 items-center gap-3 rounded border border-[#80baff] bg-white
           py-2 pl-4 pr-4 text-left text-[16px] text-primary-600 outline-offset-2
           transition-colors duration-150 hover:border-[#006eff]
           focus-visible:outline-2 focus-visible:outline-[#006eff]
@@ -87,7 +87,7 @@ export function AgendaDropdown({
       >
         <span className="min-w-0 flex-1 truncate">{shownLabel}</span>
         <MaterialIcon name="expand_more" size={20}
-          className={`ml-auto shrink-0 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+          className={`agenda-motion-chevron ml-auto shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
@@ -97,6 +97,7 @@ export function AgendaDropdown({
           ref={sheetRef}
           id={menuId}
           data-agenda-sheet="filter"
+          data-agenda-filter={label}
           role="dialog"
           aria-label={`Opciones de ${label}`}
           className={`agenda-dropdown-enter agenda-mobile-sheet absolute top-[calc(100%+8px)] z-40 flex
@@ -127,7 +128,7 @@ export function AgendaDropdown({
               const checked = selected.includes(option);
               return (
                 <label key={option}
-                  className={`relative flex min-h-12 cursor-pointer items-center justify-between gap-4
+                  className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4
                     px-4 py-2 text-[16px] leading-6 transition-colors duration-150
                     has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
                     has-[:focus-visible]:outline-primary-600
@@ -138,7 +139,7 @@ export function AgendaDropdown({
                   <input type="checkbox" checked={checked} onChange={() => toggle(option)}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
-                    className={`relative z-10 grid size-5 shrink-0 place-items-center rounded-[2px] border-2
+                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center rounded-[2px] border-2
                       ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
                     {checked && <MaterialIcon name="check" size={16} className="text-white" />}
                   </span>
@@ -209,8 +210,8 @@ export function AgendaSortDropdown({
     <div ref={rootRef} className="relative">
       <button type="button" ref={buttonRef} aria-expanded={isOpen}
         aria-haspopup="true" aria-controls={menuId} aria-label="Ordenar"
-        onClick={() => setIsOpen(open => !open)}
-        className="inline-flex h-12 items-center justify-center gap-2 rounded-full
+        onClick={() => { if (isOpen) dismiss(); else setIsOpen(true); }}
+        className="agenda-motion-control inline-flex h-12 items-center justify-center gap-2 rounded-full
           border border-[#d9d9d9] bg-white px-5 text-[18px] text-grey-900
           transition-colors hover:bg-[#f2f7fc]
           focus-visible:outline-2 focus-visible:outline-primary-600">
