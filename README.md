@@ -73,3 +73,22 @@ No crear la integración Git que dispara despliegues por cada push. `vercel.json
 Configurados typecheck, ESLint y build mediante GitHub Actions en pull requests; la publicación de GitHub Pages solo se produce desde `main`. No hay pruebas visuales automatizadas configuradas todavía. Validar en anchos 375, 390, 432, 768, 1024 y 1440 px, y comparar frente a los frames desktop (1415 px) y mobile (432 px) de Figma. El código implementa los layouts de referencia; todavía no se ha automatizado un diff visual del navegador.
 
 Este repositorio es un prototipo frontend. No es el sitio oficial ni debe tratarse como canal de atención ciudadana o información vigente de trámites.
+
+
+## QA visual con Playwright + Chromium
+
+Se incluye una batería de pruebas de navegador con `@playwright/test` y Chromium, independiente de Vercel.
+
+1. `npm install`
+2. `npx playwright install chromium` (en Linux puede requerir `--with-deps`)
+3. `npm run test:e2e` — rutas, colores, logos, responsive y capturas.
+4. `npm run test:visual` — genera únicamente capturas visuales.
+5. `npm run test:visual:report` — abre el informe HTML local.
+
+Playwright inicia Vite localmente por defecto. Para probar una página ya publicada (sin iniciar Vite), ejecutar `PLAYWRIGHT_BASE_URL=https://santiagom96.github.io/mlz npm run test:e2e`. 
+
+Se prueban los anchos **1415, 432, 390 y 768 px**, comprobando el orden mobile del índice y la ausencia de overflow horizontal. Se generan capturas de viewport, página completa, header y footer, además de un JSON de medidas y colores. Los resultados se guardan en `test-results`.
+
+El workflow `.github/workflows/visual-qa.yml` ejecuta los tests automáticamente con push a main, pull requests o bajo demanda, adjuntando **playwright-visual-report** en la pestaña Actions. Esto utiliza **GitHub Actions**, no Vercel.
+
+Las capturas son evidencia para comparar con Figma. La suite no debe confundirse con una prueba pixel-perfect: falta registrar y aprobar baselines visuales de referencia con la tipografía Geometria licenciada para habilitar regresiones de píxeles automatizadas. Los reportes permiten revisar y corregir diferencias manualmente sin inventar un porcentaje de fidelidad.

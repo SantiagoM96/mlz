@@ -1,0 +1,42 @@
+name: QA visual — Chromium y Playwright
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    name: Chromium desktop y mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Instalar Chromium y librerías del sistema
+        run: npx playwright install --with-deps chromium
+      - name: Verificar el build
+        run: npm run build
+      - name: Ejecutar pruebas y capturas
+        run: npm run test:e2e
+        env:
+          CI: 'true'
+      - name: Publicar capturas y reporte HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-visual-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: warn
