@@ -12,5 +12,6 @@ export const featuredActivity: AgendaActivity = {
   badges: [{ kind: 'registration', label: 'Requiere entrada' }, { kind: 'featured', label: 'Destacado' }],
   venue: 'Teatro Municipal',
   address: 'Manuel Castro 262 - Lomas de Zamora',
-  description: 'Actividad teatral presentada en el diseño de referencia de la Agenda de la Comunidad.',
+  description: 'Una propuesta teatral para disfrutar de una historia en escena y compartir un encuentro cultural. La función tiene como sede el Teatro Municipal, en Lomas de Zamora.',
+  descriptionIsIllustrative: true,
 };

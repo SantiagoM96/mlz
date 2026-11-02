@@ -309,7 +309,7 @@ test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
   await expect(page.getByTestId('agenda-card').first()).toContainText('AMBIENTAL');
   await search.fill('Palabras desde el barrio');
-  expect(await page.getByTestId('agenda-card').count()).toBeGreaterThan(1);
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
   await search.fill('nombre inhallable 2026');
   await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
 });
@@ -344,4 +344,20 @@ test('una ficha omitida no se publica aunque se conozca su URL anterior', async 
   await page.goto(activities + '/actividad-24');
   await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
+});
+
+test('descripciones ilustrativas muestran punto rojo y las fichas mantienen datos originales', async ({ page }) => {
+  await page.goto(activities + '/actividad-1');
+  const copy = page.getByTestId('agenda-activity-description');
+  await expect(copy).toContainText('Una invitación a disfrutar de la música');
+  await expect(copy).toContainText('Teatro del Municipio');
+  const dot = copy.getByTestId('agenda-illustrative-dot');
+  await expect(dot).toHaveCSS('background-color', 'rgb(211, 47, 47)');
+  await expect(dot).toHaveAttribute('title', 'Texto creado para la maqueta; pendiente de validación');
+  await expect(dot).toHaveAttribute('aria-label', 'Descripción ilustrativa, pendiente de validación');
+  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
+
+  await page.goto(activities + '/tita-y-rhodesia');
+  await expect(page.getByTestId('agenda-activity-description')).toContainText('Una propuesta teatral');
+  await expect(page.getByTestId('agenda-illustrative-dot')).toHaveCount(1);
 });

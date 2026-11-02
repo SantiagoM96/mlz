@@ -70,7 +70,22 @@ export function AgendaActivityDetailPage() {
         <div className="space-y-4">
           <p className="text-[16px] font-medium uppercase text-[#888]">{activity.category}</p>
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-          {activity.description && <p className="text-[18px] leading-[26px] text-grey-900">{activity.description}</p>}
+          {activity.description && (
+            <p data-testid="agenda-activity-description" className="text-[18px] leading-[26px] text-grey-900">
+              {activity.descriptionIsIllustrative && (
+                <span
+                  data-testid="agenda-illustrative-dot"
+                  role="img"
+                  aria-label="Descripción ilustrativa, pendiente de validación"
+                  title="Texto creado para la maqueta; pendiente de validación"
+                  tabIndex={0}
+                  className="mr-2 inline-block size-2 rounded-full bg-[#d32f2f] align-middle
+                    outline-offset-2 focus-visible:outline-2 focus-visible:outline-[#d32f2f]"
+                />
+              )}
+              {activity.description}
+            </p>
+          )}
           {activity.dateISO && activity.dateISO < argentinaTodayISO() && <p className="text-[14px] text-[#69737b]">Actividad pasada · Archivo 2026</p>}
         </div>
         <DetailSummary activity={activity} />
