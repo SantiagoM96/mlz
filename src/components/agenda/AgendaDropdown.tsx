@@ -129,9 +129,9 @@ export function AgendaDropdown({
                 <label key={option}
                   className={`relative flex min-h-12 cursor-pointer items-center justify-between gap-4
                     px-4 py-2 text-[16px] leading-6 transition-colors duration-150
-                    focus-within:outline-2 focus-within:-outline-offset-2
-                    focus-within:outline-primary-600
-                    ${checked ? 'bg-info-500 text-white hover:bg-[#005bd1]'
+                    has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
+                    has-[:focus-visible]:outline-primary-600
+                    ${checked ? 'bg-[#eef5ff] text-primary-600 hover:bg-[#e3efff]'
                       : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
@@ -139,7 +139,7 @@ export function AgendaDropdown({
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
                     className={`grid size-[18px] shrink-0 place-items-center rounded-[2px] border-2
-                      ${checked ? 'border-white text-white' : 'border-primary-600 text-primary-600'}`}>
+                      ${checked ? 'border-[#006eff] bg-[#006eff] text-white' : 'border-primary-600 text-primary-600'}`}>
                     {checked && <MaterialIcon name="check" size={16}/>}
                   </span>
                 </label>
