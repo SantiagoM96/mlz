@@ -25,7 +25,7 @@ export function Breadcrumbs({ items, className = '', tone = 'primary' }: Breadcr
       <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-2">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-          const classes = `rounded-sm whitespace-nowrap ${isLast ? 'font-bold' : 'font-medium'}`;
+          const classes = `rounded-sm ${isLast ? 'font-bold break-words' : 'font-medium whitespace-nowrap'}`;
 
           return (
             <li key={index} className="inline-flex min-w-0 items-center gap-2">

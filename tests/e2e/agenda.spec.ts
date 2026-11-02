@@ -66,6 +66,7 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await page.getByRole('button', { name: 'Limpiar filtros' }).click();
   await page.getByRole('button', { name: /Más Filtros/ }).click();
   const filter = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await filter.getByRole('button', { name: 'Categoría' }).click();
   await filter.getByRole('checkbox', { name: 'Ambiental' }).check();
   await filter.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
@@ -210,4 +211,34 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
   await page.getByRole('button', { name: 'Alfabético A-Z' }).click();
   await expect(sorter).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
+});
+
+test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page }) => {
+  await page.goto(activities + '/actividad-2');
+  await expect(page.getByRole('heading', { level: 1, name: 'Patin' })).toBeVisible();
+  await expect(page.getByText('Contenido de demostración basado en Figma')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Volver a las actividades' })).toHaveCount(0);
+  const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' });
+  await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+});
+
+test('Más Filtros se mantiene dentro del viewport y conserva acciones accesibles', async ({ page }) => {
+  await page.goto(activities);
+  const trigger = page.getByRole('button', { name: /Más Filtros/ });
+  await trigger.click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  const rect = await panel.evaluate(node => {
+    const r = node.getBoundingClientRect();
+    return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
+  });
+  const viewport = page.viewportSize()!;
+  expect(rect.top).toBeGreaterThanOrEqual(0);
+  expect(rect.bottom).toBeLessThanOrEqual(viewport.height + 1);
+  expect(rect.right).toBeLessThanOrEqual(viewport.width + 1);
+  expect(rect.left).toBeGreaterThanOrEqual(0);
+  await expect(panel.getByRole('button', { name: 'Ver resultados' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Limpiar', exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+  await expect(trigger).toBeFocused();
 });

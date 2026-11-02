@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
@@ -72,8 +72,6 @@ export function AgendaActivityDetailPage() {
           <p className="text-[16px] font-medium uppercase text-[#888]">{activity.category}</p>
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
           {activity.description && <p className="text-[18px] leading-[26px] text-grey-900">{activity.description}</p>}
-          <p className="text-sm text-[#888]">Contenido de demostración basado en Figma; fecha, disponibilidad y detalles sujetos a validación.</p>
-          <Link className="inline-flex items-center gap-1 pt-4 font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades"><MaterialIcon name="arrow_back" size={20} /> Volver a las actividades</Link>
         </div>
         <DetailSummary activity={activity} />
       </div>

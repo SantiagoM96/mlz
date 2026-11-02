@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SelectedFilters } from './AgendaFilterPanel';
 import { filterOptions } from '../../data/agenda';
 import { AgendaFilterPanel } from './AgendaFilterPanel';
@@ -15,6 +15,28 @@ type Props = {
 
 export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }: Props) {
   const [open, setOpen] = useState(false);
+  const moreFiltersButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handlePointer = (event: PointerEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('[aria-label="Filtros de la agenda"]') &&
+          !moreFiltersButtonRef.current?.contains(target)) setOpen(false);
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        moreFiltersButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', handlePointer);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointer);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [open]);
   const selectedCount = Object.values(filters).reduce((sum, items) => sum + items.length, 0);
 
   return <div className="relative" data-testid="agenda-toolbar">
@@ -30,7 +52,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
       </label>
 
       <div className="hidden min-w-0 md:block">
-        <AgendaDropdown label="Localidad"
+        <AgendaDropdown label="Localidad" align="end"
           options={filterOptions.locality}
           selected={filters.locality}
           multiple
@@ -43,11 +65,10 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         align="end-responsive"
         onChange={date => onFilters({ ...filters, date })} />
 
-      <button type="button" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(v => !v)}
-        className="flex h-12 min-w-0 items-center justify-center gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 hover:bg-[#f2f7fc] focus-visible:outline-2">
-        <span className="min-w-0 truncate">Más Filtros</span>
-        {selectedCount > 0 && <span className="grid size-5 shrink-0 place-items-center rounded-full bg-[#006eff] text-xs font-bold text-white">{selectedCount}</span>}
-        <MaterialIcon name="tune" size={24}/>
+      <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters" onClick={() => setOpen(v => !v)}
+        className="flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f2f7fc] focus-visible:outline-2">
+        <span className="whitespace-nowrap">Más Filtros</span>
+        <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>
     </div>
 

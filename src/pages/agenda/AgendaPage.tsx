@@ -70,7 +70,7 @@ export function AgendaPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <section className="flex min-h-[380px] flex-col items-center justify-center gap-3 text-center" aria-live="polite">
+        <section className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center" aria-live="polite">
           <MaterialIcon name="search" size={64} className="text-[#8da3af]" />
           <h2 className="text-[20px] font-bold text-grey-900">No encontramos actividades</h2>
           <p className="text-[16px] text-grey-900">Probá cambiar los filtros o buscá con otro término.</p>

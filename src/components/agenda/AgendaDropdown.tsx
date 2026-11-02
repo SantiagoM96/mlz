@@ -7,7 +7,7 @@ type FilterDropdownProps = {
   selected: string[];
   onChange: (values: string[]) => void;
   multiple?: boolean;
-  align?: 'start' | 'end-responsive';
+  align?: 'start' | 'end' | 'end-responsive';
 };
 
 /**
@@ -94,7 +94,7 @@ export function AgendaDropdown({
             max-h-[min(72vh,430px)] w-[min(416px,calc(100vw-32px))] flex-col
             overflow-hidden rounded-md border border-[#e1e7eb] bg-white p-2
             shadow-[0_4px_14px_rgba(0,0,0,0.16)]
-            ${align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
+            ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
           <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
