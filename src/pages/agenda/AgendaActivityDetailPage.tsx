@@ -119,7 +119,7 @@ export function AgendaActivityDetailPage() {
         </div>
         <ActivityShare key={activity.id} title={activity.title} />
       </div>
-      <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_370px]">
+      <div className="agenda-motion-detail grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_370px]">
         <div className="min-w-0 space-y-6">
           <img
             data-testid="agenda-detail-image"

@@ -120,6 +120,7 @@ button:not(:disabled) { cursor: pointer; }
 .agenda-motion-grid [data-testid="agenda-card"]:nth-child(3n+2) { animation-delay: 35ms; }
 .agenda-motion-grid [data-testid="agenda-card"]:nth-child(3n) { animation-delay: 65ms; }
 .agenda-motion-empty { animation: agenda-content-in var(--agenda-motion-slow) var(--agenda-motion-ease) backwards; }
+.agenda-motion-detail { animation: agenda-content-in var(--agenda-motion-slow) var(--agenda-motion-ease) backwards; }
 .agenda-filter-chips-scroll { display: contents; }
 .agenda-filter-chip {
   animation: agenda-chip-in var(--agenda-motion-mid) var(--agenda-motion-emphasis) backwards;
@@ -252,7 +253,7 @@ button:not(:disabled) { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) {
   .agenda-dropdown-enter, .agenda-dropdown-exit,
-  .agenda-motion-grid [data-testid="agenda-card"], .agenda-motion-empty,
+  .agenda-motion-grid [data-testid="agenda-card"], .agenda-motion-empty, .agenda-motion-detail,
   .agenda-filter-chip, .agenda-motion-check:not(:empty), .agenda-motion-accordion,
   .agenda-mobile-sheet, .agenda-mobile-backdrop {
     animation: none !important;
