@@ -95,7 +95,7 @@ button:not(:disabled) { cursor: pointer; }
     padding-bottom: env(safe-area-inset-bottom, 0px);
     box-shadow: 0 -8px 28px rgba(0,0,0,.2);
     overscroll-behavior: contain;
-    animation: agenda-sheet-up 230ms cubic-bezier(.2,.8,.2,1) both !important;
+    animation: agenda-sheet-up 230ms cubic-bezier(.2,.8,.2,1) backwards !important;
   }
   .agenda-mobile-sheet[data-agenda-sheet="sort"] {
     height: auto;
