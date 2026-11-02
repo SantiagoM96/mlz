@@ -91,7 +91,7 @@ const addressByVenue: Record<string, string> = {
  * Las fechas únicas no se convierten en eventos recurrentes.
  */
 function displayDate(isoDate: string): string {
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(isoDate)) return 'Fecha a confirmar';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return 'Fecha a confirmar';
   const date = new Date(isoDate + 'T12:00:00Z');
   if (Number.isNaN(date.getTime())) return 'Fecha a confirmar';
   const formatted = new Intl.DateTimeFormat('es-AR', {
@@ -102,8 +102,8 @@ function displayDate(isoDate: string): string {
 
 /** Horarios compactos y consistentes: 16:00 h / 15:00 a 16:30 h. */
 function parseHour(raw: string): string | null {
-  const value = raw.trim().toLowerCase().replace(/\\s*(?:hs|h)\\.?$/, '').trim();
-  const match = /^(\\d{1,2})(?:[:.](\\d{1,2}))?$/.exec(value);
+  const value = raw.trim().toLowerCase().replace(/\s*(?:hs|h)\\.?$/, '').trim();
+  const match = /^(\d{1,2})(?:[:.](\d{1,2}))?$/.exec(value);
   if (!match) return null;
   const hours = Number(match[1]);
   const minutes = Number(match[2] ?? 0);
@@ -114,7 +114,7 @@ function parseHour(raw: string): string | null {
 function displayTime(raw: string): string {
   const value = raw.trim();
   if (!value) return 'Horario a confirmar';
-  const range = /^(.+?)\\s+(?:a|hasta)\\s+(.+)$/i.exec(value);
+  const range = /^(.+?)\s+(?:a|hasta)\s+(.+)$/i.exec(value);
   if (range) {
     const start = parseHour(range[1]!);
     const end = parseHour(range[2]!);
@@ -133,13 +133,13 @@ function displayTime(raw: string): string {
  * Los índices originales se conservan para no cambiar los ID y enlaces existentes.
  */
 function isValidDate(value: string): boolean {
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(value + 'T12:00:00Z');
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
 function isValidTime(value: string): boolean {
-  const range = /^(.+?)\\s+(?:a|hasta)\\s+(.+)$/i.exec(value.trim());
+  const range = /^(.+?)\s+(?:a|hasta)\s+(.+)$/i.exec(value.trim());
   return range
     ? parseHour(range[1]!) !== null && parseHour(range[2]!) !== null
     : parseHour(value) !== null;
