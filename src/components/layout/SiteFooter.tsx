@@ -27,12 +27,12 @@ export function SiteFooter() {
       </nav>
       <section aria-label="Redes sociales" className="space-y-3">
         <h2 className="text-2xl leading-8 font-bold">¡Seguinos en nuestras redes!</h2>
-        <div className="inline-flex flex-wrap items-center gap-3 rounded bg-white px-4 py-3 text-brand-600">
-          <span aria-label="Instagram" title="Instagram" className="text-sm font-bold">IG</span>
-          <span aria-label="X" title="X" className="text-sm font-bold">X</span>
-          <span aria-label="TikTok" title="TikTok" className="text-sm font-bold">TT</span>
-          <span aria-label="Facebook" title="Facebook" className="text-sm font-bold">f</span>
-          <span aria-label="YouTube" title="YouTube" className="text-sm font-bold">YT</span>
+        <div className="inline-flex flex-wrap items-center gap-4 rounded bg-white px-4 py-3 text-brand-600">
+          {['instagram', 'x', 'tiktok', 'facebook', 'youtube'].map((network) => (
+            <span key={network} title={network} className="inline-flex h-6 w-6 items-center justify-center">
+              <img src={import.meta.env.BASE_URL + 'assets/social/' + network + '.svg'} alt={network} width="24" height="24" />
+            </span>
+          ))}
         </div>
       </section>
       <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[16px] leading-[26px]">
