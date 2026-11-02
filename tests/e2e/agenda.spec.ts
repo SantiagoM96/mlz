@@ -165,14 +165,13 @@ test('la iconografía de todas las rutas usa Google Material Symbols', async ({ 
   }
 });
 
-test('chips azul Info 500, texto blanco y tune de Material Symbols', async ({ page }) => {
+test('solo filtros seleccionados son azules; activity badges conservan colores semanticos y tune', async ({ page }) => {
   const routes = ['/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
     '/agenda-de-la-comunidad/actividades/actividad-1'];
   for (const route of routes) {
     await page.goto(route);
     const activityChips = page.locator('[data-agenda-chip="activity"]');
-    await expect(activityChips.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
-    await expect(activityChips.first()).toHaveCSS('color', 'rgb(255, 255, 255)');
+    await expect(activityChips.first()).not.toHaveCSS('background-color', 'rgb(0, 110, 255)');
     await expect(activityChips.first().locator('[data-material-symbol]')).toBeVisible();
   }
 
