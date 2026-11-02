@@ -53,7 +53,7 @@ export function AgendaPage() {
   const hasMore = filtered.length > visible.length;
 
   return (
-    <PageContainer className="!max-w-[1292px] pt-6 pb-6 md:!px-[30px]" >
+    <PageContainer className="pt-6 pb-6" >
       <div className="mb-6">
         <h1 className="text-[32px] font-bold leading-10 text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
         <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>

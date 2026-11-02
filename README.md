@@ -128,3 +128,13 @@ En GitHub Pages la ruta se prepara en `scripts/prepare-pages.mjs`. Vercel sigue 
 - Figma Home desktop `7153:8476`, mobile `7153:8509`. Figma detalle `7296:19178`.
 - Los IDs de demo se preparan como directorios en GitHub Pages para soportar refresh. Actividades reales requerirán datos estables y actualizar el script de rutas.
 - La programación del diseño es de ejemplo: no presentar como eventos confirmados.
+
+
+### Contenedor compartido (máximo 1200px)
+`PageContainer` controla el ancho institucional **total**: `max-w-[1200px]`.
+A partir de un viewport de 1232px, el contenido ocupa los 1200px completos; debajo,
+se aplica padding horizontal de 16px para mantener márgenes de seguridad.
+El Header usa padding mobile de 24px y 0px en desktop grande, pero no cambia el máximo.
+No sobrescribir con `!max-w-[1292px]` ni `max-w-[1232px]` en páginas.
+Playwright verifica la regla para Home municipal, Home Agenda, actividades, ficha y Jóvenes,
+en los cuatro viewports configurados.

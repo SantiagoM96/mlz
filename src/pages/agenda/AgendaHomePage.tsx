@@ -18,14 +18,14 @@ export function AgendaHomePage() {
   }, []);
 
   return (
-    <PageContainer className="!max-w-[1292px] pb-6 pt-6 md:!px-[30px]">
+    <PageContainer className="pb-6 pt-6">
       <img
         data-testid="agenda-home-banner"
         src={import.meta.env.BASE_URL + 'assets/agenda/home-hero.jpg'}
         alt="Agenda de la Comunidad"
-        width="1232"
-        height="345"
-        className="aspect-[400/179] w-full rounded-lg object-cover md:aspect-[1232/345]"
+        width="1200"
+        height="336"
+        className="aspect-[400/179] w-full rounded-lg object-cover md:aspect-[1200/336]"
         fetchPriority="high"
       />
       <div className="mb-10 mt-6">

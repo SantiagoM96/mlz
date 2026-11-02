@@ -97,3 +97,30 @@ test('las tres rutas principales admiten recarga y generan capturas', async ({ p
     }
   }
 });
+
+test('todos los contenedores institucionales respetan el máximo de 1200px', async ({ page }, info) => {
+  const routes = ['/', '/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
+    '/agenda-de-la-comunidad/actividades/actividad-1', '/jovenes-en-comunidad'];
+  const expected = Math.min(info.project.use.viewport?.width ?? 1200, 1200);
+
+  for (const route of routes) {
+    await page.goto(route);
+    const widths = await page.locator('[data-layout-container="true"]').evaluateAll(elements =>
+      elements.map(element => ({
+        width: element.getBoundingClientRect().width,
+        x: element.getBoundingClientRect().x,
+      })),
+    );
+    expect(widths.length, `Sin contenedores en ${route}`).toBeGreaterThan(0);
+    for (const { width, x } of widths) {
+      expect(width, `Contenedor demasiado ancho en ${route}`).toBeLessThanOrEqual(1200.5);
+      expect(width, `Contenedor fuera de pantalla en ${route}`).toBeLessThanOrEqual(expected + 0.5);
+      if ((info.project.use.viewport?.width ?? 0) >= 1232) {
+        expect(width).toBeCloseTo(1200, 0);
+        expect(x).toBeCloseTo(((info.project.use.viewport?.width ?? 0) - 1200) / 2, 0);
+      }
+    }
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(scrollWidth, `Overflow horizontal en ${route}`).toBeLessThanOrEqual((info.project.use.viewport?.width ?? 1200) + 1);
+  }
+});
