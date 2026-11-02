@@ -323,3 +323,25 @@ test('todas las fechas y horarios mantienen el estilo editorial de Figma', async
   await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('Jueves 5 de noviembre');
   await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
 });
+
+test('excluye registros importados con datos incompletos o fecha aproximada', async ({ page }) => {
+  await page.goto(activities);
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Palabras desde el barrio');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
+
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Festival Internacional del Jazz');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
+
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
+  await page.getByTestId('agenda-card').first().click();
+  await expect(page).toHaveURL(/actividad-1\/?$/);
+  await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toBeVisible();
+  await expect(page.getByText('Dirección a confirmar')).toHaveCount(0);
+});
+
+test('una ficha omitida no se publica aunque se conozca su URL anterior', async ({ page }) => {
+  await page.goto(activities + '/actividad-24');
+  await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
+});
