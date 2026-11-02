@@ -202,7 +202,7 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
     await localityOptions.getByRole('textbox', { name: 'Buscar localidad' }).fill('Banfield');
     await localityOptions.getByRole('checkbox', { name: 'Banfield' }).check();
     await localityOptions.getByRole('button', { name: 'Ver resultados' }).click();
-    await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy', 'Banfield']);
+    await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Banfield', 'Hoy']);
   }
 
   const sorter = page.getByRole('button', { name: 'Ordenar', exact: true });
