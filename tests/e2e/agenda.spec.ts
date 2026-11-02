@@ -349,7 +349,7 @@ test('una ficha omitida no se publica aunque se conozca su URL anterior', async 
 test('descripciones ilustrativas muestran punto rojo y las fichas mantienen datos originales', async ({ page }) => {
   await page.goto(activities + '/actividad-1');
   const copy = page.getByTestId('agenda-activity-description');
-  await expect(copy).toContainText('Una invitación a disfrutar de la música');
+  await expect(copy).toContainText('Una invitación a compartir el espíritu del chamamé');
   await expect(copy).toContainText('Teatro del Municipio');
   const dot = copy.getByTestId('agenda-illustrative-dot');
   await expect(dot).toHaveCSS('background-color', 'rgb(211, 47, 47)');
