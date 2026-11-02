@@ -19,7 +19,7 @@ test('Apertura y cierre de Fecha conservan un ritmo de movimiento consistente', 
   expect(motion.position).toBe(mobile ? 'fixed' : 'absolute');
   const today = panel.getByRole('checkbox', { name: 'Hoy' });
   await today.check();
-  await expect(panel.locator('label', { has: today })).toHaveCSS('background-color', 'rgb(0, 110, 255)');
+  await expect(panel.locator('label:has(input[aria-label="Hoy"])')).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await panel.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(panel).toHaveCount(0);
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -59,7 +59,7 @@ test('Más filtros abre/cierra y aplica selección sin perder el estado', async 
     await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
     await trigger.click();
     await expect(sheet).toBeVisible();
-    await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click();
+    await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
     await expect(sheet).toHaveCount(0);
   }
 });
@@ -82,8 +82,10 @@ test('Panel móvil acompaña el arrastre, rebota y se cierra con deslizamiento l
   await expect(sheet).toHaveClass(/agenda-sheet-dragging/);
   await page.mouse.up();
   await expect(sheet).toBeVisible();
-  await expect.poll(async () => sheet.evaluate(el => getComputedStyle(el).transform))
-    .toBe('matrix(1, 0, 0, 1, 0, 0)');
+  await expect.poll(async () => sheet.evaluate(el => {
+    const transform = getComputedStyle(el).transform;
+    return transform === 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)';
+  })).toBe(true);
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.move(x, y + 180, { steps: 8 });
