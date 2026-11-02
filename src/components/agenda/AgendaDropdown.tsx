@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
+import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
 
 type FilterDropdownProps = {
   label: string;
@@ -21,6 +22,7 @@ export function AgendaDropdown({
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
+  const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLElement>(isOpen, () => setIsOpen(false));
   const [search, setSearch] = useState('');
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -30,11 +32,11 @@ export function AgendaDropdown({
   useEffect(() => {
     if (!isOpen) return;
     const closeOutside = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false);
+      if (!rootRef.current?.contains(event.target as Node)) dismiss();
     };
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsOpen(false);
+        dismiss();
         buttonRef.current?.focus();
       }
     };
@@ -44,11 +46,11 @@ export function AgendaDropdown({
       document.removeEventListener('pointerdown', closeOutside);
       document.removeEventListener('keydown', closeOnEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, dismiss]);
 
   useEffect(() => {
-    if (isOpen) searchRef.current?.focus();
-  }, [isOpen]);
+    if (isOpen && !window.matchMedia('(max-width: 680px)').matches) searchRef.current?.focus();
+  }, [isOpen, dismiss]);
 
   const visibleOptions = options.filter(option =>
     option.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -90,8 +92,9 @@ export function AgendaDropdown({
 
       {isOpen && (
         <>
-          <AgendaSheetBackdrop onClose={() => setIsOpen(false)} />
+          <AgendaSheetBackdrop onClose={dismiss} />
         <section
+          ref={sheetRef}
           id={menuId}
           data-agenda-sheet="filter"
           role="dialog"
@@ -102,7 +105,7 @@ export function AgendaDropdown({
             shadow-[0_4px_14px_rgba(0,0,0,0.16)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
-          <AgendaSheetHeader title={label} onClose={() => setIsOpen(false)} />
+          <AgendaSheetHeader title={label} onClose={dismiss} />
           <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
             <input
@@ -147,7 +150,7 @@ export function AgendaDropdown({
           </div>
 
           <div className="mt-2 flex shrink-0 items-center gap-2 border-t border-[#e1e7eb] pt-2">
-            <button type="button" onClick={() => setIsOpen(false)}
+            <button type="button" onClick={dismiss}
               className="min-h-12 flex-1 rounded bg-primary-600 px-3 text-[16px] font-bold
                 text-white transition-colors hover:bg-primary-700">
               Ver resultados
@@ -178,6 +181,7 @@ export function AgendaSortDropdown({
 }: { value: AgendaSortValue; onChange: (sort: AgendaSortValue) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
+  const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLDivElement>(isOpen, () => setIsOpen(false));
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -185,11 +189,11 @@ export function AgendaSortDropdown({
   useEffect(() => {
     if (!isOpen) return;
     const closeOutside = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false);
+      if (!rootRef.current?.contains(event.target as Node)) dismiss();
     };
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setIsOpen(false);
+        dismiss();
         buttonRef.current?.focus();
       }
     };
@@ -199,7 +203,7 @@ export function AgendaSortDropdown({
       document.removeEventListener('pointerdown', closeOutside);
       document.removeEventListener('keydown', closeOnEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, dismiss]);
 
   return (
     <div ref={rootRef} className="relative">
@@ -215,16 +219,16 @@ export function AgendaSortDropdown({
       </button>
       {isOpen && (
         <>
-          <AgendaSheetBackdrop onClose={() => setIsOpen(false)} />
-        <div id={menuId} data-agenda-sheet="sort" role="group" aria-label="Opciones para ordenar"
+          <AgendaSheetBackdrop onClose={dismiss} />
+        <div ref={sheetRef} id={menuId} data-agenda-sheet="sort" role="group" aria-label="Opciones para ordenar"
           className="agenda-dropdown-enter agenda-mobile-sheet absolute right-0 top-[calc(100%+8px)] z-40
             w-max min-w-[210px] max-w-[calc(100vw-32px)] overflow-hidden rounded-md
             border border-[#e1e7eb] bg-white py-2 shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
-          <AgendaSheetHeader title="Ordenar actividades" onClose={() => setIsOpen(false)} />
+          <AgendaSheetHeader title="Ordenar actividades" onClose={dismiss} />
           {sortOptions.map(option => (
             <button type="button" key={option.value}
               aria-pressed={value === option.value}
-              onClick={() => { onChange(option.value); setIsOpen(false); buttonRef.current?.focus(); }}
+              onClick={() => { onChange(option.value); dismiss(); buttonRef.current?.focus(); }}
               className={`flex min-h-11 w-full items-center justify-between gap-4 px-4
                 text-left text-[16px] text-primary-600 transition-colors hover:bg-[#f2f7fc]
                 ${value === option.value ? 'bg-[#e5f0ff] font-bold' : ''}`}>
