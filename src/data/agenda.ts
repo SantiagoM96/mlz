@@ -33,18 +33,57 @@ export function argentinaTodayISO(): string {
   return `${value('year')}-${value('month')}-${value('day')}`;
 }
 
-const asset = (name: string) => import.meta.env.BASE_URL + 'assets/agenda/' + name + '.jpg';
+/**
+ * Pictogramas originales del frame ANDY / BUSCADOR en Figma.
+ * Cada tipo tiene una imagen dedicada; exportada a 3x sin reproducir el
+ * raster genérico que se usaba para las categorías amplias.
+ */
+const imageByType: Readonly<Record<string, string>> = {
+  'Visita guiada': 'visita-guiada',
+  Charla: 'charla',
+  Música: 'musica',
+  Teatro: 'teatro',
+  Magia: 'magia',
+  Muestra: 'muestra',
+  Presentación: 'presentacion',
+  Cine: 'cine',
+  Danza: 'danza',
+  Jornada: 'jornada',
+  'Taller de danza': 'taller-de-danza',
+  'Taller artístico': 'taller-artistico',
+  Entrenamiento: 'entrenamiento',
+  Humor: 'humor',
+  Varieté: 'variete',
+  'Cuerpo-mente': 'cuerpo-mente',
+  'Cuerpo–mente': 'cuerpo-mente',
+  Aeróbica: 'aerobica',
+  Infantil: 'infantil',
+  Circo: 'circo',
+  Títeres: 'titeres',
+  Taller: 'taller',
+  'Artes del movimiento': 'artes-del-movimiento',
+  'Taller musical': 'taller-musical',
+  'Taller ambiental': 'taller-ambiental',
+  Postural: 'postural',
+  Pileta: 'pileta',
+  'Encuentro literario': 'encuentro-literario',
+  Conversatorio: 'conversatorio',
+  'Disciplina inclusiva': 'disciplina-inclusiva',
+  Torneo: 'torneo',
 
-/** Recursos ilustrativos existentes, no fotografías específicas de las actividades. */
-const imageForActivity = (type: string, category: string): string => {
-  if (category === 'Deportiva y recreativa' ||
-      ['Aeróbica','Cuerpo-mente','Entrenamiento','Postural','Pileta','Torneo'].includes(type)) {
-    return asset('deportes');
-  }
-  if (type === 'Humor' || type === 'Circo' || type === 'Varieté' || type === 'Magia') {
-    return asset('humor');
-  }
-  return asset('cine');
+  // Denominaciones del Excel que se corresponden con tipos ilustrados.
+  'Danza/baile': 'danza',
+  Exposición: 'muestra',
+  Función: 'teatro',
+  Literatura: 'encuentro-literario',
+  Evento: 'jornada',
+};
+
+const imageForActivity = (type: string, category: string, title: string): string => {
+  const isInclusive = /disciplinas? inclusivas?/i.test(title);
+  const filename = isInclusive ? 'disciplina-inclusiva' : imageByType[type] ??
+    (category === 'Deportiva y recreativa' ? 'entrenamiento' : 'jornada');
+  return import.meta.env.BASE_URL + `assets/agenda/types/${filename}.png`;
 };
 
 /** Direcciones que figuran en la misma planilla, normalizadas por sede y localidad. */
@@ -204,7 +243,7 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
     locality,
     dayLabel: displayDate(dateISO),
     timeLabel: displayTime(time),
-    image: imageForActivity(type, category),
+    image: imageForActivity(type, category, title),
     venue: venue || undefined,
     address: addressByVenue[`${venue}|${locality}`],
     badges,

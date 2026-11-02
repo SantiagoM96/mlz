@@ -363,3 +363,23 @@ test('descripciones del Excel no muestran marca de contenido ficticio y las ilus
   await expect(page.getByRole('region', { name: 'Descripción de la actividad' })).toContainText('Una propuesta teatral');
   await expect(page.getByTestId('agenda-illustrative-dot')).toHaveCount(1);
 });
+
+
+test('las tarjetas usan ilustraciones de Figma según el tipo de actividad', async ({ page }) => {
+  await page.goto(activities);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  const examples = [
+    { title: 'La Chamameceada', filename: 'musica.png' },
+    { title: 'Zumba', filename: 'aerobica.png' },
+    { title: 'Salida de observación de hongos', filename: 'visita-guiada.png' },
+    { title: 'Truco en Comunidad', filename: 'torneo.png' },
+  ] as const;
+
+  for (const example of examples) {
+    await search.fill(example.title);
+    const img = page.getByTestId('agenda-card').first().locator('img');
+    await expect(img).toHaveAttribute('src', new RegExp('/types/' + example.filename.replace('.', '\\.')));
+    await expect(img).toBeVisible();
+    await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(400);
+  }
+});
