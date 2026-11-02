@@ -13,7 +13,6 @@ export const importedActivityRows: readonly string[] = String.raw`
 2026-11-08|Música|Cultural|Lomas de Zamora|Tango en Comunidad|16hs|Plaza Grigera|No|Sí
 2026-11-13|Teatro|Cultural|Llavallol|Lomas en Escena presenta: Cóctel|21:00 h|Casa Fuentealba|Sí|No
 2026-11-13|Presentación|Cultural|Lomas de Zamora|Presentación del libro «Filosofía nuestra»|18:00 h|Museo Americanista||
-2026-11-14|Teatro|Cultural|Lomas de Zamora|CHICAGO El musical|21h|Teatro del Municipio||
 2026-11-14|Literatura|Cultural|Lomas de Zamora|Presentación del libro «Solo sé hablar de cosas que no existen», de Manuel Marchioni|18:00 h|Museo Americanista|No|No
 2026-11-14|Música|Cultural|Lomas de Zamora|Rock en Comunidad|16hs|Plaza Grigera|No|Sí
 2026-11-15|Varieté|Cultural|Llavallol|Cultura en las Plazas|14:00 h|Parque Llavallol|No|Sí
