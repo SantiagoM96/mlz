@@ -31,7 +31,6 @@ function DetailSummary({ activity }: { activity: AgendaActivity }) {
             <div>
               <p className="font-bold">{location}</p>
               {activity.address && <p>{activity.address}</p>}
-              {!activity.address && <p className="text-sm text-[#888]">Dirección a confirmar</p>}
               {activity.address && (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address)}`}
@@ -72,8 +71,7 @@ export function AgendaActivityDetailPage() {
           <p className="text-[16px] font-medium uppercase text-[#888]">{activity.category}</p>
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
           {activity.description && <p className="text-[18px] leading-[26px] text-grey-900">{activity.description}</p>}
-          {activity.dateISO && !activity.isDateApproximate && activity.dateISO < argentinaTodayISO() && <p className="text-[14px] text-[#69737b]">Actividad pasada · Archivo 2026</p>}
-          {activity.source && <p className="text-[14px] text-[#69737b]">Datos de la planilla 2026. Confirmá fecha, ubicación e inscripción antes de asistir.</p>}
+          {activity.dateISO && activity.dateISO < argentinaTodayISO() && <p className="text-[14px] text-[#69737b]">Actividad pasada · Archivo 2026</p>}
         </div>
         <DetailSummary activity={activity} />
       </div>
