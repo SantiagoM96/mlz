@@ -9,7 +9,7 @@ export function FeaturedActivityCard({ activity }: { activity: AgendaActivity })
       <img src={activity.image} alt="Representación teatral en el escenario" width="924" height="543"
         className="h-[249px] w-full object-cover md:h-[362px]" fetchPriority="high" />
       <div className="flex min-h-[327px] flex-col gap-3 p-6 md:min-h-[362px] md:px-8 md:py-4">
-        <p className="text-[16px] font-medium uppercase leading-6 text-[#888]">{activity.category}</p>
+        <p className="text-[16px] font-medium uppercase leading-6 text-[#888]">{activity.type}</p>
         <h2 className="text-[30px] leading-9 font-bold text-primary-600">{activity.title}</h2>
         <ActivityBadges badges={activity.badges} />
         <div className="space-y-3 text-[18px] leading-6 text-grey-900">
