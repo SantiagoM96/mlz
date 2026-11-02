@@ -492,8 +492,8 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
     await expect(information).toContainText('Tipo de actividad');
     await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Ubicación' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', /google\\.com\\/maps\\/search/);
-    await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', /google\\.com\\/maps\\?q=/);
+    await expect(page.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', new RegExp('google[.]com/maps/search'));
+    await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
     await expect(page.getByRole('button', { name: /Elegir horario|Inscribirme|Reservar cupo/ })).toHaveCount(0);
     const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
     expect(noOverflow, 'La ficha tiene overflow en ' + path + ' (' + info.project.name + ')').toBe(true);
