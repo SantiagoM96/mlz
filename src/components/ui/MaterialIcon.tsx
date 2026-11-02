@@ -22,6 +22,7 @@ export type MaterialIconName =
   | 'location_on'
   | 'grid_view'
   | 'sort'
+  | 'swap_vert'
   | 'confirmation_number'
   | 'accessible_forward'
   | 'rainy'
