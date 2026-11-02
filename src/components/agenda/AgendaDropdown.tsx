@@ -117,7 +117,7 @@ export function AgendaDropdown({
               const checked = selected.includes(option);
               return (
                 <label key={option}
-                  className={`flex min-h-12 cursor-pointer items-center justify-between gap-4
+                  className={`relative flex min-h-12 cursor-pointer items-center justify-between gap-4
                     px-4 py-2 text-[16px] leading-6 transition-colors duration-150
                     focus-within:outline-2 focus-within:-outline-offset-2
                     focus-within:outline-primary-600
@@ -126,7 +126,7 @@ export function AgendaDropdown({
                 >
                   <span className="min-w-0 flex-1">{option}</span>
                   <input type="checkbox" checked={checked} onChange={() => toggle(option)}
-                    className="peer sr-only" aria-label={option} />
+                    className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
                     className={`grid size-[18px] shrink-0 place-items-center rounded-[2px] border-2
                       ${checked ? 'border-white text-white' : 'border-primary-600 text-primary-600'}`}>
