@@ -37,7 +37,7 @@ export function ActivityCard({ activity }: { activity: AgendaActivity }) {
             font-medium text-primary-600 no-underline group-hover:no-underline">
             Ver más
             <MaterialIcon name="chevron_right" size={20}
-              className="ml-2 transition-transform duration-150 motion-safe:group-hover:translate-x-[3px]" />
+              className="ml-2" />
           </span>
         </div>
       </Link>
