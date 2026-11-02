@@ -47,6 +47,8 @@ test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
   await expect(page).toHaveURL(new RegExp(activities + '/tita-y-rhodesia/?$'));
   await expect(page.getByRole('heading', { name: 'Tita & Rhodesia', level: 1 })).toBeVisible();
   await expect(page.getByRole('link', { name: /Ver en Google Maps/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Compartir por WhatsApp' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Compartir por Facebook' })).toBeVisible();
 });
 
 test('listado responsive, búsqueda, filtros y controles', async ({ page }, info) => {
