@@ -1,7 +1,13 @@
 import type { AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 
-/** Los chips de actividad comparten Info 500 + blanco en todas sus variantes de Figma. */
+const styles: Record<AgendaActivity['badges'][number]['kind'], string> = {
+  rain: 'bg-[#e5f0ff] text-[#006eff]',
+  accessible: 'bg-[#ecddff] text-[#9747ff]',
+  registration: 'bg-[#fff7dd] text-[#f59c00]',
+  featured: 'bg-[#ecddff] text-[#9747ff]',
+};
+
 export function ActivityBadges({ badges }: { badges: AgendaActivity['badges'] }) {
   return (
     <div className="flex flex-wrap gap-2" aria-label="Características de la actividad">
@@ -9,7 +15,7 @@ export function ActivityBadges({ badges }: { badges: AgendaActivity['badges'] })
         <span
           key={badge.kind}
           data-agenda-chip="activity"
-          className="inline-flex min-h-6 items-center gap-1 rounded-[6px] bg-info-500 px-[6px] py-0.5 text-sm font-medium text-white"
+          className={`inline-flex min-h-6 items-center gap-1 rounded-[6px] px-[6px] py-0.5 text-sm font-medium ${styles[badge.kind]}`}
         >
           <MaterialIcon
             name={
