@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AppRouter } from './app/router';
+import 'material-symbols/outlined.css';
 import './styles/globals.css';
 
 const mount = document.getElementById('root');

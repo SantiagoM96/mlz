@@ -104,7 +104,7 @@ test('componentes Breadcrumbs, iconos y tarjetas cumplen medidas de Figma', asyn
   const breadcrumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
   await expect(breadcrumbs).toHaveCSS('font-size', '18px');
   await expect(breadcrumbs.getByTestId('breadcrumb-current')).toHaveCSS('font-weight', '700');
-  await expect(breadcrumbs.locator('[data-icon="chevron-right"]')).toHaveCount(2);
+  await expect(breadcrumbs.locator('[data-material-symbol="chevron_right"]')).toHaveCount(2);
 
   const indexNavigation = page.getByRole('navigation', { name: 'Índice de iniciativas' });
   const card = indexNavigation.locator('..');
@@ -116,7 +116,7 @@ test('componentes Breadcrumbs, iconos y tarjetas cumplen medidas de Figma', asyn
   await expect(links).toHaveCount(9);
   await expect(links.first()).toHaveCSS('column-gap', '4px');
   await expect(links.first()).toHaveCSS('font-size', '18px');
-  const bookmark = links.first().locator('[data-icon="bookmark"]');
+  const bookmark = links.first().locator('[data-material-symbol="bookmark"]');
   await expect(bookmark).toHaveCSS('width', '24px');
   await expect(bookmark).toHaveCSS('height', '24px');
 
@@ -128,18 +128,20 @@ test('componentes Breadcrumbs, iconos y tarjetas cumplen medidas de Figma', asyn
   }
 
   const contact = page.getByRole('heading', { name: 'Contacto', level: 2 }).locator('..');
-  await expect(contact.locator('[data-icon="instagram"]')).toHaveCSS('width', '24px');
+  await expect(contact.locator('img[data-brand-icon="instagram"]')).toHaveCSS('width', '24px');
 
-  const iconPaths = await page.locator('[data-icon]').evaluateAll((icons) =>
-    [...new Set(icons.map((icon) => {
-      const image = getComputedStyle(icon).maskImage;
-      const match = image.match(/url\(["']?([^"')]+)["']?\)/);
-      return match ? match[1] : '';
-    }))],
+  // Los iconos del UI Kit deben usar la fuente local de Google, no máscaras SVG.
+  await page.evaluate(() => document.fonts.ready);
+  const icons = await page.locator('[data-material-symbol]').evaluateAll((items) =>
+    items.map(item => ({
+      glyph: item.textContent?.trim(),
+      font: getComputedStyle(item).fontFamily,
+      width: Math.round(item.getBoundingClientRect().width),
+      height: Math.round(item.getBoundingClientRect().height),
+    })),
   );
-  expect(iconPaths.every(Boolean)).toBeTruthy();
-  for (const url of iconPaths) {
-    const assetResponse = await page.request.get(url);
-    expect(assetResponse.ok(), 'No se pudo cargar el SVG ' + url).toBeTruthy();
-  }
+  expect(icons.length).toBeGreaterThan(10);
+  expect(icons.every(icon => icon.font.includes('Material Symbols Outlined'))).toBeTruthy();
+  expect(await page.evaluate(() => document.fonts.check('24px "Material Symbols Outlined"'))).toBe(true);
+  expect(icons.every(icon => icon.width > 0 && icon.height > 0)).toBeTruthy();
 });

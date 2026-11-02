@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Icon } from '../ui/Icon';
+import { MaterialIcon } from '../ui/MaterialIcon';
 
 export interface BreadcrumbItem {
   label: string;
@@ -29,7 +29,7 @@ export function Breadcrumbs({ items, className = '', tone = 'primary' }: Breadcr
 
           return (
             <li key={index} className="inline-flex min-w-0 items-center gap-2">
-              {index > 0 && <Icon name="chevron-right" />}
+              {index > 0 && <MaterialIcon name="chevron_right" size={24} />}
               {item.to && !isLast ? (
                 <Link
                   className={`${classes} underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600`}

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { FeaturedActivityCard } from '../../components/agenda/FeaturedActivityCard';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaCircuitCard, type AgendaCircuit } from '../../components/agenda/AgendaCircuitCard';
@@ -37,7 +38,7 @@ export function AgendaHomePage() {
         <div className="mb-10 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
           <h2 id="proximos-eventos" className="text-[32px] leading-10 font-bold text-primary-600">Próximos eventos</h2>
           <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades">
-            Ver todas las actividades <span aria-hidden="true">›</span>
+            Ver todas las actividades <MaterialIcon name="chevron_right" size={20} />
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3" data-testid="agenda-upcoming">

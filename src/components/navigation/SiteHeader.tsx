@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PageContainer } from '../layout/PageContainer';
-
-function ChevronRightIcon() {
-  return (
-    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="m9 6 6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+import { MaterialIcon } from '../ui/MaterialIcon';
 
 const desktopMenu = [
   { label: 'Municipio', hasChevron: false },
@@ -58,7 +51,7 @@ export function SiteHeader() {
                 className="inline-flex min-h-12 items-center gap-2 px-4 text-[18px] leading-[26px] font-bold"
               >
                 {label}
-                {hasChevron && <ChevronRightIcon />}
+                {hasChevron && <MaterialIcon name="chevron_right" size={24} />}
               </span>
             ),
           )}
@@ -81,13 +74,9 @@ export function SiteHeader() {
           onClick={() => setOpen((value) => !value)}
         >
           {open ? (
-            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 5l14 14M19 5 5 19" />
-            </svg>
+            <MaterialIcon name="close" size={24} />
           ) : (
-            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <MaterialIcon name="menu" size={24} />
           )}
         </button>
       </PageContainer>

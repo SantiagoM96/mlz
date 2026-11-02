@@ -37,7 +37,7 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await expect(page.getByRole('heading', { level: 1, name: 'Futbol' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(61, 61, 61)');
-  await page.getByRole('link', { name: '‹ Volver a las actividades' }).click();
+  await page.getByRole('link', { name: 'Volver a las actividades' }).click();
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
 });
 
@@ -122,5 +122,33 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     expect(scrollWidth, `Overflow horizontal en ${route}`).toBeLessThanOrEqual((info.project.use.viewport?.width ?? 1200) + 1);
+  }
+});
+
+test('la iconografía de todas las rutas usa Google Material Symbols', async ({ page }) => {
+  const routes = [
+    '/',
+    '/jovenes-en-comunidad',
+    '/agenda-de-la-comunidad',
+    '/agenda-de-la-comunidad/actividades',
+    '/agenda-de-la-comunidad/actividades/actividad-1',
+  ];
+
+  for (const route of routes) {
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    const icons = page.locator('[data-material-symbol]');
+    expect(await icons.count(), `No hay Material Symbols en ${route}`).toBeGreaterThan(0);
+    const state = await icons.evaluateAll((nodes) => nodes.map(node => ({
+      font: getComputedStyle(node).fontFamily,
+      size: getComputedStyle(node).fontSize,
+      text: node.textContent?.trim(),
+      labelHidden: node.getAttribute('aria-hidden'),
+    })));
+    expect(state.every(icon => icon.font.includes('Material Symbols Outlined')),
+      `Iconos no estandarizados: ${route}`).toBeTruthy();
+    expect(state.every(icon => icon.labelHidden === 'true' && !!icon.text)).toBeTruthy();
+    expect(await page.evaluate(() => document.fonts.check('24px "Material Symbols Outlined"'))).toBeTruthy();
+    await expect(page.locator('main svg, header svg')).toHaveCount(0);
   }
 });

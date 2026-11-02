@@ -138,3 +138,15 @@ El Header usa padding mobile de 24px y 0px en desktop grande, pero no cambia el 
 No sobrescribir con `!max-w-[1292px]` ni `max-w-[1232px]` en páginas.
 Playwright verifica la regla para Home municipal, Home Agenda, actividades, ficha y Jóvenes,
 en los cuatro viewports configurados.
+
+## Convención global de iconografía (obligatoria)
+
+Todos los **iconos de interfaz** usan **Google Material Symbols Outlined**, importados localmente con
+`material-symbols/outlined.css` y renderizados exclusivamente mediante
+`src/components/ui/MaterialIcon.tsx`. Los iconos heredan `currentColor` y permiten configurar
+`size`, `weight` y `filled`, con tamaños nominales explícitos para respetar Figma.
+**No dibujar iconos nuevos en SVG ni usar caracteres Unicode (›, ‹, ☰) como iconos.**
+Las marcas (logo del municipio, Comunidad Lomas, Instagram, WhatsApp, Facebook, etc.)
+se conservan como archivos SVG gráficos oficiales, porque no son iconos de interfaz.
+Las imágenes fotográficas o ilustraciones tampoco se sustituyen por símbolos.
+La fuente está incluida en el bundle Vite y no necesita una petición a Google Fonts en runtime.

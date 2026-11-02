@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
-import { AgendaIcon } from '../../components/agenda/AgendaIcon';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../components/agenda/ActivityBadges';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
 import { agendaActivities, type AgendaActivity } from '../../data/agenda';
@@ -19,15 +19,15 @@ function DetailSummary({ activity }: { activity: AgendaActivity }) {
         <ActivityBadges badges={activity.badges} />
         <div className="mt-5 space-y-4 text-[18px] leading-[22px]">
           <div className="flex items-start gap-2">
-            <AgendaIcon name="calendar" size={24} />
+            <MaterialIcon name="calendar_month" size={24} />
             <div><p className="font-bold">Fecha</p><p>{activity.dayLabel}</p></div>
           </div>
           <div className="flex items-start gap-2">
-            <AgendaIcon name="clock" size={24} />
+            <MaterialIcon name="schedule" size={24} />
             <div><p className="font-bold">Horario</p><p>{activity.timeLabel}</p></div>
           </div>
           <div className="flex items-start gap-2">
-            <AgendaIcon name="map" size={24} />
+            <MaterialIcon name="location_on" size={24} />
             <div>
               <p className="font-bold">{location}</p>
               {activity.address && <p>{activity.address}</p>}
@@ -37,7 +37,7 @@ function DetailSummary({ activity }: { activity: AgendaActivity }) {
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address)}`}
                   target="_blank" rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-1 font-bold text-primary-600 hover:underline"
-                >Ver en Google Maps <span aria-hidden="true">›</span></a>
+                >Ver en Google Maps <MaterialIcon name="chevron_right" size={20} /></a>
               )}
             </div>
           </div>
@@ -73,7 +73,7 @@ export function AgendaActivityDetailPage() {
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
           {activity.description && <p className="text-[18px] leading-[26px] text-grey-900">{activity.description}</p>}
           <p className="text-sm text-[#888]">Contenido de demostración basado en Figma; fecha, disponibilidad y detalles sujetos a validación.</p>
-          <Link className="inline-flex pt-4 font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades">‹ Volver a las actividades</Link>
+          <Link className="inline-flex items-center gap-1 pt-4 font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades"><MaterialIcon name="arrow_back" size={20} /> Volver a las actividades</Link>
         </div>
         <DetailSummary activity={activity} />
       </div>

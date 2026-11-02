@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { TableOfContents } from '../../components/ui/TableOfContents';
 import { InfoCard } from '../../components/ui/InfoCard';
 import { IconLink } from '../../components/ui/IconLink';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { initiatives, introduction, type ContentBlock, type Initiative } from '../../data/jovenes';
 
 const instagramUrl = 'https://www.instagram.com/jovenesencomunidad/';
@@ -59,7 +60,7 @@ function InitiativeSection({ initiative, first }: { initiative: Initiative; firs
             disabled
             title="La página de Puntos Jóvenes se incorporará en una etapa posterior"
           >
-            Ver Puntos Jóvenes <span aria-hidden="true">›</span>
+            Ver Puntos Jóvenes <MaterialIcon name="chevron_right" size={20} />
           </Button>
         </div>
       )}
@@ -116,7 +117,7 @@ export function JovenesEnComunidadPage() {
           <TableOfContents items={initiatives.map(({ id, title }) => ({ id, label: title }))} ariaLabel="Índice de iniciativas" />
 
           <InfoCard title="Contacto">
-            <IconLink icon="instagram" href={instagramUrl} target="_blank" rel="noopener noreferrer">
+            <IconLink brandIcon="instagram" href={instagramUrl} target="_blank" rel="noopener noreferrer">
               @jovenesencomunidad
             </IconLink>
           </InfoCard>

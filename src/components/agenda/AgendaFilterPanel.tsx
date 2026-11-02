@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { filterOptions, filterTitles, type FilterGroup } from '../../data/agenda';
-import { AgendaIcon } from './AgendaIcon';
+import { MaterialIcon } from '../ui/MaterialIcon';
 
 export type SelectedFilters = Record<FilterGroup, string[]>;
 export const emptyFilters = (): SelectedFilters => ({ type: [], category: [], locality: [], date: [] });
@@ -27,7 +27,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
       className="absolute right-0 top-[calc(100%+8px)] z-30 flex max-h-[min(75vh,860px)] w-[min(576px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-[#e7e7e7] bg-white shadow-xl">
       <div className="flex items-center justify-between border-b border-[#e7e7e7] px-4 py-3 md:hidden">
         <h2 className="font-bold text-primary-600">Filtrar actividades</h2>
-        <button type="button" aria-label="Cerrar filtros" onClick={onClose}><AgendaIcon name="close" size={24}/></button>
+        <button type="button" aria-label="Cerrar filtros" onClick={onClose}><MaterialIcon name="close" size={24}/></button>
       </div>
       <div className="overflow-auto p-4">
         {groups.map(group => (
@@ -35,7 +35,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
             <button type="button" className="flex w-full items-center justify-between text-left text-[18px] font-bold text-primary-600"
               aria-expanded={!collapsed.includes(group)}
               onClick={() => setCollapsed(prev => prev.includes(group) ? prev.filter(x => x !== group) : [...prev, group])}>
-              {filterTitles[group]} <AgendaIcon name="chevron" size={24} className={collapsed.includes(group) ? '-rotate-90' : ''} />
+              {filterTitles[group]} <MaterialIcon name="expand_more" size={24} className={collapsed.includes(group) ? '-rotate-90' : ''} />
             </button>
             {!collapsed.includes(group) &&
               <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">

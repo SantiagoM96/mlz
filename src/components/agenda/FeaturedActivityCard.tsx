@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { ActivityBadges } from './ActivityBadges';
-import { AgendaIcon } from './AgendaIcon';
+import { MaterialIcon } from '../ui/MaterialIcon';
 
 export function FeaturedActivityCard({ activity }: { activity: AgendaActivity }) {
   return (
@@ -13,10 +13,10 @@ export function FeaturedActivityCard({ activity }: { activity: AgendaActivity })
         <h2 className="text-[30px] leading-9 font-bold text-primary-600">{activity.title}</h2>
         <ActivityBadges badges={activity.badges} />
         <div className="space-y-3 text-[18px] leading-6 text-grey-900">
-          <p className="flex items-center gap-2 font-bold"><AgendaIcon name="calendar" size={20} />{activity.dayLabel}</p>
-          <p className="flex items-center gap-2 font-bold"><AgendaIcon name="clock" size={20} />{activity.timeLabel}</p>
+          <p className="flex items-center gap-2 font-bold"><MaterialIcon name="calendar_month" size={20} />{activity.dayLabel}</p>
+          <p className="flex items-center gap-2 font-bold"><MaterialIcon name="schedule" size={20} />{activity.timeLabel}</p>
           <div className="flex items-start gap-2">
-            <AgendaIcon name="map" size={20} className="mt-0.5 shrink-0" />
+            <MaterialIcon name="location_on" size={20} className="mt-0.5 shrink-0" />
             <div><p className="font-bold">{activity.venue}</p><p>{activity.address}</p></div>
           </div>
         </div>

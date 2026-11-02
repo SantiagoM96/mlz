@@ -3,7 +3,7 @@ import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
-import { AgendaIcon } from '../../components/agenda/AgendaIcon';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
 import { agendaActivities } from '../../data/agenda';
 
@@ -74,21 +74,21 @@ export function AgendaPage() {
           </select>
           <button type="button" onClick={() => setShowMap(v=>!v)} aria-pressed={showMap}
             className="inline-flex h-12 items-center gap-2 rounded-full border border-[#e7e7e7] px-4 font-medium text-primary-600 hover:bg-[#f3f7fc]">
-            <AgendaIcon name={showMap ? 'grid' : 'map'} size={20}/><span>{showMap ? 'Ver grilla' : 'Ver mapa'}</span>
+            <MaterialIcon name={showMap ? 'grid_view' : 'map'} size={20}/><span>{showMap ? 'Ver grilla' : 'Ver mapa'}</span>
           </button>
         </div>
       </div>
 
       {showMap ? (
         <section className="mt-6 flex min-h-[390px] flex-col items-center justify-center rounded-lg border border-[#e7e7e7] bg-[#f3f7fc] p-6 text-center" aria-label="Vista mapa">
-          <AgendaIcon name="map" size={48} className="text-primary-600"/>
+          <MaterialIcon name="map" size={48} className="text-primary-600"/>
           <h2 className="mt-4 text-xl font-bold text-primary-600">Mapa de actividades</h2>
           <p className="mt-2 max-w-[550px]">La vista geográfica se habilitará cuando las actividades tengan direcciones verificadas. Podés seguir explorando las actividades en la grilla.</p>
           <button type="button" onClick={() => setShowMap(false)} className="mt-5 rounded bg-primary-600 px-6 py-3 font-bold text-white">Volver a la grilla</button>
         </section>
       ) : filtered.length === 0 ? (
         <section className="flex min-h-[380px] flex-col items-center justify-center gap-3 text-center" aria-live="polite">
-          <AgendaIcon name="search" size={64} className="text-[#8da3af]" />
+          <MaterialIcon name="search" size={64} className="text-[#8da3af]" />
           <h2 className="text-[20px] font-bold text-grey-900">No encontramos actividades</h2>
           <p className="text-[16px] text-grey-900">Probá cambiar los filtros o buscá con otro término.</p>
           <button type="button" onClick={onReset} className="mt-3 rounded bg-primary-600 px-6 py-3 font-bold text-white">Limpiar filtros</button>
