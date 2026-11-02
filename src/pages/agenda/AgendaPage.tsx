@@ -70,11 +70,20 @@ export function AgendaPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <section className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center" aria-live="polite">
-          <MaterialIcon name="search" size={64} className="text-[#8da3af]" />
-          <h2 className="text-[20px] font-bold text-grey-900">No encontramos actividades</h2>
-          <p className="text-[16px] text-grey-900">Probá cambiar los filtros o buscá con otro término.</p>
-          <button type="button" onClick={onReset} className="mt-3 rounded bg-primary-600 px-6 py-3 font-bold text-white">Limpiar filtros</button>
+        <section data-testid="agenda-empty-state"
+          className="flex min-h-[355px] flex-col items-center justify-center text-center" aria-live="polite">
+          <img src={import.meta.env.BASE_URL + 'assets/agenda/no-results.png'}
+            alt="" width={194} height={207}
+            className="h-[207px] w-[194px] shrink-0 object-contain" />
+          <div className="mt-6 max-w-full px-3 text-[18px] leading-[26px] text-grey-900">
+            <h2 className="font-bold">No encontramos actividades</h2>
+            <p>Probá cambiar los filtros o buscá con otro término.</p>
+          </div>
+          <button type="button" onClick={onReset}
+            className="mt-6 h-12 min-w-[175px] rounded bg-primary-600 px-6 text-[18px] font-bold text-white
+              transition-colors duration-150 hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-info-500">
+            Limpiar filtros
+          </button>
         </section>
       ) : (
         <>

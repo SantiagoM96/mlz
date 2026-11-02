@@ -274,3 +274,17 @@ test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes
   await page.keyboard.press('Escape');
   await expect(more).toHaveCount(0);
 });
+
+test('el estado sin resultados reproduce la ilustración de Figma', async ({ page }) => {
+  await page.goto(activities);
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('zzzzz-sin-coincidencias');
+  const empty = page.getByTestId('agenda-empty-state');
+  const image = empty.locator('img');
+  await expect(image).toBeVisible();
+  await expect(image).toHaveJSProperty('naturalWidth', 194);
+  await expect(image).toHaveJSProperty('naturalHeight', 207);
+  await expect(empty.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
+  await expect(empty.getByRole('button', { name: 'Limpiar filtros' })).toHaveCSS('height', '48px');
+  await empty.getByRole('button', { name: 'Limpiar filtros' }).click();
+  await expect(empty).toHaveCount(0);
+});
