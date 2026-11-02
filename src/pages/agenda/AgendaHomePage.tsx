@@ -18,7 +18,7 @@ export function AgendaHomePage() {
   }, []);
 
   return (
-    <PageContainer className="pb-6 pt-6">
+    <PageContainer className="!max-w-[1292px] pb-6 pt-6 md:!px-[30px]">
       <img
         data-testid="agenda-home-banner"
         src={import.meta.env.BASE_URL + 'assets/agenda/home-hero.jpg'}
