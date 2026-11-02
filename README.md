@@ -25,11 +25,11 @@ Otras tareas: `npm run typecheck`, `npm run lint`, `npm run build`, `npm run pre
 - Figma: https://www.figma.com/design/dgnKx8QM8ZyU8HYNCgIriM/EJE-JOVENES-EN-COMUNIDAD?node-id=2101-1124
 - Sitio oficial de referencia: https://lomasdezamora.gov.ar/
 
-El frame de escritorio de Jóvenes en Comunidad se utilizó como fuente primaria. **No se identificó dentro de la sección suministrada un frame mobile equivalente de esta misma página**; la adaptación mobile realizada es una propuesta responsive que requiere comparación con una referencia específica si se proporciona después.
+El frame de escritorio de Jóvenes en Comunidad se utilizó como fuente primaria. **El frame mobile de 432 px ya está disponible en Figma (nodo `2108:1125`) y fue incorporado como referencia de la implementación.** Mobile presenta introducción, índice y contacto antes de las iniciativas; desktop mantiene el índice en la columna lateral. El banner mobile utiliza una exportación dedicada del mismo recurso de Figma.
 
 La familia tipográfica de Figma es Geometria. El proyecto declara esa fuente y utiliza fallback a Arial, sin distribuir archivos tipográficos con licencia. Incorporar las fuentes licenciadas si corresponde.
 
-Los archivos `public/assets/jovenes-hero.jpg` y `public/assets/municipio-logo.png` provienen de exportaciones de nodos de Figma. No son capturas completas de la página.
+Los archivos `public/assets/jovenes-hero.jpg`, `public/assets/jovenes-hero-mobile.jpg`, `public/assets/municipio-logo.png` y `public/assets/municipio-logo-footer.png` provienen de exportaciones de nodos de Figma. No son capturas completas de la página.
 
 ## Organización
 
@@ -42,7 +42,7 @@ Los archivos `public/assets/jovenes-hero.jpg` y `public/assets/municipio-logo.pn
 
 Para modificar el color municipal principal, actualizar `--color-brand-600` y los otros tokens semánticos en `src/styles/globals.css`. La imagen y los textos están fuera de las piezas visuales reutilizables.
 
-**Pendientes:** Home definitiva, enlaces oficiales de los botones genéricos del header y footer, página Puntos Jóvenes, verificación visual en mobile con diseño específico, integración de fuente Geometria.
+**Pendientes:** Home definitiva, enlaces oficiales de los botones genéricos del header y footer, página Puntos Jóvenes, verificación visual automatizada contra Figma, integración de fuente Geometria.
 
 ## GitHub Pages — preview
 
@@ -70,6 +70,6 @@ No crear la integración Git que dispara despliegues por cada push. `vercel.json
 
 ## Verificación
 
-Configurados typecheck, ESLint y build mediante GitHub Actions en pull requests; la publicación de GitHub Pages solo se produce desde `main`. No hay pruebas visuales automatizadas configuradas todavía. Validar en anchos 375, 390, 768, 1024 y 1440 px, y comparar frente a los frames de Figma.
+Configurados typecheck, ESLint y build mediante GitHub Actions en pull requests; la publicación de GitHub Pages solo se produce desde `main`. No hay pruebas visuales automatizadas configuradas todavía. Validar en anchos 375, 390, 432, 768, 1024 y 1440 px, y comparar frente a los frames desktop (1415 px) y mobile (432 px) de Figma. El código implementa los layouts de referencia; todavía no se ha automatizado un diff visual del navegador.
 
 Este repositorio es un prototipo frontend. No es el sitio oficial ni debe tratarse como canal de atención ciudadana o información vigente de trámites.

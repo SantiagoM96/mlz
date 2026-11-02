@@ -6,13 +6,13 @@
   --color-brand-700: #19577f;
   --color-success-500: #2abb5b;
   --color-success-600: #208c43;
-  --color-panel: #f2f7fc;
+  --color-panel: #f3f7fc;
   --color-muted: #5c6873;
   --color-divider: #e1e7eb;
   --font-sans: Geometria, Arial, Helvetica, sans-serif;
 }
 
-:root { font-family: var(--font-sans); color: #333; background: #fff; font-synthesis: none; }
+:root { font-family: var(--font-sans); color: #3d3d3d; background: #fff; font-synthesis: none; }
 html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 body { min-width: 320px; margin: 0; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -22,10 +22,10 @@ button:not(:disabled) { cursor: pointer; }
 .skip-link:focus { top: 12px; }
 .article-copy { font-size: 18px; line-height: 26px; }
 .article-copy p + p { margin-top: 16px; }
+.intro-copy p + p { margin-top: 24px; }
 .article-copy a { color: var(--color-brand-600); font-weight: 700; text-decoration: underline; }
 .article-copy ul { margin-top: 12px; list-style: disc; padding-left: 24px; }
 .article-copy li + li { margin-top: 12px; }
 .article-section { border-bottom: 1px solid var(--color-divider); padding-block: 24px; scroll-margin-top: 20px; }
 .article-section:last-child { border-bottom: 0; }
 .article-section h3 { margin-bottom: 16px; font-size: 24px; line-height: 30px; font-weight: 700; color: var(--color-brand-600); }
-@media (max-width: 767px) { .article-copy { font-size: 16px; line-height: 25px; } .article-section h3 { font-size: 21px; } }
