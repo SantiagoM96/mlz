@@ -69,7 +69,7 @@ export function AgendaActivityDetailPage() {
       ]} />
       <div className="grid min-h-[440px] items-start gap-6 pb-6 md:grid-cols-[minmax(0,1fr)_430px]">
         <div className="space-y-4">
-          <p className="text-[16px] font-medium uppercase text-[#888]">{activity.category}</p>
+          <p className="text-[16px] font-medium uppercase text-[#888]">{activity.type}</p>
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
           <ActivityDescription activity={activity} />
           {activity.dateISO && activity.dateISO < argentinaTodayISO() && <p className="text-[14px] text-[#69737b]">Actividad pasada · Archivo 2026</p>}
