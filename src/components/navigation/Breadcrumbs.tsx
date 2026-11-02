@@ -16,16 +16,15 @@ export interface BreadcrumbsProps {
  * Breadcrumb institucional: una sola línea, con el elemento actual truncado
  * cuando no entra. En mobile se mantienen visibles el padre y la página actual.
  */
-export function Breadcrumbs({ items, className = '', tone = 'primary' }: BreadcrumbsProps) {
-  const linkColor = tone === 'neutral'
-    ? 'text-grey-900 visited:text-grey-900 hover:text-grey-900'
-    : 'text-primary-600 visited:text-primary-600 hover:text-primary-600';
+export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
+  // El breadcrumb institucional siempre utiliza el azul primario.
+  const linkColor = 'text-primary-600 visited:text-primary-600 hover:text-primary-600';
 
   return (
     <nav
       aria-label="Ruta de navegación"
       className={`my-6 w-full min-w-0 text-[18px] leading-6
-        ${tone === 'neutral' ? 'text-grey-900' : 'text-primary-600'} ${className}`}
+        text-primary-600 ${className}`}
     >
       <ol className="flex w-full min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
         {items.map((item, index) => {

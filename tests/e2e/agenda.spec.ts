@@ -320,8 +320,8 @@ test('todas las fechas y horarios mantienen el estilo editorial de Figma', async
   await expect(page.getByTestId('agenda-card').first()).toContainText('21:00 h');
   await page.getByTestId('agenda-card').first().click();
   await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('Jueves 5 de noviembre');
-  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('21:00 h');
+  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('Jueves 5 de noviembre');
+  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('21:00 h');
 });
 
 test('excluye registros importados con datos incompletos o fecha aproximada', async ({ page }) => {
@@ -351,7 +351,7 @@ test('descripciones del Excel no muestran marca de contenido ficticio y las ilus
   const description = page.getByRole('region', { name: 'Descripción de la actividad' });
   await expect(description).toContainText('Primera edición de La Chamameceada');
   await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('21:00 h');
+  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('21:00 h');
 
   await page.goto(activities + '/actividad-2');
   const illustrative = page.getByRole('region', { name: 'Descripción de la actividad' });
@@ -487,11 +487,14 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
     await expect(image).toBeVisible();
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(400);
     const information = page.getByRole('heading', { name: 'Información general' }).locator('..');
-    await expect(information).toContainText('Fecha');
-    await expect(information).toContainText('Horario');
     await expect(information).toContainText('Tipo de actividad');
-    await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Ubicación' })).toBeVisible();
+    await expect(information).toContainText('Categoría');
+    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    await expect(summary.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+    await expect(summary).toContainText('Fecha');
+    await expect(summary).toContainText('Horario');
+    await expect(summary).toContainText('Lugar');
+    await expect(page.getByRole('heading', { name: 'Ubicación en el mapa' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', new RegExp('google[.]com/maps/search'));
     await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
     await expect(page.getByRole('button', { name: /Elegir horario|Inscribirme|Reservar cupo/ })).toHaveCount(0);
@@ -555,4 +558,44 @@ test('motion UX mobile: chips deslizables con acción Limpiar visible', async ({
   await expect(chips.getByRole('button', { name: 'Limpiar' })).toBeVisible();
   const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
   expect(fits).toBe(true);
+});
+
+test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al final', async ({ page }, info) => {
+  for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
+    await page.goto(path);
+    const description = page.getByRole('region', { name: 'Descripción de la actividad' });
+    const image = page.getByTestId('agenda-detail-image');
+    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const map = page.getByRole('region', { name: 'Mapa de ubicación' });
+    await expect(description).toBeVisible();
+    await expect(image).toBeVisible();
+    await expect(summary).toBeVisible();
+    await expect(map).toBeVisible();
+    const positions = await page.evaluate(() => {
+      const rect = (selector: string) =>
+        document.querySelector(selector)!.getBoundingClientRect();
+      return {
+        description: rect('[aria-label="Descripción de la actividad"]').top,
+        image: rect('[data-testid="agenda-detail-image"]').top,
+        summary: rect('[aria-label="Resumen de actividad"]'),
+        map: rect('[aria-label="Mapa de ubicación"]').top,
+        info: rect('#agenda-general-information').top,
+        imageBottom: rect('[data-testid="agenda-detail-image"]').bottom,
+      };
+    });
+    expect(positions.description).toBeLessThan(positions.image);
+    expect(positions.map).toBeGreaterThan(positions.imageBottom);
+    expect(positions.map).toBeGreaterThan(positions.info);
+    if ((info.project.use.viewport?.width ?? 0) >= 1024) {
+      const imageX = await image.evaluate(el => el.getBoundingClientRect().x);
+      expect(positions.summary.x).toBeGreaterThan(imageX);
+    }
+    await expect(summary).toContainText('Fecha');
+    await expect(summary).toContainText('Horario');
+    await expect(summary).toContainText('Lugar');
+    await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
+    const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
+    await expect(crumbs).toHaveCSS('color', 'rgb(38, 103, 151)');
+    await expect(crumbs.getByTestId('breadcrumb-current')).toBeVisible();
+  }
 });
