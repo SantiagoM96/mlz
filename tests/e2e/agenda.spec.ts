@@ -34,10 +34,10 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
   await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
-  await expect(page.getByRole('heading', { level: 1, name: 'Futbol' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(61, 61, 61)');
-  await page.getByRole('link', { name: 'Volver a las actividades' }).click();
+  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
 });
 
@@ -59,8 +59,8 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   const allImagesLoaded = await page.getByTestId('agenda-card').first().locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0);
   expect(allImagesLoaded).toBe(true);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
-  await search.fill('Patin');
-  await expect(page.getByTestId('agenda-card')).toHaveCount(6);
+  await search.fill('La Chamameceada');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
   await search.fill('término inexistente');
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Limpiar filtros' }).click();
@@ -69,7 +69,7 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await filter.getByRole('button', { name: 'Categoría' }).click();
   await filter.getByRole('checkbox', { name: 'Ambiental' }).check();
   await filter.getByRole('button', { name: 'Ver resultados' }).click();
-  await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
+  await expect(page.getByTestId('agenda-card').first()).toContainText('Salida de observación de hongos');
   await page.getByRole('button', { name: 'Ambiental' }).click();
   await expect(page.getByTestId('agenda-card')).not.toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
@@ -214,8 +214,8 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
 });
 
 test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page }) => {
-  await page.goto(activities + '/actividad-2');
-  await expect(page.getByRole('heading', { level: 1, name: 'Patin' })).toBeVisible();
+  await page.goto(activities + '/actividad-1');
+  await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
   await expect(page.getByText('Contenido de demostración basado en Figma')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Volver a las actividades' })).toHaveCount(0);
   const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' });
@@ -287,4 +287,27 @@ test('el estado sin resultados reproduce la ilustración de Figma', async ({ pag
   await expect(empty.getByRole('button', { name: 'Limpiar filtros' })).toHaveCSS('height', '48px');
   await empty.getByRole('button', { name: 'Limpiar filtros' }).click();
   await expect(empty).toHaveCount(0);
+});
+
+test('tarjeta completa clickeable, cursor pointer, Ver más sin subrayado', async ({ page }) => {
+  await page.goto(activities);
+  const first = page.getByTestId('agenda-card').first();
+  const link = first.getByRole('link', { name: 'Ver más sobre La Chamameceada' });
+  await expect(link).toHaveCSS('cursor', 'pointer');
+  await expect(link).toHaveCSS('text-decoration-line', 'none');
+  await expect(first.getByText('Ver más')).toHaveCSS('text-decoration-line', 'none');
+  await first.getByRole('heading', { name: 'La Chamameceada' }).click();
+  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/actividad-1\/?$/);
+});
+
+test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async ({ page }) => {
+  await page.goto(activities);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Salida de observación de hongos');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
+  await expect(page.getByTestId('agenda-card').first()).toContainText('AMBIENTAL');
+  await search.fill('Palabras desde el barrio');
+  await expect(page.getByTestId('agenda-card').count()).resolves.toBeGreaterThan(1);
+  await search.fill('nombre inhallable 2026');
+  await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
 });

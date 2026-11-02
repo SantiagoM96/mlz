@@ -1,4 +1,4 @@
-import type { AgendaActivity } from '../../data/agenda';
+import { argentinaTodayISO, type AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { ActivityBadges } from './ActivityBadges';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ export function ActivityCard({ activity }: { activity: AgendaActivity }) {
         <div className="flex flex-1 flex-col gap-3 px-6 pt-3 pb-[18px]">
           <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888888]">{activity.category}</p>
           <h2 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h2>
-          {activity.dateISO && activity.dateISO < new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' }) && (
+          {activity.dateISO && activity.dateISO < argentinaTodayISO() && (
             <span className="self-start rounded bg-[#f2f4f6] px-2 py-1 text-[12px] font-medium text-[#626d75]">
               Actividad pasada
             </span>

@@ -48,7 +48,7 @@ export function AgendaHomePage() {
       <section aria-label="Circuitos de la Comunidad" className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
         {circuits.map(circuit => <AgendaCircuitCard key={circuit.title} circuit={circuit} />)}
       </section>
-      <p className="mt-6 text-xs text-[#888]">Prototipo de interfaz con actividades de ejemplo tomadas del diseño de Figma.</p>
+      <p className="mt-6 text-xs text-[#888]">Catálogo de actividades extraído de la planilla 2026, con registros históricos. El evento destacado sigue siendo ilustrativo; confirmar vigencia.</p>
     </PageContainer>
   );
 }
