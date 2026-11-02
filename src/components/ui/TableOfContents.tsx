@@ -1,44 +1,31 @@
-import type { Initiative } from '../../data/jovenes';
+import { IconLink } from './IconLink';
+import { InfoCard } from './InfoCard';
 
-function BookmarkIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M6 4.5h12v15l-6-4-6 4v-15Z" />
-    </svg>
-  );
+export interface TableOfContentsItem {
+  id: string;
+  label: string;
 }
 
-export function TableOfContents({ initiatives }: { initiatives: Initiative[] }) {
+export interface TableOfContentsProps {
+  items: readonly TableOfContentsItem[];
+  title?: string;
+}
+
+/** Índice reutilizable e independiente del modelo de datos de cada página. */
+export function TableOfContents({ items, title = 'Índice' }: TableOfContentsProps) {
   return (
-    <div className="rounded-[4px] bg-panel p-6">
-      <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-primary-600">
-        Índice
-      </h2>
+    <InfoCard title={title}>
       <nav aria-label="Índice de iniciativas">
         <ol className="flex flex-col gap-4">
-          {initiatives.map((item) => (
+          {items.map((item) => (
             <li key={item.id}>
-              <a
-                href={'#' + item.id}
-                className="flex items-start gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
-              >
-                <span className="mt-0.5 shrink-0">
-                  <BookmarkIcon />
-                </span>
-                <span>{item.title}</span>
-              </a>
+              <IconLink icon="bookmark" href={'#' + item.id}>
+                {item.label}
+              </IconLink>
             </li>
           ))}
         </ol>
       </nav>
-    </div>
+    </InfoCard>
   );
 }

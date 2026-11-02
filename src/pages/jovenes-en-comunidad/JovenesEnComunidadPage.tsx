@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { PageContainer } from '../../components/layout/PageContainer';
+import { PageHero } from '../../components/layout/PageHero';
 import { Button } from '../../components/ui/Button';
 import { TableOfContents } from '../../components/ui/TableOfContents';
+import { InfoCard } from '../../components/ui/InfoCard';
+import { IconLink } from '../../components/ui/IconLink';
 import { initiatives, introduction, type ContentBlock, type Initiative } from '../../data/jovenes';
 
 const instagramUrl = 'https://www.instagram.com/jovenesencomunidad/';
@@ -71,21 +74,14 @@ export function JovenesEnComunidadPage() {
 
   const heroDesktop = import.meta.env.BASE_URL + 'assets/jovenes-hero.jpg';
   const heroMobile = import.meta.env.BASE_URL + 'assets/jovenes-hero-mobile.jpg';
-  const instagramIcon = import.meta.env.BASE_URL + 'assets/social/instagram.svg';
 
   return (
     <PageContainer className="pb-4 pt-8">
-      <picture className="block">
-        <source media="(max-width: 767px)" srcSet={heroMobile} />
-        <img
-          src={heroDesktop}
-          className="aspect-[25/14] w-full rounded-[4px] object-cover md:aspect-[25/7]"
-          width="1200"
-          height="336"
-          alt="Jóvenes reunidos en una actividad comunitaria de Lomas de Zamora"
-          fetchPriority="high"
-        />
-      </picture>
+      <PageHero
+        desktopSrc={heroDesktop}
+        mobileSrc={heroMobile}
+        alt="Jóvenes reunidos en una actividad comunitaria de Lomas de Zamora"
+      />
 
       <Breadcrumbs
         items={[
@@ -115,24 +111,15 @@ export function JovenesEnComunidadPage() {
 
         <aside
           aria-label="Índice y contacto de Jóvenes en Comunidad"
-          className="w-full max-w-[390px] min-w-0 space-y-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+          className="w-full max-w-[390px] min-w-0 space-y-6 lg:col-start-2 lg:row-span-2 lg:row-start-1"
         >
-          <TableOfContents initiatives={initiatives} />
+          <TableOfContents items={initiatives.map(({ id, title }) => ({ id, label: title }))} />
 
-          <div className="rounded-[4px] bg-panel p-6">
-            <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-primary-600">
-              Contacto
-            </h2>
-            <a
-              className="inline-flex items-center gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-primary-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
-              href={instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={instagramIcon} width="20" height="20" alt="" aria-hidden="true" />
+          <InfoCard title="Contacto">
+            <IconLink icon="instagram" href={instagramUrl} target="_blank" rel="noopener noreferrer">
               @jovenesencomunidad
-            </a>
-          </div>
+            </IconLink>
+          </InfoCard>
         </aside>
 
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">
