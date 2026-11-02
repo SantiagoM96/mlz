@@ -26,7 +26,8 @@
   background: #ffffff;
   font-synthesis: none;
 }
-html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+/* Los cambios de ruta y la restauración del historial no deben desplazarse suavemente. */
+html { scroll-behavior: auto; scroll-padding-top: 24px; }
 body { min-width: 320px; margin: 0; }
 button, a { -webkit-tap-highlight-color: transparent; }
 /* Los controles deben heredar la misma familia tipográfica que el contenido. */

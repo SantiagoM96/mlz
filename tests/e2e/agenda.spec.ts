@@ -441,3 +441,41 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   const categories = await groupCategory.locator('label').allTextContents();
   assertSorted(categories.map(label => label.trim()));
 });
+
+test('navegar desde una tarjeta inferior abre la ficha arriba y volver restaura el scroll', async ({ page }) => {
+  await page.goto(activities);
+  const lastCard = page.getByTestId('agenda-card').last();
+  await lastCard.scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
+  await lastCard.getByRole('link', { name: /Ver más sobre/ }).click();
+  await expect(page).toHaveURL(/\\/agenda-de-la-comunidad\\/actividades\\/actividad-\\d+\\/?$/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
+  await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toBeInViewport();
+  await page.goBack();
+  await expect(page).toHaveURL(/\\/agenda-de-la-comunidad\\/actividades\\/?$/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
+});
+
+test('breadcrumb de título largo permanece en una línea sin separar la flecha', async ({ page }, info) => {
+  await page.goto(activities + '/actividad-10');
+  const nav = page.getByRole('navigation', { name: 'Ruta de navegación' });
+  const current = nav.getByTestId('breadcrumb-current');
+  await expect(current).toHaveText('Presentación del libro «Solo sé hablar de cosas que no existen», de Manuel Marchioni');
+  await expect(current).toHaveCSS('text-overflow', 'ellipsis');
+  const height = await nav.evaluate(element => element.getBoundingClientRect().height);
+  expect(height).toBeLessThanOrEqual(30);
+  const arrowAlignment = await current.evaluate(element => {
+    const arrow = element.parentElement?.querySelector('[data-material-symbol]');
+    if (!arrow) return false;
+    const a = arrow.getBoundingClientRect();
+    const t = element.getBoundingClientRect();
+    return Math.abs(a.top + a.height / 2 - (t.top + t.height / 2)) < 4;
+  });
+  expect(arrowAlignment).toBe(true);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+  expect(overflow).toBe(false);
+  if ((info.project.use.viewport?.width ?? 0) < 640) {
+    await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
+  }
+});
