@@ -4,7 +4,6 @@ import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
 import { AgendaSortDropdown, type AgendaSortValue } from '../../components/agenda/AgendaDropdown';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
-import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
 import { agendaActivities } from '../../data/agenda';
 
