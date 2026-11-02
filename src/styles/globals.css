@@ -17,7 +17,7 @@
   --color-success-600: #208c43;
   --color-panel: #f3f7fc;
   --color-divider: #e1e7eb;
-  --font-sans: Geometria, Arial, Helvetica, sans-serif;
+  --font-sans: Geometria, 'Century Gothic', 'Avenir Next', 'Trebuchet MS', Arial, sans-serif;
 }
 
 :root {
@@ -29,6 +29,8 @@
 html { scroll-behavior: smooth; scroll-padding-top: 24px; }
 body { min-width: 320px; margin: 0; }
 button, a { -webkit-tap-highlight-color: transparent; }
+/* Los controles deben heredar la misma familia tipográfica que el contenido. */
+button, input, select, textarea { font-family: inherit; }
 a { text-underline-offset: 2px; }
 button:not(:disabled) { cursor: pointer; }
 .skip-link { position: absolute; z-index: 100; top: -100px; left: 12px; background: #fff; color: var(--color-primary-600); padding: 12px; border: 2px solid var(--color-primary-600); }
@@ -144,4 +146,31 @@ button:not(:disabled) { cursor: pointer; }
     transition: none !important;
   }
   .agenda-sheet-grabber span { transition: none; }
+}
+
+/* Más detalle de UX motion: cierre acompañando el gesto y rebote controlado. */
+@media (max-width: 680px) {
+  .agenda-mobile-sheet.agenda-sheet-dragging {
+    animation: none !important;
+    transition: none !important;
+    transform: translate3d(0,var(--agenda-sheet-drag-y,0px),0) !important;
+    will-change: transform;
+  }
+  .agenda-mobile-sheet.agenda-sheet-exit {
+    animation: none !important;
+    transform: translate3d(0,100%,0) !important;
+    transition: transform 200ms cubic-bezier(.4,0,1,1) !important;
+    pointer-events: none;
+  }
+  .agenda-mobile-backdrop.agenda-backdrop-exit {
+    animation: none !important;
+    opacity: 0 !important;
+    transition: opacity 200ms ease-in !important;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .agenda-mobile-sheet.agenda-sheet-dragging,
+    .agenda-mobile-sheet.agenda-sheet-exit,
+    .agenda-mobile-backdrop.agenda-backdrop-exit { transition: none !important; }
+  }
 }
