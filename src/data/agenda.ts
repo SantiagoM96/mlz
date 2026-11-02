@@ -156,58 +156,6 @@ function displayTime(raw: string): string {
 }
 
 /**
- * Copy de demostración para las fichas. No representa una sinopsis oficial:
- * solamente toma el tipo de actividad, la sede y la localidad documentados.
- * La UI debe mostrar un punto rojo junto al texto hasta su validación.
- */
-function illustrativeActivityDescription(
-  title: string, type: string, category: string, venue: string, locality: string,
-): string {
-  const titleSpecific: Record<string, string> = {
-    'La Chamameceada': 'Una invitación a compartir el espíritu del chamamé y encontrarse con la música popular.',
-    'Ensamble Percusión': 'El ritmo es protagonista en una propuesta para acercarse a los sonidos de la percusión.',
-    'Tributo a Charly García': 'Una propuesta musical para reencontrarse con el universo de canciones de Charly García.',
-    'Ballet Yago': 'La danza llega al escenario con una propuesta que invita a disfrutar del movimiento y la expresión.',
-    'Folklore en Comunidad': 'Un encuentro para celebrar los ritmos y las expresiones del folklore en comunidad.',
-    'Tango en Comunidad': 'Una invitación a acercarse al tango y compartir la música que forma parte de nuestra identidad cultural.',
-    'Rock en Comunidad': 'Una propuesta para compartir rock y disfrutar de la música en comunidad.',
-    'Exploradoras de la galaxia': 'Una invitación a dejar volar la imaginación y disfrutar de una aventura cultural en familia.',
-    'Festival Literario': 'Un encuentro alrededor de los libros, las palabras y las voces que dan vida a la literatura.',
-    'Salida de observación de hongos': 'Una propuesta para explorar el entorno natural y conocer el fascinante mundo de los hongos.',
-    'Truco en Comunidad': 'Una invitación a encontrarse alrededor del truco y compartir una jornada de juego en el barrio.',
-  };
-  const intros: Record<string, string> = {
-    Música: 'Una invitación a disfrutar de la música y compartir un encuentro cultural con la comunidad.',
-    Danza: 'Una propuesta para encontrarse con la danza y las distintas maneras de expresarse a través del movimiento.',
-    'Danza/baile': 'Un espacio para disfrutar de la danza, el ritmo y el movimiento en comunidad.',
-    Teatro: 'Una propuesta escénica para acercarse al teatro y disfrutar de la programación cultural local.',
-    Infantil: 'Una propuesta cultural para compartir un momento de entretenimiento y descubrimiento en familia.',
-    Literatura: 'Un encuentro alrededor de la literatura, las historias y los libros.',
-    Presentación: 'Una propuesta para acercarse a nuevas ideas y compartir un encuentro con la cultura.',
-    Cine: 'Una invitación a compartir una experiencia audiovisual y acercarse a distintas historias.',
-    Varieté: 'Un encuentro para disfrutar de propuestas culturales y expresiones artísticas de la comunidad.',
-    Jornada: 'Una jornada para participar de actividades y compartir un espacio de encuentro en el barrio.',
-    Evento: 'Una propuesta para reunirse y participar de la agenda cultural del municipio.',
-    Taller: 'Un espacio de participación para aprender, crear y compartir experiencias.',
-    'Taller de danza': 'Una invitación a explorar el movimiento y compartir un espacio creativo.',
-    Muestra: 'Una oportunidad para conocer expresiones artísticas y acercarse al trabajo creativo local.',
-    Exposición: 'Una invitación a recorrer una propuesta expositiva y disfrutar del arte en comunidad.',
-    Función: 'Una función para sumarse a la programación cultural y disfrutar de un encuentro artístico.',
-    Charla: 'Un espacio de intercambio para acercarse a nuevas ideas y conversar en comunidad.',
-    'Visita guiada': 'Una invitación a explorar el entorno, conocer sus características y descubrir nuevas perspectivas.',
-    Aeróbica: 'Una propuesta de movimiento para sumar actividad física y bienestar a la rutina.',
-    'Cuerpo-mente': 'Una actividad para conectar movimiento, concentración y bienestar personal.',
-    Entrenamiento: 'Una propuesta de actividad física para moverse, entrenar y compartir un encuentro en el barrio.',
-    Torneo: 'Una oportunidad para participar de una actividad recreativa y compartir el espíritu del juego.',
-  };
-  const intro = titleSpecific[title] ?? intros[type] ??
-    (category === 'Ambiental'
-      ? 'Una propuesta para acercarse al ambiente y conocer el entorno local.'
-      : 'Una actividad para participar de las propuestas comunitarias del municipio.');
-  return `${intro} La actividad tiene como sede ${venue}, en ${locality}.`;
-}
-
-/**
  * La planilla se preserva íntegra. Solo se publican filas con datos confirmables:
  * fecha exacta, título, tipo, categoría, localidad, sede y horario definidos,
  * además de flags explícitos para inscripción y suspensión.
@@ -259,8 +207,6 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
     image: imageForActivity(type, category),
     venue: venue || undefined,
     address: addressByVenue[`${venue}|${locality}`],
-    description: illustrativeActivityDescription(title, type, category, venue, locality),
-    descriptionIsIllustrative: true,
     badges,
     description: originalActivityDescriptions['actividad-' + (index + 1)] ||
       illustrativeDescription(title, type, locality, venue),
