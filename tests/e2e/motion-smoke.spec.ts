@@ -6,7 +6,7 @@ test.use({ reducedMotion: 'no-preference' });
 test('Apertura y cierre de Fecha conservan un ritmo de movimiento consistente', async ({ page }, info) => {
   await page.goto(route);
   const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
-  const trigger = page.getByRole('button', { name: 'Fecha', exact: true });
+  const trigger = page.getByTestId('agenda-dropdown-fecha');
   await trigger.click();
   const panel = page.getByRole('dialog', { name: 'Opciones de Fecha' });
   await expect(panel).toBeVisible();
@@ -19,6 +19,7 @@ test('Apertura y cierre de Fecha conservan un ritmo de movimiento consistente', 
   expect(motion.position).toBe(mobile ? 'fixed' : 'absolute');
   const today = panel.getByRole('checkbox', { name: 'Hoy' });
   await today.check();
+  await page.mouse.move(0, 0); // Evitar el estado hover oscuro del elemento seleccionado.
   await expect(panel.locator('label:has(input[aria-label="Hoy"])')).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await panel.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(panel).toHaveCount(0);
