@@ -148,7 +148,7 @@ function isValidTime(value: string): boolean {
 function isPublishableRow(line: string): boolean {
   const fields = line.split('|').map(value => value.trim());
   if (fields.length !== 9) return false;
-  const [dateISO, type, category, locality, title, time, venue, registration, rain] = fields;
+  const [dateISO = '', type = '', category = '', locality = '', title = '', time = '', venue = '', registration = '', rain = ''] = fields;
   if (![type, category, locality, title, venue].every(Boolean)) return false;
   if (type === 'Sin especificar' || category === 'Sin categoría') return false;
   if (title.includes('Palabras desde el barrio') && dateISO === '2026-11-30') return false;
