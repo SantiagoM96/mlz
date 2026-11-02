@@ -13,6 +13,12 @@ test('portada propia de la Agenda y Home municipal separada', async ({ page }, i
   const bannerSize = await banner.evaluate((img: HTMLImageElement) => ({ natural: img.naturalWidth, rendered: img.clientWidth }));
   expect(bannerSize.natural).toBeGreaterThanOrEqual(bannerSize.rendered - 1);
   await expect(page.getByTestId('agenda-featured')).toBeVisible();
+  // Las imágenes de la Home no deben ampliarse respecto de su exportación original.
+  const sourceWidths = await page.locator('main img').evaluateAll((images) =>
+    images.filter(image => getComputedStyle(image).display !== 'none')
+      .map(image => ({ src: image.getAttribute('src'), natural: image.naturalWidth, displayed: image.clientWidth })),
+  );
+  expect(sourceWidths.every(img => img.natural >= img.displayed - 1), JSON.stringify(sourceWidths)).toBeTruthy();
   await expect(page.getByTestId('agenda-upcoming').getByTestId('agenda-card')).toHaveCount(3);
   const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
   expect(noOverflow, 'La Home tiene overflow horizontal').toBe(true);
