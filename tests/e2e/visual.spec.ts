@@ -27,6 +27,12 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
     await testInfo.attach(name, { path, contentType: 'image/png' });
   }
 
+  // Capturar footer provoca scroll. Restablecer posición antes de medir y previsualizar.
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, 0);
+  });
+
   const metrics = await page.evaluate(() => {
     const bounds = (selector: string) => {
       const rect = document.querySelector(selector)?.getBoundingClientRect();
@@ -50,7 +56,7 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
         hero: bounds('main picture img'),
         introduction: bounds('section[aria-label="Presentación de Jóvenes en Comunidad"]'),
         indexAndContact: bounds('aside'),
-        initiativesHeading: bounds('main h2'),
+        initiativesHeading: bounds('[data-testid="initiatives-heading"]'),
       },
     };
   });

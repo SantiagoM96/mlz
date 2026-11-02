@@ -136,7 +136,7 @@ export function JovenesEnComunidadPage() {
         </aside>
 
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">
-          <h2 className="mb-6 text-[18px] leading-[26px] font-bold tracking-[0.03em] text-primary-600">
+          <h2 data-testid="initiatives-heading" className="mb-6 text-[18px] leading-[26px] font-bold tracking-[0.03em] text-primary-600">
             INICIATIVAS
           </h2>
           <div>
