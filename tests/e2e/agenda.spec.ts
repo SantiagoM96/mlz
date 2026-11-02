@@ -313,3 +313,13 @@ test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async
   await search.fill('nombre inhallable 2026');
   await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
 });
+
+test('todas las fechas y horarios mantienen el estilo editorial de Figma', async ({ page }) => {
+  await page.goto(activities);
+  await expect(page.getByTestId('agenda-card').first()).toContainText('Jueves 5 de noviembre');
+  await expect(page.getByTestId('agenda-card').first()).toContainText('21:00 h');
+  await page.getByTestId('agenda-card').first().click();
+  await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('Jueves 5 de noviembre');
+  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
+});
