@@ -87,18 +87,42 @@ const addressByVenue: Record<string, string> = {
   'Centro Paraguayo|Budge': 'Campoamor 1962, Budge',
 };
 
+/**
+ * Microcopy de Agenda siguiendo el patrón de las tarjetas de Figma.
+ * Las fechas únicas no se convierten en eventos recurrentes.
+ */
 function displayDate(isoDate: string): string {
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(isoDate)) return 'Fecha a confirmar';
   const date = new Date(isoDate + 'T12:00:00Z');
-  return new Intl.DateTimeFormat('es-AR', {
-    timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  }).format(date);
+  if (Number.isNaN(date.getTime())) return 'Fecha a confirmar';
+  const formatted = new Intl.DateTimeFormat('es-AR', {
+    timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long',
+  }).format(date).replace(',', '');
+  return formatted.charAt(0).toLocaleUpperCase('es-AR') + formatted.slice(1);
 }
 
-function displayTime(value: string): string {
-  const trimmed = value.trim();
-  const simple = /^(\d{1,2})(?::(\d{1,2}))?\s*(?:h|hs|HS|H)\.?$/i.exec(trimmed);
-  if (simple) return `${simple[1]!.padStart(2,'0')}:${(simple[2] ?? '00').padStart(2,'0')} hs`;
-  return trimmed;
+/** Horarios compactos y consistentes: 16:00 h / 15:00 a 16:30 h. */
+function parseHour(raw: string): string | null {
+  const value = raw.trim().toLowerCase().replace(/\\s*(?:hs|h)\\.?$/, '').trim();
+  const match = /^(\\d{1,2})(?:[:.](\\d{1,2}))?$/.exec(value);
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2] ?? 0);
+  if (hours > 23 || minutes > 59) return null;
+  return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`;
+}
+
+function displayTime(raw: string): string {
+  const value = raw.trim();
+  if (!value) return 'Horario a confirmar';
+  const range = /^(.+?)\\s+(?:a|hasta)\\s+(.+)$/i.exec(value);
+  if (range) {
+    const start = parseHour(range[1]!);
+    const end = parseHour(range[2]!);
+    if (start && end) return `${start} a ${end} h`;
+  }
+  const single = parseHour(value);
+  return single ? `${single} h` : value;
 }
 
 /**
@@ -120,8 +144,8 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows.map((line
     category,
     type,
     locality,
-    dayLabel: isDateApproximate ? 'Noviembre 2026 · días según taller' : displayDate(dateISO),
-    timeLabel: displayTime(time) || 'Horario a confirmar',
+    dayLabel: isDateApproximate ? 'Durante noviembre · días a confirmar' : displayDate(dateISO),
+    timeLabel: displayTime(time),
     image: imageForActivity(type, category),
     venue: venue || undefined,
     address: addressByVenue[`${venue}|${locality}`],
