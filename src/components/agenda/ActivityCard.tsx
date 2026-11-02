@@ -21,7 +21,7 @@ export function ActivityCard({ activity }: { activity: AgendaActivity }) {
       >
         <img src={activity.image} alt="" className="h-[154px] w-full object-cover" loading="lazy" />
         <div className="flex flex-1 flex-col gap-3 px-6 pt-3 pb-[18px]">
-          <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888888]">{activity.category}</p>
+          <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888888]">{activity.type}</p>
           <h2 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h2>
           {activity.dateISO && activity.dateISO < argentinaTodayISO() && (
             <span className="self-start rounded bg-[#f2f4f6] px-2 py-1 text-[12px] font-medium text-[#626d75]">
