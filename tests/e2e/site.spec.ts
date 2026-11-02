@@ -88,7 +88,8 @@ test('header alineado con Figma en desktop y mobile', async ({ page }, testInfo)
   if (testInfo.project.name === 'desktop-1415') {
     // (1415 - 1232) / 2 + 16 = 107,5 px: el contenedor desktop queda centrado.
     expect(logoBox!.x).toBeCloseTo(107.5, 1);
-    expect(logoBox!.height).toBe(72);
+    // El SVG exportado tiene un redondeo de <0,5px respecto de la instancia Figma.
+    expect(logoBox!.height).toBeCloseTo(72, 0);
   } else {
     expect(logoBox!.x).toBe(24);
     if (testInfo.project.name === 'mobile-432') {
