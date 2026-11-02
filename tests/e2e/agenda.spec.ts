@@ -87,5 +87,11 @@ test('las tres rutas principales admiten recarga y generan capturas', async ({ p
     const shot = info.outputPath(label + '.png');
     await page.screenshot({ path: shot, fullPage: true, animations: 'disabled' });
     await info.attach(label + '-' + info.project.name, { path: shot, contentType: 'image/png' });
+    // Vista previa directa en logs del navegador para revisión contra Figma.
+    if (process.env.CI && ['desktop-1415', 'mobile-432'].includes(info.project.name)) {
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      const preview = await page.screenshot({ type: 'jpeg', quality: 30, fullPage: false, animations: 'disabled' });
+      console.log('MLZ_AGENDA_PREVIEW_' + info.project.name + '_' + label + ':' + preview.toString('base64'));
+    }
   }
 });
