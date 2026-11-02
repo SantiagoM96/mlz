@@ -160,7 +160,22 @@ function displayTime(raw: string): string {
  * solamente toma el tipo de actividad, la sede y la localidad documentados.
  * La UI debe mostrar un punto rojo junto al texto hasta su validación.
  */
-function illustrativeActivityDescription(type: string, category: string, venue: string, locality: string): string {
+function illustrativeActivityDescription(
+  title: string, type: string, category: string, venue: string, locality: string,
+): string {
+  const titleSpecific: Record<string, string> = {
+    'La Chamameceada': 'Una invitación a compartir el espíritu del chamamé y encontrarse con la música popular.',
+    'Ensamble Percusión': 'El ritmo es protagonista en una propuesta para acercarse a los sonidos de la percusión.',
+    'Tributo a Charly García': 'Una propuesta musical para reencontrarse con el universo de canciones de Charly García.',
+    'Ballet Yago': 'La danza llega al escenario con una propuesta que invita a disfrutar del movimiento y la expresión.',
+    'Folklore en Comunidad': 'Un encuentro para celebrar los ritmos y las expresiones del folklore en comunidad.',
+    'Tango en Comunidad': 'Una invitación a acercarse al tango y compartir la música que forma parte de nuestra identidad cultural.',
+    'Rock en Comunidad': 'Una propuesta para compartir rock y disfrutar de la música en comunidad.',
+    'Exploradoras de la galaxia': 'Una invitación a dejar volar la imaginación y disfrutar de una aventura cultural en familia.',
+    'Festival Literario': 'Un encuentro alrededor de los libros, las palabras y las voces que dan vida a la literatura.',
+    'Salida de observación de hongos': 'Una propuesta para explorar el entorno natural y conocer el fascinante mundo de los hongos.',
+    'Truco en Comunidad': 'Una invitación a encontrarse alrededor del truco y compartir una jornada de juego en el barrio.',
+  };
   const intros: Record<string, string> = {
     Música: 'Una invitación a disfrutar de la música y compartir un encuentro cultural con la comunidad.',
     Danza: 'Una propuesta para encontrarse con la danza y las distintas maneras de expresarse a través del movimiento.',
@@ -185,7 +200,7 @@ function illustrativeActivityDescription(type: string, category: string, venue: 
     Entrenamiento: 'Una propuesta de actividad física para moverse, entrenar y compartir un encuentro en el barrio.',
     Torneo: 'Una oportunidad para participar de una actividad recreativa y compartir el espíritu del juego.',
   };
-  const intro = intros[type] ??
+  const intro = titleSpecific[title] ?? intros[type] ??
     (category === 'Ambiental'
       ? 'Una propuesta para acercarse al ambiente y conocer el entorno local.'
       : 'Una actividad para participar de las propuestas comunitarias del municipio.');
@@ -244,7 +259,7 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
     image: imageForActivity(type, category),
     venue: venue || undefined,
     address: addressByVenue[`${venue}|${locality}`],
-    description: illustrativeActivityDescription(type, category, venue, locality),
+    description: illustrativeActivityDescription(title, type, category, venue, locality),
     descriptionIsIllustrative: true,
     badges,
     description: originalActivityDescriptions['actividad-' + (index + 1)] ||
