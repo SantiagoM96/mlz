@@ -16,14 +16,18 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
   const viewport = join(folder, 'jovenes-viewport.png');
   const complete = join(folder, 'jovenes-full.png');
   const header = join(folder, 'header.png');
+  const breadcrumbs = join(folder, 'breadcrumbs.png');
+  const indexCard = join(folder, 'index-card.png');
   const footer = join(folder, 'footer.png');
 
   await page.screenshot({ path: viewport, animations: 'disabled' });
   await page.screenshot({ path: complete, animations: 'disabled', fullPage: true });
   await page.locator('header').screenshot({ path: header });
+  await page.getByRole('navigation', { name: 'Ruta de navegación' }).screenshot({ path: breadcrumbs });
+  await page.getByRole('navigation', { name: 'Índice de iniciativas' }).locator('..').screenshot({ path: indexCard });
   await page.locator('footer').screenshot({ path: footer });
 
-  for (const [name, path] of Object.entries({ viewport, complete, header, footer })) {
+  for (const [name, path] of Object.entries({ viewport, complete, header, breadcrumbs, indexCard, footer })) {
     await testInfo.attach(name, { path, contentType: 'image/png' });
   }
 
@@ -73,6 +77,16 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
       type: 'jpeg', quality: 23, animations: 'disabled', fullPage: false,
     });
     console.log('MLZ_VISUAL_PREVIEW_' + testInfo.project.name + ':' + preview.toString('base64'));
+  }
+  // Fragmentos reducidos para inspección directa sin descargar los artefactos.
+  if (['desktop-1415', 'mobile-432'].includes(testInfo.project.name) && process.env.CI) {
+    for (const [name, locator] of [
+      ['breadcrumbs', reviewPage.getByRole('navigation', { name: 'Ruta de navegación' })],
+      ['index', reviewPage.getByRole('navigation', { name: 'Índice de iniciativas' }).locator('..')],
+    ] as const) {
+      const bytes = await locator.screenshot({ type: 'jpeg', quality: 65, animations: 'disabled' });
+      console.log('MLZ_COMPONENT_PREVIEW_' + testInfo.project.name + '_' + name + ':' + bytes.toString('base64'));
+    }
   }
   await reviewPage.close();
 });

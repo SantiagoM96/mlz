@@ -9,13 +9,14 @@ export interface TableOfContentsItem {
 export interface TableOfContentsProps {
   items: readonly TableOfContentsItem[];
   title?: string;
+  ariaLabel?: string;
 }
 
 /** Índice reutilizable e independiente del modelo de datos de cada página. */
-export function TableOfContents({ items, title = 'Índice' }: TableOfContentsProps) {
+export function TableOfContents({ items, title = 'Índice', ariaLabel = 'Índice de contenidos' }: TableOfContentsProps) {
   return (
     <InfoCard title={title}>
-      <nav aria-label="Índice de iniciativas">
+      <nav aria-label={ariaLabel}>
         <ol className="flex flex-col gap-4">
           {items.map((item) => (
             <li key={item.id}>

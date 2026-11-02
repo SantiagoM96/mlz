@@ -92,3 +92,10 @@ Se prueban los anchos **1415, 432, 390 y 768 px**, comprobando el orden mobile d
 El workflow `.github/workflows/visual-qa.yml` ejecuta los tests automáticamente con push a main, pull requests o bajo demanda, adjuntando **playwright-visual-report** en la pestaña Actions. Esto utiliza **GitHub Actions**, no Vercel.
 
 Las capturas son evidencia para comparar con Figma. La suite no debe confundirse con una prueba pixel-perfect: falta registrar y aprobar baselines visuales de referencia con la tipografía Geometria licenciada para habilitar regresiones de píxeles automatizadas. Los reportes permiten revisar y corregir diferencias manualmente sin inventar un porcentaje de fidelidad.
+
+
+### Biblioteca visual compartida — Figma
+
+El UI Kit contiene los componentes `Breadcrumbs` (Geometria 18, 24 px de icono de separación, gap 8), `Icon` (mascara CSS con SVG originales de Figma), `IconLink` (icono 24 px + texto 18/26, gap 4), `InfoCard` (SimpleCard, padding 24/gap 16) y `TableOfContents` desacoplado de la lista de iniciativas. `PageHero` también es reutilizable entre páginas institucionales. Se extraen SVG a `public/assets/icons` y no se copian dibujos aproximados dentro de cada página. Los datos y los destinos de enlaces siguen siendo específicos de cada página.
+
+Tests Playwright específicos verifican fuentes, color, medidas de iconos, gaps, padding y el ancho de las tarjetas en frames Figma desktop (1415 px) y mobile (432 px). El reporte guarda capturas individuales del breadcrumb y el índice, además del header y la página completa. La fidelidad tipográfica exacta sigue condicionada a disponer de Geometria bajo licencia.

@@ -113,7 +113,7 @@ export function JovenesEnComunidadPage() {
           aria-label="Índice y contacto de Jóvenes en Comunidad"
           className="w-full max-w-[390px] min-w-0 space-y-6 lg:col-start-2 lg:row-span-2 lg:row-start-1"
         >
-          <TableOfContents items={initiatives.map(({ id, title }) => ({ id, label: title }))} />
+          <TableOfContents items={initiatives.map(({ id, title }) => ({ id, label: title }))} ariaLabel="Índice de iniciativas" />
 
           <InfoCard title="Contacto">
             <IconLink icon="instagram" href={instagramUrl} target="_blank" rel="noopener noreferrer">
