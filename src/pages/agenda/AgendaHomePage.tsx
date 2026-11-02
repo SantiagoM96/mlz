@@ -1,0 +1,53 @@
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { PageContainer } from '../../components/layout/PageContainer';
+import { FeaturedActivityCard } from '../../components/agenda/FeaturedActivityCard';
+import { ActivityCard } from '../../components/agenda/ActivityCard';
+import { AgendaCircuitCard, type AgendaCircuit } from '../../components/agenda/AgendaCircuitCard';
+import { agendaActivities } from '../../data/agenda';
+import { featuredActivity } from '../../data/agenda-featured';
+
+const circuits: AgendaCircuit[] = [
+  { title: 'Circuito Cultural', description: 'Obras, funciones, encuentros culturales y propuestas culturales en salas y espacios independientes del municipio.', actionLabel: 'Ir a cartelera', image: import.meta.env.BASE_URL + 'assets/agenda/home-theater.jpg', variant: 'theater' },
+  { title: 'Circuito del Café', description: 'Conocé todas las cafeterías de Lomas y los productos destacados de cada una de ellas. Navegá el mapa y elegí una ubicación para ver las tiendas de café en la zona.', actionLabel: 'Ir al recorrido', image: import.meta.env.BASE_URL + 'assets/agenda/home-cafe.jpg', variant: 'cafe' },
+];
+
+export function AgendaHomePage() {
+  useEffect(() => {
+    document.title = 'Agenda de la Comunidad | Municipio de Lomas de Zamora';
+  }, []);
+
+  return (
+    <PageContainer className="pb-6 pt-6">
+      <img
+        data-testid="agenda-home-banner"
+        src={import.meta.env.BASE_URL + 'assets/agenda/home-hero.jpg'}
+        alt="Agenda de la Comunidad"
+        width="1232"
+        height="345"
+        className="aspect-[400/179] w-full rounded-lg object-cover md:aspect-[1232/345]"
+        fetchPriority="high"
+      />
+      <div className="mb-10 mt-6">
+        <h1 className="text-[32px] leading-10 font-bold text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
+        <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>
+      </div>
+      <FeaturedActivityCard activity={featuredActivity} />
+      <section aria-labelledby="proximos-eventos" className="mt-10">
+        <div className="mb-10 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+          <h2 id="proximos-eventos" className="text-[32px] leading-10 font-bold text-primary-600">Próximos eventos</h2>
+          <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades">
+            Ver todas las actividades <span aria-hidden="true">›</span>
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3" data-testid="agenda-upcoming">
+          {agendaActivities.slice(0, 3).map(activity => <ActivityCard key={activity.id} activity={activity} />)}
+        </div>
+      </section>
+      <section aria-label="Circuitos de la Comunidad" className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
+        {circuits.map(circuit => <AgendaCircuitCard key={circuit.title} circuit={circuit} />)}
+      </section>
+      <p className="mt-6 text-xs text-[#888]">Prototipo de interfaz con actividades de ejemplo tomadas del diseño de Figma.</p>
+    </PageContainer>
+  );
+}

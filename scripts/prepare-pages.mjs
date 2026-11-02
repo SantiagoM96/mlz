@@ -1,8 +1,13 @@
 import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-
 const dist = join(process.cwd(), 'dist');
-const staticPaths = ['jovenes-en-comunidad', 'agenda-de-la-comunidad'];
+const staticPaths = [
+  'jovenes-en-comunidad',
+  'agenda-de-la-comunidad',
+  'agenda-de-la-comunidad/actividades',
+  'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
+  ...Array.from({ length: 18 }, (_, i) => `agenda-de-la-comunidad/actividades/actividad-${i + 1}`),
+];
 for (const route of staticPaths) {
   const directory = join(dist, route);
   mkdirSync(directory, { recursive: true });
@@ -10,4 +15,4 @@ for (const route of staticPaths) {
 }
 copyFileSync(join(dist, 'index.html'), join(dist, '404.html'));
 writeFileSync(join(dist, '.nojekyll'), '');
-console.log('Rutas estáticas de GitHub Pages preparadas:', staticPaths.join(', '));
+console.log('Rutas estáticas preparadas en GitHub Pages:', staticPaths.length);

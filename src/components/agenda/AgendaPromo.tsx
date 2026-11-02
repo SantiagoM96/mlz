@@ -4,6 +4,6 @@ export function AgendaPromo() {
       <p>Conocé todas las cafeterías de Lomas y los productos destacados de cada una de ellas. Navegá el mapa y elegí una ubicación para ver las tiendas de café en la zona.</p>
       <span className="mt-4 inline-flex font-bold">Recorrido del café · Próximamente</span>
     </div>
-    <img src={import.meta.env.BASE_URL + 'assets/agenda/cafe-logo.jpg'} alt="Recorrido Interactivo del Café" className="relative z-10 max-h-[185px] w-full max-w-[330px] object-contain" loading="lazy" />
+    <img src={import.meta.env.BASE_URL + 'assets/agenda/home-cafe.jpg'} alt="Recorrido Interactivo del Café" className="relative z-10 max-h-[185px] w-full max-w-[330px] object-contain" loading="lazy" />
   </section>;
 }

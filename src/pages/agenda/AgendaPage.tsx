@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
-import { ActivityDetails } from '../../components/agenda/ActivityDetails';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
 import { AgendaIcon } from '../../components/agenda/AgendaIcon';
 import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
-import { agendaActivities, type AgendaActivity } from '../../data/agenda';
+import { agendaActivities } from '../../data/agenda';
 
 function usePageSize() {
   const [size, setSize] = useState(9);
@@ -19,7 +18,7 @@ function usePageSize() {
   return size;
 }
 
-/** Home de la Agenda: el resto del sitio municipal reutiliza SiteLayout. */
+/** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
   const pageSize = usePageSize();
   const [search, setSearch] = useState('');
@@ -27,10 +26,9 @@ export function AgendaPage() {
   const [sort, setSort] = useState<'default' | 'az' | 'za'>('default');
   const [limit, setLimit] = useState(9);
   const [showMap, setShowMap] = useState(false);
-  const [detail, setDetail] = useState<AgendaActivity | null>(null);
 
   useEffect(() => {
-    document.title = 'Agenda Anual de la Comunidad 2026 | Municipio Lomas de Zamora';
+    document.title = 'Actividades | Agenda de la Comunidad | Municipio Lomas de Zamora';
   }, []);
 
   const filtered = useMemo(() => {
@@ -98,7 +96,7 @@ export function AgendaPage() {
       ) : (
         <>
           <div data-testid="agenda-grid" className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {visible.map(activity => <ActivityCard key={activity.id} activity={activity} onOpen={setDetail} />)}
+            {visible.map(activity => <ActivityCard key={activity.id} activity={activity} />)}
           </div>
           {hasMore && <div className="mt-7 text-center">
             <button type="button" onClick={() => setLimit(n => Math.max(n, pageSize) + pageSize)} className="rounded bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700">Mostrar más actividades</button>
@@ -107,7 +105,6 @@ export function AgendaPage() {
       )}
 
       <AgendaPromo />
-      {detail && <ActivityDetails activity={detail} onClose={() => setDetail(null)} />}
     </PageContainer>
   );
 }

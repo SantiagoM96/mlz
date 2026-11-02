@@ -117,3 +117,14 @@ La primera vista real de Home es **Agenda Anual de la Comunidad 2026**. Se publi
 Pruebas Playwright específicas en `tests/e2e/agenda.spec.ts` comprueban las rutas y el funcionamiento en 1415, 768, 432 y 390 px. Ejecutar `npm run test:e2e`.
 
 En GitHub Pages la ruta se prepara en `scripts/prepare-pages.mjs`. Vercel sigue **sin conexión automática ni despliegues**.
+
+
+## Corrección de rutas de Agenda (Figma Home y ficha final)
+- `/`: Home **general municipal** provisional, no Agenda.
+- `/agenda-de-la-comunidad`: Home de Agenda con imagen hero, actividad destacada, 3 eventos y circuitos.
+- `/agenda-de-la-comunidad/actividades`: buscador y filtros.
+- `/agenda-de-la-comunidad/actividades/:id`: página de detalle/Resumen y Compartir, reemplaza el modal anterior.
+- Exportaciones actualizadas desde Figma en resolución nativa o superior para banner, foto destacada, ilustraciones y circuitos.
+- Figma Home desktop `7153:8476`, mobile `7153:8509`. Figma detalle `7296:19178`.
+- Los IDs de demo se preparan como directorios en GitHub Pages para soportar refresh. Actividades reales requerirán datos estables y actualizar el script de rutas.
+- La programación del diseño es de ejemplo: no presentar como eventos confirmados.

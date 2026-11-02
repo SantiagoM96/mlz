@@ -1,0 +1,101 @@
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { PageContainer } from '../../components/layout/PageContainer';
+import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
+import { AgendaIcon } from '../../components/agenda/AgendaIcon';
+import { ActivityBadges } from '../../components/agenda/ActivityBadges';
+import { agendaActivities, type AgendaActivity } from '../../data/agenda';
+import { featuredActivity } from '../../data/agenda-featured';
+import { NotFoundPage } from '../not-found/NotFoundPage';
+
+function DetailSummary({ activity }: { activity: AgendaActivity }) {
+  const location = activity.venue ?? activity.locality;
+  return (
+    <aside className="min-w-0 md:w-[430px] md:shrink-0" aria-label="Resumen de actividad">
+      <ShareActivity title={activity.title} />
+      <section className="rounded-lg border border-[#d1d1d1] p-6" aria-labelledby="resumen-title">
+        <h2 id="resumen-title" className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Resumen</h2>
+        <ActivityBadges badges={activity.badges} />
+        <div className="mt-5 space-y-4 text-[18px] leading-[22px]">
+          <div className="flex items-start gap-2">
+            <AgendaIcon name="calendar" size={24} />
+            <div><p className="font-bold">Fecha</p><p>{activity.dayLabel}</p></div>
+          </div>
+          <div className="flex items-start gap-2">
+            <AgendaIcon name="clock" size={24} />
+            <div><p className="font-bold">Horario</p><p>{activity.timeLabel}</p></div>
+          </div>
+          <div className="flex items-start gap-2">
+            <AgendaIcon name="map" size={24} />
+            <div>
+              <p className="font-bold">{location}</p>
+              {activity.address && <p>{activity.address}</p>}
+              {!activity.address && <p className="text-sm text-[#888]">Dirección a confirmar</p>}
+              {activity.address && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.address)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 font-bold text-primary-600 hover:underline"
+                >Ver en Google Maps <span aria-hidden="true">›</span></a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  );
+}
+
+function ShareActivity({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false);
+  const share = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) await navigator.share({ title, url });
+      else if (navigator.clipboard) { await navigator.clipboard.writeText(url); setCopied(true); }
+    } catch {
+      // Cancelar la ventana nativa de compartir no debe generar errores en pantalla.
+    }
+  };
+  return (
+    <div className="mb-6 flex items-center gap-2 text-primary-600">
+      <a className="inline-flex size-8 items-center justify-center rounded-full border border-primary-600" href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + (typeof window !== 'undefined' ? window.location.href : ''))}`} target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">W</a>
+      <button type="button" onClick={share} className="inline-flex size-8 items-center justify-center rounded-full border border-primary-600" aria-label="Compartir actividad"><AgendaIcon name="check" size={18} /></button>
+      <span className="font-bold">{copied ? 'Enlace copiado' : 'Compartir'}</span>
+    </div>
+  );
+}
+
+export function AgendaActivityDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const activity = [featuredActivity, ...agendaActivities].find(a => a.id === id);
+
+  useEffect(() => {
+    document.title = activity
+      ? `${activity.title} | Agenda de la Comunidad`
+      : 'Actividad no encontrada | Agenda de la Comunidad';
+  }, [activity]);
+
+  if (!activity) return <NotFoundPage />;
+
+  return (
+    <PageContainer className="pb-0 pt-1 md:pt-0">
+      <Breadcrumbs tone="neutral" items={[
+        { label: 'Inicio', to: '/' },
+        { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad' },
+        { label: 'Actividades', to: '/agenda-de-la-comunidad/actividades' },
+        { label: activity.title },
+      ]} />
+      <div className="grid min-h-[440px] items-start gap-6 pb-6 md:grid-cols-[minmax(0,1fr)_430px]">
+        <div className="space-y-4">
+          <p className="text-[16px] font-medium uppercase text-[#888]">{activity.category}</p>
+          <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
+          {activity.description && <p className="text-[18px] leading-[26px] text-grey-900">{activity.description}</p>}
+          <p className="text-sm text-[#888]">Contenido de demostración basado en Figma; fecha, disponibilidad y detalles sujetos a validación.</p>
+          <Link className="inline-flex pt-4 font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades">‹ Volver a las actividades</Link>
+        </div>
+        <DetailSummary activity={activity} />
+      </div>
+    </PageContainer>
+  );
+}

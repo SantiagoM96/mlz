@@ -1,4 +1,4 @@
-export type ActivityCategory = 'Entrenamiento' | 'Deportes' | 'Humor';
+export type ActivityCategory = 'Entrenamiento' | 'Deportes' | 'Humor' | 'Teatro';
 export type FilterGroup = 'type' | 'category' | 'locality' | 'date';
 
 export interface AgendaActivity {
@@ -10,7 +10,10 @@ export interface AgendaActivity {
   dayLabel: string;
   timeLabel: string;
   image: string;
-  badges: { kind: 'rain' | 'accessible' | 'registration'; label: string }[];
+  badges: { kind: 'rain' | 'accessible' | 'registration' | 'featured'; label: string }[];
+  venue?: string;
+  address?: string;
+  description?: string;
 }
 
 const asset = (name: string) => import.meta.env.BASE_URL + 'assets/agenda/' + name + '.jpg';

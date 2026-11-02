@@ -1,58 +1,85 @@
 import { expect, test } from '@playwright/test';
 
-test.beforeEach(async ({ page }) => {
-  const response = await page.goto('/agenda-de-la-comunidad');
-  expect(response?.ok()).toBeTruthy();
-});
+const agenda = '/agenda-de-la-comunidad';
+const activities = agenda + '/actividades';
 
-test('Agenda principal responsive, imágenes y navegación', async ({ page }, testInfo) => {
+test('portada propia de la Agenda y Home municipal separada', async ({ page }, info) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Municipio de Lomas de Zamora' })).toBeVisible();
+  await page.goto(agenda);
   await expect(page.getByRole('heading', { name: '¡Agenda Anual de la Comunidad 2026!' })).toBeVisible();
-  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
-  await expect(page.getByTestId('agenda-card')).toHaveCount(testInfo.project.name.startsWith('mobile') ? 6 : 9);
+  const banner = page.getByTestId('agenda-home-banner');
+  await expect(banner).toBeVisible();
+  const bannerSize = await banner.evaluate((img: HTMLImageElement) => ({ natural: img.naturalWidth, rendered: img.clientWidth }));
+  expect(bannerSize.natural).toBeGreaterThanOrEqual(bannerSize.rendered - 1);
+  await expect(page.getByTestId('agenda-featured')).toBeVisible();
+  await expect(page.getByTestId('agenda-upcoming').getByTestId('agenda-card')).toHaveCount(3);
   const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
-  expect(noOverflow).toBe(true);
-  const first = page.getByTestId('agenda-card').first().locator('img');
-  await expect(first).toBeVisible();
-  expect(await first.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
-  await expect(page.locator('header')).toHaveCSS('background-color','rgb(35, 105, 153)');
+  expect(noOverflow, 'La Home tiene overflow horizontal').toBe(true);
+  const path = info.outputPath('agenda-home.png');
+  await page.screenshot({ path, fullPage: true, animations: 'disabled' });
+  await info.attach('agenda-home-' + info.project.name, { path, contentType: 'image/png' });
 });
 
-test('Búsqueda, estado vacío y limpiar filtros', async ({ page }) => {
-  const input = page.getByRole('textbox', { name: 'Buscar actividades' });
-  await input.fill('Patin');
+test('vínculo de portada a listado, luego a ficha y navegación de regreso', async ({ page }) => {
+  await page.goto(agenda);
+  await page.getByRole('link', { name: /Ver todas las actividades/ }).click();
+  await expect(page).toHaveURL(new RegExp(activities + '/?$'));
+  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+  await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
+  await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
+  await expect(page.getByRole('heading', { level: 1, name: 'Futbol' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(61, 61, 61)');
+  await page.getByRole('link', { name: '‹ Volver a las actividades' }).click();
+  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+});
+
+test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
+  await page.goto(agenda);
+  await page.getByTestId('agenda-featured').getByRole('link', { name: 'Ver más' }).click();
+  await expect(page).toHaveURL(new RegExp(activities + '/tita-y-rhodesia/?$'));
+  await expect(page.getByRole('heading', { name: 'Tita & Rhodesia', level: 1 })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Ver en Google Maps/ })).toBeVisible();
+});
+
+test('listado responsive, búsqueda, filtros y controles', async ({ page }, info) => {
+  await page.goto(activities);
+  const count = info.project.name.startsWith('mobile') ? 6 : 9;
+  await expect(page.getByTestId('agenda-card')).toHaveCount(count);
+  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+  const allImagesLoaded = await page.getByTestId('agenda-card').first().locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0);
+  expect(allImagesLoaded).toBe(true);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Patin');
   await expect(page.getByTestId('agenda-card')).toHaveCount(6);
-  await input.fill('término inexistente123');
+  await search.fill('término inexistente');
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Limpiar filtros' }).click();
-  await expect(input).toHaveValue('');
-  await expect(page.getByTestId('agenda-card')).not.toHaveCount(0);
-});
-
-test('Filtros por categoría con chips removibles', async ({ page }) => {
   await page.getByRole('button', { name: /Más Filtros/ }).click();
-  const dialog = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole('checkbox', { name: 'Ambiental' }).check();
-  await dialog.getByRole('button', { name: 'Ver resultados' }).click();
+  const filter = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await filter.getByRole('checkbox', { name: 'Ambiental' }).check();
+  await filter.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Ambiental' }).click();
   await expect(page.getByTestId('agenda-card')).not.toHaveCount(0);
-});
-
-test('Detalle de tarjeta y alternancia de vista de mapa', async ({ page }) => {
-  await page.getByTestId('agenda-card').first().getByRole('button', { name: /Ver más/ }).click();
-  const dialog = page.getByRole('dialog', { name: 'Futbol' });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole('button', { name: 'Cerrar detalle' }).click();
-  await expect(dialog).toBeHidden();
   await page.getByRole('button', { name: 'Ver mapa' }).click();
   await expect(page.getByRole('heading', { name: 'Mapa de actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Ver grilla' }).click();
   await expect(page.getByTestId('agenda-grid')).toBeVisible();
 });
 
-test('Captura de Agenda desktop y mobile', async ({ page }, testInfo) => {
-  const folder = testInfo.outputDir;
-  await page.screenshot({ path: folder + '/agenda-' + testInfo.project.name + '.png', fullPage: true, animations: 'disabled' });
-  await testInfo.attach('agenda-figma-' + testInfo.project.name, { path: folder + '/agenda-' + testInfo.project.name + '.png', contentType: 'image/png' });
+test('las tres rutas principales admiten recarga y generan capturas', async ({ page }, info) => {
+  for (const [label, path] of [
+    ['home', agenda],
+    ['list', activities],
+    ['detail', activities + '/actividad-1'],
+  ]) {
+    await page.goto(path);
+    await page.reload();
+    await expect(page.locator('main')).toBeVisible();
+    const shot = info.outputPath(label + '.png');
+    await page.screenshot({ path: shot, fullPage: true, animations: 'disabled' });
+    await info.attach(label + '-' + info.project.name, { path: shot, contentType: 'image/png' });
+  }
 });

@@ -9,17 +9,18 @@ export interface BreadcrumbItem {
 export interface BreadcrumbsProps {
   items: readonly BreadcrumbItem[];
   className?: string;
+  tone?: 'primary' | 'neutral';
 }
 
 /**
  * Reutilizable en todas las páginas. Figma: Geometria Medium 18,
  * último ítem Bold 18, separadores de 24 px y gap horizontal de 8 px.
  */
-export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className = '', tone = 'primary' }: BreadcrumbsProps) {
   return (
     <nav
       aria-label="Ruta de navegación"
-      className={`my-6 w-full text-[18px] leading-6 text-primary-600 ${className}`}
+      className={`my-6 w-full text-[18px] leading-6 ${tone === 'neutral' ? 'text-grey-900' : 'text-primary-600'} ${className}`}
     >
       <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-2">
         {items.map((item, index) => {
