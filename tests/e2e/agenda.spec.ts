@@ -36,7 +36,7 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
   await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(61, 61, 61)');
   await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
@@ -319,9 +319,9 @@ test('todas las fechas y horarios mantienen el estilo editorial de Figma', async
   await expect(page.getByTestId('agenda-card').first()).toContainText('Jueves 5 de noviembre');
   await expect(page.getByTestId('agenda-card').first()).toContainText('21:00 h');
   await page.getByTestId('agenda-card').first().click();
-  await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
-  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('Jueves 5 de noviembre');
-  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
+  await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('Jueves 5 de noviembre');
+  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('21:00 h');
 });
 
 test('excluye registros importados con datos incompletos o fecha aproximada', async ({ page }) => {
@@ -343,7 +343,7 @@ test('excluye registros importados con datos incompletos o fecha aproximada', as
 test('una ficha omitida no se publica aunque se conozca su URL anterior', async ({ page }) => {
   await page.goto(activities + '/actividad-24');
   await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Información general' })).toHaveCount(0);
 });
 
 test('descripciones del Excel no muestran marca de contenido ficticio y las ilustrativas sí', async ({ page }) => {
@@ -351,7 +351,7 @@ test('descripciones del Excel no muestran marca de contenido ficticio y las ilus
   const description = page.getByRole('region', { name: 'Descripción de la actividad' });
   await expect(description).toContainText('Primera edición de La Chamameceada');
   await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
-  await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
+  await expect(page.getByRole('heading', { name: 'Información general' }).locator('..')).toContainText('21:00 h');
 
   await page.goto(activities + '/actividad-2');
   const illustrative = page.getByRole('region', { name: 'Descripción de la actividad' });
@@ -478,4 +478,39 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
     await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
   }
+});
+
+test('ficha: imagen original, ubicación y datos generales sin flujo de inscripción', async ({ page }, info) => {
+  for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
+    await page.goto(path);
+    const image = page.getByTestId('agenda-detail-image');
+    await expect(image).toBeVisible();
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(400);
+    const information = page.getByRole('heading', { name: 'Información general' }).locator('..');
+    await expect(information).toContainText('Fecha');
+    await expect(information).toContainText('Horario');
+    await expect(information).toContainText('Tipo de actividad');
+    await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Ubicación' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', /google\\.com\\/maps\\/search/);
+    await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', /google\\.com\\/maps\\?q=/);
+    await expect(page.getByRole('button', { name: /Elegir horario|Inscribirme|Reservar cupo/ })).toHaveCount(0);
+    const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
+    expect(noOverflow, 'La ficha tiene overflow en ' + path + ' (' + info.project.name + ')').toBe(true);
+  }
+});
+
+test('copiar enlace en una ficha muestra confirmación y copia la URL actual', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: async (value: string) => { (window as Window & { __testCopiedLink?: string }).__testCopiedLink = value; } },
+    });
+  });
+  await page.goto(activities + '/actividad-10');
+  await page.getByRole('button', { name: 'Copiar enlace' }).click();
+  await expect(page.getByRole('button', { name: 'Enlace copiado' })).toBeVisible();
+  await expect(page.getByRole('status')).toHaveText('Enlace copiado al portapapeles');
+  const copied = await page.evaluate(() => (window as Window & { __testCopiedLink?: string }).__testCopiedLink);
+  expect(copied).toBe(page.url());
 });
