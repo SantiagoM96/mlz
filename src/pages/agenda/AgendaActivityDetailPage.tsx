@@ -65,7 +65,7 @@ function ActivityInformation({ activity }: { activity: AgendaActivity }) {
       <h2 id="agenda-general-information" className="mb-5 text-[24px] font-bold text-primary-600">
         Información general
       </h2>
-      <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+      <dl className="grid max-w-[900px] gap-x-10 gap-y-5 sm:grid-cols-2">
         {fields.map(field => (
           <div key={field.label} className="min-w-0 text-[18px] leading-[26px] text-grey-900">
             <dt className="font-bold">{field.label}</dt>
