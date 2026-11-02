@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { MaterialIcon } from '../ui/MaterialIcon';
+import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
+import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 
 type FilterDropdownProps = {
   label: string;
@@ -18,6 +20,7 @@ export function AgendaDropdown({
   label, options, selected, onChange, multiple = false, align = 'start',
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  useAgendaMobileScrollLock(isOpen);
   const [search, setSearch] = useState('');
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -86,16 +89,20 @@ export function AgendaDropdown({
       </button>
 
       {isOpen && (
+        <>
+          <AgendaSheetBackdrop onClose={() => setIsOpen(false)} />
         <section
           id={menuId}
+          data-agenda-sheet="filter"
           role="dialog"
           aria-label={`Opciones de ${label}`}
-          className={`agenda-dropdown-enter absolute top-[calc(100%+8px)] z-40 flex
+          className={`agenda-dropdown-enter agenda-mobile-sheet absolute top-[calc(100%+8px)] z-40 flex
             max-h-[min(72vh,430px)] w-[min(416px,calc(100vw-32px))] flex-col
             overflow-hidden rounded-md border border-[#e1e7eb] bg-white p-2
             shadow-[0_4px_14px_rgba(0,0,0,0.16)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
+          <AgendaSheetHeader title={label} onClose={() => setIsOpen(false)} />
           <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
             <input
@@ -152,6 +159,7 @@ export function AgendaDropdown({
             </button>
           </div>
         </section>
+        </>
       )}
     </div>
   );
@@ -169,6 +177,7 @@ export function AgendaSortDropdown({
   value, onChange,
 }: { value: AgendaSortValue; onChange: (sort: AgendaSortValue) => void }) {
   const [isOpen, setIsOpen] = useState(false);
+  useAgendaMobileScrollLock(isOpen);
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -205,10 +214,13 @@ export function AgendaSortDropdown({
         <span>Ordenar</span>
       </button>
       {isOpen && (
-        <div id={menuId} role="group" aria-label="Opciones para ordenar"
-          className="agenda-dropdown-enter absolute right-0 top-[calc(100%+8px)] z-40
+        <>
+          <AgendaSheetBackdrop onClose={() => setIsOpen(false)} />
+        <div id={menuId} data-agenda-sheet="sort" role="group" aria-label="Opciones para ordenar"
+          className="agenda-dropdown-enter agenda-mobile-sheet absolute right-0 top-[calc(100%+8px)] z-40
             w-max min-w-[210px] max-w-[calc(100vw-32px)] overflow-hidden rounded-md
             border border-[#e1e7eb] bg-white py-2 shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
+          <AgendaSheetHeader title="Ordenar actividades" onClose={() => setIsOpen(false)} />
           {sortOptions.map(option => (
             <button type="button" key={option.value}
               aria-pressed={value === option.value}
@@ -221,6 +233,7 @@ export function AgendaSortDropdown({
             </button>
           ))}
         </div>
+        </>
       )}
     </div>
   );
