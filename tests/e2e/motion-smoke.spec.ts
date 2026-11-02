@@ -15,7 +15,7 @@ test('Apertura y cierre de Fecha conservan un ritmo de movimiento consistente', 
     return { name: styles.animationName, duration: styles.animationDuration, position: styles.position };
   });
   expect(motion.name).toContain(mobile ? 'agenda-sheet-in' : 'agenda-popover-in');
-  expect(motion.duration).toBe(mobile ? '0.3s' : '0.22s');
+  expect(motion.duration).toBe(mobile ? '0.23s' : '0.15s');
   expect(motion.position).toBe(mobile ? 'fixed' : 'absolute');
   const today = panel.getByRole('checkbox', { name: 'Hoy' });
   await today.check();

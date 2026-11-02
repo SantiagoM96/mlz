@@ -57,21 +57,23 @@ button:not(:disabled) { cursor: pointer; }
 :root {
   --agenda-motion-fast: 150ms;
   --agenda-motion-mid: 220ms;
+  --agenda-motion-popover: 150ms;
+  --agenda-motion-sheet: 230ms;
   --agenda-motion-slow: 300ms;
   --agenda-motion-ease: cubic-bezier(.2,.75,.25,1);
   --agenda-motion-emphasis: cubic-bezier(.2,.85,.2,1);
 }
 @keyframes agenda-popover-in {
-  from { opacity: 0; transform: translate3d(0,-7px,0) scale(.992); }
-  to { opacity: 1; transform: translate3d(0,0,0) scale(1); }
+  from { opacity: .6; transform: translate3d(0,-6px,0); }
+  to { opacity: 1; transform: translate3d(0,0,0); }
 }
 @keyframes agenda-popover-out {
   from { opacity: 1; transform: translate3d(0,0,0) scale(1); }
   to { opacity: 0; transform: translate3d(0,-4px,0) scale(.995); }
 }
 @keyframes agenda-sheet-in {
-  from { opacity: .65; transform: translate3d(0,28px,0); }
-  to { opacity: 1; transform: translate3d(0,0,0); }
+  from { transform: translate3d(0,100%,0); }
+  to { transform: translate3d(0,0,0); }
 }
 @keyframes agenda-backdrop-in {
   from { opacity: 0; }
@@ -90,7 +92,7 @@ button:not(:disabled) { cursor: pointer; }
   to { opacity: 1; transform: scale(1); }
 }
 .agenda-dropdown-enter {
-  animation: agenda-popover-in var(--agenda-motion-mid) var(--agenda-motion-ease) backwards;
+  animation: agenda-popover-in var(--agenda-motion-popover) ease-out backwards;
   transform-origin: top right;
 }
 .agenda-dropdown-exit {
@@ -155,7 +157,7 @@ button:not(:disabled) { cursor: pointer; }
     padding-bottom: env(safe-area-inset-bottom, 0px);
     box-shadow: 0 -8px 28px rgba(0,0,0,.2);
     overscroll-behavior: contain;
-    animation: agenda-sheet-in var(--agenda-motion-slow) var(--agenda-motion-emphasis) backwards !important;
+    animation: agenda-sheet-in var(--agenda-motion-sheet) cubic-bezier(.2,.8,.2,1) backwards !important;
     transform-origin: bottom center;
   }
   /* La selección de fechas tiene pocas opciones; no ocupa toda la pantalla. */
