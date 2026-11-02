@@ -242,3 +242,35 @@ test('Más Filtros se mantiene dentro del viewport y conserva acciones accesible
   await expect(panel).toHaveCount(0);
   await expect(trigger).toBeFocused();
 });
+
+
+test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes', async ({ page }, info) => {
+  if ((info.project.use.viewport?.width ?? 0) > 680) return;
+  await page.goto(activities);
+
+  await page.getByRole('button', { name: 'Fecha', exact: true }).click();
+  const dates = page.getByRole('dialog', { name: 'Opciones de Fecha' });
+  await expect(dates).toBeVisible();
+  await expect(dates.locator('.agenda-sheet-grabber')).toBeVisible();
+  await expect(dates).toHaveCSS('position', 'fixed');
+  await expect(dates).toHaveCSS('border-top-left-radius', '16px');
+  await expect(page.getByRole('button', { name: 'Cerrar panel de opciones' })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+  await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click();
+  await expect(dates).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
+
+  await page.getByRole('button', { name: 'Ordenar', exact: true }).click();
+  const sort = page.getByRole('group', { name: 'Opciones para ordenar' });
+  await expect(sort).toBeVisible();
+  await expect(sort.locator('.agenda-sheet-grabber')).toBeVisible();
+  await page.getByRole('button', { name: 'Cerrar opciones' }).click();
+  await expect(sort).toHaveCount(0);
+
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const more = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await expect(more).toBeVisible();
+  await expect(more.locator('.agenda-sheet-grabber')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(more).toHaveCount(0);
+});
