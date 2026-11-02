@@ -2,53 +2,79 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PageContainer } from '../layout/PageContainer';
 
-const menuLabels = ['Municipio', 'Gestión', 'Trámites', 'Turnos'];
+function ChevronRightIcon() {
+  return (
+    <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="m9 6 6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+const desktopMenu = [
+  { label: 'Municipio', hasChevron: false },
+  { label: 'Gestión', hasChevron: true },
+  { label: 'Trámites', hasChevron: true },
+  { label: 'Turnos', hasChevron: true },
+] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const logo = import.meta.env.BASE_URL + 'assets/municipio-logo.png';
+
+  const logoMunicipio = import.meta.env.BASE_URL + 'assets/logo-municipio-blanco.svg';
+  const logoComunidad = import.meta.env.BASE_URL + 'assets/logo-comunidad-blanco.svg';
 
   return (
-    <header className="bg-brand-600 text-white">
-      <PageContainer className="flex min-h-[104px] items-center justify-between gap-4">
+    <header className="bg-primary-600 text-white">
+      <PageContainer className="flex h-[104px] items-center justify-between gap-4">
         <Link
           to="/"
-          className="min-w-0 shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-white"
-          aria-label="Municipio de Lomas de Zamora: inicio"
+          className="shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          aria-label="Municipio de Lomas de Zamora: ir al inicio"
           onClick={() => setOpen(false)}
         >
           <img
-            src={logo}
-            width="277"
+            src={logoMunicipio}
+            width="286"
             height="72"
-            className="h-auto w-[min(277px,calc(100vw-112px))] object-contain lg:w-[277px]"
+            className="block h-auto w-[min(286px,calc(100vw-112px))] xl:w-[286px]"
             alt="Municipio de Lomas de Zamora — Gobierno de la Comunidad"
           />
         </Link>
 
-        <nav aria-label="Navegación principal" className="hidden items-center gap-5 lg:flex">
-          {menuLabels.map((label) => (
-            <span key={label} className="px-1 py-3 text-[18px] font-bold">
-              {label}
-              {label !== 'Municipio' && (
-                <span aria-hidden="true" className="ml-2">
-                  ›
-                </span>
-              )}
-            </span>
-          ))}
+        <nav aria-label="Navegación principal" className="hidden items-center gap-4 xl:flex">
+          {desktopMenu.map(({ label, hasChevron }) =>
+            label === 'Municipio' ? (
+              <Link
+                key={label}
+                to="/"
+                className="inline-flex min-h-12 items-center rounded-[4px] px-4 text-[18px] leading-[26px] font-bold hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
+              >
+                {label}
+              </Link>
+            ) : (
+              <span
+                key={label}
+                className="inline-flex min-h-12 items-center gap-2 px-4 text-[18px] leading-[26px] font-bold"
+              >
+                {label}
+                {hasChevron && <ChevronRightIcon />}
+              </span>
+            ),
+          )}
         </nav>
 
-        <span className="hidden shrink-0 text-right text-[15px] leading-4 font-bold lg:block">
-          Comunidad
-          <br />
-          <span className="text-[23px]">LOMAS</span>
-        </span>
+        <img
+          src={logoComunidad}
+          width="131"
+          height="40"
+          className="hidden h-10 w-[131px] shrink-0 xl:block"
+          alt="Comunidad Lomas"
+        />
 
         <button
           type="button"
-          className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px] bg-brand-500 text-white hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:hidden"
+          className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[4px] bg-primary-500 transition-colors hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white xl:hidden"
           aria-controls="menu-municipal"
           aria-expanded={open}
           aria-label={open ? 'Cerrar navegación' : 'Abrir navegación'}
@@ -70,22 +96,20 @@ export function SiteHeader() {
         <nav
           id="menu-municipal"
           aria-label="Navegación móvil"
-          className="border-t border-white/20 bg-brand-700 lg:hidden"
+          className="border-t border-white/20 bg-primary-700 xl:hidden"
         >
           <PageContainer className="flex flex-col py-3">
             <Link
               to="/"
-              className="px-3 py-3 font-bold focus-visible:outline-white"
+              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
               onClick={() => setOpen(false)}
             >
               Inicio
             </Link>
             <Link
               to="/jovenes-en-comunidad"
-              aria-current={
-                location.pathname.endsWith('/jovenes-en-comunidad') ? 'page' : undefined
-              }
-              className="px-3 py-3 font-bold focus-visible:outline-white"
+              aria-current={location.pathname.endsWith('/jovenes-en-comunidad') ? 'page' : undefined}
+              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
               onClick={() => setOpen(false)}
             >
               Jóvenes en Comunidad

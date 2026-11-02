@@ -19,7 +19,7 @@ function BookmarkIcon() {
 export function TableOfContents({ initiatives }: { initiatives: Initiative[] }) {
   return (
     <div className="rounded-[4px] bg-panel p-6">
-      <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-brand-600">
+      <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-primary-600">
         Índice
       </h2>
       <nav aria-label="Índice de iniciativas">
@@ -28,7 +28,7 @@ export function TableOfContents({ initiatives }: { initiatives: Initiative[] }) 
             <li key={item.id}>
               <a
                 href={'#' + item.id}
-                className="flex items-start gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-brand-600 hover:underline focus-visible:outline-2 focus-visible:outline-brand-600"
+                className="flex items-start gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
               >
                 <span className="mt-0.5 shrink-0">
                   <BookmarkIcon />

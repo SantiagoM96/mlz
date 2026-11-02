@@ -94,7 +94,7 @@ export function JovenesEnComunidadPage() {
           { label: 'Jóvenes en Comunidad' },
         ]}
       />
-      <h1 className="mb-6 text-[32px] leading-[40px] font-bold text-brand-600">
+      <h1 className="mb-6 text-[32px] leading-[40px] font-bold text-primary-600">
         Jóvenes en Comunidad
       </h1>
 
@@ -120,11 +120,11 @@ export function JovenesEnComunidadPage() {
           <TableOfContents initiatives={initiatives} />
 
           <div className="rounded-[4px] bg-panel p-6">
-            <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-brand-600">
+            <h2 className="mb-4 text-[24px] leading-[30px] font-bold text-primary-600">
               Contacto
             </h2>
             <a
-              className="inline-flex items-center gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-brand-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-brand-600"
+              className="inline-flex items-center gap-2 rounded-sm text-[18px] leading-[26px] font-bold text-primary-600 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -136,7 +136,7 @@ export function JovenesEnComunidadPage() {
         </aside>
 
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">
-          <h2 className="mb-6 text-[18px] leading-[26px] font-bold tracking-[0.03em] text-brand-600">
+          <h2 className="mb-6 text-[18px] leading-[26px] font-bold tracking-[0.03em] text-primary-600">
             INICIATIVAS
           </h2>
           <div>

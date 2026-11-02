@@ -29,7 +29,7 @@ El frame de escritorio de Jóvenes en Comunidad se utilizó como fuente primaria
 
 La familia tipográfica de Figma es Geometria. El proyecto declara esa fuente y utiliza fallback a Arial, sin distribuir archivos tipográficos con licencia. Incorporar las fuentes licenciadas si corresponde.
 
-Los archivos `public/assets/jovenes-hero.jpg`, `public/assets/jovenes-hero-mobile.jpg`, `public/assets/municipio-logo.png` y `public/assets/municipio-logo-footer.png` provienen de exportaciones de nodos de Figma. No son capturas completas de la página.
+Los banners `public/assets/jovenes-hero.jpg` y `public/assets/jovenes-hero-mobile.jpg` provienen de Figma. Los logotipos institucionales oficiales se exportaron como SVG a partir de los componentes de Figma (`2112:1590` y `2112:1653`): `public/assets/logo-municipio-blanco.svg` y `public/assets/logo-comunidad-blanco.svg`. Se reutilizan en Header y Footer. No son capturas completas de la página.
 
 ## Organización
 
@@ -40,7 +40,7 @@ Los archivos `public/assets/jovenes-hero.jpg`, `public/assets/jovenes-hero-mobil
 - `src/pages`: páginas independientes.
 - `src/styles/globals.css`: tokens semánticos de Tailwind y estilos tipográficos.
 
-Para modificar el color municipal principal, actualizar `--color-brand-600` y los otros tokens semánticos en `src/styles/globals.css`. La imagen y los textos están fuera de las piezas visuales reutilizables.
+Los tokens principales de la biblioteca Figma se encuentran en `src/styles/globals.css`: **Primario 600 `#236999`** (`--color-primary-600`) para títulos y enlaces azules y **Grey 900 `#3d3d3d`** (`--color-grey-900`) para texto oscuro. El header usa ambos logos oficiales en desktop; en mobile muestra el logo municipal y el botón de menú. Para modificar el color municipal principal, actualizar los tokens en ese archivo. La imagen y los textos están fuera de las piezas visuales reutilizables.
 
 **Pendientes:** Home definitiva, enlaces oficiales de los botones genéricos del header y footer, página Puntos Jóvenes, verificación visual automatizada contra Figma, integración de fuente Geometria.
 
