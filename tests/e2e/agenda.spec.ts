@@ -121,6 +121,16 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
       }
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    if (scrollWidth > (info.project.use.viewport?.width ?? 1200) + 1) {
+      const offenders = await page.evaluate(() => [...document.body.querySelectorAll('*')]
+        .map(el => {
+          const rect = el.getBoundingClientRect();
+          return { tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 125) : '',
+            text: el.textContent?.trim().slice(0, 35), x: rect.x, right: rect.right,
+            width: rect.width, overflow: getComputedStyle(el).overflowX };
+        }).filter(item => item.right > window.innerWidth + 1 || item.x < -1).slice(0, 20));
+      console.log('MLZ_OVERFLOW_DIAGNOSTIC', route, JSON.stringify(offenders));
+    }
     expect(scrollWidth, `Overflow horizontal en ${route}`).toBeLessThanOrEqual((info.project.use.viewport?.width ?? 1200) + 1);
   }
 });
@@ -148,7 +158,9 @@ test('la iconografía de todas las rutas usa Google Material Symbols', async ({ 
     expect(state.every(icon => icon.font.includes('Material Symbols Outlined')),
       `Iconos no estandarizados: ${route}`).toBeTruthy();
     expect(state.every(icon => icon.labelHidden === 'true' && !!icon.text)).toBeTruthy();
-    expect(await page.evaluate(() => document.fonts.check('24px "Material Symbols Outlined"'))).toBeTruthy();
+    expect(await page.evaluate(() =>
+    Array.from(document.fonts).some(font => font.family.includes('Material Symbols Outlined') && font.status === 'loaded'),
+  )).toBeTruthy();
     await expect(page.locator('main svg, header svg')).toHaveCount(0);
   }
 });

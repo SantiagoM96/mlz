@@ -142,6 +142,8 @@ test('componentes Breadcrumbs, iconos y tarjetas cumplen medidas de Figma', asyn
   );
   expect(icons.length).toBeGreaterThan(10);
   expect(icons.every(icon => icon.font.includes('Material Symbols Outlined'))).toBeTruthy();
-  expect(await page.evaluate(() => document.fonts.check('24px "Material Symbols Outlined"'))).toBe(true);
+  expect(await page.evaluate(() =>
+    Array.from(document.fonts).some(font => font.family.includes('Material Symbols Outlined') && font.status === 'loaded'),
+  )).toBe(true);
   expect(icons.every(icon => icon.width > 0 && icon.height > 0)).toBeTruthy();
 });
