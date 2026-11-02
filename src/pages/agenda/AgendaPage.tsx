@@ -52,7 +52,6 @@ export function AgendaPage() {
       if (filters.category.length && !filters.category.includes(activity.category)) return false;
       if (filters.locality.length && !filters.locality.includes(activity.locality)) return false;
       if (filters.date.length) {
-        if (activity.isDateApproximate) return false;
         const date = activity.dateISO ?? '';
         const isWeek = date >= weekStart && date <= weekEnd;
         const weekDay = date ? new Date(date + 'T12:00:00Z').getUTCDay() : -1;
