@@ -14,6 +14,7 @@ export interface AgendaActivity {
   image: string;
   badges: { kind: 'rain' | 'accessible' | 'registration' | 'featured'; label: string }[];
   dateISO?: string;
+  isDateApproximate?: boolean;
   venue?: string;
   address?: string;
   description?: string;
@@ -65,17 +66,19 @@ function displayTime(value: string): string {
  */
 export const agendaActivities: AgendaActivity[] = importedActivityRows.map((line, index) => {
   const [dateISO='',type='',category='',locality='',title='',time='',venue='',registration='',rain=''] = line.split('|');
+  const isDateApproximate = dateISO === '2026-11-30' && title.includes('Palabras desde el barrio');
   const badges: AgendaActivity['badges'] = [];
   if (registration === 'Sí') badges.push({ kind:'registration', label:'Requiere inscripción' });
   if (rain === 'Sí') badges.push({ kind:'rain', label:'Se suspende por lluvia' });
   return {
     id: 'actividad-' + (index + 1),
     dateISO,
+    isDateApproximate,
     title,
     category,
     type,
     locality,
-    dayLabel: displayDate(dateISO),
+    dayLabel: isDateApproximate ? 'Noviembre 2026 · días según taller' : displayDate(dateISO),
     timeLabel: displayTime(time) || 'Horario a confirmar',
     image: imageForActivity(type, category),
     venue: venue || undefined,
