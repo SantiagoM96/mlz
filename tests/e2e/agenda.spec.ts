@@ -400,3 +400,44 @@ test('tarjetas y fichas muestran el tipo específico en vez de la categoría gen
   await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Danza');
   await expect(page.getByTestId('agenda-card').first().locator('img')).toHaveAttribute('src', /\/types\/danza\.png/);
 });
+
+
+test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas', async ({ page }, info) => {
+  await page.goto(activities);
+  const collator = new Intl.Collator('es-AR', { sensitivity: 'base', numeric: true });
+  const assertSorted = (options: string[]) =>
+    expect(options).toEqual([...options].sort(collator.compare));
+
+  await page.getByRole('button', { name: 'Fecha', exact: true }).click();
+  const dateOptions = page.getByRole('dialog', { name: 'Opciones de Fecha' });
+  const dates = await dateOptions.getByRole('checkbox').evaluateAll(elements =>
+    elements.map(element => element.getAttribute('aria-label') ?? ''));
+  assertSorted(dates);
+  const today = dateOptions.getByRole('checkbox', { name: 'Hoy' });
+  await today.check();
+  const selectedDate = dateOptions.locator('label', { has: today });
+  await expect(selectedDate).toHaveCSS('background-color', 'rgb(0, 110, 255)');
+  await expect(selectedDate).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
+  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
+
+  if ((info.project.use.viewport?.width ?? 0) >= 768) {
+    await page.getByRole('button', { name: 'Localidad', exact: true }).click();
+    const localityMenu = page.getByRole('dialog', { name: 'Opciones de Localidad' });
+    const localities = await localityMenu.getByRole('checkbox').evaluateAll(elements =>
+      elements.map(element => element.getAttribute('aria-label') ?? ''));
+    assertSorted(localities);
+    await localityMenu.getByRole('button', { name: 'Ver resultados' }).click();
+  }
+
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const filters = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  const groupType = filters.getByRole('button', { name: 'Tipo de actividad' }).locator('..');
+  const typeLabels = await groupType.locator('label').allTextContents();
+  assertSorted(typeLabels.map(label => label.trim()));
+  await filters.getByRole('button', { name: 'Categoría' }).click();
+  const groupCategory = filters.getByRole('button', { name: 'Categoría' }).locator('..');
+  const categories = await groupCategory.locator('label').allTextContents();
+  assertSorted(categories.map(label => label.trim()));
+});

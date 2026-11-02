@@ -256,8 +256,12 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
 
 /* Catálogo de tipos proporcionado por diseño + valores documentados del Excel.
  * Mostrar el catálogo completo permite revisar todos los estados de filtros. */
+// Orden consistente en todos los menús y paneles, respetando tildes y la Ñ.
+const sortFilterOptions = (options: readonly string[]): string[] =>
+  [...options].sort((a, b) => a.localeCompare(b, 'es-AR', { sensitivity: 'base', numeric: true }));
+
 export const filterOptions: Record<FilterGroup, readonly string[]> = {
-  type: [
+  type: sortFilterOptions([
     'Teatro', 'Infantil', 'Música', 'Danza', 'Humor', 'Magia', 'Circo', 'Títeres',
     'Cine', 'Varieté', 'Taller', 'Taller artístico', 'Taller de danza',
     'Artes del movimiento', 'Taller musical', 'Taller ambiental', 'Visita guiada',
@@ -265,14 +269,14 @@ export const filterOptions: Record<FilterGroup, readonly string[]> = {
     'Postural', 'Pileta', 'Torneo', 'Encuentro literario', 'Conversatorio',
     'Presentación', 'Cuerpo-mente', 'Danza/baile', 'Literatura', 'Evento',
     'Exposición', 'Función',
-  ],
-  category: ['Cultural', 'Deportiva y recreativa', 'Ambiental'],
-  locality: [
+  ]),
+  category: sortFilterOptions(['Cultural', 'Deportiva y recreativa', 'Ambiental']),
+  locality: sortFilterOptions([
     'Albertina', 'Banfield', 'Budge', 'Centenario', 'Fiorito', 'Lamadrid',
     'Llavallol', 'Lomas de Zamora', 'Parque Barón', 'San José',
     'Santa Catalina', 'Temperley', 'Turdera',
-  ],
-  date: ['Hoy', 'Esta semana', 'Este fin de semana'],
+  ]),
+  date: sortFilterOptions(['Hoy', 'Esta semana', 'Este fin de semana']),
 };
 
 export const filterTitles: Record<FilterGroup, string> = {
