@@ -45,7 +45,6 @@ export function AgendaDropdown({
 
   useEffect(() => {
     if (isOpen) searchRef.current?.focus();
-    else setSearch('');
   }, [isOpen]);
 
   const visibleOptions = options.filter(option =>
@@ -74,7 +73,7 @@ export function AgendaDropdown({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        onClick={() => setIsOpen(open => !open)}
+        onClick={() => { setSearch(''); setIsOpen(open => !open); }}
         className={`flex h-12 w-full min-w-0 items-center gap-3 rounded border border-[#80baff] bg-white
           py-2 pl-4 pr-4 text-left text-[16px] text-primary-600 outline-offset-2
           transition-colors duration-150 hover:border-[#006eff]
@@ -202,7 +201,7 @@ export function AgendaSortDropdown({
           border border-[#d9d9d9] bg-white px-5 text-[18px] text-grey-900
           transition-colors hover:bg-[#f2f7fc]
           focus-visible:outline-2 focus-visible:outline-primary-600">
-        <MaterialIcon name="sort" size={24}/>
+        <MaterialIcon name="swap_vert" size={24}/>
         <span>Ordenar</span>
       </button>
       {isOpen && (
