@@ -7,6 +7,9 @@ export function useAgendaSheetDismiss<T extends HTMLElement>(
   const sheetRef = useRef<T | null>(null);
   const closeTimer = useRef<number | null>(null);
   const isClosing = useRef(false);
+  const onDismissRef = useRef(onDismiss);
+
+  useEffect(() => { onDismissRef.current = onDismiss; }, [onDismiss]);
 
   useEffect(() => {
     if (open) isClosing.current = false;
@@ -21,7 +24,7 @@ export function useAgendaSheetDismiss<T extends HTMLElement>(
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const sheet = sheetRef.current;
     if (!mobile || reduced || !sheet) {
-      onDismiss();
+      onDismissRef.current();
       return;
     }
 
@@ -29,8 +32,8 @@ export function useAgendaSheetDismiss<T extends HTMLElement>(
     sheet.classList.add('agenda-sheet-exit');
     const backdrop = sheet.parentElement?.querySelector<HTMLElement>('.agenda-mobile-backdrop');
     backdrop?.classList.add('agenda-backdrop-exit');
-    closeTimer.current = window.setTimeout(onDismiss, 200);
-  }, [onDismiss]);
+    closeTimer.current = window.setTimeout(() => onDismissRef.current(), 200);
+  }, []);
 
   return { sheetRef, dismiss };
 }
