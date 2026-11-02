@@ -26,7 +26,7 @@ export function SiteHeader() {
 
   return (
     <header className="bg-primary-600 text-white">
-      <PageContainer className="flex h-[104px] items-center justify-between gap-4">
+      <PageContainer className="site-header-content flex h-[104px] items-center justify-between gap-4">
         <Link
           to="/"
           className="shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

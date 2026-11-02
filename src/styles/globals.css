@@ -41,3 +41,9 @@ button:not(:disabled) { cursor: pointer; }
 .article-section { border-bottom: 1px solid var(--color-divider); padding-block: 24px; scroll-margin-top: 20px; }
 .article-section:last-child { border-bottom: 0; }
 .article-section h3 { margin-bottom: 16px; font-size: 24px; line-height: 30px; font-weight: 700; color: var(--color-primary-600); }
+
+/* La instancia mobile de Header/Sitio de Figma usa 24 px de padding. */
+.site-header-content { padding-inline: 24px; }
+@media (min-width: 1280px) {
+  .site-header-content { padding-inline: 16px; }
+}

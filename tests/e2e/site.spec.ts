@@ -77,3 +77,23 @@ test('navegación funcional y ruta 404', async ({ page }, testInfo) => {
   await page.goto('/ruta-que-no-existe');
   await expect(page.getByRole('heading', { name: 'No encontramos esta página' })).toBeVisible();
 });
+
+test('header alineado con Figma en desktop y mobile', async ({ page }, testInfo) => {
+  const logo = page.locator('header').getByRole('img', {
+    name: 'Municipio de Lomas de Zamora — Gobierno de la Comunidad',
+  });
+  const logoBox = await logo.boundingBox();
+  expect(logoBox).not.toBeNull();
+
+  if (testInfo.project.name === 'desktop-1415') {
+    expect(logoBox!.x).toBe(108);
+    expect(logoBox!.height).toBe(72);
+  } else {
+    expect(logoBox!.x).toBe(24);
+    if (testInfo.project.name === 'mobile-432') {
+      const menuBox = await page.getByRole('button', { name: 'Abrir navegación' }).boundingBox();
+      expect(menuBox).not.toBeNull();
+      expect(menuBox!.x).toBe(360);
+    }
+  }
+});
