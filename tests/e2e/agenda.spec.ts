@@ -595,7 +595,7 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     await expect(summary).toContainText('Lugar');
     await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
     const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
-    await expect(crumbs).toHaveCSS('color', 'rgb(38, 103, 151)');
+    await expect(crumbs).toHaveCSS('color', 'rgb(35, 105, 153)');
     await expect(crumbs.getByTestId('breadcrumb-current')).toBeVisible();
   }
 });
