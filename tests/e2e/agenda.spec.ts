@@ -346,18 +346,20 @@ test('una ficha omitida no se publica aunque se conozca su URL anterior', async 
   await expect(page.getByRole('heading', { name: 'Resumen' })).toHaveCount(0);
 });
 
-test('descripciones ilustrativas muestran punto rojo y las fichas mantienen datos originales', async ({ page }) => {
+test('descripciones del Excel no muestran marca de contenido ficticio y las ilustrativas sí', async ({ page }) => {
   await page.goto(activities + '/actividad-1');
-  const copy = page.getByTestId('agenda-activity-description');
-  await expect(copy).toContainText('Una invitación a compartir el espíritu del chamamé');
-  await expect(copy).toContainText('Teatro del Municipio');
-  const dot = copy.getByTestId('agenda-illustrative-dot');
-  await expect(dot).toHaveCSS('background-color', 'rgb(211, 47, 47)');
-  await expect(dot).toHaveAttribute('title', 'Texto creado para la maqueta; pendiente de validación');
-  await expect(dot).toHaveAttribute('aria-label', 'Descripción ilustrativa, pendiente de validación');
+  const description = page.getByRole('region', { name: 'Descripción de la actividad' });
+  await expect(description).toContainText('Primera edición de La Chamameceada');
+  await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
   await expect(page.locator('aside[aria-label="Resumen de actividad"]')).toContainText('21:00 h');
 
+  await page.goto(activities + '/actividad-2');
+  const illustrative = page.getByRole('region', { name: 'Descripción de la actividad' });
+  await expect(illustrative).toContainText('percusión');
+  await expect(illustrative.getByTestId('agenda-illustrative-dot')).toHaveCSS('background-color', 'rgb(211, 47, 47)');
+  await expect(illustrative).toContainText('Descripción ilustrativa');
+
   await page.goto(activities + '/tita-y-rhodesia');
-  await expect(page.getByTestId('agenda-activity-description')).toContainText('Una propuesta teatral');
+  await expect(page.getByRole('region', { name: 'Descripción de la actividad' })).toContainText('Una propuesta teatral');
   await expect(page.getByTestId('agenda-illustrative-dot')).toHaveCount(1);
 });
