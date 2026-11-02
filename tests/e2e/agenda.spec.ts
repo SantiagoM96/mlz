@@ -448,11 +448,11 @@ test('navegar desde una tarjeta inferior abre la ficha arriba y volver restaura 
   await lastCard.scrollIntoViewIfNeeded();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
   await lastCard.getByRole('link', { name: /Ver más sobre/ }).click();
-  await expect(page).toHaveURL(/\\/agenda-de-la-comunidad\\/actividades\\/actividad-\\d+\\/?$/);
+  await expect(page).toHaveURL(new RegExp('/agenda-de-la-comunidad/actividades/actividad-[0-9]+/?$'));
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toBeInViewport();
   await page.goBack();
-  await expect(page).toHaveURL(/\\/agenda-de-la-comunidad\\/actividades\\/?$/);
+  await expect(page).toHaveURL(new RegExp('/agenda-de-la-comunidad/actividades/?$'));
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
 });
 
