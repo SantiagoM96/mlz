@@ -22,6 +22,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
     const handlePointer = (event: PointerEvent) => {
       const target = event.target as Element;
       if (!target.closest('[aria-label="Filtros de la agenda"]') &&
+          !target.closest('.agenda-mobile-backdrop') &&
           !moreFiltersButtonRef.current?.contains(target)) setOpen(false);
     };
     const handleEscape = (event: KeyboardEvent) => {
