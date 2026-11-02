@@ -30,7 +30,7 @@ export function ActivityCard({ activity }: { activity: AgendaActivity }) {
           )}
           {activity.isDateApproximate && (
             <span className="self-start rounded bg-[#f2f4f6] px-2 py-1 text-[12px] font-medium text-[#626d75]">
-              Días y horarios a confirmar
+              Día a confirmar
             </span>
           )}
           <ActivityBadges badges={activity.badges} />
