@@ -71,9 +71,7 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Ambiental' }).click();
   await expect(page.getByTestId('agenda-card')).not.toHaveCount(0);
-  await page.getByRole('button', { name: 'Ver mapa' }).click();
-  await expect(page.getByRole('heading', { name: 'Mapa de actividades' })).toBeVisible();
-  await page.getByRole('button', { name: 'Ver grilla' }).click();
+  await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
   await expect(page.getByTestId('agenda-grid')).toBeVisible();
 });
 
@@ -185,4 +183,31 @@ test('solo filtros seleccionados son azules; activity badges conservan colores s
   const selected = page.locator('[data-agenda-chip="selected"]');
   await expect(selected.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await expect(selected.first()).toHaveCSS('color', 'rgb(255, 255, 255)');
+});
+
+test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', async ({ page }, info) => {
+  await page.goto(activities);
+  const dateButton = page.getByRole('button', { name: 'Fecha', exact: true });
+  await dateButton.click();
+  const dateOptions = page.getByRole('dialog', { name: 'Opciones de Fecha' });
+  await expect(dateOptions.getByRole('textbox', { name: 'Buscar fecha' })).toBeFocused();
+  await dateOptions.getByRole('checkbox', { name: 'Hoy' }).check();
+  await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
+  await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy']);
+
+  if ((info.project.use.viewport?.width ?? 0) >= 768) {
+    const localityButton = page.getByRole('button', { name: 'Localidad', exact: true });
+    await localityButton.click();
+    const localityOptions = page.getByRole('dialog', { name: 'Opciones de Localidad' });
+    await localityOptions.getByRole('textbox', { name: 'Buscar localidad' }).fill('Banfield');
+    await localityOptions.getByRole('checkbox', { name: 'Banfield' }).check();
+    await localityOptions.getByRole('button', { name: 'Ver resultados' }).click();
+    await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy', 'Banfield']);
+  }
+
+  const sorter = page.getByRole('button', { name: 'Ordenar', exact: true });
+  await sorter.click();
+  await page.getByRole('button', { name: 'Alfabético A-Z' }).click();
+  await expect(sorter).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
 });

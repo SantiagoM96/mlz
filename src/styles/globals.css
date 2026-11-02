@@ -48,3 +48,13 @@ button:not(:disabled) { cursor: pointer; }
 @media (min-width: 1232px) {
   .site-header-content { padding-inline: 0; }
 }
+
+/* Agenda: apertura breve de los menús de filtros y de ordenamiento. */
+@keyframes agenda-dropdown-enter {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.agenda-dropdown-enter { animation: agenda-dropdown-enter 160ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .agenda-dropdown-enter { animation: none; }
+}

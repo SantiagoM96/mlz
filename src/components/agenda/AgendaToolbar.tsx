@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import type { SelectedFilters } from './AgendaFilterPanel';
+import { filterOptions } from '../../data/agenda';
 import { AgendaFilterPanel } from './AgendaFilterPanel';
 import { MaterialIcon } from '../ui/MaterialIcon';
+import { AgendaDropdown } from './AgendaDropdown';
 
 type Props = {
   search: string;
@@ -14,8 +16,6 @@ type Props = {
 export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }: Props) {
   const [open, setOpen] = useState(false);
   const selectedCount = Object.values(filters).reduce((sum, items) => sum + items.length, 0);
-  const locality = filters.locality[0] ?? '';
-  const date = filters.date[0] ?? '';
 
   return <div className="relative" data-testid="agenda-toolbar">
     <div className="grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
@@ -29,23 +29,19 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         }
       </label>
 
-      <label className="relative hidden md:block">
-        <span className="sr-only">Localidad</span>
-        <select value={locality} onChange={e => onFilters({ ...filters, locality: e.target.value ? [e.target.value] : [] })}
-          className="h-12 w-full appearance-none rounded border border-[#80baff] bg-white px-4 pr-9 text-[16px] text-primary-600 focus:outline-2 focus:outline-[#006eff]">
-          <option value="">Localidad</option><option value="Lomas de Zamora">Lomas de Zamora</option><option value="Banfield">Banfield</option>
-        </select>
-        <MaterialIcon name="expand_more" size={20} className="pointer-events-none absolute right-3 top-3.5 text-primary-600" />
-      </label>
+      <div className="hidden min-w-0 md:block">
+        <AgendaDropdown label="Localidad"
+          options={filterOptions.locality}
+          selected={filters.locality}
+          multiple
+          onChange={locality => onFilters({ ...filters, locality })} />
+      </div>
 
-      <label className="relative">
-        <span className="sr-only">Fecha</span>
-        <select value={date} onChange={e => onFilters({ ...filters, date: e.target.value ? [e.target.value] : [] })}
-          className="h-12 w-full appearance-none rounded border border-[#80baff] bg-white px-4 pr-9 text-[16px] text-primary-600 focus:outline-2 focus:outline-[#006eff]">
-          <option value="">Fecha</option><option value="Hoy">Hoy</option><option value="Esta semana">Esta semana</option><option value="Este fin de semana">Este fin de semana</option>
-        </select>
-        <MaterialIcon name="expand_more" size={20} className="pointer-events-none absolute right-3 top-3.5 text-primary-600" />
-      </label>
+      <AgendaDropdown label="Fecha"
+        options={filterOptions.date}
+        selected={filters.date}
+        align="end-responsive"
+        onChange={date => onFilters({ ...filters, date })} />
 
       <button type="button" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(v => !v)}
         className="flex h-12 min-w-0 items-center justify-center gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 hover:bg-[#f2f7fc] focus-visible:outline-2">

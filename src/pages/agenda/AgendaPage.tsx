@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
+import { AgendaSortDropdown, type AgendaSortValue } from '../../components/agenda/AgendaDropdown';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
@@ -23,9 +24,8 @@ export function AgendaPage() {
   const pageSize = usePageSize();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<SelectedFilters>(emptyFilters);
-  const [sort, setSort] = useState<'default' | 'az' | 'za'>('default');
+  const [sort, setSort] = useState<AgendaSortValue>('default');
   const [limit, setLimit] = useState(9);
-  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     document.title = 'Actividades | Agenda de la Comunidad | Municipio Lomas de Zamora';
@@ -48,7 +48,7 @@ export function AgendaPage() {
     return results;
   }, [search, filters, sort]);
 
-  const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); setShowMap(false); };
+  const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); };
   const visible = filtered.slice(0, Math.max(pageSize, limit === 9 ? pageSize : limit));
   const hasMore = filtered.length > visible.length;
 
@@ -66,27 +66,10 @@ export function AgendaPage() {
         <p aria-live="polite" className="text-[16px] leading-[26px] text-grey-900">
           Mostrando - {filtered.length ? `${visible.length} de ${filtered.length} actividades` : 'Sin resultados'}
         </p>
-        <div className="flex items-center gap-2">
-          <label className="sr-only" htmlFor="agenda-sort">Ordenar actividades</label>
-          <select id="agenda-sort" value={sort} onChange={e => setSort(e.target.value as typeof sort)}
-            className="h-12 rounded-full border border-[#e7e7e7] bg-white px-3 text-[15px] text-grey-900 focus:outline-2 focus:outline-primary-600">
-            <option value="default">Ordenar</option><option value="az">Alfabético A-Z</option><option value="za">Alfabético Z-A</option>
-          </select>
-          <button type="button" onClick={() => setShowMap(v=>!v)} aria-pressed={showMap}
-            className="inline-flex h-12 items-center gap-2 rounded-full border border-[#e7e7e7] px-4 font-medium text-primary-600 hover:bg-[#f3f7fc]">
-            <MaterialIcon name={showMap ? 'grid_view' : 'map'} size={20}/><span>{showMap ? 'Ver grilla' : 'Ver mapa'}</span>
-          </button>
-        </div>
+        <AgendaSortDropdown value={sort} onChange={setSort} />
       </div>
 
-      {showMap ? (
-        <section className="mt-6 flex min-h-[390px] flex-col items-center justify-center rounded-lg border border-[#e7e7e7] bg-[#f3f7fc] p-6 text-center" aria-label="Vista mapa">
-          <MaterialIcon name="map" size={48} className="text-primary-600"/>
-          <h2 className="mt-4 text-xl font-bold text-primary-600">Mapa de actividades</h2>
-          <p className="mt-2 max-w-[550px]">La vista geográfica se habilitará cuando las actividades tengan direcciones verificadas. Podés seguir explorando las actividades en la grilla.</p>
-          <button type="button" onClick={() => setShowMap(false)} className="mt-5 rounded bg-primary-600 px-6 py-3 font-bold text-white">Volver a la grilla</button>
-        </section>
-      ) : filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <section className="flex min-h-[380px] flex-col items-center justify-center gap-3 text-center" aria-live="polite">
           <MaterialIcon name="search" size={64} className="text-[#8da3af]" />
           <h2 className="text-[20px] font-bold text-grey-900">No encontramos actividades</h2>

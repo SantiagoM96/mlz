@@ -110,7 +110,7 @@ La primera vista real de Home es **Agenda Anual de la Comunidad 2026**. Se publi
 - Componentes reutilizables en `src/components/agenda/`: `ActivityCard`, `AgendaToolbar`, `AgendaFilterPanel`, `ActivityDetails`, `AgendaPromo`, `AgendaIcon`.
 - Datos de demostración separados en `src/data/agenda.ts`; las 18 tarjetas representan las variantes visuales repetidas en el prototipo, **no eventos reales confirmados**.
 - Búsqueda por texto, filtros, chips removibles, orden alfabético, paginación, detalles en modal, resultado vacío.
-- La vista mapa es una pantalla informativa temporal: todavía **no existe información geográfica validada**.
+- No se muestra el botón **Ver mapa** ni una vista geográfica provisional: no están definidos en el buscador de Figma.
 - Exportaciones originales de Figma en `public/assets/agenda/`: ilustraciones Cine, Deportes, Humor y logo Recorrido del Café. El fondo fotográfico de esa promoción todavía no se incorporó y se reemplaza provisionalmente por un gradiente.
 - La tipografía Geometria no está incorporada por falta de archivos licenciados; usa fallback.
 
