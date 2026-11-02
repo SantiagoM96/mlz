@@ -153,4 +153,4 @@ La fuente está incluida en el bundle Vite y no necesita una petición a Google 
 
 
 ### Chips de Agenda — sincronizados con Figma
-Todos los chips seleccionados y los chips de actividad usan `--color-info-500: #006EFF`, texto e iconos blancos. `Más Filtros` usa el glifo `tune` de Google Material Symbols a 24 px, visible también en mobile. El color **Primario 600** se conserva en los componentes institucionales, no se sustituye por Info 500 fuera de estos chips. Corresponde al frame Figma `7358:11951` y a los demás chips de la sección BUSCADOR.
+Solo los chips de filtros seleccionados usan `--color-info-500: #006EFF`, texto e iconos blancos. Los chips de actividad mantienen los colores semánticos originales (lluvia, accesibilidad, inscripción y destacado). `Más Filtros` usa el glifo `tune` de Google Material Symbols a 24 px, visible también en mobile. El color **Primario 600** se conserva en los componentes institucionales, no se sustituye por Info 500 fuera de estos chips. Corresponde al frame Figma `7358:11951` y a los demás chips de la sección BUSCADOR.
