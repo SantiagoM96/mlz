@@ -32,6 +32,7 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await page.getByRole('link', { name: /Ver todas las actividades/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/?$'));
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
   await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
   await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
@@ -291,6 +292,7 @@ test('el estado sin resultados reproduce la ilustración de Figma', async ({ pag
 
 test('tarjeta completa clickeable, cursor pointer, Ver más sin subrayado', async ({ page }) => {
   await page.goto(activities);
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
   const first = page.getByTestId('agenda-card').first();
   const link = first.getByRole('link', { name: 'Ver más sobre La Chamameceada' });
   await expect(link).toHaveCSS('cursor', 'pointer');
@@ -307,7 +309,7 @@ test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
   await expect(page.getByTestId('agenda-card').first()).toContainText('AMBIENTAL');
   await search.fill('Palabras desde el barrio');
-  await expect(page.getByTestId('agenda-card').count()).resolves.toBeGreaterThan(1);
+  expect(await page.getByTestId('agenda-card').count()).toBeGreaterThan(1);
   await search.fill('nombre inhallable 2026');
   await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
 });
