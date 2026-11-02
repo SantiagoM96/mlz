@@ -307,7 +307,7 @@ test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('Salida de observación de hongos');
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
-  await expect(page.getByTestId('agenda-card').first()).toContainText('AMBIENTAL');
+  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Visita guiada');
   await search.fill('Palabras desde el barrio');
   await expect(page.getByTestId('agenda-card')).toHaveCount(0);
   await search.fill('nombre inhallable 2026');
@@ -382,4 +382,21 @@ test('las tarjetas usan ilustraciones de Figma según el tipo de actividad', asy
     await expect(img).toBeVisible();
     await expect.poll(async () => img.evaluate(node => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(400);
   }
+});
+
+test('tarjetas y fichas muestran el tipo específico en vez de la categoría general', async ({ page }) => {
+  await page.goto(activities);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('La Chamameceada');
+  const card = page.getByTestId('agenda-card').first();
+  await expect(card.locator('p').first()).toHaveText('Música');
+  await expect(card.locator('img')).toHaveAttribute('src', /\/types\/musica\.png/);
+  await card.getByRole('link', { name: /Ver más/ }).click();
+  await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toBeVisible();
+  await expect(page.locator('h1').locator('..').locator('p').first()).toHaveText('Música');
+
+  await page.goto(activities);
+  await search.fill('Ballet Yago');
+  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Danza');
+  await expect(page.getByTestId('agenda-card').first().locator('img')).toHaveAttribute('src', /\/types\/danza\.png/);
 });
