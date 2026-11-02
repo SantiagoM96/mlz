@@ -108,3 +108,41 @@ test('Abrir una ficha desde el listado respeta scroll y diseño responsive', asy
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ page }, info) => {
+  for (const route of ['/agenda-de-la-comunidad/actividades/actividad-1',
+    '/agenda-de-la-comunidad/actividades/tita-y-rhodesia']) {
+    await page.goto(route);
+    const desc = page.getByRole('region', { name: 'Descripción de la actividad' });
+    const image = page.getByTestId('agenda-detail-image');
+    const sidebar = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const map = page.getByRole('region', { name: 'Mapa de ubicación' });
+    await expect(desc).toBeVisible();
+    await expect(image).toBeVisible();
+    await expect(sidebar).toBeVisible();
+    await expect(map).toBeVisible();
+    await expect(sidebar.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+    await expect(sidebar).toContainText('Fecha');
+    await expect(sidebar).toContainText('Horario');
+    await expect(sidebar).toContainText('Lugar');
+    await expect(sidebar.locator('[data-agenda-chip="activity"]')).not.toHaveCount(0);
+    const positions = await page.evaluate(() => {
+      const rect = (query: string) => document.querySelector(query)!.getBoundingClientRect();
+      return {
+        desc: rect('[aria-label="Descripción de la actividad"]').top,
+        image: rect('[data-testid="agenda-detail-image"]').top,
+        imageBottom: rect('[data-testid="agenda-detail-image"]').bottom,
+        summaryX: rect('[aria-label="Resumen de actividad"]').x,
+        imageX: rect('[data-testid="agenda-detail-image"]').x,
+        map: rect('[aria-label="Mapa de ubicación"]').top,
+      };
+    });
+    expect(positions.desc).toBeLessThan(positions.image);
+    expect(positions.map).toBeGreaterThan(positions.imageBottom);
+    if ((info.project.use.viewport?.width ?? 0) >= 1024) {
+      expect(positions.summaryX).toBeGreaterThan(positions.imageX);
+    }
+    await expect(page.getByRole('navigation', { name: 'Ruta de navegación' }))
+      .toHaveCSS('color', 'rgb(35, 105, 153)');
+  }
+});
