@@ -18,7 +18,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
   const date = filters.date[0] ?? '';
 
   return <div className="relative" data-testid="agenda-toolbar">
-    <div className="grid grid-cols-[minmax(0,1fr)_118px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
+    <div className="grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
       <label className="relative col-span-2 block md:col-span-1">
         <span className="sr-only">Buscar actividades</span>
         <input value={search} onChange={e => onSearch(e.target.value)} placeholder="¿Qué estás buscando?"
@@ -48,17 +48,17 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
       </label>
 
       <button type="button" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(v => !v)}
-        className="flex h-12 items-center justify-center gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 hover:bg-[#f2f7fc] focus-visible:outline-2">
+        className="flex h-12 min-w-0 items-center justify-center gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 hover:bg-[#f2f7fc] focus-visible:outline-2">
         <span className="min-w-0 truncate">Más Filtros</span>
         {selectedCount > 0 && <span className="grid size-5 shrink-0 place-items-center rounded-full bg-[#006eff] text-xs font-bold text-white">{selectedCount}</span>}
-        <span className="hidden md:inline"><MaterialIcon name="filter_list" size={20}/></span>
+        <MaterialIcon name="tune" size={24}/>
       </button>
     </div>
 
     {selectedCount > 0 && <div aria-label="Filtros seleccionados" className="mt-4 flex flex-wrap items-center gap-2">
       {(['type','category','locality','date'] as const).flatMap(group => filters[group].map(value => (
         <button type="button" key={group+value} onClick={() => onFilters({ ...filters, [group]: filters[group].filter(x => x !== value) })}
-          className="inline-flex min-h-[30px] items-center gap-2 rounded bg-[#f1f6fc] px-2.5 text-[14px] font-bold text-primary-600 hover:bg-[#dcefff]">
+          data-agenda-chip="selected" className="inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
           {value}<MaterialIcon name="close" size={15}/>
         </button>
       )))}

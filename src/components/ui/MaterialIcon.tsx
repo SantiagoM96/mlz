@@ -17,6 +17,7 @@ export type MaterialIconName =
   | 'schedule'
   | 'expand_more'
   | 'filter_list'
+  | 'tune'
   | 'map'
   | 'location_on'
   | 'grid_view'

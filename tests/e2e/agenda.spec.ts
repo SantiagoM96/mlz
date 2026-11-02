@@ -164,3 +164,26 @@ test('la iconografía de todas las rutas usa Google Material Symbols', async ({ 
     await expect(page.locator('main svg, header svg')).toHaveCount(0);
   }
 });
+
+test('chips azul Info 500, texto blanco y tune de Material Symbols', async ({ page }) => {
+  const routes = ['/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
+    '/agenda-de-la-comunidad/actividades/actividad-1'];
+  for (const route of routes) {
+    await page.goto(route);
+    const activityChips = page.locator('[data-agenda-chip="activity"]');
+    await expect(activityChips.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
+    await expect(activityChips.first()).toHaveCSS('color', 'rgb(255, 255, 255)');
+    await expect(activityChips.first().locator('[data-material-symbol]')).toBeVisible();
+  }
+
+  await page.goto('/agenda-de-la-comunidad/actividades');
+  const filters = page.getByRole('button', { name: /Más Filtros/ });
+  await expect(filters.locator('[data-material-symbol="tune"]')).toBeVisible();
+  await filters.click();
+  const dialog = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await dialog.getByRole('checkbox', { name: 'Banfield' }).check();
+  await dialog.getByRole('button', { name: 'Ver resultados' }).click();
+  const selected = page.locator('[data-agenda-chip="selected"]');
+  await expect(selected.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
+  await expect(selected.first()).toHaveCSS('color', 'rgb(255, 255, 255)');
+});

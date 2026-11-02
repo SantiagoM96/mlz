@@ -150,3 +150,7 @@ Las marcas (logo del municipio, Comunidad Lomas, Instagram, WhatsApp, Facebook, 
 se conservan como archivos SVG gráficos oficiales, porque no son iconos de interfaz.
 Las imágenes fotográficas o ilustraciones tampoco se sustituyen por símbolos.
 La fuente está incluida en el bundle Vite y no necesita una petición a Google Fonts en runtime.
+
+
+### Chips de Agenda — sincronizados con Figma
+Todos los chips seleccionados y los chips de actividad usan `--color-info-500: #006EFF`, texto e iconos blancos. `Más Filtros` usa el glifo `tune` de Google Material Symbols a 24 px, visible también en mobile. El color **Primario 600** se conserva en los componentes institucionales, no se sustituye por Info 500 fuera de estos chips. Corresponde al frame Figma `7358:11951` y a los demás chips de la sección BUSCADOR.
