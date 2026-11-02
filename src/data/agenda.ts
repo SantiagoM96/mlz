@@ -1,4 +1,5 @@
 import { importedActivityRows } from './agenda-imported';
+import { originalActivityDescriptions } from './agenda-descriptions';
 
 export type ActivityCategory = string;
 export type FilterGroup = 'type' | 'category' | 'locality' | 'date';
@@ -87,6 +88,34 @@ const addressByVenue: Record<string, string> = {
   'Sudaka|Lomas de Zamora': 'Francisco Portela 82, Lomas de Zamora',
   'Centro Paraguayo|Budge': 'Campoamor 1962, Budge',
 };
+
+/**
+ * Copy orientativo solo cuando el Excel no incluye una descripción aprovechable.
+ * Se marca en la UI como ilustrativo y nunca se presenta como texto oficial.
+ */
+function illustrativeDescription(title: string, type: string, locality: string, venue: string): string {
+  const place = venue ? `en ${venue}, ${locality}` : `en ${locality}`;
+  const cleanTitle = title.trim();
+  const lower = cleanTitle.toLocaleLowerCase('es-AR');
+  if (/tributo a charly/i.test(title)) return `Un encuentro musical dedicado a Charly García ${place}. Una propuesta para disfrutar y compartir canciones que forman parte de nuestra cultura.`;
+  if (/ensamble percusi[oó]n/i.test(title)) return `Una propuesta para acercarse a la música y los ritmos de percusión ${place}.`;
+  if (/exploradoras de la galaxia/i.test(title)) return `Una propuesta cultural para compartir con las infancias ${place}. Una invitación a dejar volar la imaginación.`;
+  if (/filosofía nuestra/i.test(title)) return `Un encuentro alrededor del libro «Filosofía nuestra» ${place}, para acercarse a la lectura y el intercambio de ideas.`;
+  if (/truco en comunidad/i.test(title)) return `Un encuentro recreativo pensado para compartir partidas de truco y disfrutar de un momento de juego ${place}.`;
+  if (/observación de hongos/i.test(title)) return `Una salida para acercarse a la naturaleza y observar el mundo de los hongos ${place}.`;
+  if (/muestra anual de estudiantes/i.test(title)) return `Una oportunidad para conocer trabajos y producciones de estudiantes ${place}.`;
+  if (/presentaci[oó]n sade/i.test(title)) return `Una propuesta vinculada a la literatura y la escritura ${place}, abierta a quienes disfrutan de los encuentros culturales.`;
+  if (/yoga|tai chi/i.test(title)) return `Una actividad de movimiento y bienestar para conectar con el cuerpo y compartir un momento de práctica ${place}.`;
+  if (/zumba|lomas camina|funcional|kick boxing|actividad f[ií]sica guiada/i.test(title)) return `Una propuesta de actividad física y movimiento ${place}, pensada para sumar ejercicio a la rutina en comunidad.`;
+  if (type === 'Música') return `Una propuesta musical para disfrutar de ${cleanTitle} ${place}. Un espacio para encontrarse alrededor de la música.`;
+  if (type === 'Danza' || type === 'Danza/baile') return `Una invitación a compartir la danza y descubrir la propuesta de ${cleanTitle} ${place}.`;
+  if (type === 'Infantil') return `Una actividad cultural para compartir con las infancias ${place}.`;
+  if (type === 'Teatro' || type === 'Función') return `Una propuesta escénica para acercarse a ${cleanTitle} ${place}.`;
+  if (type === 'Literatura' || type === 'Presentación') return `Un encuentro para acercarse a ${cleanTitle} y compartir lecturas e ideas ${place}.`;
+  if (type === 'Taller' || type.startsWith('Taller')) return `Un espacio de participación y aprendizaje alrededor de ${lower} ${place}.`;
+  if (type === 'Torneo') return `Una propuesta recreativa para encontrarse y compartir actividades en comunidad ${place}.`;
+  return `Una propuesta de la Agenda de la Comunidad para conocer ${cleanTitle} ${place}.`;
+}
 
 /**
  * Microcopy de Agenda siguiendo el patrón de las tarjetas de Figma.
@@ -218,6 +247,9 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
     description: illustrativeActivityDescription(type, category, venue, locality),
     descriptionIsIllustrative: true,
     badges,
+    description: originalActivityDescriptions['actividad-' + (index + 1)] ||
+      illustrativeDescription(title, type, locality, venue),
+    descriptionIsIllustrative: !originalActivityDescriptions['actividad-' + (index + 1)],
     source: 'Planilla de actividades 2026',
   };
 });
