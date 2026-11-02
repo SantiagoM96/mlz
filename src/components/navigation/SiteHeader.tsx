@@ -107,6 +107,14 @@ export function SiteHeader() {
               Inicio
             </Link>
             <Link
+              to="/agenda-de-la-comunidad"
+              aria-current={location.pathname.endsWith('/agenda-de-la-comunidad') ? 'page' : undefined}
+              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
+              onClick={() => setOpen(false)}
+            >
+              Agenda de la Comunidad
+            </Link>
+            <Link
               to="/jovenes-en-comunidad"
               aria-current={location.pathname.endsWith('/jovenes-en-comunidad') ? 'page' : undefined}
               className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"

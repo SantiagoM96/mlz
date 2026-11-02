@@ -2,7 +2,7 @@ import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dist = join(process.cwd(), 'dist');
-const staticPaths = ['jovenes-en-comunidad'];
+const staticPaths = ['jovenes-en-comunidad', 'agenda-de-la-comunidad'];
 for (const route of staticPaths) {
   const directory = join(dist, route);
   mkdirSync(directory, { recursive: true });

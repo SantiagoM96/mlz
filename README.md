@@ -99,3 +99,21 @@ Las capturas son evidencia para comparar con Figma. La suite no debe confundirse
 El UI Kit contiene los componentes `Breadcrumbs` (Geometria 18, 24 px de icono de separación, gap 8), `Icon` (mascara CSS con SVG originales de Figma), `IconLink` (icono 24 px + texto 18/26, gap 4), `InfoCard` (SimpleCard, padding 24/gap 16) y `TableOfContents` desacoplado de la lista de iniciativas. `PageHero` también es reutilizable entre páginas institucionales. Se extraen SVG a `public/assets/icons` y no se copian dibujos aproximados dentro de cada página. Los datos y los destinos de enlaces siguen siendo específicos de cada página.
 
 Tests Playwright específicos verifican fuentes, color, medidas de iconos, gaps, padding y el ancho de las tarjetas en frames Figma desktop (1415 px) y mobile (432 px). El reporte guarda capturas individuales del breadcrumb y el índice, además del header y la página completa. La fidelidad tipográfica exacta sigue condicionada a disponer de Geometria bajo licencia.
+
+## Agenda de la Comunidad — Home inicial
+
+Figma: https://www.figma.com/design/i1EyRb02SVGEtP6nWElLlT/AGENDA-DE-ACTIVIDADES---TEATROS-LOCALES?node-id=7358-11662
+
+La primera vista real de Home es **Agenda Anual de la Comunidad 2026**. Se publica tanto en `/` como en `/agenda-de-la-comunidad`; esto no implica que esté terminada la Home global del municipio.
+
+- Frame desktop `7358:11786` (1292px); mobile `7358:11747` (432px).
+- Componentes reutilizables en `src/components/agenda/`: `ActivityCard`, `AgendaToolbar`, `AgendaFilterPanel`, `ActivityDetails`, `AgendaPromo`, `AgendaIcon`.
+- Datos de demostración separados en `src/data/agenda.ts`; las 18 tarjetas representan las variantes visuales repetidas en el prototipo, **no eventos reales confirmados**.
+- Búsqueda por texto, filtros, chips removibles, orden alfabético, paginación, detalles en modal, resultado vacío.
+- La vista mapa es una pantalla informativa temporal: todavía **no existe información geográfica validada**.
+- Exportaciones originales de Figma en `public/assets/agenda/`: ilustraciones Cine, Deportes, Humor y logo Recorrido del Café. El fondo fotográfico de esa promoción todavía no se incorporó y se reemplaza provisionalmente por un gradiente.
+- La tipografía Geometria no está incorporada por falta de archivos licenciados; usa fallback.
+
+Pruebas Playwright específicas en `tests/e2e/agenda.spec.ts` comprueban las rutas y el funcionamiento en 1415, 768, 432 y 390 px. Ejecutar `npm run test:e2e`.
+
+En GitHub Pages la ruta se prepara en `scripts/prepare-pages.mjs`. Vercel sigue **sin conexión automática ni despliegues**.
