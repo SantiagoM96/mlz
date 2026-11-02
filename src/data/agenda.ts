@@ -14,7 +14,6 @@ export interface AgendaActivity {
   image: string;
   badges: { kind: 'rain' | 'accessible' | 'registration' | 'featured'; label: string }[];
   dateISO?: string;
-  isDateApproximate?: boolean;
   venue?: string;
   address?: string;
   description?: string;
@@ -126,25 +125,53 @@ function displayTime(raw: string): string {
 }
 
 /**
- * Los registros provienen del Excel compartido por el equipo. Algunas actividades ya
- * ocurrieron; se conservan para explorar el buscador, pero se señalan como históricas.
- * No se inventan inscripciones, direcciones ni eventos fuera de la planilla.
+ * La planilla se preserva íntegra. Solo se publican filas con datos confirmables:
+ * fecha exacta, título, tipo, categoría, localidad, sede y horario definidos,
+ * además de flags explícitos para inscripción y suspensión.
+ * La fecha 30/11 de «Palabras desde el barrio» se usó para agrupar talleres
+ * sin día informado: no debe mostrarse como fecha cierta.
+ * Los índices originales se conservan para no cambiar los ID y enlaces existentes.
  */
-export const agendaActivities: AgendaActivity[] = importedActivityRows.map((line, index) => {
+function isValidDate(value: string): boolean {
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T12:00:00Z');
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function isValidTime(value: string): boolean {
+  const range = /^(.+?)\\s+(?:a|hasta)\\s+(.+)$/i.exec(value.trim());
+  return range
+    ? parseHour(range[1]!) !== null && parseHour(range[2]!) !== null
+    : parseHour(value) !== null;
+}
+
+function isPublishableRow(line: string): boolean {
+  const fields = line.split('|').map(value => value.trim());
+  if (fields.length !== 9) return false;
+  const [dateISO, type, category, locality, title, time, venue, registration, rain] = fields;
+  if (![type, category, locality, title, venue].every(Boolean)) return false;
+  if (type === 'Sin especificar' || category === 'Sin categoría') return false;
+  if (title.includes('Palabras desde el barrio') && dateISO === '2026-11-30') return false;
+  if (!isValidDate(dateISO) || !isValidTime(time)) return false;
+  return ['Sí', 'No'].includes(registration) && ['Sí', 'No'].includes(rain);
+}
+
+export const agendaActivities: AgendaActivity[] = importedActivityRows
+  .map((line, index) => ({ line, index }))
+  .filter(({ line }) => isPublishableRow(line))
+  .map(({ line, index }) => {
   const [dateISO='',type='',category='',locality='',title='',time='',venue='',registration='',rain=''] = line.split('|');
-  const isDateApproximate = dateISO === '2026-11-30' && title.includes('Palabras desde el barrio');
   const badges: AgendaActivity['badges'] = [];
   if (registration === 'Sí') badges.push({ kind:'registration', label:'Requiere inscripción' });
   if (rain === 'Sí') badges.push({ kind:'rain', label:'Se suspende por lluvia' });
   return {
     id: 'actividad-' + (index + 1),
     dateISO,
-    isDateApproximate,
     title,
     category,
     type,
     locality,
-    dayLabel: isDateApproximate ? 'Durante noviembre · días a confirmar' : displayDate(dateISO),
+    dayLabel: displayDate(dateISO),
     timeLabel: displayTime(time),
     image: imageForActivity(type, category),
     venue: venue || undefined,
@@ -164,9 +191,9 @@ export const filterOptions: Record<FilterGroup, readonly string[]> = {
     'Jornada', 'Muestra', 'Charla', 'Aeróbica', 'Cuerpo–mente', 'Entrenamiento',
     'Postural', 'Pileta', 'Torneo', 'Encuentro literario', 'Conversatorio',
     'Presentación', 'Cuerpo-mente', 'Danza/baile', 'Literatura', 'Evento',
-    'Exposición', 'Función', 'Sin especificar',
+    'Exposición', 'Función',
   ],
-  category: ['Cultural', 'Deportiva y recreativa', 'Ambiental', 'Sin categoría'],
+  category: ['Cultural', 'Deportiva y recreativa', 'Ambiental'],
   locality: [
     'Albertina', 'Banfield', 'Budge', 'Centenario', 'Fiorito', 'Lamadrid',
     'Llavallol', 'Lomas de Zamora', 'Parque Barón', 'San José',
