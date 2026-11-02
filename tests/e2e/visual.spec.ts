@@ -27,13 +27,12 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
     await testInfo.attach(name, { path, contentType: 'image/png' });
   }
 
-  // Capturar footer provoca scroll. Restablecer posición antes de medir y previsualizar.
-  await page.evaluate(() => {
-    document.documentElement.style.scrollBehavior = 'auto';
-    window.scrollTo(0, 0);
-  });
-
-  const metrics = await page.evaluate(() => {
+  // Inspeccionar en una pestaña independiente: las capturas del footer alteran el scroll.
+  const reviewPage = await page.context().newPage();
+  await reviewPage.goto('/jovenes-en-comunidad');
+  await expect(reviewPage.getByRole('heading', { name: 'Jóvenes en Comunidad', level: 1 })).toBeVisible();
+  await reviewPage.evaluate(() => document.fonts.ready);
+  const metrics = await reviewPage.evaluate(() => {
     const bounds = (selector: string) => {
       const rect = document.querySelector(selector)?.getBoundingClientRect();
       return rect ? { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) } : null;
@@ -70,9 +69,10 @@ test('capturas visuales auditables en Chromium', async ({ page }, testInfo) => {
   // Previsualización liviana en los logs para revisión técnica remota.
   // Las capturas originales sin compresión se guardan como artefactos.
   if (['desktop-1415', 'mobile-432'].includes(testInfo.project.name) && process.env.CI) {
-    const preview = await page.screenshot({
+    const preview = await reviewPage.screenshot({
       type: 'jpeg', quality: 23, animations: 'disabled', fullPage: false,
     });
     console.log('MLZ_VISUAL_PREVIEW_' + testInfo.project.name + ':' + preview.toString('base64'));
   }
+  await reviewPage.close();
 });
