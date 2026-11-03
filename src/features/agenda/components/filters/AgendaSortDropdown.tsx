@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { AgendaSheetBackdrop, AgendaSheetHeader } from '../../../../components/agenda/AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from '../../../../components/agenda/useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from '../../../../components/agenda/useAgendaSheetDismiss';
+import { useAgendaOutsideDismiss } from '../../hooks/useAgendaOutsideDismiss';
 import type { AgendaSortValue } from '../../model/sort';
 
 const sortOptions: { value: AgendaSortValue; text: string }[] = [
@@ -21,24 +22,7 @@ export function AgendaSortDropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const closeOutside = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) dismiss();
-    };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        dismiss();
-        buttonRef.current?.focus();
-      }
-    };
-    document.addEventListener('pointerdown', closeOutside);
-    document.addEventListener('keydown', closeOnEscape);
-    return () => {
-      document.removeEventListener('pointerdown', closeOutside);
-      document.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [isOpen, dismiss]);
+  useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
 
   return (
     <div ref={rootRef} className="relative">
