@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { MaterialIcon } from '../ui/MaterialIcon';
+import { normalizeAgendaText } from './normalizeAgendaText';
 import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
@@ -53,8 +54,7 @@ export function AgendaDropdown({
   }, [isOpen, dismiss]);
 
   const visibleOptions = options.filter(option =>
-    option.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase().includes(search.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()),
+    normalizeAgendaText(option).includes(normalizeAgendaText(search)),
   );
   const shownLabel = selected.length === 0 ? label
     : selected.length === 1 ? selected[0]!
