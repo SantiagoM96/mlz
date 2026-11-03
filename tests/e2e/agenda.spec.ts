@@ -493,6 +493,8 @@ test('ficha: mapa compacto, descripción sin recortes, iconos negros y aviso eli
   await expect(description.getByRole('button', { name: /Leer descripción completa|Leer menos/ })).toHaveCount(0);
 
   const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+  await expect(summary).not.toContainText('La Agenda es informativa: no gestiona inscripciones ni reservas.');
+  await expect(page.getByText('Actividad pasada · Archivo 2026')).toHaveCount(0);
   const icons = summary.locator('[data-material-symbol="calendar_month"], [data-material-symbol="schedule"], [data-material-symbol="location_on"]');
   await expect(icons).toHaveCount(3);
   for (const icon of await icons.all()) {
@@ -524,7 +526,7 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
     await expect(summary.getByRole('heading', { name: 'Resumen' })).toBeVisible();
     await expect(summary).toContainText('Fecha');
     await expect(summary).toContainText('Horario');
-    await expect(summary).toContainText('Lugar');
+    await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
     await expect(page.getByRole('heading', { name: 'Ubicación en el mapa' })).toBeVisible();
     await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
@@ -624,7 +626,7 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     }
     await expect(summary).toContainText('Fecha');
     await expect(summary).toContainText('Horario');
-    await expect(summary).toContainText('Lugar');
+    await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
     await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
     const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
     await expect(crumbs).toHaveCSS('color', 'rgb(35, 105, 153)');
