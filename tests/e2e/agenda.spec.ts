@@ -346,22 +346,19 @@ test('una ficha omitida no se publica aunque se conozca su URL anterior', async 
   await expect(page.getByRole('heading', { name: 'Información general' })).toHaveCount(0);
 });
 
-test('descripciones del Excel no muestran marca de contenido ficticio y las ilustrativas sí', async ({ page }) => {
-  await page.goto(activities + '/actividad-1');
-  const description = page.getByRole('region', { name: 'Descripción de la actividad' });
-  await expect(description).toContainText('Primera edición de La Chamameceada');
-  await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
-  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('21:00 h');
-
-  await page.goto(activities + '/actividad-2');
-  const illustrative = page.getByRole('region', { name: 'Descripción de la actividad' });
-  await expect(illustrative).toContainText('percusión');
-  await expect(illustrative.getByTestId('agenda-illustrative-dot')).toHaveCSS('background-color', 'rgb(211, 47, 47)');
-  await expect(illustrative).toContainText('Descripción ilustrativa');
-
-  await page.goto(activities + '/tita-y-rhodesia');
-  await expect(page.getByRole('region', { name: 'Descripción de la actividad' })).toContainText('Una propuesta teatral');
-  await expect(page.getByTestId('agenda-illustrative-dot')).toHaveCount(1);
+test('descripciones de la ficha aparecen sin marcas ni comentarios de prototipo', async ({ page }) => {
+  for (const { path, text } of [
+    { path: activities + '/actividad-1', text: 'Primera edición de La Chamameceada' },
+    { path: activities + '/actividad-2', text: 'percusión' },
+    { path: activities + '/tita-y-rhodesia', text: 'Una propuesta teatral' },
+  ]) {
+    await page.goto(path);
+    const description = page.getByRole('region', { name: 'Descripción de la actividad' });
+    await expect(description).toContainText(text);
+    await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
+    await expect(description).not.toContainText('Descripción ilustrativa');
+    await expect(description).not.toContainText('Información pendiente de validación');
+  }
 });
 
 
@@ -491,6 +488,8 @@ test('ficha: mapa compacto, descripción sin recortes, iconos negros y aviso eli
   await expect(description).toContainText('fiesta litoraleña en un marco espectacular');
   await expect(description.locator('p')).toHaveCount(3);
   await expect(description.getByRole('button', { name: /Leer descripción completa|Leer menos/ })).toHaveCount(0);
+  await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
+  await expect(description).not.toContainText('Descripción ilustrativa');
 
   const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
   await expect(summary).not.toContainText('La Agenda es informativa: no gestiona inscripciones ni reservas.');
