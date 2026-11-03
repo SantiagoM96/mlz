@@ -6,7 +6,7 @@ import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../components/agenda/ActivityBadges';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
 import { ActivityDescription } from '../../components/agenda/ActivityDescription';
-import { agendaActivities, argentinaTodayISO, type AgendaActivity } from '../../data/agenda';
+import { agendaActivities, type AgendaActivity } from '../../data/agenda';
 import { featuredActivity } from '../../data/agenda-featured';
 import { NotFoundPage } from '../not-found/NotFoundPage';
 
@@ -44,17 +44,11 @@ function ActivitySummary({ activity }: { activity: AgendaActivity }) {
         <div className="flex items-start gap-2.5">
           <MaterialIcon name="location_on" size={24} className="mt-0.5 shrink-0 text-black" />
           <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-6">Lugar</dt>
-            <dd className="font-bold">{venue}</dd>
+            <dt className="text-[18px] font-bold leading-6">{venue}</dt>
             <dd>{address || 'Dirección a confirmar'}</dd>
           </div>
         </div>
       </dl>
-      {activity.badges.some(badge => badge.kind === 'registration') && (
-        <p className="mt-5 text-[13px] leading-5 text-[#69737b]">
-          La Agenda es informativa: no gestiona inscripciones ni reservas.
-        </p>
-      )}
     </aside>
   );
 }
@@ -150,9 +144,6 @@ export function AgendaActivityDetailPage() {
         <div className="min-w-0">
           <p className="mb-2 text-[16px] font-medium uppercase text-[#888]">{activity.type}</p>
           <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-          {activity.dateISO && activity.dateISO < argentinaTodayISO() && (
-            <p className="mt-3 text-[14px] text-[#69737b]">Actividad pasada · Archivo 2026</p>
-          )}
         </div>
         <ActivityShare key={activity.id} title={activity.title} />
       </div>
