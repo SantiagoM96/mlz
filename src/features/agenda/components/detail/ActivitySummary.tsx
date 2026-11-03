@@ -1,6 +1,7 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
+import { formatActivityAddress } from '../../utils/formatActivityAddress';
 
 export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   const venue = activity.venue || activity.locality;
@@ -34,7 +35,7 @@ export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
           <MaterialIcon name="location_on" size={24} className="shrink-0 text-black" />
           <div className="min-w-0">
             <dt className="text-[18px] font-bold leading-5">{venue}</dt>
-            <dd className="mt-1 break-words">{address || 'Dirección a confirmar'}</dd>
+            <dd className="mt-1 break-words">{formatActivityAddress(address, activity.locality)}</dd>
           </div>
         </div>
       </dl>
