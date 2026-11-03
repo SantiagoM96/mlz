@@ -75,8 +75,8 @@ export function AgendaToolbar({ search, onSearch, filters, resultCount, onFilter
       <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters"
         aria-description={advancedCount ? `${advancedCount} ${advancedCount === 1 ? 'filtro avanzado seleccionado' : 'filtros avanzados seleccionados'}` : undefined}
         onClick={() => setOpen(v => !v)}
-        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-between gap-1 rounded border border-[#5ba8d5] bg-white px-2 text-[14px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 md:gap-2 md:px-3 md:text-[16px] ${open || advancedCount ? 'agenda-filter-trigger-active' : ''}`}>
-        <span className="min-w-0 flex-1 truncate whitespace-nowrap">Más Filtros</span>
+        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-center gap-1 rounded border border-[#5ba8d5] bg-white px-2 text-[14px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 md:gap-2 md:px-3 md:text-[16px] ${open || advancedCount ? 'agenda-filter-trigger-active' : ''}`}>
+        <span className="shrink-0 whitespace-nowrap">Más Filtros</span>
         <AgendaFilterCounter count={advancedCount} />
         <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>

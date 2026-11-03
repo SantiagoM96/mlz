@@ -37,6 +37,34 @@ test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page 
 });
 
 
+test('Más Filtros agrupa texto, contador e icono sin espacio vacío', async ({ page }) => {
+  await page.goto(activities);
+  const trigger = page.getByRole('button', { name: 'Más Filtros', exact: true });
+  const label = trigger.locator(':scope > span').first();
+  const icon = trigger.locator('[data-material-symbol="tune"]');
+  const gap = async (left: typeof label, right: typeof label) => {
+    const leftBox = await left.boundingBox();
+    const rightBox = await right.boundingBox();
+    expect(leftBox).not.toBeNull();
+    expect(rightBox).not.toBeNull();
+    return rightBox!.x - (leftBox!.x + leftBox!.width);
+  };
+
+  await expect(trigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
+  expect(await gap(label, icon)).toBeGreaterThanOrEqual(0);
+  expect(await gap(label, icon)).toBeLessThanOrEqual(12);
+
+  await trigger.click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await panel.getByRole('checkbox').first().check();
+  const badge = trigger.locator('[data-agenda-filter-count]');
+  await expect(badge).toHaveText('1');
+  expect(await gap(label, badge)).toBeGreaterThanOrEqual(0);
+  expect(await gap(label, badge)).toBeLessThanOrEqual(12);
+  expect(await gap(badge, icon)).toBeGreaterThanOrEqual(0);
+  expect(await gap(badge, icon)).toBeLessThanOrEqual(12);
+});
+
 test('los badges de Localidad, Fecha y Más Filtros reflejan el grupo, no el origen de la selección', async ({ page }, info) => {
   await page.goto(activities);
   const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
