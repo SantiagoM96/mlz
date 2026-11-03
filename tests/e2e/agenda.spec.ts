@@ -37,7 +37,7 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
   await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(61, 61, 61)');
+  await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(35, 105, 153)');
   await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
 });
@@ -477,6 +477,37 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
   if ((info.project.use.viewport?.width ?? 0) < 640) {
     await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
+  }
+});
+
+test('ficha: mapa compacto, descripción sin recortes, iconos negros y aviso eliminado', async ({ page }, info) => {
+  for (const path of [agenda, activities, activities + '/actividad-1']) {
+    await page.goto(path);
+    await expect(page.getByText('Información de la planilla 2026; incluye registros históricos.', { exact: false })).toHaveCount(0);
+  }
+
+  const description = page.getByRole('region', { name: 'Descripción de la actividad' });
+  await expect(description).toContainText('Primera edición de La Chamameceada');
+  await expect(description).toContainText('fiesta litoraleña en un marco espectacular');
+  await expect(description.locator('p')).toHaveCount(3);
+  await expect(description.getByRole('button', { name: /Leer descripción completa|Leer menos/ })).toHaveCount(0);
+
+  const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+  const icons = summary.locator('[data-material-symbol="calendar_month"], [data-material-symbol="schedule"], [data-material-symbol="location_on"]');
+  await expect(icons).toHaveCount(3);
+  for (const icon of await icons.all()) {
+    await expect(icon).toHaveCSS('color', 'rgb(0, 0, 0)');
+  }
+
+  const map = page.getByRole('region', { name: 'Mapa de ubicación' });
+  await expect(map.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/);
+  const mapHeight = await map.locator('iframe').evaluate(element => element.getBoundingClientRect().height);
+  expect(mapHeight).toBeLessThanOrEqual(220);
+  const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
+  expect(noOverflow).toBe(true);
+
+  if ((info.project.use.viewport?.width ?? 0) >= 1024) {
+    await expect(summary).toHaveCSS('position', 'sticky');
   }
 });
 
