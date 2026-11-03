@@ -144,7 +144,7 @@ test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ p
         ?.compareDocumentPosition(document.getElementById('agenda-general-information')!)
         & Node.DOCUMENT_POSITION_FOLLOWING));
     expect(mapBeforeInfo).toBe(true);
-    await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+    await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toBeVisible();
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       expect(positions.summaryX).toBeGreaterThan(positions.imageX);
     }
@@ -196,7 +196,7 @@ test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', a
   await expect(summary).toBeVisible();
   await expect(iframe).toBeVisible();
   const mobile = (info.project.use.viewport?.width ?? 0) < 1024;
-  await expect(summary).toHaveCSS('position', mobile ? 'static' : 'sticky');
+  await expect(summary.locator('..')).toHaveCSS('position', mobile ? 'static' : 'sticky');
   await expect(summary).toHaveCSS('font-family', /^Geometria(?:,|$)/);
   const height = await iframe.evaluate(el => el.getBoundingClientRect().height);
   expect(height).toBeLessThanOrEqual(mobile ? 201 : 221);
