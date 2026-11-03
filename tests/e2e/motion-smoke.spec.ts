@@ -157,7 +157,8 @@ test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ p
         ?.compareDocumentPosition(document.getElementById('agenda-general-information')!)
         & Node.DOCUMENT_POSITION_FOLLOWING));
     expect(mapBeforeInfo).toBe(true);
-    await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toBeVisible();
+    await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+    await expect(map.getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       expect(positions.summaryX).toBeGreaterThan(positions.imageX);
     }
