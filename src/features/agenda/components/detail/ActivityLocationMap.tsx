@@ -1,5 +1,6 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { getActivityMapQuery, getActivityMapUrl } from '../../utils/activityMap';
+import { formatActivityAddress } from '../../utils/formatActivityAddress';
 
 /** Tarjeta compacta de ubicación, siguiendo la referencia de Deportes. */
 export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) {
@@ -15,7 +16,7 @@ export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) 
       <div className="grid grid-cols-[minmax(0,1fr)_42%] overflow-hidden rounded-lg border border-[#dedede] bg-white">
         <div className="min-w-0 self-center px-4 py-3">
           <p className="text-[16px] font-bold leading-6 text-grey-900">{venue}</p>
-          <p className="mt-1 break-words text-[16px] leading-6 text-grey-900">{activity.address}</p>
+          <p className="mt-1 break-words text-[16px] leading-6 text-grey-900">{formatActivityAddress(activity.address, activity.locality)}</p>
           <a
             href={googleMapsUrl}
             target="_blank"
