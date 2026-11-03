@@ -58,7 +58,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose, 
       </div>
       <div className="flex flex-none gap-2 border-t border-[#e7e7e7] bg-white p-4">
         <button type="button" onClick={() => { if (window.matchMedia("(max-width: 680px)").matches) dismiss(); else onApply(); }} className="min-h-12 min-w-0 flex-1 rounded bg-primary-600 px-4 font-bold text-white hover:bg-primary-700">Ver resultados ({resultCount})</button>
-        <button type="button" onClick={onReset} className="min-h-12 flex-1 rounded border border-primary-600 bg-white px-4 font-bold text-primary-600 hover:bg-[#f3f7fc]">Limpiar</button>
+        <button type="button" onClick={onReset} className="min-h-12 shrink-0 rounded border border-primary-600 bg-white px-4 font-bold text-primary-600 hover:bg-[#f3f7fc]">Limpiar</button>
       </div>
     </section>
     </>
