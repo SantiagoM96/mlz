@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { normalizeAgendaText } from '../../components/agenda/normalizeAgendaText';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
@@ -31,8 +32,7 @@ export function AgendaPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    const normalize = (v: string) => v.normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-AR').replace('–', '-');
+    const normalize = normalizeAgendaText;
     const term = normalize(search.trim());
     const today = argentinaTodayISO();
     const todayDate = new Date(today + 'T12:00:00Z');
