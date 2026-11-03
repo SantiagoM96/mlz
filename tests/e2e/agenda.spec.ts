@@ -61,14 +61,14 @@ test('los badges de Localidad, Fecha y Más Filtros reflejan el grupo, no el ori
   await expect(page.getByTestId('agenda-dropdown-fecha').locator('[data-agenda-filter-count]')).toHaveText('1');
   await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
 
-  const typeSection = more.getByRole('button', { name: 'Tipo', exact: true });
-  await typeSection.click();
+  const typeSection = more.getByRole('button', { name: 'Tipo de actividad', exact: true });
+  await expect(typeSection).toHaveAttribute('aria-expanded', 'true');
   await more.getByRole('checkbox', { name: 'Charla', exact: true }).check();
   await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveText('1');
   await expect(page.getByTestId('agenda-dropdown-fecha').locator('[data-agenda-filter-count]')).toHaveText('1');
 
   const summary = (await page.getByText(/^Mostrando -/).textContent()) ?? '';
-  const total = Number(summary.match(/de (\\d+) actividades/)?.[1] ?? 0);
+  const total = Number(summary.match(/de (\d+) actividades/)?.[1] ?? 0);
   await expect(more.getByRole('button', { name: /Ver resultados/ })).toHaveText(`Ver resultados (${total})`);
   await more.getByRole('button', { name: /Ver resultados/ }).click();
 
@@ -86,10 +86,10 @@ test('los cheurones de Más Filtros indican cerrado abajo y abierto arriba; en m
   await page.goto(activities);
   await page.getByRole('button', { name: /Más Filtros/ }).click();
   const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  const type = panel.getByRole('button', { name: 'Tipo', exact: true });
+  const type = panel.getByRole('button', { name: 'Tipo de actividad', exact: true });
   const arrow = type.locator('[data-material-symbol="expand_more"]');
   await expect(type).toHaveAttribute('aria-expanded', 'true');
-  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toMatch(/matrix\\(-1/);
+  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toContain('matrix(-1');
   await type.click();
   await expect(type).toHaveAttribute('aria-expanded', 'false');
   await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toBe('none');
