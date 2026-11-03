@@ -3,9 +3,10 @@ export function formatActivityAddress(address: string | undefined, locality: str
   if (!address?.trim()) return 'Dirección a confirmar';
 
   const normalized = address.trim();
-  const comma = normalized.lastIndexOf(',');
-  const street = comma >= 0 ? normalized.slice(0, comma).trim() : normalized;
-  const addressLocality = comma >= 0 ? normalized.slice(comma + 1).trim() : '';
+  // La planilla separa con coma; algunas actividades destacadas usan « - ».
+  const parts = /^(.*?)\s*(?:,\s*|\s+-\s+)([^,]+)$/.exec(normalized);
+  const street = parts?.[1]?.trim() ?? normalized;
+  const addressLocality = parts?.[2]?.trim() ?? '';
   const displayedLocality = addressLocality || locality.trim();
 
   // Convierte «Calle 123» en «Calle N° 123» sin duplicar una numeración existente.
