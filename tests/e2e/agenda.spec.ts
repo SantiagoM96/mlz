@@ -345,8 +345,10 @@ test('buscador y dropdowns replican el foco y el margen inferior de 50px del pro
   await page.goto(activities);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.focus();
-  await expect(search).toHaveCSS('border-top-color', 'rgb(35, 105, 153)');
-  await expect(search).toHaveCSS('box-shadow', 'rgb(217, 237, 255) 0px 0px 0px 3px');
+  await expect(search).toHaveCSS('border-top-color', 'rgb(0, 110, 255)');
+  await expect(search).toHaveCSS('border-top-width', '2px');
+  await expect(search).toHaveCSS('background-color', 'rgb(246, 246, 246)');
+  await expect(search).toHaveCSS('box-shadow', 'none');
   if ((info.project.use.viewport?.width ?? 0) <= 680) return;
   const viewportHeight = await page.evaluate(() => window.innerHeight);
   const checkBottom = async (label: string) => {

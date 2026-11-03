@@ -363,9 +363,15 @@ html { scrollbar-gutter: stable both-edges; }
     width: min(576px, calc(100vw - 32px));
   }
 }
-.agenda-search-input:focus,
-.agenda-search-input:focus-visible {
-  border-color: #236999;
+/* Focus del buscador visible de Deportes (.search-wrap):
+   el mismo contorno azul Info 500 que los filtros activos,
+   sin el halo celeste del buscador antiguo (.sf-search). */
+.agenda-search-filterbar .agenda-search-input:focus,
+.agenda-search-filterbar .agenda-search-input:focus-visible {
+  border: 2px solid #006eff;
+  background-color: #f6f6f6;
   outline: none;
-  box-shadow: 0 0 0 3px #d9edff;
+  box-shadow: none;
+  padding-left: 15px;
+  padding-right: 43px;
 }
