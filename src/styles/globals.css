@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
+/* Fuentes institucionales alojadas en MLZ y resueltas por Vite, incluido GitHub Pages. */
+@font-face {
+  font-family: 'Geometria';
+  src: url('../assets/fonts/Geometria-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geometria';
+  src: url('../assets/fonts/Geometria-Medium.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geometria';
+  src: url('../assets/fonts/Geometria-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+
 /*
  * Figma — Biblioteca de colores MLZ
  * Primario/Primario 600 = #236999
