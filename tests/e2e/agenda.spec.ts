@@ -52,7 +52,17 @@ test('barra de búsqueda replica cuatro columnas de la captura en desktop', asyn
   }
   expect(boxes[1]!.width).toBeCloseTo(207, 0);
   expect(boxes[2]!.width).toBeCloseTo(207, 0);
-  expect(boxes[3]!.width).toBeCloseTo(196, 0);
+  const moreContent = more.locator('[data-agenda-more-content]');
+  const intrinsicWidth = await more.evaluate(node => {
+    const inner = node.querySelector('[data-agenda-more-content]')!;
+    const s = getComputedStyle(node);
+    return inner.getBoundingClientRect().width
+      + parseFloat(s.paddingLeft) + parseFloat(s.paddingRight)
+      + parseFloat(s.borderLeftWidth) + parseFloat(s.borderRightWidth);
+  });
+  expect(boxes[3]!.width).toBeCloseTo(intrinsicWidth, 0);
+  expect(boxes[3]!.width).toBeLessThan(190);
+  await expect(moreContent).toBeVisible();
   for (const box of boxes) expect(box!.height).toBeCloseTo(48, 0);
   const results = page.getByText(/^Mostrando -/);
   const sort = page.getByRole('button', { name: 'Ordenar', exact: true });
@@ -77,7 +87,21 @@ test('Más Filtros agrupa texto, contador e icono sin espacio vacío', async ({ 
     return rightBox!.x - (leftBox!.x + leftBox!.width);
   };
 
+  const assertHugWidth = async () => {
+    const dimensions = await trigger.evaluate(node => {
+      const inner = node.querySelector('[data-agenda-more-content]')!;
+      const s = getComputedStyle(node);
+      return {
+        actual: node.getBoundingClientRect().width,
+        expected: inner.getBoundingClientRect().width + parseFloat(s.paddingLeft)
+          + parseFloat(s.paddingRight) + parseFloat(s.borderLeftWidth)
+          + parseFloat(s.borderRightWidth),
+      };
+    });
+    expect(dimensions.actual).toBeCloseTo(dimensions.expected, 0);
+  };
   await expect(trigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
+  await assertHugWidth();
   expect(await gap(label, icon)).toBeGreaterThanOrEqual(0);
   expect(await gap(label, icon)).toBeLessThanOrEqual(12);
 
@@ -86,6 +110,7 @@ test('Más Filtros agrupa texto, contador e icono sin espacio vacío', async ({ 
   await panel.getByRole('checkbox').first().check();
   const badge = trigger.locator('[data-agenda-filter-count]');
   await expect(badge).toHaveText('1');
+  await assertHugWidth();
   expect(await gap(label, badge)).toBeGreaterThanOrEqual(0);
   expect(await gap(label, badge)).toBeLessThanOrEqual(12);
   expect(await gap(badge, icon)).toBeGreaterThanOrEqual(0);

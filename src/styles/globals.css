@@ -396,9 +396,6 @@ html { scrollbar-gutter: stable both-edges; }
   .agenda-filter-counter { flex-basis: 20px; width: 20px; height: 20px; font-size: 11px; }
 }
 
-/* En mobile, los accesos directos conservan su texto incluso con contador. */
-@media (max-width: 680px) {
-  .agenda-search-filterbar .agenda-filter-trigger-active {
-    padding-inline: 8px !important;
-  }
-}
+/* El botón "Más Filtros" usa max-content (hug) en todos los breakpoints.
+   Al activar el borde de 2px, el padding pasa de 16px a 15px para
+   conservar exactamente el ancho intrínseco, también en mobile. */
