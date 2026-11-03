@@ -53,11 +53,10 @@ export function ActivityShare({ title }: { title: string }) {
 
   const platformIcon = (platform: 'whatsapp' | 'instagram' | 'facebook') =>
     <img src={assets + 'social-' + platform + '.svg'} width="20" height="20" alt="" aria-hidden="true" />;
-  const classes = 'inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-primary-600 text-primary-600 transition-colors hover:bg-[#f3f7fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600';
+  const classes = 'inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-primary-600 text-primary-600 transition-colors hover:bg-[#f3f7fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600';
 
   return (
-    <div className="flex shrink-0 flex-wrap items-center gap-2 text-primary-600" aria-label="Compartir actividad">
-      <span className="mr-1 text-[16px] font-bold">Compartir</span>
+    <div className="flex min-w-0 flex-wrap items-center gap-2 text-primary-600" aria-label="Compartir actividad">
       <a className={classes} href={'https://api.whatsapp.com/send?text=' + shareText}
         target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">
         {platformIcon('whatsapp')}
@@ -70,13 +69,14 @@ export function ActivityShare({ title }: { title: string }) {
         target="_blank" rel="noopener noreferrer" aria-label="Compartir por Facebook">
         {platformIcon('facebook')}
       </a>
+      <span className="text-[18px] font-bold leading-[26px] text-primary-600">Compartir</span>
       <button type="button" onClick={copyLink}
-        className="ml-1 inline-flex min-h-9 items-center gap-1.5 rounded-sm px-1 text-[16px]
+        className="inline-flex min-h-7 items-center gap-1 rounded-sm px-1 text-[14px]
           font-bold text-primary-600 transition-colors hover:text-primary-700
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
         aria-label={copyState === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
         <MaterialIcon name={copyState === 'copied' ? 'check' : 'content_copy'} size={20} />
-        {copyState === 'copied' ? 'Copiado' : 'Copiar enlace'}
+        <span className="sr-only">{copyState === 'copied' ? 'Copiado' : 'Copiar enlace'}</span>
       </button>
       <span className="sr-only" role="status" aria-live="polite">
         {copyState === 'copied' ? 'Enlace copiado al portapapeles' :
