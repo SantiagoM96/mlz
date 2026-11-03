@@ -1,26 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
 import { filterAgendaActivities } from '../../components/agenda/filterAgendaActivities';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
-import { AgendaSortDropdown, type AgendaSortValue } from '../../components/agenda/AgendaDropdown';
+import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
+import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
-import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
-
-function usePageSize() {
-  const [size, setSize] = useState(9);
-  useEffect(() => {
-    const update = () => setSize(window.matchMedia('(max-width: 767px)').matches ? 6 : 9);
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-  return size;
-}
+import { emptyFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
 
 /** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
-  const pageSize = usePageSize();
+  const pageSize = useAgendaPageSize();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<SelectedFilters>(emptyFilters);
   const [sort, setSort] = useState<AgendaSortValue>('default');
