@@ -13,10 +13,7 @@ import { NotFoundPage } from '../not-found/NotFoundPage';
 function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   const venue = activity.venue || activity.locality;
   const address = activity.address;
-  const mapsUrl = address
-    ? 'https://www.google.com/maps/search/?api=1&query='
-      + encodeURIComponent(address + ', Buenos Aires, Argentina')
-    : null;
+
 
   return (
     <aside aria-label="Resumen de actividad"
@@ -48,16 +45,6 @@ function ActivitySummary({ activity }: { activity: AgendaActivity }) {
             <dt className="font-bold">Lugar</dt>
             <dd className="font-bold">{venue}</dd>
             <dd>{address || 'Dirección a confirmar'}</dd>
-            {mapsUrl && (
-              <dd className="mt-2">
-                <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex min-h-8 items-center gap-1.5 rounded-sm font-bold text-primary-600
-                    no-underline hover:no-underline focus-visible:outline-2
-                    focus-visible:outline-offset-2 focus-visible:outline-primary-600">
-                  Ver en Google Maps <MaterialIcon name="chevron_right" size={20} />
-                </a>
-              </dd>
-            )}
           </div>
         </div>
       </dl>
@@ -70,7 +57,7 @@ function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   );
 }
 
-/** El mapa se ofrece al final: la ubicación textual permanece disponible sin él. */
+/** Mapa debajo de la ficha y encima de información general. */
 function ActivityMap({ activity }: { activity: AgendaActivity }) {
   if (!activity.address) return null;
   const mapQuery = encodeURIComponent(activity.address + ', Buenos Aires, Argentina');
@@ -166,10 +153,10 @@ export function AgendaActivityDetailPage() {
         </div>
         <ActivitySummary activity={activity} />
       </div>
+      <ActivityMap activity={activity} />
       <div className="mt-8">
         <ActivityInformation activity={activity} />
       </div>
-      <ActivityMap activity={activity} />
     </PageContainer>
   );
 }

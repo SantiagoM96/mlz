@@ -202,6 +202,31 @@ button:not(:disabled) { cursor: pointer; }
     border-bottom: 1px solid #e6ecf0;
     margin-bottom: 8px;
   }
+  /* Deportes: el sheet permanece anclado al pie y se estira levemente hacia arriba. */
+  .agenda-mobile-sheet.agenda-sheet-settled {
+    animation: none !important;
+  }
+  .agenda-mobile-sheet.agenda-sheet-stretching {
+    animation: none !important;
+    transition: none !important;
+    transform: translate3d(0,0,0) !important;
+    height: calc(var(--agenda-sheet-base-height) + var(--agenda-sheet-stretch-y,0px)) !important;
+    max-height: calc(var(--agenda-sheet-base-height) + var(--agenda-sheet-stretch-y,0px)) !important;
+    will-change: height;
+  }
+  .agenda-mobile-sheet.agenda-sheet-stretch-rebounding {
+    animation: none !important;
+    transform: translate3d(0,0,0) !important;
+    height: var(--agenda-sheet-base-height) !important;
+    max-height: calc(var(--agenda-sheet-base-height) + var(--agenda-sheet-stretch-y,0px)) !important;
+    transition: height 380ms cubic-bezier(.21,1.10,.38,1) !important;
+    will-change: height;
+  }
+  .agenda-mobile-sheet.agenda-sheet-rebounding {
+    animation: none !important;
+    transform: translate3d(0,0,0) !important;
+    transition: transform 320ms cubic-bezier(.18,1.15,.36,1) !important;
+  }
   .agenda-mobile-sheet.agenda-sheet-dragging {
     animation: none !important;
     transition: none !important;
@@ -257,7 +282,9 @@ button:not(:disabled) { cursor: pointer; }
   .agenda-dropdown-enter, .agenda-dropdown-exit,
   .agenda-motion-grid [data-testid="agenda-card"], .agenda-motion-empty, .agenda-motion-detail,
   .agenda-filter-chip, .agenda-motion-check:not(:empty), .agenda-motion-accordion,
-  .agenda-mobile-sheet, .agenda-mobile-backdrop {
+  .agenda-mobile-sheet, .agenda-mobile-backdrop,
+  .agenda-mobile-sheet.agenda-sheet-rebounding,
+  .agenda-mobile-sheet.agenda-sheet-stretch-rebounding {
     animation: none !important;
     transition: none !important;
   }

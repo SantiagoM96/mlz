@@ -139,10 +139,51 @@ test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ p
     });
     expect(positions.desc).toBeLessThan(positions.image);
     expect(positions.map).toBeGreaterThan(positions.imageBottom);
+    const mapBeforeInfo = await page.evaluate(() =>
+      Boolean(document.querySelector('[aria-label="Mapa de ubicación"]')
+        ?.compareDocumentPosition(document.getElementById('agenda-general-information')!)
+        & Node.DOCUMENT_POSITION_FOLLOWING));
+    expect(mapBeforeInfo).toBe(true);
+    await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       expect(positions.summaryX).toBeGreaterThan(positions.imageX);
     }
     await expect(page.getByRole('navigation', { name: 'Ruta de navegación' }))
       .toHaveCSS('color', 'rgb(35, 105, 153)');
   }
+});
+
+test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como en Deportes', async ({ page }, info) => {
+  if ((info.project.use.viewport?.width ?? 0) > 680) return;
+  await page.goto(route);
+  await page.getByTestId('agenda-dropdown-fecha').click();
+  const sheet = page.getByRole('dialog', { name: 'Opciones de Fecha' });
+  await expect(sheet).toBeVisible();
+  const handle = sheet.getByRole('button', { name: 'Deslizar o tocar para cerrar panel' });
+  const box = await handle.boundingBox();
+  expect(box).not.toBeNull();
+  const x = box!.x + box!.width / 2;
+  const y = box!.y + box!.height / 2;
+  const base = await sheet.boundingBox();
+  expect(base).not.toBeNull();
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x, y - 90, { steps: 8 });
+  await expect(sheet).toHaveClass(/agenda-sheet-stretching/);
+  const stretch = await sheet.boundingBox();
+  expect(stretch).not.toBeNull();
+  expect(stretch!.height).toBeGreaterThan(base!.height + 10);
+  expect(stretch!.height).toBeLessThan(base!.height + 35);
+  expect(Math.abs((stretch!.y + stretch!.height) - (base!.y + base!.height))).toBeLessThan(2);
+  const backdrop = page.getByRole('button', { name: 'Cerrar panel de opciones' });
+  await expect(backdrop).toHaveCSS('opacity', '1');
+  await page.mouse.up();
+  await expect(sheet).toBeVisible();
+  await expect.poll(() => sheet.evaluate(el =>
+    el.classList.contains('agenda-sheet-stretching')
+      || el.classList.contains('agenda-sheet-stretch-rebounding'))).toBe(false);
+  const settled = await sheet.boundingBox();
+  expect(Math.abs(settled!.height - base!.height)).toBeLessThan(2);
+  await sheet.getByRole('button', { name: 'Cerrar opciones' }).click();
+  await expect(sheet).toHaveCount(0);
 });
