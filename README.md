@@ -66,7 +66,8 @@ src/
 │   └── agenda/
 │       ├── components/
 │       │   ├── detail/          # Resumen, ubicación e información
-│       │   └── filters/         # Selector de ordenamiento
+│       │   ├── filters/         # Selector de ordenamiento
+│       │   └── shared/          # Introducción editorial reutilizable
 │       ├── hooks/               # Paginación responsive
 │       ├── model/               # Contratos de filtros y ordenamiento
 │       └── utils/               # Búsqueda, selección, normalización y URLs
