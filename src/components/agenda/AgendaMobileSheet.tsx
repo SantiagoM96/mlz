@@ -13,7 +13,7 @@ export function AgendaSheetBackdrop({ onClose }: { onClose: () => void }) {
  * El tirador acompaña el dedo. Un swipe corto rebota con easing suave;
  * un swipe largo o suficientemente veloz cierra el bottom sheet.
  */
-export function AgendaSheetHeader({ title, onClose }: { title: string; onClose: () => void }) {
+export function AgendaSheetHeader({ title, onClose, showCloseButton = true }: { title: string; onClose: () => void; showCloseButton?: boolean }) {
   const startY = useRef<number | null>(null);
   const startTime = useRef(0);
   const baseHeight = useRef(0);
@@ -152,11 +152,11 @@ export function AgendaSheetHeader({ title, onClose }: { title: string; onClose: 
       </button>
       <div className="agenda-sheet-heading">
         <strong className="text-[18px] leading-6 text-primary-600">{title}</strong>
-        <button type="button" aria-label="Cerrar opciones" onClick={onClose}
+        {showCloseButton && <button type="button" aria-label="Cerrar opciones" onClick={onClose}
           className="grid size-10 place-items-center rounded-full bg-[#f1f6fa] text-primary-600
             focus-visible:outline-2 focus-visible:outline-info-500">
           <MaterialIcon name="close" size={24} />
-        </button>
+        </button>}
       </div>
     </div>
   );

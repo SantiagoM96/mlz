@@ -5,6 +5,13 @@ export type SelectedFilters = Record<FilterGroup, string[]>;
 
 export const agendaFilterGroups: readonly FilterGroup[] = ['type', 'category', 'locality', 'date'];
 
+/** Los accesos directos mantienen sus propios contadores aunque la selección se
+ * haga desde Más Filtros. El contador avanzado excluye Localidad y Fecha. */
+export function countAdvancedFilters(filters: SelectedFilters): number {
+  return agendaFilterGroups.reduce((total, group) =>
+    total + (group === 'locality' || group === 'date' ? 0 : filters[group].length), 0);
+}
+
 export function emptyFilters(): SelectedFilters {
   return { type: [], category: [], locality: [], date: [] };
 }

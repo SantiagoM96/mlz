@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { agendaFilterGroups, type SelectedFilters } from '../../features/agenda/model/filterState';
+import { agendaFilterGroups, countAdvancedFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
 import { filterOptions } from '../../data/agenda';
 import { AgendaFilterPanel } from './AgendaFilterPanel';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { AgendaDropdown } from './AgendaDropdown';
+import { AgendaFilterCounter } from './AgendaFilterCounter';
 
 type Props = {
   search: string;
   onSearch: (value: string) => void;
   filters: SelectedFilters;
+  resultCount: number;
   onFilters: (filters: SelectedFilters) => void;
   onReset: () => void;
 };
 
-export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }: Props) {
+export function AgendaToolbar({ search, onSearch, filters, resultCount, onFilters, onReset }: Props) {
   const [open, setOpen] = useState(false);
   const moreFiltersButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -39,9 +41,10 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
     };
   }, [open]);
   const selectedCount = Object.values(filters).reduce((sum, items) => sum + items.length, 0);
+  const advancedCount = countAdvancedFilters(filters);
 
   return <div className="relative" data-testid="agenda-toolbar">
-    <div className="agenda-search-filterbar grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
+    <div className="agenda-search-filterbar grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(190px,196px)]">
       <label className="relative col-span-2 block md:col-span-1">
         <span className="sr-only">Buscar actividades</span>
         <input value={search} onChange={e => onSearch(e.target.value)} placeholder="¿Qué estás buscando?"
@@ -56,6 +59,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         <AgendaDropdown label="Localidad" align="end"
           options={filterOptions.locality}
           selected={filters.locality}
+          resultCount={resultCount}
           multiple
           onChange={locality => onFilters({ ...filters, locality })} />
       </div>
@@ -63,17 +67,21 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
       <AgendaDropdown label="Fecha"
         options={filterOptions.date}
         selected={filters.date}
+        resultCount={resultCount}
         align="end-responsive"
         onChange={date => onFilters({ ...filters, date })} />
 
       <div className="relative min-w-0">
-      <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters" onClick={() => setOpen(v => !v)}
-        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-between gap-2 rounded border border-[#5ba8d5] bg-white px-4 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 ${open || selectedCount ? 'agenda-filter-trigger-active' : ''}`}>
-        <span className="whitespace-nowrap">Más Filtros</span>
+      <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters"
+        aria-description={advancedCount ? `${advancedCount} ${advancedCount === 1 ? 'filtro avanzado seleccionado' : 'filtros avanzados seleccionados'}` : undefined}
+        onClick={() => setOpen(v => !v)}
+        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-between gap-1 rounded border border-[#5ba8d5] bg-white px-2 text-[14px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 md:gap-2 md:px-3 md:text-[16px] ${open || advancedCount ? 'agenda-filter-trigger-active' : ''}`}>
+        <span className="min-w-0 flex-1 truncate whitespace-nowrap">Más Filtros</span>
+        <AgendaFilterCounter count={advancedCount} />
         <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>
         {open && <AgendaFilterPanel value={filters} onChange={onFilters} onApply={() => setOpen(false)}
-          onReset={onReset} onClose={() => setOpen(false)} anchorRef={moreFiltersButtonRef} />}
+          onReset={onReset} onClose={() => setOpen(false)} resultCount={resultCount} anchorRef={moreFiltersButtonRef} />}
       </div>
     </div>
 

@@ -34,7 +34,7 @@ export function AgendaPage() {
     <PageContainer className="pt-6 pb-6" >
       <AgendaIntro className="mb-6" />
 
-      <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters}
+      <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters} resultCount={filtered.length}
         onFilters={value => { setFilters(value); setLimit(9); }} onReset={onReset} />
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">

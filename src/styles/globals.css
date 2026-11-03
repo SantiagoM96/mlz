@@ -375,3 +375,23 @@ html { scrollbar-gutter: stable both-edges; }
   padding-left: 15px;
   padding-right: 43px;
 }
+
+/* El número de filtros se representa como en Deportes: badge Info 500 circular. */
+.agenda-filter-counter {
+  display: inline-grid;
+  flex: 0 0 24px;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0 2px;
+  border-radius: 999px;
+  background: #006eff;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 680px) {
+  .agenda-filter-counter { flex-basis: 20px; width: 20px; height: 20px; font-size: 11px; }
+}

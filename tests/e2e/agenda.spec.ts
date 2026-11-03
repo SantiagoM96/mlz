@@ -36,6 +36,71 @@ test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page 
   await expect(card.getByText('Actividad pasada')).toHaveCount(0);
 });
 
+
+test('los badges de Localidad, Fecha y Más Filtros reflejan el grupo, no el origen de la selección', async ({ page }, info) => {
+  await page.goto(activities);
+  const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
+  const moreTrigger = page.getByRole('button', { name: 'Más Filtros', exact: true });
+  await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
+
+  await moreTrigger.click();
+  const more = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await expect(more.getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
+  const localitySection = more.getByRole('button', { name: 'Localidad', exact: true });
+  await localitySection.click();
+  await more.getByRole('checkbox', { name: 'Banfield', exact: true }).check();
+  await more.getByRole('checkbox', { name: 'Temperley', exact: true }).check();
+  await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
+  if (!mobile) {
+    await expect(page.getByTestId('agenda-dropdown-localidad').locator('[data-agenda-filter-count]')).toHaveText('2');
+  }
+
+  const dateSection = more.getByRole('button', { name: 'Fecha', exact: true });
+  await dateSection.click();
+  await more.getByRole('checkbox', { name: 'Hoy', exact: true }).check();
+  await expect(page.getByTestId('agenda-dropdown-fecha').locator('[data-agenda-filter-count]')).toHaveText('1');
+  await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveCount(0);
+
+  const typeSection = more.getByRole('button', { name: 'Tipo', exact: true });
+  await typeSection.click();
+  await more.getByRole('checkbox', { name: 'Charla', exact: true }).check();
+  await expect(moreTrigger.locator('[data-agenda-filter-count]')).toHaveText('1');
+  await expect(page.getByTestId('agenda-dropdown-fecha').locator('[data-agenda-filter-count]')).toHaveText('1');
+
+  const summary = (await page.getByText(/^Mostrando -/).textContent()) ?? '';
+  const total = Number(summary.match(/de (\\d+) actividades/)?.[1] ?? 0);
+  await expect(more.getByRole('button', { name: /Ver resultados/ })).toHaveText(`Ver resultados (${total})`);
+  await more.getByRole('button', { name: /Ver resultados/ }).click();
+
+  if (!mobile) {
+    await page.getByTestId('agenda-dropdown-localidad').click();
+    const locality = page.getByRole('dialog', { name: 'Opciones de Localidad' });
+    await expect(locality.getByRole('checkbox', { name: 'Banfield', exact: true })).toBeChecked();
+    await expect(locality.getByRole('checkbox', { name: 'Temperley', exact: true })).toBeChecked();
+    await expect(locality.getByRole('button', { name: /Ver resultados/ })).toHaveText(`Ver resultados (${total})`);
+    await locality.getByRole('button', { name: /Ver resultados/ }).click();
+  }
+});
+
+test('los cheurones de Más Filtros indican cerrado abajo y abierto arriba; en mobile no aparece la X', async ({ page }, info) => {
+  await page.goto(activities);
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  const type = panel.getByRole('button', { name: 'Tipo', exact: true });
+  const arrow = type.locator('[data-material-symbol="expand_more"]');
+  await expect(type).toHaveAttribute('aria-expanded', 'true');
+  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toMatch(/matrix\\(-1/);
+  await type.click();
+  await expect(type).toHaveAttribute('aria-expanded', 'false');
+  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toBe('none');
+  if ((info.project.use.viewport?.width ?? 0) <= 680) {
+    await expect(panel.locator('.agenda-sheet-heading').getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
+    await page.getByRole('button', { name: 'Fecha', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: 'Opciones de Fecha' }).getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
+  }
+});
+
 test('Más filtros: opciones táctiles separadas sin seleccionar la opción vecina', async ({ page }, info) => {
   await page.goto(activities);
   await page.getByRole('button', { name: /Más Filtros/ }).click();

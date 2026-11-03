@@ -7,11 +7,13 @@ import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
 import { useAgendaOutsideDismiss } from '../../features/agenda/hooks/useAgendaOutsideDismiss';
 import { useAgendaViewportPopover } from '../../features/agenda/hooks/useAgendaViewportPopover';
+import { AgendaFilterCounter } from './AgendaFilterCounter';
 
 type FilterDropdownProps = {
   label: string;
   options: readonly string[];
   selected: string[];
+  resultCount: number;
   onChange: (values: string[]) => void;
   multiple?: boolean;
   align?: 'start' | 'end' | 'end-responsive';
@@ -22,7 +24,7 @@ type FilterDropdownProps = {
  * de MLZ UI KIT, con buscador y acciones explícitas.
  */
 export function AgendaDropdown({
-  label, options, selected, onChange, multiple = false, align = 'start',
+  label, options, selected, resultCount, onChange, multiple = false, align = 'start',
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
@@ -44,10 +46,6 @@ export function AgendaDropdown({
   const visibleOptions = options.filter(option =>
     normalizeAgendaText(option).includes(normalizeAgendaText(search)),
   );
-  const shownLabel = selected.length === 0 ? label
-    : selected.length === 1 ? selected[0]!
-      : `${label} (${selected.length})`;
-
   const toggle = (option: string) => {
     if (multiple) {
       onChange(toggleSelectedValue(selected, option));
@@ -65,6 +63,9 @@ export function AgendaDropdown({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={menuId}
+        aria-description={selected.length
+          ? `${selected.length} ${selected.length === 1 ? 'filtro seleccionado' : 'filtros seleccionados'}`
+          : undefined}
         onClick={() => { if (isOpen) dismiss(); else { setSearch(''); setIsOpen(true); } }}
         className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center gap-2 rounded border border-[#5ba8d5] bg-white
           py-2 px-4 text-left text-[16px] text-primary-600 outline-offset-2
@@ -72,7 +73,8 @@ export function AgendaDropdown({
           focus-visible:outline-2 focus-visible:outline-[#006eff]
           ${isOpen || selected.length ? 'agenda-filter-trigger-active' : ''}`}
       >
-        <span className="min-w-0 flex-1 truncate">{shownLabel}</span>
+        <span className="min-w-0 flex-1 truncate">{label}</span>
+        <AgendaFilterCounter count={selected.length} />
         <MaterialIcon name="expand_more" size={20}
           className={`agenda-motion-chevron ml-auto shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -93,7 +95,7 @@ export function AgendaDropdown({
             shadow-[0_8px_24px_rgba(21,57,76,0.17)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
-          <AgendaSheetHeader title={label} onClose={dismiss} />
+          <AgendaSheetHeader title={label} onClose={dismiss} showCloseButton={false} />
           {showOptionSearch && <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
             <input
@@ -141,7 +143,7 @@ export function AgendaDropdown({
             <button type="button" onClick={dismiss}
               className="min-h-12 flex-1 rounded bg-primary-600 px-3 text-[16px] font-bold
                 text-white transition-colors hover:bg-primary-700">
-              Ver resultados
+              Ver resultados ({resultCount})
             </button>
             <button type="button" onClick={() => { onChange([]); setSearch(''); }}
               className="min-h-12 shrink-0 rounded px-4 text-[16px] font-bold
