@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { toggleSelectedValue } from '../../features/agenda/model/filterState';
-import { normalizeAgendaText } from './normalizeAgendaText';
+import { normalizeAgendaText } from '../../features/agenda/utils/normalizeAgendaText';
 import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
