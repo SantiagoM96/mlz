@@ -106,9 +106,27 @@ test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
   await page.getByTestId('agenda-featured').getByRole('link', { name: 'Ver más' }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/tita-y-rhodesia/?$'));
   await expect(page.getByRole('heading', { name: 'Tita & Rhodesia', level: 1 })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' }).getByRole('link', { name: /Google Maps/ })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' }).getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Compartir por WhatsApp' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Compartir por Facebook' })).toBeVisible();
+});
+
+test('fichas: la dirección usa N° y localidad una sola vez, sin subrayar ni duplicar enlaces', async ({ page }) => {
+  const address = 'Manuel Castro N° 262 - Lomas de Zamora';
+  for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
+    await page.goto(path);
+    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const location = page.getByRole('region', { name: 'Mapa de ubicación' });
+    const summaryAddress = summary.locator('dd').last();
+    const locationAddress = location.locator('p').nth(1);
+
+    await expect(summaryAddress).toHaveText(address);
+    await expect(locationAddress).toHaveText(address);
+    await expect(summaryAddress).toHaveCSS('text-decoration-line', 'none');
+    await expect(locationAddress).toHaveCSS('text-decoration-line', 'none');
+    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+    await expect(location.getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
+  }
 });
 
 test('listado responsive, búsqueda, filtros y controles', async ({ page }, info) => {
@@ -636,7 +654,7 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
     await expect(summary).toContainText('Horario');
     await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
     await expect(page.getByRole('heading', { name: 'Ubicación en el mapa' })).toBeVisible();
-    await expect(summary.getByRole('link', { name: /Google Maps/ })).toBeVisible();
+    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
     await expect(page.getByRole('button', { name: /Elegir horario|Inscribirme|Reservar cupo/ })).toHaveCount(0);
     const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
@@ -727,7 +745,7 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     });
     expect(positions.description).toBeLessThan(positions.image);
     expect(positions.map).toBeGreaterThan(positions.imageBottom);
-    await expect(summary.getByRole('link', { name: /Google Maps/ })).toBeVisible();
+    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     expect(positions.map).toBeLessThan(positions.info);
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       const imageX = await image.evaluate(el => el.getBoundingClientRect().x);
