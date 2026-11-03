@@ -1,7 +1,14 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 
 const route = '/agenda-de-la-comunidad/actividades';
 test.use({ reducedMotion: 'no-preference' });
+
+// Para medir gestos, el tirador debe estar quieto: la hoja entra con una animación de 230 ms.
+async function awaitSheetEntrance(sheet: Locator): Promise<void> {
+  await sheet.evaluate(async element => {
+    await Promise.all(element.getAnimations().map(animation => animation.finished.catch(() => undefined)));
+  });
+}
 
 test('Apertura y cierre de Fecha conservan un ritmo de movimiento consistente', async ({ page }, info) => {
   await page.goto(route);
@@ -71,6 +78,7 @@ test('Panel móvil acompaña el arrastre, rebota y se cierra con deslizamiento l
   await page.getByRole('button', { name: 'Fecha', exact: true }).click();
   const sheet = page.getByRole('dialog', { name: 'Opciones de Fecha' });
   await expect(sheet).toBeVisible();
+  await awaitSheetEntrance(sheet);
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
   const handle = sheet.getByRole('button', { name: 'Deslizar o tocar para cerrar panel' });
   const rect = await handle.boundingBox();
@@ -164,6 +172,7 @@ test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como e
   await page.getByTestId('agenda-dropdown-fecha').click();
   const sheet = page.getByRole('dialog', { name: 'Opciones de Fecha' });
   await expect(sheet).toBeVisible();
+  await awaitSheetEntrance(sheet);
   const handle = sheet.getByRole('button', { name: 'Deslizar o tocar para cerrar panel' });
   const box = await handle.boundingBox();
   expect(box).not.toBeNull();
