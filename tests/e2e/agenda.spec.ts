@@ -3,6 +3,63 @@ import { expect, test } from '@playwright/test';
 const agenda = '/agenda-de-la-comunidad';
 const activities = agenda + '/actividades';
 
+test('Geometria real se carga en las vistas institucionales, sin fuentes de reemplazo', async ({ page }) => {
+  for (const path of ['/', '/jovenes-en-comunidad', '/agenda-de-la-comunidad', activities, activities + '/actividad-1']) {
+    await page.goto(path);
+    await expect(page.locator('body')).toHaveCSS('font-family', /^Geometria(?:,|$)/);
+  }
+  const fonts = await page.evaluate(async () => {
+    await Promise.all([
+      document.fonts.load('400 18px Geometria'),
+      document.fonts.load('500 18px Geometria'),
+      document.fonts.load('700 18px Geometria'),
+    ]);
+    await document.fonts.ready;
+    return Array.from(document.fonts)
+      .filter(face => face.family === 'Geometria')
+      .map(face => ({ weight: face.weight, status: face.status }));
+  });
+  for (const weight of ['400', '500', '700']) {
+    expect(fonts.some(face => face.weight === weight && face.status === 'loaded'), 'Debe cargarse Geometria ' + weight).toBe(true);
+  }
+});
+
+test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page }) => {
+  await page.goto(activities);
+  const card = page.getByTestId('agenda-card').first();
+  const image = card.locator('img').first();
+  await expect(image).toHaveCSS('height', '154px');
+  await expect(card.getByRole('heading', { level: 2 })).toHaveCSS('font-size', '22px');
+  await expect(card.locator('[data-material-symbol="calendar_month"]')).toHaveCSS('font-size', '20px');
+  await expect(card.locator('[data-material-symbol="schedule"]')).toHaveCSS('font-size', '20px');
+  await expect(card.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
+  await expect(card.getByText('Actividad pasada')).toHaveCount(0);
+});
+
+test('Más filtros: opciones táctiles separadas sin seleccionar la opción vecina', async ({ page }, info) => {
+  await page.goto(activities);
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  const checkboxes = dialog.getByRole('checkbox');
+  await expect(checkboxes.first()).toBeVisible();
+  const first = checkboxes.nth(0);
+  const second = checkboxes.nth(1);
+  const firstLabel = first.locator('..');
+  const secondLabel = second.locator('..');
+  await expect(firstLabel).toHaveCSS('min-height', '44px');
+  await expect(secondLabel).toHaveCSS('min-height', '44px');
+  if ((info.project.use.viewport?.width ?? 0) <= 680) {
+    const firstBox = await firstLabel.boundingBox();
+    const secondBox = await secondLabel.boundingBox();
+    expect(firstBox).not.toBeNull();
+    expect(secondBox).not.toBeNull();
+    expect(secondBox!.y - (firstBox!.y + firstBox!.height)).toBeGreaterThanOrEqual(3);
+  }
+  await second.check();
+  await expect(first).not.toBeChecked();
+  await expect(second).toBeChecked();
+});
+
 test('portada propia de la Agenda y Home municipal separada', async ({ page }, info) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Municipio de Lomas de Zamora' })).toBeVisible();
