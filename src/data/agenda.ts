@@ -21,6 +21,8 @@ export interface AgendaActivity {
   /** Marca el copy editorial creado para la maqueta, no validado por el equipo. */
   descriptionIsIllustrative?: boolean;
   source?: string;
+  /** URL externa de inscripción asignada de forma explícita a esta actividad. */
+  registrationUrl?: string;
 }
 
 /** Fecha municipal, independiente de la zona horaria del dispositivo visitante. */
@@ -217,7 +219,7 @@ function isValidTime(value: string): boolean {
 
 function isPublishableRow(line: string): boolean {
   const fields = line.split('|').map(value => value.trim());
-  if (fields.length !== 9) return false;
+  if (fields.length !== 9 && fields.length !== 10) return false;
   const [dateISO = '', type = '', category = '', locality = '', title = '', time = '', venue = '', registration = '', rain = ''] = fields;
   if (![type, category, locality, title, venue].every(Boolean)) return false;
   if (type === 'Sin especificar' || category === 'Sin categoría') return false;
@@ -230,7 +232,7 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
   .map((line, index) => ({ line, index }))
   .filter(({ line }) => isPublishableRow(line))
   .map(({ line, index }) => {
-  const [dateISO='',type='',category='',locality='',title='',time='',venue='',registration='',rain=''] = line.split('|');
+  const [dateISO='',type='',category='',locality='',title='',time='',venue='',registration='',rain='',registrationUrl=''] = line.split('|');
   const badges: AgendaActivity['badges'] = [];
   if (registration === 'Sí') badges.push({ kind:'registration', label:'Requiere inscripción' });
   if (rain === 'Sí') badges.push({ kind:'rain', label:'Se suspende por lluvia' });
@@ -251,6 +253,8 @@ export const agendaActivities: AgendaActivity[] = importedActivityRows
       illustrativeDescription(title, type, locality, venue),
     descriptionIsIllustrative: !originalActivityDescriptions['actividad-' + (index + 1)],
     source: 'Planilla de actividades 2026',
+    // El indicador de inscripción no implica que haya una URL disponible.
+    registrationUrl: registrationUrl.trim() || undefined,
   };
 });
 

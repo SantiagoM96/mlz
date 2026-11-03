@@ -5,6 +5,7 @@ import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
 import { ActivityDescription } from '../../components/agenda/ActivityDescription';
 import { ActivitySummary } from '../../features/agenda/components/detail/ActivitySummary';
+import { ActivityRegistrationLink } from '../../features/agenda/components/detail/ActivityRegistrationLink';
 import { ActivityLocationMap } from '../../features/agenda/components/detail/ActivityLocationMap';
 import { ActivityInformation } from '../../features/agenda/components/detail/ActivityInformation';
 import { agendaActivities } from '../../data/agenda';
@@ -56,6 +57,7 @@ export function AgendaActivityDetailPage() {
           <ActivityShare key={activity.id} title={activity.title} />
           <div className="lg:sticky lg:top-6">
             <ActivitySummary activity={activity} />
+            <ActivityRegistrationLink activity={activity} />
           </div>
         </div>
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">

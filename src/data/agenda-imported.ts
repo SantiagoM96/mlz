@@ -2,6 +2,7 @@
  * Registros de referencia del archivo "Limpio - Agenda Anual de la Comunidad - listado de actividades.xlsx".
  * Las fechas corresponden a la planilla de 2026; no confirman vigencia ni disponibilidad.
  * Campos: ISO | tipo | categoría | localidad | título | horario | sede | inscripción | lluvia.
+ * Opcionalmente, se admite un décimo campo con la URL explícita de inscripción.
  */
 export const importedActivityRows: readonly string[] = String.raw`
 2026-11-05|Música|Cultural|Lomas de Zamora|La Chamameceada|21 hs|Teatro del Municipio|Sí|No

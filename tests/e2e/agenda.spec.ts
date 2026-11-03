@@ -833,6 +833,19 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
   }
 });
 
+test('ficha sin Instagram y con CTA de inscripción solo si hay una URL válida', async ({ page }) => {
+  for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
+    await page.goto(path);
+    const share = page.getByLabel('Compartir actividad');
+    await expect(share.getByRole('link', { name: 'Compartir por WhatsApp' })).toBeVisible();
+    await expect(share.getByRole('link', { name: 'Compartir por Facebook' })).toBeVisible();
+    await expect(share.locator('img[src*="instagram"]')).toHaveCount(0);
+    await expect(share.getByRole('button', { name: 'Compartir desde el dispositivo' })).toHaveCount(0);
+    // La planilla marca inscripción, pero no contiene los destinos externos.
+    await expect(page.getByTestId('agenda-registration-link')).toHaveCount(0);
+  }
+});
+
 test('copiar enlace en una ficha muestra confirmación y copia la URL actual', async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, 'clipboard', {

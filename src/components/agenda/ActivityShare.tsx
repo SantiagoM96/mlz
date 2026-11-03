@@ -39,19 +39,7 @@ export function ActivityShare({ title }: { title: string }) {
     setCopyState(ok ? 'copied' : 'error');
   };
 
-  const shareFromDevice = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({ title, url });
-      } else {
-        await copyLink();
-      }
-    } catch {
-      // No mostrar un error cuando la persona cancela el diálogo nativo.
-    }
-  };
-
-  const platformIcon = (platform: 'whatsapp' | 'instagram' | 'facebook') =>
+  const platformIcon = (platform: 'whatsapp' | 'facebook') =>
     <img src={assets + 'social-' + platform + '.svg'} width="20" height="20" alt="" aria-hidden="true" />;
   const classes = 'inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-primary-600 text-primary-600 transition-colors hover:bg-[#f3f7fc] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600';
 
@@ -61,10 +49,6 @@ export function ActivityShare({ title }: { title: string }) {
         target="_blank" rel="noopener noreferrer" aria-label="Compartir por WhatsApp">
         {platformIcon('whatsapp')}
       </a>
-      <button type="button" className={classes} onClick={shareFromDevice}
-        aria-label="Compartir desde el dispositivo" title="Compartir desde el dispositivo">
-        {platformIcon('instagram')}
-      </button>
       <a className={classes} href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)}
         target="_blank" rel="noopener noreferrer" aria-label="Compartir por Facebook">
         {platformIcon('facebook')}
