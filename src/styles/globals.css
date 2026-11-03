@@ -339,7 +339,8 @@ html::-webkit-scrollbar-thumb:hover,
   background: var(--mlz-scroll-thumb-hover);
 }
 /* Mantiene estable el ancho disponible al aparecer el scroll global. */
-html { scrollbar-gutter: stable; }
+/* Reservar espacio de scrollbar a ambos lados mantiene el centrado exacto a 1200px. */
+html { scrollbar-gutter: stable both-edges; }
 @media (max-width: 680px) { html { scrollbar-gutter: auto; } }
 
 /* Buscador y filtros: controles y menús con estados del prototipo Deportes. */
