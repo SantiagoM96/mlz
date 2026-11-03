@@ -49,11 +49,13 @@ test('Más filtros: opciones táctiles separadas sin seleccionar la opción veci
   await expect(firstLabel).toHaveCSS('min-height', '44px');
   await expect(secondLabel).toHaveCSS('min-height', '44px');
   if ((info.project.use.viewport?.width ?? 0) <= 680) {
-    const firstBox = await firstLabel.boundingBox();
-    const secondBox = await secondLabel.boundingBox();
-    expect(firstBox).not.toBeNull();
-    expect(secondBox).not.toBeNull();
-    expect(secondBox!.y - (firstBox!.y + firstBox!.height)).toBeGreaterThanOrEqual(3);
+    // Tomar ambas medidas en el mismo frame evita desfases durante la animación de entrada.
+    const boxes = await checkboxes.evaluateAll(nodes => nodes.slice(0, 2).map(node => {
+      const rect = node.parentElement!.getBoundingClientRect();
+      return { y: rect.y, height: rect.height };
+    }));
+    expect(boxes).toHaveLength(2);
+    expect(boxes[1]!.y - (boxes[0]!.y + boxes[0]!.height)).toBeGreaterThanOrEqual(3);
   }
   await second.check();
   await expect(first).not.toBeChecked();
@@ -126,7 +128,7 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await page.getByRole('button', { name: /Más Filtros/ }).click();
   const filter = page.getByRole('dialog', { name: 'Filtros de la agenda' });
   await filter.getByRole('button', { name: 'Categoría' }).click();
-  await filter.getByRole('checkbox', { name: 'Ambiental' }).check();
+  await filter.getByRole('checkbox', { name: 'Ambiental', exact: true }).check();
   await filter.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.getByTestId('agenda-card').first()).toContainText('Salida de observación de hongos');
   await page.getByRole('button', { name: 'Ambiental' }).click();
@@ -180,14 +182,21 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     if (scrollWidth > (info.project.use.viewport?.width ?? 1200) + 1) {
-      const offenders = await page.evaluate(() => [...document.body.querySelectorAll('*')]
-        .map(el => {
-          const rect = el.getBoundingClientRect();
-          return { tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 125) : '',
-            text: el.textContent?.trim().slice(0, 35), x: rect.x, right: rect.right,
-            width: rect.width, overflow: getComputedStyle(el).overflowX };
-        }).filter(item => item.right > window.innerWidth + 1 || item.x < -1).slice(0, 20));
-      console.log('MLZ_OVERFLOW_DIAGNOSTIC', route, JSON.stringify(offenders));
+      const diagnostics = await page.evaluate(viewportWidth => ({
+        innerWidth: window.innerWidth,
+        clientWidth: document.documentElement.clientWidth,
+        visualWidth: window.visualViewport?.width,
+        scrollWidth: document.documentElement.scrollWidth,
+        offenders: [...document.body.querySelectorAll('*')]
+          .map(el => {
+            const rect = el.getBoundingClientRect();
+            return { tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 125) : '',
+              text: el.textContent?.trim().slice(0, 35), x: rect.x, right: rect.right,
+              width: rect.width, overflow: getComputedStyle(el).overflowX };
+          }).filter(item => item.right > viewportWidth + 1 || item.x < -1)
+          .sort((a, b) => b.right - a.right).slice(0, 25),
+      }), info.project.use.viewport?.width ?? 1200);
+      console.log('MLZ_OVERFLOW_DIAGNOSTIC', route, JSON.stringify(diagnostics));
     }
     expect(scrollWidth, `Overflow horizontal en ${route}`).toBeLessThanOrEqual((info.project.use.viewport?.width ?? 1200) + 1);
   }
@@ -245,7 +254,8 @@ test('solo filtros seleccionados son azules; activity badges conservan colores s
   await expect(filters.locator('[data-material-symbol="tune"]')).toBeVisible();
   await filters.click();
   const dialog = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  await dialog.getByRole('checkbox', { name: 'Banfield' }).check();
+  await dialog.getByRole('button', { name: 'Localidad' }).click();
+  await dialog.getByRole('checkbox', { name: 'Banfield', exact: true }).check();
   await dialog.getByRole('button', { name: 'Ver resultados' }).click();
   const selected = page.locator('[data-agenda-chip="selected"]');
   await expect(selected.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
@@ -299,15 +309,17 @@ test('Más Filtros se mantiene dentro del viewport y conserva acciones accesible
   const trigger = page.getByRole('button', { name: /Más Filtros/ });
   await trigger.click();
   const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  const rect = await panel.evaluate(node => {
+  // El bottom sheet entra desde abajo: validar su posición una vez terminada la entrada.
+  const viewport = page.viewportSize()!;
+  const rect = () => panel.evaluate(node => {
     const r = node.getBoundingClientRect();
     return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
   });
-  const viewport = page.viewportSize()!;
-  expect(rect.top).toBeGreaterThanOrEqual(0);
-  expect(rect.bottom).toBeLessThanOrEqual(viewport.height + 1);
-  expect(rect.right).toBeLessThanOrEqual(viewport.width + 1);
-  expect(rect.left).toBeGreaterThanOrEqual(0);
+  await expect.poll(async () => (await rect()).bottom).toBeLessThanOrEqual(viewport.height + 1);
+  const settledRect = await rect();
+  expect(settledRect.top).toBeGreaterThanOrEqual(0);
+  expect(settledRect.right).toBeLessThanOrEqual(viewport.width + 1);
+  expect(settledRect.left).toBeGreaterThanOrEqual(0);
   await expect(panel.getByRole('button', { name: 'Ver resultados' })).toBeVisible();
   await expect(panel.getByRole('button', { name: 'Limpiar', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
@@ -485,7 +497,7 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   const today = dateOptions.getByRole('checkbox', { name: 'Hoy' });
   await today.check();
   await page.mouse.move(0, 0); // La comprobación evalúa el color base, no el hover deliberadamente más oscuro.
-  const selectedDate = dateOptions.locator('label', { has: today });
+  const selectedDate = dateOptions.locator('label:has(input[aria-label="Hoy"])');
   await expect(selectedDate).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await expect(selectedDate).toHaveCSS('color', 'rgb(255, 255, 255)');
   await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
