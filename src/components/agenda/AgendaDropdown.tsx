@@ -5,6 +5,7 @@ import { normalizeAgendaText } from '../../features/agenda/utils/normalizeAgenda
 import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
+import { useAgendaOutsideDismiss } from '../../features/agenda/hooks/useAgendaOutsideDismiss';
 
 type FilterDropdownProps = {
   label: string;
@@ -31,24 +32,7 @@ export function AgendaDropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const closeOutside = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) dismiss();
-    };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        dismiss();
-        buttonRef.current?.focus();
-      }
-    };
-    document.addEventListener('pointerdown', closeOutside);
-    document.addEventListener('keydown', closeOnEscape);
-    return () => {
-      document.removeEventListener('pointerdown', closeOutside);
-      document.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [isOpen, dismiss]);
+  useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
 
   useEffect(() => {
     if (isOpen && !window.matchMedia('(max-width: 680px)').matches) searchRef.current?.focus();
