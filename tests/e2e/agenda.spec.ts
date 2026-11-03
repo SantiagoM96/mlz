@@ -309,13 +309,8 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
   const dateButton = page.getByRole('button', { name: 'Fecha', exact: true });
   await dateButton.click();
   const dateOptions = page.getByRole('dialog', { name: 'Opciones de Fecha' });
-  const dateSearch = dateOptions.getByRole('textbox', { name: 'Buscar fecha' });
-  if ((info.project.use.viewport?.width ?? 0) > 680) {
-    await expect(dateSearch).toBeFocused();
-  } else {
-    // En mobile no se abre automáticamente el teclado al desplegar un bottom sheet.
-    await expect(dateSearch).toBeVisible();
-  }
+  // Fecha no necesita un buscador interno; Localidad sí lo conserva.
+  await expect(dateOptions.getByRole('textbox', { name: 'Buscar fecha' })).toHaveCount(0);
   await dateOptions.getByRole('checkbox', { name: 'Hoy' }).check();
   await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy']);
