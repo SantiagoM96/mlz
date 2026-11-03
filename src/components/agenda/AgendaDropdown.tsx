@@ -123,12 +123,12 @@ export function AgendaDropdown({
           </label>
 
           <div role="group" aria-label={`Seleccionar ${label.toLowerCase()}`}
-            className="min-h-0 flex-1 overflow-y-auto">
+            className="min-h-0 flex-1 space-y-[2px] overflow-y-auto">
             {visibleOptions.length ? visibleOptions.map(option => {
               const checked = selected.includes(option);
               return (
                 <label key={option}
-                  className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4
+                  className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4 rounded
                     px-4 py-2 text-[16px] leading-6 transition-colors duration-150
                     has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
                     has-[:focus-visible]:outline-primary-600
