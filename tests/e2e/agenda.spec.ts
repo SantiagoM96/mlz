@@ -124,7 +124,7 @@ test('los cheurones de Más Filtros indican cerrado abajo y abierto arriba; en m
   if ((info.project.use.viewport?.width ?? 0) <= 680) {
     await expect(panel.locator('.agenda-sheet-heading').getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
     await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
-    await page.getByRole('button', { name: 'Fecha', exact: true }).click();
+    await page.getByTestId('agenda-dropdown-fecha').click();
     await expect(page.getByRole('dialog', { name: 'Opciones de Fecha' }).getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
   }
 });
