@@ -353,6 +353,18 @@ html { scrollbar-gutter: stable; }
 .agenda-filter-popover::-webkit-scrollbar-thumb { background: var(--mlz-scroll-thumb); border-radius: 999px; }
 .agenda-filter-popover::-webkit-scrollbar-thumb:hover { background: var(--mlz-scroll-thumb-hover); }
 @media (min-width: 681px) {
-  /* Acercar los menús al límite inferior visible sin recortar el listado. */
-  .agenda-filter-popover { max-height: min(78vh, 760px); }
+  /* El hook mide el espacio hasta 50px del viewport; las opciones hacen scroll. */
+  .agenda-filter-popover { min-height: 0; }
+  .agenda-more-panel {
+    position: absolute;
+    inset: auto 0 auto auto;
+    top: calc(100% + 8px);
+    width: min(576px, calc(100vw - 32px));
+  }
+}
+.agenda-search-input:focus,
+.agenda-search-input:focus-visible {
+  border-color: #236999;
+  outline: none;
+  box-shadow: 0 0 0 3px #d9edff;
 }

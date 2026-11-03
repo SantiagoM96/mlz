@@ -6,6 +6,7 @@ import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
 import { useAgendaOutsideDismiss } from '../../features/agenda/hooks/useAgendaOutsideDismiss';
+import { useAgendaViewportPopover } from '../../features/agenda/hooks/useAgendaViewportPopover';
 
 type FilterDropdownProps = {
   label: string;
@@ -34,6 +35,7 @@ export function AgendaDropdown({
   const showOptionSearch = label !== 'Fecha';
 
   useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
+  useAgendaViewportPopover(isOpen, buttonRef, sheetRef);
 
   useEffect(() => {
     if (isOpen && showOptionSearch && !window.matchMedia('(max-width: 680px)').matches) searchRef.current?.focus();
@@ -86,7 +88,7 @@ export function AgendaDropdown({
           role="dialog"
           aria-label={`Opciones de ${label}`}
           className={`agenda-dropdown-enter agenda-mobile-sheet agenda-filter-popover absolute top-[calc(100%+8px)] z-40 flex
-            max-h-[min(78vh,760px)] w-[min(416px,calc(100vw-32px))] flex-col
+            w-[min(416px,calc(100vw-32px))] flex-col
             overflow-hidden rounded-md border border-[#dfebf3] bg-white p-2
             shadow-[0_8px_24px_rgba(21,57,76,0.17)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}

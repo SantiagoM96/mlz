@@ -45,7 +45,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
       <label className="relative col-span-2 block md:col-span-1">
         <span className="sr-only">Buscar actividades</span>
         <input value={search} onChange={e => onSearch(e.target.value)} placeholder="¿Qué estás buscando?"
-          className="agenda-search-input h-12 w-full rounded border border-[#5ba8d5] bg-white py-2 pr-11 pl-4 text-[16px] text-grey-900 outline-none placeholder:text-[#5ba8d5] focus:border-primary-600 focus:ring-[3px] focus:ring-[#d9edff]" />
+          className="agenda-search-input h-12 w-full rounded border border-[#5ba8d5] bg-white py-2 pr-11 pl-4 text-[16px] text-grey-900 outline-none placeholder:text-[#5ba8d5]" />
         {search ?
           <button type="button" aria-label="Borrar búsqueda" onClick={() => onSearch('')} className="absolute right-3 top-3 text-primary-600"><MaterialIcon name="close" size={24}/></button> :
           <MaterialIcon name="search" size={24} className="pointer-events-none absolute right-3 top-3 text-primary-600" />
@@ -66,11 +66,15 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         align="end-responsive"
         onChange={date => onFilters({ ...filters, date })} />
 
+      <div className="relative min-w-0">
       <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters" onClick={() => setOpen(v => !v)}
-        className={`agenda-filter-trigger agenda-motion-control flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#5ba8d5] bg-white px-4 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 ${open || selectedCount ? 'agenda-filter-trigger-active' : ''}`}>
+        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-between gap-2 rounded border border-[#5ba8d5] bg-white px-4 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 ${open || selectedCount ? 'agenda-filter-trigger-active' : ''}`}>
         <span className="whitespace-nowrap">Más Filtros</span>
         <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>
+        {open && <AgendaFilterPanel value={filters} onChange={onFilters} onApply={() => setOpen(false)}
+          onReset={onReset} onClose={() => setOpen(false)} anchorRef={moreFiltersButtonRef} />}
+      </div>
     </div>
 
     {selectedCount > 0 && <div aria-label="Filtros seleccionados" className="agenda-filter-chips mt-4 flex flex-wrap items-center gap-2">
@@ -85,7 +89,5 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
       <button type="button" onClick={onReset} className="agenda-filter-clear min-h-[30px] px-2 font-bold text-primary-600 underline-offset-2 hover:underline">Limpiar</button>
     </div>}
 
-    {open && <AgendaFilterPanel value={filters} onChange={onFilters} onApply={() => setOpen(false)}
-      onReset={onReset} onClose={() => setOpen(false)} />}
   </div>;
 }

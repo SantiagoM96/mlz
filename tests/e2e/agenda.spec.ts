@@ -341,6 +341,35 @@ test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page
   await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
 });
 
+test('buscador y dropdowns replican el foco y el margen inferior de 50px del prototipo', async ({ page }, info) => {
+  await page.goto(activities);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.focus();
+  await expect(search).toHaveCSS('border-top-color', 'rgb(35, 105, 153)');
+  await expect(search).toHaveCSS('box-shadow', 'rgb(217, 237, 255) 0px 0px 0px 3px');
+  if ((info.project.use.viewport?.width ?? 0) <= 680) return;
+  const viewportHeight = await page.evaluate(() => window.innerHeight);
+  const checkBottom = async (label: string) => {
+    const dialog = page.getByRole('dialog', { name: label });
+    await expect(dialog).toBeVisible();
+    await expect.poll(() => dialog.evaluate(node => node.getBoundingClientRect().bottom))
+      .toBeLessThanOrEqual(viewportHeight - 49);
+  };
+  for (const label of ['Fecha', 'Localidad']) {
+    const button = page.getByRole('button', { name: label, exact: true });
+    if (!(await button.count())) continue;
+    await button.click();
+    await checkBottom(`Opciones de ${label}`);
+    await page.keyboard.press('Escape');
+  }
+  await page.getByRole('button', { name: /Más Filtros/ }).click();
+  await checkBottom('Filtros de la agenda');
+  await page.evaluate(() => window.scrollBy(0, 110));
+  await checkBottom('Filtros de la agenda');
+  await expect(page.getByRole('dialog', { name: 'Filtros de la agenda' })
+    .getByRole('button', { name: 'Ver resultados' })).toBeVisible();
+});
+
 test('Más Filtros se mantiene dentro del viewport y conserva acciones accesibles', async ({ page }) => {
   await page.goto(activities);
   const trigger = page.getByRole('button', { name: /Más Filtros/ });

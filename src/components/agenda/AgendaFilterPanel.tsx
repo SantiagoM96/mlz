@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, type RefObject } from 'react';
+import { useAgendaViewportPopover } from '../../features/agenda/hooks/useAgendaViewportPopover';
 import { agendaFilterGroups, toggleFilterValue, type SelectedFilters } from '../../features/agenda/model/filterState';
 import { filterOptions, filterTitles, type FilterGroup } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
@@ -15,12 +16,14 @@ type Props = {
   onApply: () => void;
   onReset: () => void;
   onClose: () => void;
+  anchorRef: RefObject<HTMLButtonElement | null>;
 };
 
-export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }: Props) {
+export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose, anchorRef }: Props) {
   const [expanded, setExpanded] = useState<FilterGroup[]>(['type']);
   useAgendaMobileScrollLock(true);
   const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLElement>(true, onClose);
+  useAgendaViewportPopover(true, anchorRef, sheetRef);
   const toggleItem = (group: FilterGroup, item: string) => {
     onChange(toggleFilterValue(value, group, item));
   };
@@ -29,7 +32,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
     <>
       <AgendaSheetBackdrop onClose={dismiss} />
     <section ref={sheetRef} id="agenda-more-filters" data-agenda-sheet="more" role="dialog" aria-modal="false" aria-label="Filtros de la agenda"
-      className="agenda-dropdown-enter agenda-mobile-sheet agenda-filter-popover fixed inset-x-4 top-20 bottom-4 z-50 flex w-auto flex-col overflow-hidden rounded-lg border border-[#e7e7e7] bg-white shadow-xl md:absolute md:inset-auto md:right-0 md:top-[calc(100%+8px)] md:max-h-[min(78vh,760px)] md:w-[min(576px,calc(100vw-32px))]">
+      className="agenda-dropdown-enter agenda-mobile-sheet agenda-filter-popover agenda-more-panel fixed inset-x-4 top-20 bottom-4 z-50 flex w-auto flex-col overflow-hidden rounded-lg border border-[#e7e7e7] bg-white shadow-xl">
       <AgendaSheetHeader title="Filtrar actividades" onClose={dismiss} />
       <div className="agenda-filter-options min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
         {agendaFilterGroups.map(group => (
