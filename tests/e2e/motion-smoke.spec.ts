@@ -187,3 +187,28 @@ test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como e
   await sheet.getByRole('button', { name: 'Cerrar opciones' }).click();
   await expect(sheet).toHaveCount(0);
 });
+
+test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', async ({ page }, info) => {
+  await page.goto('/agenda-de-la-comunidad/actividades/actividad-1');
+  const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+  const map = page.getByRole('region', { name: 'Mapa de ubicación' });
+  const iframe = map.locator('iframe');
+  await expect(summary).toBeVisible();
+  await expect(iframe).toBeVisible();
+  const mobile = (info.project.use.viewport?.width ?? 0) < 1024;
+  await expect(summary).toHaveCSS('position', mobile ? 'static' : 'sticky');
+  await expect(summary).toHaveCSS('font-family', /Geometria.*Montserrat/);
+  const height = await iframe.evaluate(el => el.getBoundingClientRect().height);
+  expect(height).toBeLessThanOrEqual(mobile ? 201 : 221);
+  await expect(summary.locator('dt').first()).toHaveCSS('font-size', '18px');
+  await expect(summary.locator('dd').first()).toHaveCSS('font-size', '16px');
+  if (!mobile) {
+    const base = await summary.boundingBox();
+    await page.evaluate(() => window.scrollBy(0, 180));
+    const moved = await summary.boundingBox();
+    expect(base).not.toBeNull();
+    expect(moved).not.toBeNull();
+    expect(moved!.y).toBeGreaterThanOrEqual(23);
+    expect(moved!.y).toBeLessThanOrEqual(base!.y + 1);
+  }
+});
