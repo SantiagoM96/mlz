@@ -52,9 +52,11 @@ export function AgendaActivityDetailPage() {
             fetchPriority="high"
           />
         </div>
-        <div className="min-w-0 space-y-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start">
+        <div className="min-w-0 space-y-6 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-stretch">
           <ActivityShare key={activity.id} title={activity.title} />
-          <ActivitySummary activity={activity} />
+          <div className="lg:sticky lg:top-6">
+            <ActivitySummary activity={activity} />
+          </div>
         </div>
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">
           <ActivityLocationMap activity={activity} />
