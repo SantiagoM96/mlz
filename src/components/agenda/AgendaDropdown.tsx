@@ -31,12 +31,13 @@ export function AgendaDropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const showOptionSearch = label !== 'Fecha';
 
   useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
 
   useEffect(() => {
-    if (isOpen && !window.matchMedia('(max-width: 680px)').matches) searchRef.current?.focus();
-  }, [isOpen, dismiss]);
+    if (isOpen && showOptionSearch && !window.matchMedia('(max-width: 680px)').matches) searchRef.current?.focus();
+  }, [isOpen, showOptionSearch]);
 
   const visibleOptions = options.filter(option =>
     normalizeAgendaText(option).includes(normalizeAgendaText(search)),
@@ -63,11 +64,11 @@ export function AgendaDropdown({
         aria-expanded={isOpen}
         aria-controls={menuId}
         onClick={() => { if (isOpen) dismiss(); else { setSearch(''); setIsOpen(true); } }}
-        className={`agenda-motion-control flex h-12 w-full min-w-0 items-center gap-3 rounded border border-[#80baff] bg-white
-          py-2 pl-4 pr-4 text-left text-[16px] text-primary-600 outline-offset-2
-          transition-colors duration-150 hover:border-[#006eff]
+        className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center gap-2 rounded border border-[#5ba8d5] bg-white
+          py-2 px-4 text-left text-[16px] text-primary-600 outline-offset-2
+          transition-colors duration-150 hover:border-primary-600 hover:bg-[#f4f9fd]
           focus-visible:outline-2 focus-visible:outline-[#006eff]
-          ${isOpen ? 'border-[#006eff]' : ''}`}
+          ${isOpen || selected.length ? 'agenda-filter-trigger-active' : ''}`}
       >
         <span className="min-w-0 flex-1 truncate">{shownLabel}</span>
         <MaterialIcon name="expand_more" size={20}
@@ -84,14 +85,14 @@ export function AgendaDropdown({
           data-agenda-filter={label}
           role="dialog"
           aria-label={`Opciones de ${label}`}
-          className={`agenda-dropdown-enter agenda-mobile-sheet absolute top-[calc(100%+8px)] z-40 flex
-            max-h-[min(72vh,430px)] w-[min(416px,calc(100vw-32px))] flex-col
-            overflow-hidden rounded-md border border-[#e1e7eb] bg-white p-2
-            shadow-[0_4px_14px_rgba(0,0,0,0.16)]
+          className={`agenda-dropdown-enter agenda-mobile-sheet agenda-filter-popover absolute top-[calc(100%+8px)] z-40 flex
+            max-h-[min(78vh,760px)] w-[min(416px,calc(100vw-32px))] flex-col
+            overflow-hidden rounded-md border border-[#dfebf3] bg-white p-2
+            shadow-[0_8px_24px_rgba(21,57,76,0.17)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
           <AgendaSheetHeader title={label} onClose={dismiss} />
-          <label className="relative mb-2 block shrink-0">
+          {showOptionSearch && <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
             <input
               ref={searchRef}
@@ -104,10 +105,10 @@ export function AgendaDropdown({
             />
             <MaterialIcon name="search" size={22}
               className="pointer-events-none absolute right-3 top-3 text-primary-600" />
-          </label>
+          </label>}
 
           <div role="group" aria-label={`Seleccionar ${label.toLowerCase()}`}
-            className="min-h-0 flex-1 space-y-[2px] overflow-y-auto">
+            className="agenda-filter-options min-h-0 flex-1 space-y-[2px] overflow-y-auto overscroll-contain">
             {visibleOptions.length ? visibleOptions.map(option => {
               const checked = selected.includes(option);
               return (
