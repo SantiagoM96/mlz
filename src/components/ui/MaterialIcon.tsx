@@ -27,6 +27,7 @@ export type MaterialIconName =
   | 'accessible_forward'
   | 'rainy'
   | 'check'
+  | 'link'
   | 'content_copy'
   | 'star'
   | 'info';
