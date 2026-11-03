@@ -1,12 +1,10 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
-import { getActivityMapUrl } from '../../utils/activityMap';
 
 export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   const venue = activity.venue || activity.locality;
   const address = activity.address;
-  const googleMapsUrl = getActivityMapUrl(activity);
 
   return (
     <aside aria-label="Resumen de actividad"
@@ -37,17 +35,6 @@ export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
           <div className="min-w-0">
             <dt className="text-[18px] font-bold leading-5">{venue}</dt>
             <dd className="mt-1 break-words">{address || 'Dirección a confirmar'}</dd>
-            {address && (
-              <dd className="mt-1">
-                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 rounded-sm text-[16px] font-bold text-primary-600
-                    underline-offset-2 hover:underline focus-visible:outline-2
-                    focus-visible:outline-offset-2 focus-visible:outline-primary-600">
-                  Ver en Google Maps
-                  <MaterialIcon name="chevron_right" size={24} />
-                </a>
-              </dd>
-            )}
           </div>
         </div>
       </dl>
