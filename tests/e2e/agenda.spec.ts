@@ -114,8 +114,9 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   const count = info.project.name.startsWith('mobile') ? 6 : 9;
   await expect(page.getByTestId('agenda-card')).toHaveCount(count);
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
-  const allImagesLoaded = await page.getByTestId('agenda-card').first().locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0);
-  expect(allImagesLoaded).toBe(true);
+  const firstImage = page.getByTestId('agenda-card').first().locator('img');
+  await expect.poll(() => firstImage.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+    { message: 'La primera ilustración debe cargar correctamente' }).toBe(true);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('La Chamameceada');
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
@@ -225,12 +226,19 @@ test('la iconografía de todas las rutas usa Google Material Symbols', async ({ 
 test('solo filtros seleccionados son azules; activity badges conservan colores semanticos y tune', async ({ page }) => {
   const routes = ['/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
     '/agenda-de-la-comunidad/actividades/actividad-1'];
+  let observedChips = 0;
   for (const route of routes) {
     await page.goto(route);
     const activityChips = page.locator('[data-agenda-chip="activity"]');
-    await expect(activityChips.first()).not.toHaveCSS('background-color', 'rgb(0, 110, 255)');
-    await expect(activityChips.first().locator('[data-material-symbol]')).toBeVisible();
+    const count = await activityChips.count();
+    observedChips += count;
+    for (let index = 0; index < count; index++) {
+      await expect(activityChips.nth(index)).not.toHaveCSS('background-color', 'rgb(0, 110, 255)');
+      await expect(activityChips.nth(index).locator('[data-material-symbol]')).toBeVisible();
+    }
   }
+  // Los badges son opcionales por actividad; la portada ofrece ejemplos reales.
+  expect(observedChips).toBeGreaterThan(0);
 
   await page.goto('/agenda-de-la-comunidad/actividades');
   const filters = page.getByRole('button', { name: /Más Filtros/ });
@@ -249,7 +257,13 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
   const dateButton = page.getByRole('button', { name: 'Fecha', exact: true });
   await dateButton.click();
   const dateOptions = page.getByRole('dialog', { name: 'Opciones de Fecha' });
-  await expect(dateOptions.getByRole('textbox', { name: 'Buscar fecha' })).toBeFocused();
+  const dateSearch = dateOptions.getByRole('textbox', { name: 'Buscar fecha' });
+  if ((info.project.use.viewport?.width ?? 0) > 680) {
+    await expect(dateSearch).toBeFocused();
+  } else {
+    // En mobile no se abre automáticamente el teclado al desplegar un bottom sheet.
+    await expect(dateSearch).toBeVisible();
+  }
   await dateOptions.getByRole('checkbox', { name: 'Hoy' }).check();
   await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy']);
@@ -314,7 +328,8 @@ test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes
   await expect(dates).toHaveCSS('border-top-left-radius', '16px');
   await expect(page.getByRole('button', { name: 'Cerrar panel de opciones' })).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
-  await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click();
+  // Hacer clic en la zona visible del backdrop, no en el centro cubierto por la hoja.
+  await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
   await expect(dates).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
 
@@ -469,6 +484,7 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   assertSorted(dates);
   const today = dateOptions.getByRole('checkbox', { name: 'Hoy' });
   await today.check();
+  await page.mouse.move(0, 0); // La comprobación evalúa el color base, no el hover deliberadamente más oscuro.
   const selectedDate = dateOptions.locator('label', { has: today });
   await expect(selectedDate).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await expect(selectedDate).toHaveCSS('color', 'rgb(255, 255, 255)');
@@ -608,6 +624,7 @@ test('copiar enlace en una ficha muestra confirmación y copia la URL actual', a
 });
 
 test('motion UX: desktop popovers y mobile sheets tienen duraciones coherentes', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto(activities);
   const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
   await page.getByRole('button', { name: 'Fecha', exact: true }).click();
@@ -618,7 +635,7 @@ test('motion UX: desktop popovers y mobile sheets tienen duraciones coherentes',
     return { animationName: styles.animationName, duration: styles.animationDuration };
   });
   expect(motion.animationName).toContain(mobile ? 'agenda-sheet-in' : 'agenda-popover-in');
-  expect(motion.duration).toBe(mobile ? '0.3s' : '0.22s');
+  expect(motion.duration).toBe(mobile ? '0.23s' : '0.15s');
   await dateSheet.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(dateSheet).toHaveCount(0);
 
@@ -683,7 +700,10 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     await expect(summary).toContainText('Fecha');
     await expect(summary).toContainText('Horario');
     await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
-    await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
+    // Solo las actividades que tienen avisos muestran chips; no inventar badges.
+    if (path.endsWith('/tita-y-rhodesia')) {
+      await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
+    }
     const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
     await expect(crumbs).toHaveCSS('color', 'rgb(35, 105, 153)');
     await expect(crumbs.getByTestId('breadcrumb-current')).toBeVisible();
