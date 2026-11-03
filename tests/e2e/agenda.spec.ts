@@ -187,6 +187,30 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
         clientWidth: document.documentElement.clientWidth,
         visualWidth: window.visualViewport?.width,
         scrollWidth: document.documentElement.scrollWidth,
+        bodyWidth: document.body.scrollWidth,
+        bodyClientWidth: document.body.clientWidth,
+        overflowContainers: [document.documentElement, document.body, ...document.body.querySelectorAll('*')]
+          .map(el => ({ tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 90) : '',
+            width: el.clientWidth, scroll: el.scrollWidth, overflow: getComputedStyle(el).overflowX }))
+          .filter(el => el.scroll > el.width + 1).sort((a, b) => b.scroll - b.width - (a.scroll - a.width))
+          .slice(0, 15),
+        textOffenders: (() => {
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+          const overflow: { text: string; right: number; left: number; parent: string }[] = [];
+          let node: Node | null;
+          while ((node = walker.nextNode())) {
+            if (!node.textContent?.trim() || !node.parentElement) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rect = range.getBoundingClientRect();
+            if (rect.right > viewportWidth + 1 || rect.left < -1) {
+              overflow.push({ text: node.textContent.trim().slice(0, 65),
+                right: Math.round(rect.right), left: Math.round(rect.left),
+                parent: node.parentElement.tagName + '.' + node.parentElement.className.toString().slice(0, 70) });
+            }
+          }
+          return overflow.slice(0, 15);
+        })(),
         offenders: [...document.body.querySelectorAll('*')]
           .map(el => {
             const rect = el.getBoundingClientRect();
@@ -500,8 +524,8 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   const selectedDate = dateOptions.locator('label:has(input[aria-label="Hoy"])');
   await expect(selectedDate).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await expect(selectedDate).toHaveCSS('color', 'rgb(255, 255, 255)');
-  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
-  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(selectedDate.locator(':scope > span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
+  await expect(selectedDate.locator(':scope > span[aria-hidden="true"]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
 
   if ((info.project.use.viewport?.width ?? 0) >= 768) {
