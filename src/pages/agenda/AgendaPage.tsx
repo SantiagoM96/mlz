@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
-import { filterAgendaActivities } from '../../components/agenda/filterAgendaActivities';
+import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
