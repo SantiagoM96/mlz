@@ -13,39 +13,51 @@ import { NotFoundPage } from '../not-found/NotFoundPage';
 function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   const venue = activity.venue || activity.locality;
   const address = activity.address;
-
+  const mapQuery = encodeURIComponent(
+    [address || venue, activity.locality, 'Buenos Aires', 'Argentina'].filter(Boolean).join(', ')
+  );
+  const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + mapQuery;
 
   return (
     <aside aria-label="Resumen de actividad"
-      className="rounded-lg border border-[#dedede] bg-white p-5 sm:p-6
-        lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start
-        lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto">
+      className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-6">
       <h2 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Resumen</h2>
       {activity.badges.length > 0 && (
-        <div className="mb-5">
-          <ActivityBadges badges={activity.badges} />
+        <div className="mb-4">
+          <ActivityBadges badges={activity.badges} variant="summary" />
         </div>
       )}
-      <dl className="space-y-5 text-[16px] leading-6 text-grey-900">
-        <div className="flex items-start gap-2.5">
-          <MaterialIcon name="calendar_month" size={24} className="mt-0.5 shrink-0 text-black" />
+      <dl className="space-y-4 text-[16px] leading-5 text-grey-900">
+        <div className="flex min-w-0 items-start gap-2">
+          <MaterialIcon name="calendar_month" size={24} className="shrink-0 text-black" />
           <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-6">Fecha</dt>
-            <dd>{activity.dayLabel}</dd>
+            <dt className="text-[18px] font-bold leading-5">Fecha</dt>
+            <dd className="mt-2">{activity.dayLabel}</dd>
           </div>
         </div>
-        <div className="flex items-start gap-2.5">
-          <MaterialIcon name="schedule" size={24} className="mt-0.5 shrink-0 text-black" />
+        <div className="flex min-w-0 items-start gap-2">
+          <MaterialIcon name="schedule" size={24} className="shrink-0 text-black" />
           <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-6">Horario</dt>
-            <dd>{activity.timeLabel}</dd>
+            <dt className="text-[18px] font-bold leading-5">Horario</dt>
+            <dd className="mt-2">{activity.timeLabel}</dd>
           </div>
         </div>
-        <div className="flex items-start gap-2.5">
-          <MaterialIcon name="location_on" size={24} className="mt-0.5 shrink-0 text-black" />
+        <div className="flex min-w-0 items-start gap-2">
+          <MaterialIcon name="location_on" size={24} className="shrink-0 text-black" />
           <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-6">{venue}</dt>
-            <dd>{address || 'Dirección a confirmar'}</dd>
+            <dt className="text-[18px] font-bold leading-5">{venue}</dt>
+            <dd className="mt-1 break-words">{address || 'Dirección a confirmar'}</dd>
+            {address && (
+              <dd className="mt-1">
+                <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-sm text-[16px] font-bold text-primary-600
+                    underline-offset-2 hover:underline focus-visible:outline-2
+                    focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                  Ver en Google Maps
+                  <MaterialIcon name="chevron_right" size={24} />
+                </a>
+              </dd>
+            )}
           </div>
         </div>
       </dl>
@@ -140,14 +152,11 @@ export function AgendaActivityDetailPage() {
         { label: 'Actividades', to: '/agenda-de-la-comunidad/actividades' },
         { label: activity.title },
       ]} />
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-6">
-        <div className="min-w-0">
-          <p className="mb-2 text-[16px] font-medium uppercase text-[#888]">{activity.type}</p>
-          <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-        </div>
-        <ActivityShare key={activity.id} title={activity.title} />
+      <div className="mb-6 min-w-0">
+        <p className="mb-2 text-[16px] font-medium uppercase text-[#888]">{activity.type}</p>
+        <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
       </div>
-      <div className="agenda-motion-detail grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_370px]">
+      <div className="agenda-motion-detail grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_430px]">
         <div className="min-w-0 space-y-6 lg:col-start-1 lg:row-start-1">
           <ActivityDescription key={activity.id} activity={activity} />
           <img
@@ -162,7 +171,10 @@ export function AgendaActivityDetailPage() {
             fetchPriority="high"
           />
         </div>
-        <ActivitySummary activity={activity} />
+        <div className="min-w-0 space-y-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start">
+          <ActivityShare key={activity.id} title={activity.title} />
+          <ActivitySummary activity={activity} />
+        </div>
         <div className="min-w-0 lg:col-start-1 lg:row-start-2">
           <ActivityMap activity={activity} />
           <div className="mt-8">
