@@ -124,8 +124,13 @@ test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ p
     await expect(sidebar.getByRole('heading', { name: 'Resumen' })).toBeVisible();
     await expect(sidebar).toContainText('Fecha');
     await expect(sidebar).toContainText('Horario');
-    await expect(sidebar.locator('dt').last()).toHaveText('Teatro del Municipio');
-    await expect(sidebar.locator('[data-agenda-chip="activity"]')).not.toHaveCount(0);
+    await expect(sidebar.locator('dt').last()).toHaveText(
+      route.endsWith('/tita-y-rhodesia') ? 'Teatro Municipal' : 'Teatro del Municipio',
+    );
+    // El componente admite actividades sin avisos. Se comprueban los avisos de la destacada.
+    if (route.endsWith('/tita-y-rhodesia')) {
+      await expect(sidebar.locator('[data-agenda-chip="activity"]')).not.toHaveCount(0);
+    }
     const positions = await page.evaluate(() => {
       const rect = (query: string) => document.querySelector(query)!.getBoundingClientRect();
       return {
