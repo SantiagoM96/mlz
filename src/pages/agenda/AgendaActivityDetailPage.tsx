@@ -28,21 +28,21 @@ function ActivitySummary({ activity }: { activity: AgendaActivity }) {
       )}
       <dl className="space-y-5 text-[16px] leading-6 text-grey-900">
         <div className="flex items-start gap-2.5">
-          <MaterialIcon name="calendar_month" size={24} className="mt-0.5 shrink-0 text-primary-600" />
+          <MaterialIcon name="calendar_month" size={24} className="mt-0.5 shrink-0 text-black" />
           <div className="min-w-0">
             <dt className="text-[18px] font-bold leading-6">Fecha</dt>
             <dd>{activity.dayLabel}</dd>
           </div>
         </div>
         <div className="flex items-start gap-2.5">
-          <MaterialIcon name="schedule" size={24} className="mt-0.5 shrink-0 text-primary-600" />
+          <MaterialIcon name="schedule" size={24} className="mt-0.5 shrink-0 text-black" />
           <div className="min-w-0">
             <dt className="text-[18px] font-bold leading-6">Horario</dt>
             <dd>{activity.timeLabel}</dd>
           </div>
         </div>
         <div className="flex items-start gap-2.5">
-          <MaterialIcon name="location_on" size={24} className="mt-0.5 shrink-0 text-primary-600" />
+          <MaterialIcon name="location_on" size={24} className="mt-0.5 shrink-0 text-black" />
           <div className="min-w-0">
             <dt className="text-[18px] font-bold leading-6">Lugar</dt>
             <dd className="font-bold">{venue}</dd>
@@ -59,20 +59,38 @@ function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   );
 }
 
-/** Mapa debajo de la ficha y encima de información general. */
+/** Tarjeta compacta de ubicación, siguiendo la referencia de Deportes. */
 function ActivityMap({ activity }: { activity: AgendaActivity }) {
   if (!activity.address) return null;
-  const mapQuery = encodeURIComponent(activity.address + ', Buenos Aires, Argentina');
+
   const venue = activity.venue || activity.locality;
+  const mapQuery = encodeURIComponent(
+    [activity.address, activity.locality, 'Buenos Aires', 'Argentina'].filter(Boolean).join(', ')
+  );
+  const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + mapQuery;
 
   return (
-    <section aria-label="Mapa de ubicación" className="mt-9">
-      <h2 className="mb-4 text-[24px] font-bold text-primary-600">Ubicación en el mapa</h2>
-      <div className="overflow-hidden rounded-lg border border-[#dedede] bg-[#e7eef3]">
+    <section aria-label="Mapa de ubicación">
+      <h2 className="sr-only">Ubicación en el mapa</h2>
+      <div className="grid grid-cols-[minmax(0,1fr)_42%] overflow-hidden rounded-lg border border-[#dedede] bg-white">
+        <div className="min-w-0 self-center px-4 py-3">
+          <p className="text-[16px] font-bold leading-6 text-grey-900">{venue}</p>
+          <p className="mt-1 break-words text-[16px] leading-6 text-grey-900">{activity.address}</p>
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1 inline-block rounded-sm text-[16px] font-bold leading-6 text-primary-600
+              underline-offset-2 hover:underline focus-visible:outline-2
+              focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+          >
+            Ver en Google Maps
+          </a>
+        </div>
         <iframe
           title={'Mapa de ' + venue}
           src={'https://www.google.com/maps?q=' + mapQuery + '&output=embed'}
-          className="h-[180px] w-full border-0 sm:h-[200px] lg:h-[220px]"
+          className="h-full min-h-[116px] w-full border-0"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
@@ -90,7 +108,7 @@ function ActivityInformation({ activity }: { activity: AgendaActivity }) {
   ];
 
   return (
-    <section aria-labelledby="agenda-general-information" className="border-t border-[#e1e7eb] pt-7">
+    <section aria-labelledby="agenda-general-information" className="pt-0">
       <h2 id="agenda-general-information" className="mb-5 text-[24px] font-bold text-primary-600">
         Información general
       </h2>
