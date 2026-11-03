@@ -197,7 +197,7 @@ test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', a
   await expect(iframe).toBeVisible();
   const mobile = (info.project.use.viewport?.width ?? 0) < 1024;
   await expect(summary).toHaveCSS('position', mobile ? 'static' : 'sticky');
-  await expect(summary).toHaveCSS('font-family', /Geometria.*Montserrat/);
+  await expect(summary).toHaveCSS('font-family', /^Geometria(?:,|$)/);
   const height = await iframe.evaluate(el => el.getBoundingClientRect().height);
   expect(height).toBeLessThanOrEqual(mobile ? 201 : 221);
   await expect(summary.locator('dt').first()).toHaveCSS('font-size', '18px');
