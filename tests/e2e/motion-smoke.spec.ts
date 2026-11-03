@@ -199,7 +199,8 @@ test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como e
       || el.classList.contains('agenda-sheet-stretch-rebounding'))).toBe(false);
   const settled = await sheet.boundingBox();
   expect(Math.abs(settled!.height - base!.height)).toBeLessThan(2);
-  await sheet.getByRole('button', { name: 'Cerrar opciones' }).click();
+  // La X fue eliminada a pedido de diseño: cerrar desde el backdrop.
+  await backdrop.click({ position: { x: 10, y: 10 } });
   await expect(sheet).toHaveCount(0);
 });
 
