@@ -37,8 +37,7 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
             <li
               key={index}
               className={`min-w-0 items-center gap-2
-                ${isLast ? 'inline-flex flex-1' : 'inline-flex shrink-0'}
-                ${hideOnMobile ? 'hidden sm:inline-flex' : ''}`}
+                ${isLast ? 'inline-flex flex-1' : hideOnMobile ? 'hidden shrink-0 sm:inline-flex' : 'inline-flex shrink-0'}`}
             >
               {index > 0 && (
                 <MaterialIcon

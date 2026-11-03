@@ -1,156 +1,109 @@
-# MLZ — Réplica frontend del sitio municipal
+# MLZ — Frontend institucional
 
-Base multipágina para construir progresivamente una réplica del sitio institucional de la Municipalidad de Lomas de Zamora. La primera página desarrollada es **Jóvenes en Comunidad**. La Home es provisional.
+Frontend multipágina de **MLZ / Municipio de Lomas de Zamora**, desarrollado como prototipo visual y funcional a partir de referencias institucionales en Figma. **No es el sitio oficial** ni una fuente de información vigente sobre eventos o trámites. La Agenda contiene datos de demostración y registros importados que no deben presentarse como actividades confirmadas.
 
-**Stack:** React 19, TypeScript estricto, Vite 8, Tailwind CSS 4, React Router, ESLint y Prettier.
+## Stack y requisitos
 
-## Ejecutar localmente
+- React 19, React Router 7 y TypeScript 5.9 (modo estricto).
+- Vite 8 y Tailwind CSS 4.
+- Google Material Symbols Outlined, ESLint, Prettier y Playwright con Chromium.
+- Node.js **>= 20.19.0** (se recomienda Node 22 compatible), npm.
 
-Requiere Node.js >=20.19.0 (se recomienda Node 22 LTS o superior compatible).
+## Desarrollo local
 
-1. `npm install`
-2. `npm run dev`
-3. Abrir http://localhost:5173/jovenes-en-comunidad
+```sh
+npm install
+npm run dev
+```
 
-Otras tareas: `npm run typecheck`, `npm run lint`, `npm run build`, `npm run preview`, `npm run format`.
+Vite inicia normalmente en `http://localhost:5173`. Para comprobar el proyecto:
 
-## Páginas
+| Comando existente | Función |
+| --- | --- |
+| `npm run typecheck` | TypeScript, `tsc -b --pretty false` |
+| `npm run lint` | ESLint |
+| `npm run build` | TypeScript + build de Vite |
+| `npm run preview` | Vista local del build |
+| `npm run format:check` | Comprobación de Prettier |
+| `npm run format` | Aplica Prettier |
+| `npm run test:e2e` | Playwright: rutas, UI, responsive, motion y capturas |
+| `npm run test:visual` | Capturas visuales Playwright |
+| `npm run test:visual:report` | Abre el informe de Playwright |
+| `npm run build:pages` | Build y preparación de rutas para GitHub Pages |
 
-- `/`: pantalla provisional, aún no diseñada.
-- `/jovenes-en-comunidad`: primera página real de la réplica municipal.
-- `/*`: página básica 404.
+Instalar el navegador antes de ejecutar pruebas en un entorno nuevo: `npx playwright install chromium` (en Linux puede requerir `--with-deps`). Playwright arranca un servidor Vite de pruebas salvo que se configure `PLAYWRIGHT_BASE_URL`. Los proyectos incluyen **1415, 768, 432 y 390 px**; los reportes se guardan en `test-results/` y `playwright-report/`.
 
-## Referencias visuales
+Los workflows de GitHub Actions ejecutan TypeScript, ESLint, build y Playwright en los pull requests. Su existencia no reemplaza la comprobación de los resultados de una ejecución concreta.
 
-- Figma: https://www.figma.com/design/dgnKx8QM8ZyU8HYNCgIriM/EJE-JOVENES-EN-COMUNIDAD?node-id=2101-1124
-- Sitio oficial de referencia: https://lomasdezamora.gov.ar/
+## Rutas públicas
 
-El frame de escritorio de Jóvenes en Comunidad se utilizó como fuente primaria. **El frame mobile de 432 px ya está disponible en Figma (nodo `2108:1125`) y fue incorporado como referencia de la implementación.** Mobile presenta introducción, índice y contacto antes de las iniciativas; desktop mantiene el índice en la columna lateral. El banner mobile utiliza una exportación dedicada del mismo recurso de Figma.
+| Ruta | Contenido |
+| --- | --- |
+| `/` | Home municipal provisional |
+| `/jovenes-en-comunidad` | Página institucional Jóvenes en Comunidad |
+| `/agenda-de-la-comunidad` | Home de Agenda: hero, destacada, eventos y circuitos |
+| `/agenda-de-la-comunidad/actividades` | Buscador, filtros y listado |
+| `/agenda-de-la-comunidad/actividades/:id` | Ficha completa de actividad |
+| `*` | Página 404 |
 
-La familia tipográfica de Figma es Geometria. El proyecto declara esa fuente y utiliza fallback a Arial, sin distribuir archivos tipográficos con licencia. Incorporar las fuentes licenciadas si corresponde.
+Las rutas se declaran en `src/app/router.tsx`; no cambiar sus nombres públicos durante refactorizaciones. `SiteLayout` gestiona Header, Footer, el enlace para saltar al contenido y `ScrollRestoration`.
 
-Los banners `public/assets/jovenes-hero.jpg` y `public/assets/jovenes-hero-mobile.jpg` provienen de Figma. Los logotipos institucionales oficiales se exportaron como SVG a partir de los componentes de Figma (`2112:1590` y `2112:1653`): `public/assets/logo-municipio-blanco.svg` y `public/assets/logo-comunidad-blanco.svg`. Se reutilizan en Header y Footer. No son capturas completas de la página.
+## Arquitectura pragmática por funcionalidades
 
-## Organización
+La modularización es incremental y conserva APIs existentes:
 
-- `src/app`: rutas.
-- `src/layouts`: layout general reutilizable.
-- `src/components`: navegación, UI Kit y componentes globales.
-- `src/data`: contenidos separados de su presentación.
-- `src/pages`: páginas independientes.
-- `src/styles/globals.css`: tokens semánticos de Tailwind y estilos tipográficos.
+```text
+src/
+├── app/                         # React Router
+├── assets/fonts/                # Geometria, archivos locales
+├── components/
+│   ├── agenda/                  # Componentes Agenda todavía existentes aquí
+│   ├── layout/                  # PageContainer, Footer y estructuras compartidas
+│   ├── navigation/              # Header, Breadcrumbs y navegación
+│   └── ui/                      # MaterialIcon y primitivas compartidas
+├── data/                        # Datos originales e importaciones de Agenda
+├── features/
+│   └── agenda/
+│       ├── components/
+│       │   ├── detail/          # Resumen, ubicación e información
+│       │   ├── filters/         # Selector de ordenamiento
+│       │   └── shared/          # Introducción editorial reutilizable
+│       ├── hooks/               # Paginación responsive
+│       ├── model/               # Contratos de filtros y ordenamiento
+│       └── utils/               # Búsqueda, selección, normalización y URLs
+├── layouts/                     # SiteLayout
+├── pages/                       # Composición por ruta
+└── styles/globals.css           # Geometria, tokens, Tailwind y motion
+```
 
-Los tokens principales de la biblioteca Figma se encuentran en `src/styles/globals.css`: **Primario 600 `#236999`** (`--color-primary-600`) para títulos y enlaces azules y **Grey 900 `#3d3d3d`** (`--color-grey-900`) para texto oscuro. El header usa ambos logos oficiales en desktop; en mobile muestra el logo municipal y el botón de menú. Para modificar el color municipal principal, actualizar los tokens en ese archivo. La imagen y los textos están fuera de las piezas visuales reutilizables.
+No hay obligación de crear todas las carpetas para cada feature. La lógica y el estado específicos deben permanecer cerca de su funcionalidad; los elementos realmente reutilizables van a `components/ui`, `layout` o `navigation`. Evitar importar implementaciones internas de una feature desde otra. Conservar contratos, tests y comportamiento durante migraciones posteriores.
 
-**Pendientes:** Home definitiva, enlaces oficiales de los botones genéricos del header y footer, página Puntos Jóvenes, verificación visual automatizada contra Figma, integración de fuente Geometria.
+En Agenda, `filterAgendaActivities` ordena una copia filtrada del dataset, `filterState` define los filtros y sus operaciones, `normalizeAgendaText` gestiona coincidencias de búsqueda y `activityMap` compone URLs de mapas. `AgendaPage` y `AgendaActivityDetailPage` se concentran en la composición de la vista. El drawer y las transiciones existentes permanecen en la implementación actual hasta que pueda verificarse una migración sin regresiones.
 
-## GitHub Pages — preview
+## Design System
 
-La acción `.github/workflows/pages.yml` compila y publica la página **solo en GitHub Pages**, tras un push a `main` o una ejecución manual.
+- **Geometria** en `src/assets/fonts/`: Regular (400), Medium (500) y Bold (700), enlazadas con `@font-face` en `src/styles/globals.css`. Formularios y botones heredan la tipografía.
+- **Material Symbols Outlined** para iconos de UI a través de `src/components/ui/MaterialIcon.tsx`. No introducir Lucide/Font Awesome ni dibujar SVG para sustituir iconos de interfaz. Los logos oficiales y pictogramas pueden conservar sus recursos.
+- **Contenedor institucional** de ancho máximo total **1200 px**, aplicado con `PageContainer`. El gutter pequeño es de 16 px; desde 1232 px el contenedor utiliza el ancho completo. El Header tiene su gutter propio.
+- **Tokens principales**: `--color-primary-500: #358dc2`, `--color-primary-600: #236999`, `--color-primary-700: #19577f`, `--color-info-500: #006eff`, `--color-grey-900: #3d3d3d`.
+- **Chips**: los filtros seleccionados usan Info 500 con texto blanco; las características de actividades conservan sus colores semánticos.
+- **Motion**: `src/styles/globals.css` contiene las curvas y duraciones calibradas de Agenda, sus gestos y soporte para `prefers-reduced-motion`. No cambiarlas solamente para simplificar una refactorización.
 
-Para habilitarla, un administrador del repo debe ir a **Settings → Pages → Build and deployment → Source → GitHub Actions**. Según la visibilidad del repositorio y el plan de GitHub, es posible que GitHub Pages no esté disponible; el proyecto no cambia automáticamente la privacidad del repo.
+### Figma (consulta, no edición)
 
-- URL prevista: https://santiagom96.github.io/mlz/
-- Página: https://santiagom96.github.io/mlz/jovenes-en-comunidad/
-- Build manual local: `npm run build:pages`
+- [Agenda de Actividades / Teatros Locales](https://www.figma.com/design/i1EyRb02SVGEtP6nWElLlT/AGENDA-DE-ACTIVIDADES---TEATROS-LOCALES): Home desktop `7153:8476`, Home mobile `7153:8509`, ficha `7296:19178`, chips `7358:11951`. Consultar el frame específico de cada componente antes de modificar su presentación.
+- [Jóvenes en Comunidad](https://www.figma.com/design/dgnKx8QM8ZyU8HYNCgIriM/EJE-JOVENES-EN-COMUNIDAD): frame mobile `2108:1125` y biblioteca institucional relacionada.
 
-`build:pages` usa `/mlz/` como ruta base y genera una copia de `index.html` para las rutas conocidas. Esto permite abrir y recargar directamente `/jovenes-en-comunidad/` en GitHub Pages. La ruta 404 también tiene fallback estático. Al agregar páginas nuevas, incluirlas en `scripts/prepare-pages.mjs`.
+Las capturas y medidas de Playwright ayudan a comparar con Figma, pero **no equivalen a una prueba de igualdad pixel-perfect**: se necesitan baselines aprobados para esa afirmación.
 
-## Vercel — estrictamente manual
+## Despliegues y colaboración
 
-**No está integrado GitHub con Vercel. No hay despliegues automáticos de Vercel.**
+**GitHub Pages:** `.github/workflows/pages.yml` publica únicamente por push a `main` o ejecución manual. `npm run build:pages` utiliza la base `/mlz/` y ejecuta `scripts/prepare-pages.mjs` para crear páginas estáticas de las rutas conocidas y un `404.html`. Al incorporar rutas dinámicas reales, revisar explícitamente ese script. Preview previsto: https://santiagom96.github.io/mlz/.
 
-Cuando el responsable autorice expresamente publicar, desde una máquina autenticada:
+**Vercel:** despliegue estrictamente manual, sujeto a autorización. No conectar GitHub, crear despliegues automáticos ni modificar `vercel.json` durante refactorizaciones.
 
-1. `npm install`
-2. `npm run build`
-3. `npx vercel` para un Preview o `npx vercel --prod` para producción, solamente tras autorización.
+**Agentes de IA y colaboradores:** consultar primero el [AGENTS.md](AGENTS.md) raíz y, para trabajos de Agenda, las instrucciones específicas de la feature. Trabajar en una rama, hacer commits acotados y abrir un PR sin merge automático. Respetar Figma, datos originales, rutas y diseño aprobado. Documentar validaciones reales y riesgos antes de pedir revisión.
 
-No crear la integración Git que dispara despliegues por cada push. `vercel.json` contiene exclusivamente la regla SPA para recarga de rutas limpias.
+## Pendientes conocidos
 
-## Verificación
-
-Configurados typecheck, ESLint y build mediante GitHub Actions en pull requests; la publicación de GitHub Pages solo se produce desde `main`. No hay pruebas visuales automatizadas configuradas todavía. Validar en anchos 375, 390, 432, 768, 1024 y 1440 px, y comparar frente a los frames desktop (1415 px) y mobile (432 px) de Figma. El código implementa los layouts de referencia; todavía no se ha automatizado un diff visual del navegador.
-
-Este repositorio es un prototipo frontend. No es el sitio oficial ni debe tratarse como canal de atención ciudadana o información vigente de trámites.
-
-
-## QA visual con Playwright + Chromium
-
-Se incluye una batería de pruebas de navegador con `@playwright/test` y Chromium, independiente de Vercel.
-
-1. `npm install`
-2. `npx playwright install chromium` (en Linux puede requerir `--with-deps`)
-3. `npm run test:e2e` — rutas, colores, logos, responsive y capturas.
-4. `npm run test:visual` — genera únicamente capturas visuales.
-5. `npm run test:visual:report` — abre el informe HTML local.
-
-Playwright inicia Vite localmente por defecto. Para probar una página ya publicada (sin iniciar Vite), ejecutar `PLAYWRIGHT_BASE_URL=https://santiagom96.github.io/mlz npm run test:e2e`. 
-
-Se prueban los anchos **1415, 432, 390 y 768 px**, comprobando el orden mobile del índice y la ausencia de overflow horizontal. Se generan capturas de viewport, página completa, header y footer, además de un JSON de medidas y colores. Los resultados se guardan en `test-results`.
-
-El workflow `.github/workflows/visual-qa.yml` ejecuta los tests automáticamente con push a main, pull requests o bajo demanda, adjuntando **playwright-visual-report** en la pestaña Actions. Esto utiliza **GitHub Actions**, no Vercel.
-
-Las capturas son evidencia para comparar con Figma. La suite no debe confundirse con una prueba pixel-perfect: falta registrar y aprobar baselines visuales de referencia con la tipografía Geometria licenciada para habilitar regresiones de píxeles automatizadas. Los reportes permiten revisar y corregir diferencias manualmente sin inventar un porcentaje de fidelidad.
-
-
-### Biblioteca visual compartida — Figma
-
-El UI Kit contiene los componentes `Breadcrumbs` (Geometria 18, 24 px de icono de separación, gap 8), `Icon` (mascara CSS con SVG originales de Figma), `IconLink` (icono 24 px + texto 18/26, gap 4), `InfoCard` (SimpleCard, padding 24/gap 16) y `TableOfContents` desacoplado de la lista de iniciativas. `PageHero` también es reutilizable entre páginas institucionales. Se extraen SVG a `public/assets/icons` y no se copian dibujos aproximados dentro de cada página. Los datos y los destinos de enlaces siguen siendo específicos de cada página.
-
-Tests Playwright específicos verifican fuentes, color, medidas de iconos, gaps, padding y el ancho de las tarjetas en frames Figma desktop (1415 px) y mobile (432 px). El reporte guarda capturas individuales del breadcrumb y el índice, además del header y la página completa. La fidelidad tipográfica exacta sigue condicionada a disponer de Geometria bajo licencia.
-
-## Agenda de la Comunidad — Home inicial
-
-Figma: https://www.figma.com/design/i1EyRb02SVGEtP6nWElLlT/AGENDA-DE-ACTIVIDADES---TEATROS-LOCALES?node-id=7358-11662
-
-La primera vista real de Home es **Agenda Anual de la Comunidad 2026**. Se publica tanto en `/` como en `/agenda-de-la-comunidad`; esto no implica que esté terminada la Home global del municipio.
-
-- Frame desktop `7358:11786` (1292px); mobile `7358:11747` (432px).
-- Componentes reutilizables en `src/components/agenda/`: `ActivityCard`, `AgendaToolbar`, `AgendaFilterPanel`, `ActivityDetails`, `AgendaPromo`, `AgendaIcon`.
-- Datos de demostración separados en `src/data/agenda.ts`; las 18 tarjetas representan las variantes visuales repetidas en el prototipo, **no eventos reales confirmados**.
-- Búsqueda por texto, filtros, chips removibles, orden alfabético, paginación, detalles en modal, resultado vacío.
-- No se muestra el botón **Ver mapa** ni una vista geográfica provisional: no están definidos en el buscador de Figma.
-- Exportaciones originales de Figma en `public/assets/agenda/`: ilustraciones Cine, Deportes, Humor y logo Recorrido del Café. El fondo fotográfico de esa promoción todavía no se incorporó y se reemplaza provisionalmente por un gradiente.
-- La tipografía Geometria no está incorporada por falta de archivos licenciados; usa fallback.
-
-Pruebas Playwright específicas en `tests/e2e/agenda.spec.ts` comprueban las rutas y el funcionamiento en 1415, 768, 432 y 390 px. Ejecutar `npm run test:e2e`.
-
-En GitHub Pages la ruta se prepara en `scripts/prepare-pages.mjs`. Vercel sigue **sin conexión automática ni despliegues**.
-
-
-## Corrección de rutas de Agenda (Figma Home y ficha final)
-- `/`: Home **general municipal** provisional, no Agenda.
-- `/agenda-de-la-comunidad`: Home de Agenda con imagen hero, actividad destacada, 3 eventos y circuitos.
-- `/agenda-de-la-comunidad/actividades`: buscador y filtros.
-- `/agenda-de-la-comunidad/actividades/:id`: página de detalle/Resumen y Compartir, reemplaza el modal anterior.
-- Exportaciones actualizadas desde Figma en resolución nativa o superior para banner, foto destacada, ilustraciones y circuitos.
-- Figma Home desktop `7153:8476`, mobile `7153:8509`. Figma detalle `7296:19178`.
-- Los IDs de demo se preparan como directorios en GitHub Pages para soportar refresh. Actividades reales requerirán datos estables y actualizar el script de rutas.
-- La programación del diseño es de ejemplo: no presentar como eventos confirmados.
-
-
-### Contenedor compartido (máximo 1200px)
-`PageContainer` controla el ancho institucional **total**: `max-w-[1200px]`.
-A partir de un viewport de 1232px, el contenido ocupa los 1200px completos; debajo,
-se aplica padding horizontal de 16px para mantener márgenes de seguridad.
-El Header usa padding mobile de 24px y 0px en desktop grande, pero no cambia el máximo.
-No sobrescribir con `!max-w-[1292px]` ni `max-w-[1232px]` en páginas.
-Playwright verifica la regla para Home municipal, Home Agenda, actividades, ficha y Jóvenes,
-en los cuatro viewports configurados.
-
-## Convención global de iconografía (obligatoria)
-
-Todos los **iconos de interfaz** usan **Google Material Symbols Outlined**, importados localmente con
-`material-symbols/outlined.css` y renderizados exclusivamente mediante
-`src/components/ui/MaterialIcon.tsx`. Los iconos heredan `currentColor` y permiten configurar
-`size`, `weight` y `filled`, con tamaños nominales explícitos para respetar Figma.
-**No dibujar iconos nuevos en SVG ni usar caracteres Unicode (›, ‹, ☰) como iconos.**
-Las marcas (logo del municipio, Comunidad Lomas, Instagram, WhatsApp, Facebook, etc.)
-se conservan como archivos SVG gráficos oficiales, porque no son iconos de interfaz.
-Las imágenes fotográficas o ilustraciones tampoco se sustituyen por símbolos.
-La fuente está incluida en el bundle Vite y no necesita una petición a Google Fonts en runtime.
-
-
-### Chips de Agenda — sincronizados con Figma
-Solo los chips de filtros seleccionados usan `--color-info-500: #006EFF`, texto e iconos blancos. Los chips de actividad mantienen los colores semánticos originales (lluvia, accesibilidad, inscripción y destacado). `Más Filtros` usa el glifo `tune` de Google Material Symbols a 24 px, visible también en mobile. El color **Primario 600** se conserva en los componentes institucionales, no se sustituye por Info 500 fuera de estos chips. Corresponde al frame Figma `7358:11951` y a los demás chips de la sección BUSCADOR.
+La Home municipal sigue provisional; las actividades importadas no equivalen a un servicio oficial actualizado. La migración de todos los componentes de Agenda a `features/` se realiza de forma progresiva para minimizar regresiones. La fidelidad pixel-perfect requiere un proceso de comparación y aprobación de capturas; no se presupone por el éxito de TypeScript o Playwright.

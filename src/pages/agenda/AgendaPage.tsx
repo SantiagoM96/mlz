@@ -1,26 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
+import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
+import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
-import { AgendaSortDropdown, type AgendaSortValue } from '../../components/agenda/AgendaDropdown';
+import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
+import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
-import { emptyFilters, type SelectedFilters } from '../../components/agenda/AgendaFilterPanel';
-import { agendaActivities, argentinaTodayISO } from '../../data/agenda';
-
-function usePageSize() {
-  const [size, setSize] = useState(9);
-  useEffect(() => {
-    const update = () => setSize(window.matchMedia('(max-width: 767px)').matches ? 6 : 9);
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-  return size;
-}
+import { emptyFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
 
 /** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
-  const pageSize = usePageSize();
+  const pageSize = useAgendaPageSize();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<SelectedFilters>(emptyFilters);
   const [sort, setSort] = useState<AgendaSortValue>('default');
@@ -31,52 +23,7 @@ export function AgendaPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    const normalize = (v: string) => v.normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-AR').replace('–', '-');
-    const term = normalize(search.trim());
-    const today = argentinaTodayISO();
-    const todayDate = new Date(today + 'T12:00:00Z');
-    const monday = new Date(todayDate);
-    monday.setUTCDate(todayDate.getUTCDate() - (todayDate.getUTCDay() + 6) % 7);
-    const weekStart = monday.toISOString().slice(0, 10);
-    const sunday = new Date(monday);
-    sunday.setUTCDate(monday.getUTCDate() + 6);
-    const weekEnd = sunday.toISOString().slice(0, 10);
-
-    const results = agendaActivities.filter(activity => {
-      if (term && !normalize([
-        activity.title, activity.category, activity.type, activity.locality,
-        activity.venue ?? '',
-      ].join(' ')).includes(term)) return false;
-      if (filters.type.length && !filters.type.some(type => normalize(type) === normalize(activity.type))) return false;
-      if (filters.category.length && !filters.category.includes(activity.category)) return false;
-      if (filters.locality.length && !filters.locality.includes(activity.locality)) return false;
-      if (filters.date.length) {
-        const date = activity.dateISO ?? '';
-        const isWeek = date >= weekStart && date <= weekEnd;
-        const weekDay = date ? new Date(date + 'T12:00:00Z').getUTCDay() : -1;
-        const matchesDate = filters.date.some(option =>
-          (option === 'Hoy' && date === today) ||
-          (option === 'Esta semana' && isWeek) ||
-          (option === 'Este fin de semana' && isWeek && (weekDay === 0 || weekDay === 6)));
-        if (!matchesDate) return false;
-      }
-      return true;
-    });
-
-    if (sort === 'az') results.sort((a, b) => a.title.localeCompare(b.title, 'es'));
-    if (sort === 'za') results.sort((a, b) => b.title.localeCompare(a.title, 'es'));
-    if (sort === 'default') {
-      // Primero las fechas actuales/futuras, después el archivo (más reciente primero).
-      results.sort((a, b) => {
-        const aFuture = (a.dateISO ?? '') >= today;
-        const bFuture = (b.dateISO ?? '') >= today;
-        if (aFuture !== bFuture) return aFuture ? -1 : 1;
-        const order = (a.dateISO ?? '').localeCompare(b.dateISO ?? '');
-        return aFuture ? order : -order;
-      });
-    }
-    return results;
+    return filterAgendaActivities(search, filters, sort);
   }, [search, filters, sort]);
 
   const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); };
@@ -85,10 +32,7 @@ export function AgendaPage() {
 
   return (
     <PageContainer className="pt-6 pb-6" >
-      <div className="mb-6">
-        <h1 className="text-[32px] font-bold leading-10 text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
-        <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>
-      </div>
+      <AgendaIntro className="mb-6" />
 
       <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters}
         onFilters={value => { setFilters(value); setLimit(9); }} onReset={onReset} />

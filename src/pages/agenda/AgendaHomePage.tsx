@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { FeaturedActivityCard } from '../../components/agenda/FeaturedActivityCard';
+import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaCircuitCard, type AgendaCircuit } from '../../components/agenda/AgendaCircuitCard';
 import { agendaActivities } from '../../data/agenda';
@@ -29,10 +30,7 @@ export function AgendaHomePage() {
         className="aspect-[400/179] w-full rounded-lg object-cover md:aspect-[1200/336]"
         fetchPriority="high"
       />
-      <div className="mb-10 mt-6">
-        <h1 className="text-[32px] leading-10 font-bold text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
-        <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>
-      </div>
+      <AgendaIntro className="mb-10 mt-6" />
       <FeaturedActivityCard activity={featuredActivity} />
       <section aria-labelledby="proximos-eventos" className="mt-10">
         <div className="mb-10 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">

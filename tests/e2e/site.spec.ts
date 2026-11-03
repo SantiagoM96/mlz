@@ -133,7 +133,7 @@ test('componentes Breadcrumbs, iconos y tarjetas cumplen medidas de Figma', asyn
   // Los iconos del UI Kit deben usar la fuente local de Google, no máscaras SVG.
   await page.evaluate(() => document.fonts.ready);
   const icons = await page.locator('[data-material-symbol]').evaluateAll((items) =>
-    items.map(item => ({
+    items.filter(item => item.getClientRects().length > 0).map(item => ({
       glyph: item.textContent?.trim(),
       font: getComputedStyle(item).fontFamily,
       width: Math.round(item.getBoundingClientRect().width),

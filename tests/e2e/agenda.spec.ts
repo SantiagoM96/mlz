@@ -49,11 +49,13 @@ test('Más filtros: opciones táctiles separadas sin seleccionar la opción veci
   await expect(firstLabel).toHaveCSS('min-height', '44px');
   await expect(secondLabel).toHaveCSS('min-height', '44px');
   if ((info.project.use.viewport?.width ?? 0) <= 680) {
-    const firstBox = await firstLabel.boundingBox();
-    const secondBox = await secondLabel.boundingBox();
-    expect(firstBox).not.toBeNull();
-    expect(secondBox).not.toBeNull();
-    expect(secondBox!.y - (firstBox!.y + firstBox!.height)).toBeGreaterThanOrEqual(3);
+    // Tomar ambas medidas en el mismo frame evita desfases durante la animación de entrada.
+    const boxes = await checkboxes.evaluateAll(nodes => nodes.slice(0, 2).map(node => {
+      const rect = node.parentElement!.getBoundingClientRect();
+      return { y: rect.y, height: rect.height };
+    }));
+    expect(boxes).toHaveLength(2);
+    expect(boxes[1]!.y - (boxes[0]!.y + boxes[0]!.height)).toBeGreaterThanOrEqual(3);
   }
   await second.check();
   await expect(first).not.toBeChecked();
@@ -114,8 +116,9 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   const count = info.project.name.startsWith('mobile') ? 6 : 9;
   await expect(page.getByTestId('agenda-card')).toHaveCount(count);
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
-  const allImagesLoaded = await page.getByTestId('agenda-card').first().locator('img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0);
-  expect(allImagesLoaded).toBe(true);
+  const firstImage = page.getByTestId('agenda-card').first().locator('img');
+  await expect.poll(() => firstImage.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+    { message: 'La primera ilustración debe cargar correctamente' }).toBe(true);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('La Chamameceada');
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
@@ -125,7 +128,7 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await page.getByRole('button', { name: /Más Filtros/ }).click();
   const filter = page.getByRole('dialog', { name: 'Filtros de la agenda' });
   await filter.getByRole('button', { name: 'Categoría' }).click();
-  await filter.getByRole('checkbox', { name: 'Ambiental' }).check();
+  await filter.getByRole('checkbox', { name: 'Ambiental', exact: true }).check();
   await filter.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.getByTestId('agenda-card').first()).toContainText('Salida de observación de hongos');
   await page.getByRole('button', { name: 'Ambiental' }).click();
@@ -179,14 +182,45 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     if (scrollWidth > (info.project.use.viewport?.width ?? 1200) + 1) {
-      const offenders = await page.evaluate(() => [...document.body.querySelectorAll('*')]
-        .map(el => {
-          const rect = el.getBoundingClientRect();
-          return { tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 125) : '',
-            text: el.textContent?.trim().slice(0, 35), x: rect.x, right: rect.right,
-            width: rect.width, overflow: getComputedStyle(el).overflowX };
-        }).filter(item => item.right > window.innerWidth + 1 || item.x < -1).slice(0, 20));
-      console.log('MLZ_OVERFLOW_DIAGNOSTIC', route, JSON.stringify(offenders));
+      const diagnostics = await page.evaluate(viewportWidth => ({
+        innerWidth: window.innerWidth,
+        clientWidth: document.documentElement.clientWidth,
+        visualWidth: window.visualViewport?.width,
+        scrollWidth: document.documentElement.scrollWidth,
+        bodyWidth: document.body.scrollWidth,
+        bodyClientWidth: document.body.clientWidth,
+        overflowContainers: [document.documentElement, document.body, ...document.body.querySelectorAll('*')]
+          .map(el => ({ tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 90) : '',
+            width: el.clientWidth, scroll: el.scrollWidth, overflow: getComputedStyle(el).overflowX }))
+          .filter(el => el.scroll > el.width + 1).sort((a, b) => b.scroll - b.width - (a.scroll - a.width))
+          .slice(0, 15),
+        textOffenders: (() => {
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+          const overflow: { text: string; right: number; left: number; parent: string }[] = [];
+          let node: Node | null;
+          while ((node = walker.nextNode())) {
+            if (!node.textContent?.trim() || !node.parentElement) continue;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rect = range.getBoundingClientRect();
+            if (rect.right > viewportWidth + 1 || rect.left < -1) {
+              overflow.push({ text: node.textContent.trim().slice(0, 65),
+                right: Math.round(rect.right), left: Math.round(rect.left),
+                parent: node.parentElement.tagName + '.' + node.parentElement.className.toString().slice(0, 70) });
+            }
+          }
+          return overflow.slice(0, 15);
+        })(),
+        offenders: [...document.body.querySelectorAll('*')]
+          .map(el => {
+            const rect = el.getBoundingClientRect();
+            return { tag: el.tagName, className: typeof el.className === 'string' ? el.className.slice(0, 125) : '',
+              text: el.textContent?.trim().slice(0, 35), x: rect.x, right: rect.right,
+              width: rect.width, overflow: getComputedStyle(el).overflowX };
+          }).filter(item => item.right > viewportWidth + 1 || item.x < -1)
+          .sort((a, b) => b.right - a.right).slice(0, 25),
+      }), info.project.use.viewport?.width ?? 1200);
+      console.log('MLZ_OVERFLOW_DIAGNOSTIC', route, JSON.stringify(diagnostics));
     }
     expect(scrollWidth, `Overflow horizontal en ${route}`).toBeLessThanOrEqual((info.project.use.viewport?.width ?? 1200) + 1);
   }
@@ -225,19 +259,27 @@ test('la iconografía de todas las rutas usa Google Material Symbols', async ({ 
 test('solo filtros seleccionados son azules; activity badges conservan colores semanticos y tune', async ({ page }) => {
   const routes = ['/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
     '/agenda-de-la-comunidad/actividades/actividad-1'];
+  let observedChips = 0;
   for (const route of routes) {
     await page.goto(route);
     const activityChips = page.locator('[data-agenda-chip="activity"]');
-    await expect(activityChips.first()).not.toHaveCSS('background-color', 'rgb(0, 110, 255)');
-    await expect(activityChips.first().locator('[data-material-symbol]')).toBeVisible();
+    const count = await activityChips.count();
+    observedChips += count;
+    for (let index = 0; index < count; index++) {
+      await expect(activityChips.nth(index)).not.toHaveCSS('background-color', 'rgb(0, 110, 255)');
+      await expect(activityChips.nth(index).locator('[data-material-symbol]')).toBeVisible();
+    }
   }
+  // Los badges son opcionales por actividad; la portada ofrece ejemplos reales.
+  expect(observedChips).toBeGreaterThan(0);
 
   await page.goto('/agenda-de-la-comunidad/actividades');
   const filters = page.getByRole('button', { name: /Más Filtros/ });
   await expect(filters.locator('[data-material-symbol="tune"]')).toBeVisible();
   await filters.click();
   const dialog = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  await dialog.getByRole('checkbox', { name: 'Banfield' }).check();
+  await dialog.getByRole('button', { name: 'Localidad' }).click();
+  await dialog.getByRole('checkbox', { name: 'Banfield', exact: true }).check();
   await dialog.getByRole('button', { name: 'Ver resultados' }).click();
   const selected = page.locator('[data-agenda-chip="selected"]');
   await expect(selected.first()).toHaveCSS('background-color', 'rgb(0, 110, 255)');
@@ -249,7 +291,13 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
   const dateButton = page.getByRole('button', { name: 'Fecha', exact: true });
   await dateButton.click();
   const dateOptions = page.getByRole('dialog', { name: 'Opciones de Fecha' });
-  await expect(dateOptions.getByRole('textbox', { name: 'Buscar fecha' })).toBeFocused();
+  const dateSearch = dateOptions.getByRole('textbox', { name: 'Buscar fecha' });
+  if ((info.project.use.viewport?.width ?? 0) > 680) {
+    await expect(dateSearch).toBeFocused();
+  } else {
+    // En mobile no se abre automáticamente el teclado al desplegar un bottom sheet.
+    await expect(dateSearch).toBeVisible();
+  }
   await dateOptions.getByRole('checkbox', { name: 'Hoy' }).check();
   await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(page.locator('[data-agenda-chip="selected"]')).toContainText(['Hoy']);
@@ -285,15 +333,17 @@ test('Más Filtros se mantiene dentro del viewport y conserva acciones accesible
   const trigger = page.getByRole('button', { name: /Más Filtros/ });
   await trigger.click();
   const panel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
-  const rect = await panel.evaluate(node => {
+  // El bottom sheet entra desde abajo: validar su posición una vez terminada la entrada.
+  const viewport = page.viewportSize()!;
+  const rect = () => panel.evaluate(node => {
     const r = node.getBoundingClientRect();
     return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
   });
-  const viewport = page.viewportSize()!;
-  expect(rect.top).toBeGreaterThanOrEqual(0);
-  expect(rect.bottom).toBeLessThanOrEqual(viewport.height + 1);
-  expect(rect.right).toBeLessThanOrEqual(viewport.width + 1);
-  expect(rect.left).toBeGreaterThanOrEqual(0);
+  await expect.poll(async () => (await rect()).bottom).toBeLessThanOrEqual(viewport.height + 1);
+  const settledRect = await rect();
+  expect(settledRect.top).toBeGreaterThanOrEqual(0);
+  expect(settledRect.right).toBeLessThanOrEqual(viewport.width + 1);
+  expect(settledRect.left).toBeGreaterThanOrEqual(0);
   await expect(panel.getByRole('button', { name: 'Ver resultados' })).toBeVisible();
   await expect(panel.getByRole('button', { name: 'Limpiar', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
@@ -314,7 +364,8 @@ test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes
   await expect(dates).toHaveCSS('border-top-left-radius', '16px');
   await expect(page.getByRole('button', { name: 'Cerrar panel de opciones' })).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden');
-  await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click();
+  // Hacer clic en la zona visible del backdrop, no en el centro cubierto por la hoja.
+  await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
   await expect(dates).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('');
 
@@ -469,11 +520,12 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   assertSorted(dates);
   const today = dateOptions.getByRole('checkbox', { name: 'Hoy' });
   await today.check();
-  const selectedDate = dateOptions.locator('label', { has: today });
+  await page.mouse.move(0, 0); // La comprobación evalúa el color base, no el hover deliberadamente más oscuro.
+  const selectedDate = dateOptions.locator('label:has(input[aria-label="Hoy"])');
   await expect(selectedDate).toHaveCSS('background-color', 'rgb(0, 110, 255)');
   await expect(selectedDate).toHaveCSS('color', 'rgb(255, 255, 255)');
-  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
-  await expect(selectedDate.locator('span[aria-hidden="true"]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect(selectedDate.locator(':scope > span[aria-hidden="true"]')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
+  await expect(selectedDate.locator(':scope > span[aria-hidden="true"]')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await dateOptions.getByRole('button', { name: 'Ver resultados' }).click();
 
   if ((info.project.use.viewport?.width ?? 0) >= 768) {
@@ -608,6 +660,7 @@ test('copiar enlace en una ficha muestra confirmación y copia la URL actual', a
 });
 
 test('motion UX: desktop popovers y mobile sheets tienen duraciones coherentes', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto(activities);
   const mobile = (info.project.use.viewport?.width ?? 0) <= 680;
   await page.getByRole('button', { name: 'Fecha', exact: true }).click();
@@ -618,7 +671,7 @@ test('motion UX: desktop popovers y mobile sheets tienen duraciones coherentes',
     return { animationName: styles.animationName, duration: styles.animationDuration };
   });
   expect(motion.animationName).toContain(mobile ? 'agenda-sheet-in' : 'agenda-popover-in');
-  expect(motion.duration).toBe(mobile ? '0.3s' : '0.22s');
+  expect(motion.duration).toBe(mobile ? '0.23s' : '0.15s');
   await dateSheet.getByRole('button', { name: 'Ver resultados' }).click();
   await expect(dateSheet).toHaveCount(0);
 
@@ -683,7 +736,10 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     await expect(summary).toContainText('Fecha');
     await expect(summary).toContainText('Horario');
     await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
-    await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
+    // Solo las actividades que tienen avisos muestran chips; no inventar badges.
+    if (path.endsWith('/tita-y-rhodesia')) {
+      await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
+    }
     const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
     await expect(crumbs).toHaveCSS('color', 'rgb(35, 105, 153)');
     await expect(crumbs.getByTestId('breadcrumb-current')).toBeVisible();

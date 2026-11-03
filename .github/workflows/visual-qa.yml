@@ -12,9 +12,13 @@ permissions:
 
 jobs:
   playwright:
-    name: Chromium desktop y mobile
+    name: Chromium — ${{ matrix.project }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-1415, mobile-432, mobile-390, tablet-768]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,14 +31,14 @@ jobs:
       - name: Verificar el build
         run: npm run build
       - name: Ejecutar pruebas y capturas
-        run: npm run test:e2e
+        run: npm run test:e2e -- --project=${{ matrix.project }} --retries=0
         env:
           CI: 'true'
       - name: Publicar capturas y reporte HTML
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-visual-report
+          name: playwright-visual-report-${{ matrix.project }}
           path: |
             playwright-report/
             test-results/

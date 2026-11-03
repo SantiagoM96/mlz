@@ -1,14 +1,13 @@
 import { useState } from 'react';
+import { agendaFilterGroups, toggleFilterValue, type SelectedFilters } from '../../features/agenda/model/filterState';
 import { filterOptions, filterTitles, type FilterGroup } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { AgendaSheetBackdrop, AgendaSheetHeader } from './AgendaMobileSheet';
 import { useAgendaMobileScrollLock } from './useAgendaMobileScrollLock';
 import { useAgendaSheetDismiss } from './useAgendaSheetDismiss';
 
-export type SelectedFilters = Record<FilterGroup, string[]>;
-export const emptyFilters = (): SelectedFilters => ({ type: [], category: [], locality: [], date: [] });
-
-const groups: FilterGroup[] = ['type', 'category', 'locality', 'date'];
+export { emptyFilters } from '../../features/agenda/model/filterState';
+export type { SelectedFilters } from '../../features/agenda/model/filterState';
 
 type Props = {
   value: SelectedFilters;
@@ -23,8 +22,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
   useAgendaMobileScrollLock(true);
   const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLElement>(true, onClose);
   const toggleItem = (group: FilterGroup, item: string) => {
-    const previous = value[group];
-    onChange({ ...value, [group]: previous.includes(item) ? previous.filter(x => x !== item) : [...previous, item] });
+    onChange(toggleFilterValue(value, group, item));
   };
 
   return (
@@ -34,7 +32,7 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
       className="agenda-dropdown-enter agenda-mobile-sheet fixed inset-x-4 top-20 bottom-4 z-50 flex w-auto flex-col overflow-hidden rounded-lg border border-[#e7e7e7] bg-white shadow-xl md:absolute md:inset-auto md:right-0 md:top-[calc(100%+8px)] md:max-h-[min(65vh,540px)] md:w-[min(560px,calc(100vw-32px))]">
       <AgendaSheetHeader title="Filtrar actividades" onClose={dismiss} />
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-        {groups.map(group => (
+        {agendaFilterGroups.map(group => (
           <section key={group} className="mb-4 last:mb-0">
             <button type="button" className="agenda-motion-control flex min-h-10 w-full items-center justify-between text-left text-[18px] font-bold text-primary-600"
               aria-expanded={expanded.includes(group)}
