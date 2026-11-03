@@ -88,7 +88,6 @@ export function AgendaPage() {
       <div className="mb-6">
         <h1 className="text-[32px] font-bold leading-10 text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
         <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>
-        <p className="mt-2 text-[14px] leading-5 text-[#69737b]">Información de la planilla 2026; incluye registros históricos. Confirmá fechas y disponibilidad antes de asistir.</p>
       </div>
 
       <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters}
