@@ -57,7 +57,7 @@ export function MaterialIcon({
     <span
       aria-hidden="true"
       data-material-symbol={name}
-      className={`material-symbols-outlined inline-flex shrink-0 select-none items-center justify-center align-middle leading-none ${className}`}
+      className={`material-symbols-outlined inline-flex shrink-0 select-none items-center justify-center overflow-hidden align-middle leading-none ${className}`}
       style={style}
     >
       {name}
