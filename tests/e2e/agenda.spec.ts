@@ -47,7 +47,7 @@ test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
   await page.getByTestId('agenda-featured').getByRole('link', { name: 'Ver más' }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/tita-y-rhodesia/?$'));
   await expect(page.getByRole('heading', { name: 'Tita & Rhodesia', level: 1 })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' }).getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' }).getByRole('link', { name: /Google Maps/ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Compartir por WhatsApp' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Compartir por Facebook' })).toBeVisible();
 });
@@ -508,7 +508,7 @@ test('ficha: mapa compacto, descripción sin recortes, iconos negros y aviso eli
   expect(noOverflow).toBe(true);
 
   if ((info.project.use.viewport?.width ?? 0) >= 1024) {
-    await expect(summary).toHaveCSS('position', 'sticky');
+    await expect(summary.locator('..')).toHaveCSS('position', 'sticky');
   }
 });
 
@@ -527,7 +527,7 @@ test('ficha: imagen original, ubicación y datos generales sin flujo de inscripc
     await expect(summary).toContainText('Horario');
     await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
     await expect(page.getByRole('heading', { name: 'Ubicación en el mapa' })).toBeVisible();
-    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+    await expect(summary.getByRole('link', { name: /Google Maps/ })).toBeVisible();
     await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
     await expect(page.getByRole('button', { name: /Elegir horario|Inscribirme|Reservar cupo/ })).toHaveCount(0);
     const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
@@ -617,7 +617,7 @@ test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al 
     });
     expect(positions.description).toBeLessThan(positions.image);
     expect(positions.map).toBeGreaterThan(positions.imageBottom);
-    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
+    await expect(summary.getByRole('link', { name: /Google Maps/ })).toBeVisible();
     expect(positions.map).toBeLessThan(positions.info);
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       const imageX = await image.evaluate(el => el.getBoundingClientRect().x);
