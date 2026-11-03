@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
+import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
@@ -31,10 +32,7 @@ export function AgendaPage() {
 
   return (
     <PageContainer className="pt-6 pb-6" >
-      <div className="mb-6">
-        <h1 className="text-[32px] font-bold leading-10 text-primary-600">¡Agenda Anual de la Comunidad 2026!</h1>
-        <p className="mt-2 text-[18px] leading-[26px] text-grey-900">Encontrá mes a mes todas las actividades culturales, deportivas y ambientales para disfrutar en tu barrio.</p>
-      </div>
+      <AgendaIntro className="mb-6" />
 
       <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters}
         onFilters={value => { setFilters(value); setLimit(9); }} onReset={onReset} />
