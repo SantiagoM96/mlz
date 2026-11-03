@@ -89,10 +89,10 @@ test('los cheurones de Más Filtros indican cerrado abajo y abierto arriba; en m
   const type = panel.getByRole('button', { name: 'Tipo de actividad', exact: true });
   const arrow = type.locator('[data-material-symbol="expand_more"]');
   await expect(type).toHaveAttribute('aria-expanded', 'true');
-  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toContain('matrix(-1');
+  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).rotate)).toBe('180deg');
   await type.click();
   await expect(type).toHaveAttribute('aria-expanded', 'false');
-  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).transform)).toBe('none');
+  await expect.poll(() => arrow.evaluate(node => getComputedStyle(node).rotate)).toBe('none');
   if ((info.project.use.viewport?.width ?? 0) <= 680) {
     await expect(panel.locator('.agenda-sheet-heading').getByRole('button', { name: 'Cerrar opciones' })).toHaveCount(0);
     await page.getByRole('button', { name: 'Cerrar panel de opciones' }).click({ position: { x: 10, y: 10 } });
