@@ -41,11 +41,11 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
   const selectedCount = Object.values(filters).reduce((sum, items) => sum + items.length, 0);
 
   return <div className="relative" data-testid="agenda-toolbar">
-    <div className="grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
+    <div className="agenda-search-filterbar grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(135px,162px)]">
       <label className="relative col-span-2 block md:col-span-1">
         <span className="sr-only">Buscar actividades</span>
         <input value={search} onChange={e => onSearch(e.target.value)} placeholder="¿Qué estás buscando?"
-          className="h-12 w-full rounded border border-[#80baff] bg-white py-2 pr-11 pl-4 text-[16px] text-primary-600 outline-offset-2 placeholder:text-[#68ace1] focus:border-[#006eff]" />
+          className="agenda-search-input h-12 w-full rounded border border-[#5ba8d5] bg-white py-2 pr-11 pl-4 text-[16px] text-grey-900 outline-none placeholder:text-[#5ba8d5] focus:border-primary-600 focus:ring-[3px] focus:ring-[#d9edff]" />
         {search ?
           <button type="button" aria-label="Borrar búsqueda" onClick={() => onSearch('')} className="absolute right-3 top-3 text-primary-600"><MaterialIcon name="close" size={24}/></button> :
           <MaterialIcon name="search" size={24} className="pointer-events-none absolute right-3 top-3 text-primary-600" />
@@ -67,7 +67,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
         onChange={date => onFilters({ ...filters, date })} />
 
       <button ref={moreFiltersButtonRef} type="button" aria-haspopup="dialog" aria-expanded={open} aria-controls="agenda-more-filters" onClick={() => setOpen(v => !v)}
-        className="agenda-motion-control flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#006eff] bg-white px-3 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f2f7fc] focus-visible:outline-2">
+        className={`agenda-filter-trigger agenda-motion-control flex h-12 min-w-0 items-center justify-between gap-2 rounded border border-[#5ba8d5] bg-white px-4 text-[16px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 ${open || selectedCount ? 'agenda-filter-trigger-active' : ''}`}>
         <span className="whitespace-nowrap">Más Filtros</span>
         <MaterialIcon name="tune" size={24} className="shrink-0"/>
       </button>
