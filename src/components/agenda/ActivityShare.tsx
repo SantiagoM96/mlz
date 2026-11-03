@@ -69,14 +69,10 @@ export function ActivityShare({ title }: { title: string }) {
         target="_blank" rel="noopener noreferrer" aria-label="Compartir por Facebook">
         {platformIcon('facebook')}
       </a>
-      <span className="text-[18px] font-bold leading-[26px] text-primary-600">Compartir</span>
-      <button type="button" onClick={copyLink}
-        className="inline-flex min-h-7 items-center gap-1 rounded-sm px-1 text-[14px]
-          font-bold text-primary-600 transition-colors hover:text-primary-700
-          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-        aria-label={copyState === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
-        <MaterialIcon name={copyState === 'copied' ? 'check' : 'content_copy'} size={20} />
-        <span className="sr-only">{copyState === 'copied' ? 'Copiado' : 'Copiar enlace'}</span>
+      <button type="button" onClick={copyLink} className={classes}
+        aria-label={copyState === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}
+        title={copyState === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
+        <MaterialIcon name={copyState === 'copied' ? 'check' : 'link'} size={20} />
       </button>
       <span className="sr-only" role="status" aria-live="polite">
         {copyState === 'copied' ? 'Enlace copiado al portapapeles' :
