@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { SelectedFilters } from './AgendaFilterPanel';
+import { agendaFilterGroups, type SelectedFilters } from '../../features/agenda/model/filterState';
 import { filterOptions } from '../../data/agenda';
 import { AgendaFilterPanel } from './AgendaFilterPanel';
 import { MaterialIcon } from '../ui/MaterialIcon';
@@ -75,7 +75,7 @@ export function AgendaToolbar({ search, onSearch, filters, onFilters, onReset }:
 
     {selectedCount > 0 && <div aria-label="Filtros seleccionados" className="agenda-filter-chips mt-4 flex flex-wrap items-center gap-2">
       <div className="agenda-filter-chips-scroll">
-      {(['type','category','locality','date'] as const).flatMap(group => filters[group].map(value => (
+      {agendaFilterGroups.flatMap(group => filters[group].map(value => (
         <button type="button" key={group+value} onClick={() => onFilters({ ...filters, [group]: filters[group].filter(x => x !== value) })}
           data-agenda-chip="selected" className="agenda-filter-chip inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
           {value}<MaterialIcon name="close" size={15}/>
