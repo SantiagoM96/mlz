@@ -42,10 +42,10 @@ export function AgendaFilterPanel({ value, onChange, onApply, onReset, onClose }
               {filterTitles[group]} <MaterialIcon name="expand_more" size={24} className={`agenda-motion-chevron ${expanded.includes(group) ? '': '-rotate-90'}`} />
             </button>
             {expanded.includes(group) &&
-              <div className="agenda-motion-accordion mt-3 grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
+              <div className="agenda-motion-accordion mt-2 grid grid-cols-1 gap-x-3 gap-y-1 sm:grid-cols-2">
                 {filterOptions[group].map(option => (
-                  <label key={option} className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] leading-6 text-grey-900">
-                    <input type="checkbox" className="size-4 accent-[#006eff]" checked={value[group].includes(option)} onChange={() => toggleItem(group, option)} />
+                  <label key={option} className="flex min-h-11 cursor-pointer items-center gap-2 rounded px-2 py-2 text-[16px] leading-6 text-grey-900 transition-colors hover:bg-[#f3f7fc] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary-600">
+                    <input type="checkbox" className="size-5 shrink-0 accent-[#006eff]" checked={value[group].includes(option)} onChange={() => toggleItem(group, option)} />
                     <span>{option}</span>
                   </label>
                 ))}
