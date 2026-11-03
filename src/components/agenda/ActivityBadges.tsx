@@ -8,14 +8,14 @@ const styles: Record<AgendaActivity['badges'][number]['kind'], string> = {
   featured: 'bg-[#ecddff] text-[#9747ff]',
 };
 
-export function ActivityBadges({ badges }: { badges: AgendaActivity['badges'] }) {
+export function ActivityBadges({ badges, variant = 'default' }: { badges: AgendaActivity['badges']; variant?: 'default' | 'summary' }) {
   return (
     <div className="flex flex-wrap gap-2" aria-label="Características de la actividad">
       {badges.map((badge) => (
         <span
           key={badge.kind}
           data-agenda-chip="activity"
-          className={`inline-flex min-h-6 items-center gap-1 rounded-[6px] px-[6px] py-0.5 text-sm font-medium ${styles[badge.kind]}`}
+          className={`inline-flex items-center gap-1.5 rounded-[6px] font-medium ${variant === 'summary' ? 'min-h-[30px] max-w-full px-[10px] py-1 text-[18px] leading-[22px]' : 'min-h-6 px-[6px] py-0.5 text-sm'} ${styles[badge.kind]}`}
         >
           <MaterialIcon
             name={
@@ -24,7 +24,7 @@ export function ActivityBadges({ badges }: { badges: AgendaActivity['badges'] })
                 : badge.kind === 'rain' ? 'rainy'
                 : 'confirmation_number'
             }
-            size={16}
+            size={variant === 'summary' ? 20 : 16}
           />
           {badge.label}
         </span>
