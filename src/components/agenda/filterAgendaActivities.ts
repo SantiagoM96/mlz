@@ -1,6 +1,6 @@
 import { agendaActivities, argentinaTodayISO } from '../../data/agenda';
-import type { SelectedFilters } from './AgendaFilterPanel';
-import type { AgendaSortValue } from './AgendaDropdown';
+import type { SelectedFilters } from '../../features/agenda/model/filterState';
+import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { normalizeAgendaText } from './normalizeAgendaText';
 
 /** Filtrado y ordenamiento puros; nunca modifica el dataset original. */
