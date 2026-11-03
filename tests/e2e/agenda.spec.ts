@@ -37,10 +37,37 @@ test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page 
 });
 
 
+test('barra de búsqueda replica cuatro columnas de la captura en desktop', async ({ page }, info) => {
+  if ((info.project.use.viewport?.width ?? 0) < 1280) return;
+  await page.goto(activities);
+  const toolbar = page.getByTestId('agenda-toolbar');
+  const search = toolbar.getByRole('textbox', { name: 'Buscar actividades' });
+  const locality = toolbar.getByTestId('agenda-dropdown-localidad');
+  const date = toolbar.getByTestId('agenda-dropdown-fecha');
+  const more = toolbar.getByRole('button', { name: 'Más Filtros', exact: true });
+  const boxes = await Promise.all([search, locality, date, more].map(el => el.boundingBox()));
+  expect(boxes.every(Boolean)).toBe(true);
+  for (let i = 0; i < boxes.length - 1; i++) {
+    expect(boxes[i + 1]!.x - (boxes[i]!.x + boxes[i]!.width)).toBeCloseTo(16, 0);
+  }
+  expect(boxes[1]!.width).toBeCloseTo(207, 0);
+  expect(boxes[2]!.width).toBeCloseTo(207, 0);
+  expect(boxes[3]!.width).toBeCloseTo(196, 0);
+  for (const box of boxes) expect(box!.height).toBeCloseTo(48, 0);
+  const results = page.getByText(/^Mostrando -/);
+  const sort = page.getByRole('button', { name: 'Ordenar', exact: true });
+  const resultBox = await results.boundingBox();
+  const sortBox = await sort.boundingBox();
+  expect(resultBox).not.toBeNull();
+  expect(sortBox).not.toBeNull();
+  expect(sortBox!.y).toBeGreaterThan(boxes[3]!.y + boxes[3]!.height);
+  expect(sortBox!.x + sortBox!.width).toBeCloseTo(boxes[3]!.x + boxes[3]!.width, 0);
+});
+
 test('Más Filtros agrupa texto, contador e icono sin espacio vacío', async ({ page }) => {
   await page.goto(activities);
   const trigger = page.getByRole('button', { name: 'Más Filtros', exact: true });
-  const label = trigger.locator(':scope > span').first();
+  const label = trigger.locator('[data-agenda-more-label]');
   const icon = trigger.locator('[data-material-symbol="tune"]');
   const gap = async (left: typeof label, right: typeof label) => {
     const leftBox = await left.boundingBox();

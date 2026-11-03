@@ -44,7 +44,7 @@ export function AgendaToolbar({ search, onSearch, filters, resultCount, onFilter
   const advancedCount = countAdvancedFilters(filters);
 
   return <div className="relative" data-testid="agenda-toolbar">
-    <div className="agenda-search-filterbar grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(190px,196px)]">
+    <div className="agenda-search-filterbar grid grid-cols-[minmax(0,1fr)_150px] gap-4 md:grid-cols-[minmax(0,1fr)_minmax(150px,207px)_minmax(150px,207px)_minmax(190px,196px)] xl:grid-cols-[minmax(0,1fr)_207px_207px_196px]">
       <label className="relative col-span-2 block md:col-span-1">
         <span className="sr-only">Buscar actividades</span>
         <input value={search} onChange={e => onSearch(e.target.value)} placeholder="¿Qué estás buscando?"
@@ -76,9 +76,11 @@ export function AgendaToolbar({ search, onSearch, filters, resultCount, onFilter
         aria-description={advancedCount ? `${advancedCount} ${advancedCount === 1 ? 'filtro avanzado seleccionado' : 'filtros avanzados seleccionados'}` : undefined}
         onClick={() => setOpen(v => !v)}
         className={`agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-center gap-1 rounded border border-[#5ba8d5] bg-white px-2 text-[14px] text-primary-600 transition-colors duration-150 hover:bg-[#f4f9fd] hover:border-primary-600 focus-visible:outline-2 md:gap-2 md:px-3 md:text-[16px] ${open || advancedCount ? 'agenda-filter-trigger-active' : ''}`}>
-        <span className="shrink-0 whitespace-nowrap">Más Filtros</span>
-        <AgendaFilterCounter count={advancedCount} />
-        <MaterialIcon name="tune" size={24} className="shrink-0"/>
+        <span data-agenda-more-content className="inline-flex shrink-0 items-center gap-2">
+          <span data-agenda-more-label className="whitespace-nowrap">Más Filtros</span>
+          <AgendaFilterCounter count={advancedCount} />
+          <MaterialIcon name="tune" size={24} />
+        </span>
       </button>
         {open && <AgendaFilterPanel value={filters} onChange={onFilters} onApply={() => setOpen(false)}
           onReset={onReset} onClose={() => setOpen(false)} resultCount={resultCount} anchorRef={moreFiltersButtonRef} />}
