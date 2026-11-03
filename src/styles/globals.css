@@ -315,3 +315,44 @@ button:not(:disabled) { cursor: pointer; }
   .agenda-motion-option, .agenda-motion-control, .agenda-motion-chevron { transition: none !important; }
   .agenda-sheet-grabber span { transition: none !important; }
 }
+
+
+/* Barras de desplazamiento del prototipo Deportes: global + filtros de Agenda.
+   Firefox usa scrollbar-width/color; Chromium/Safari usan ::-webkit-scrollbar. */
+:root { --mlz-scroll-thumb: #c4d2dc; --mlz-scroll-thumb-hover: #91aab9; }
+html,
+.agenda-filter-options {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mlz-scroll-thumb) transparent;
+}
+html::-webkit-scrollbar,
+.agenda-filter-options::-webkit-scrollbar { width: 6px; height: 6px; }
+html::-webkit-scrollbar-track,
+.agenda-filter-options::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb,
+.agenda-filter-options::-webkit-scrollbar-thumb {
+  background: var(--mlz-scroll-thumb);
+  border-radius: 999px;
+}
+html::-webkit-scrollbar-thumb:hover,
+.agenda-filter-options::-webkit-scrollbar-thumb:hover {
+  background: var(--mlz-scroll-thumb-hover);
+}
+/* Mantiene estable el ancho disponible al aparecer el scroll global. */
+html { scrollbar-gutter: stable; }
+@media (max-width: 680px) { html { scrollbar-gutter: auto; } }
+
+/* Buscador y filtros: controles y menús con estados del prototipo Deportes. */
+.agenda-filter-trigger-active {
+  border: 2px solid #006eff !important;
+  background: #f6f6f6 !important;
+  padding-inline: 15px !important;
+}
+.agenda-filter-popover { scrollbar-width: thin; scrollbar-color: var(--mlz-scroll-thumb) transparent; }
+.agenda-filter-popover::-webkit-scrollbar { width: 6px; }
+.agenda-filter-popover::-webkit-scrollbar-thumb { background: var(--mlz-scroll-thumb); border-radius: 999px; }
+.agenda-filter-popover::-webkit-scrollbar-thumb:hover { background: var(--mlz-scroll-thumb-hover); }
+@media (min-width: 681px) {
+  /* Acercar los menús al límite inferior visible sin recortar el listado. */
+  .agenda-filter-popover { max-height: min(78vh, 760px); }
+}
