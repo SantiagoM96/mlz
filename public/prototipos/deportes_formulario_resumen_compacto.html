@@ -4955,7 +4955,31 @@ document.addEventListener('click', function(event) {
   if(!switchInput || switchInput.disabled)return;
   switchInput.click();
 });
-</script><style id="deportesSwitchNoLayoutShift20261104">
+</script><style id="deportesSwitchFocusRingFix20261104">
+/* Causa identificada: reglas antiguas dibujaban outline de 2/3px
+   sobre la pista al enfocar el input, incluso tras un toque mobile. */
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"],
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"]:is(:focus,:focus-visible,:active){
+ box-sizing:border-box!important;
+ border:0!important;outline:0!important;box-shadow:none!important;
+ padding:0!important;margin:0!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"] + .registration-switch-track,
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"]:is(:focus,:focus-visible,:active) + .registration-switch-track{
+ box-sizing:border-box!important;
+ width:44px!important;height:26px!important;
+ min-width:44px!important;max-width:44px!important;
+ min-height:26px!important;max-height:26px!important;
+ border:0!important;outline:0!important;outline-offset:0!important;
+ box-shadow:none!important;
+ transform:none!important;scale:1!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"] + .registration-switch-track .registration-switch-thumb{
+ box-sizing:border-box!important;width:20px!important;height:20px!important;
+ border:0!important;outline:0!important;
+}
+</style><style id="deportesSwitchNoLayoutShift20261104">
 /* Dos columnas de ancho estable: el estado del input no puede desplazar el texto. */
 body.form-page #signup :is(.minor-age-card,.form-toggle-card),
 body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within),
