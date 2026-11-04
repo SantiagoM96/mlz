@@ -3210,6 +3210,22 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  body.form-page .mlz-message .mlz-message__content>strong,
  body.form-page .mlz-message .mlz-message__content>b{font-size:17px!important;}
 }
+</style><style id="deportesMobileDrawerExitPolish20261104">
+@media(max-width:680px){
+ /* El panel debe salir por completo, incluida su sombra proyectada. */
+ #formOptionSheet.form-sheet-closing{
+  transform:translate3d(0,calc(100% + 52px),0)!important;
+  box-shadow:none!important;
+ }
+ body.form-page #signup .birthdate-popup.birthdate-dismiss{
+  transform:translate3d(0,calc(100% + 52px),0)!important;
+  box-shadow:none!important;
+  transition:transform .29s cubic-bezier(.4,0,.7,1)!important;
+ }
+ body.form-page #signup .birthdate-overlay.birthdate-overlay-dismiss{
+  opacity:0!important;transition:opacity .29s ease!important;
+ }
+}
 </style><style id="deportesMobileSelectMotion20261104">
 @media(max-width:680px){
  .form-sheet-backdrop{opacity:1;transition:opacity .3s ease,background-color .3s ease;}
@@ -4142,16 +4158,30 @@ function initBirthdatePicker(){
    });
    confirm.disabled=!pending;
  }
+ let birthExitTimer=null;
+ function finishBirthHide(){
+  if(birthExitTimer){clearTimeout(birthExitTimer);birthExitTimer=null;}
+  popup.hidden=true;overlay.hidden=true;
+  popup.classList.remove('birthdate-dragging','birthdate-dismiss');
+  overlay.classList.remove('birthdate-overlay-dismiss');
+  popup.style.removeProperty('transform');overlay.style.removeProperty('opacity');
+ }
  function show(){
+  if(birthExitTimer)finishBirthHide();
   if(selected){const parts=selected.split('-').map(Number);viewYear=parts[0];viewMonth=parts[1]-1;}
   pending=selected;
   popup.hidden=false;overlay.hidden=!isMobile();trigger.setAttribute('aria-expanded','true');draw();
  }
- function hide(focus=false){
-  closeSelect();popup.classList.remove('birthdate-dragging','birthdate-dismiss');
-  overlay.classList.remove('birthdate-overlay-dismiss');
+ function hide(focus=false,immediate=false){
+  closeSelect();trigger.setAttribute('aria-expanded','false');
+  if(focus)trigger.focus();
+  if(!isMobile()||immediate||window.matchMedia('(prefers-reduced-motion:reduce)').matches){finishBirthHide();return;}
+  if(birthExitTimer)return;
+  popup.classList.remove('birthdate-dragging');
   popup.style.removeProperty('transform');overlay.style.removeProperty('opacity');
-  popup.hidden=true;overlay.hidden=true;trigger.setAttribute('aria-expanded','false');if(focus)trigger.focus();
+  popup.classList.add('birthdate-dismiss');
+  overlay.classList.add('birthdate-overlay-dismiss');
+  birthExitTimer=window.setTimeout(finishBirthHide,310);
  }
  function syncInlineClear(){inlineClear.hidden=!selected||trigger.disabled;}
  function resetDate(){selected=null;pending=null;input.value='';value.textContent='Seleccionar fecha';value.classList.add('birthdate-placeholder');input.dispatchEvent(new Event('input',{bubbles:true}));syncInlineClear();hide(true);}
@@ -4185,9 +4215,8 @@ function initBirthdatePicker(){
   const elapsed=Math.max(1,performance.now()-g.startTime);
   const shouldClose=g.delta>Math.min(168,Math.max(120,popup.offsetHeight*.24))||(g.delta>55&&g.delta/elapsed>.8);
   if(shouldClose){
-   birthClosing=true;popup.style.removeProperty('transform');overlay.style.removeProperty('opacity');
-   popup.classList.add('birthdate-dismiss');overlay.classList.add('birthdate-overlay-dismiss');
-   window.setTimeout(()=>{hide(false);birthClosing=false;},250);
+   birthClosing=true;hide(false);
+   window.setTimeout(()=>{birthClosing=false;},320);
   }else{
    popup.style.transition='transform .3s ease-out';
    overlay.style.transition='opacity .3s ease-out';
