@@ -4191,7 +4191,9 @@ function initBirthdatePicker(){
  function hide(focus=false,immediate=false){
   closeSelect();trigger.setAttribute('aria-expanded','false');
   if(focus)trigger.focus();
-  if(!isMobile()||immediate||window.matchMedia('(prefers-reduced-motion:reduce)').matches){finishBirthHide();return;}
+  // Igual que «Ver resultados» de filtros: al confirmar, retirar el panel
+  // y su scrim en el mismo frame, sin animación residual de salida.
+  if(!isMobile()||immediate||!birthGesture||window.matchMedia('(prefers-reduced-motion:reduce)').matches){finishBirthHide();return;}
   if(birthExitTimer)return;
   popup.classList.remove('birthdate-dragging');
   popup.style.removeProperty('transform');overlay.style.removeProperty('opacity');
@@ -4233,8 +4235,11 @@ function initBirthdatePicker(){
   const elapsed=Math.max(1,performance.now()-g.startTime);
   const shouldClose=g.delta>Math.min(168,Math.max(120,popup.offsetHeight*.24))||(g.delta>55&&g.delta/elapsed>.8);
   if(shouldClose){
-   birthClosing=true;hide(false);
-   window.setTimeout(()=>{birthClosing=false;},320);
+   birthClosing=true;
+   // El gesto conserva el cierre deslizante; los botones cierran de inmediato.
+   popup.classList.add('birthdate-dismiss');
+   overlay.classList.add('birthdate-overlay-dismiss');
+   window.setTimeout(()=>{hide(false,true);birthClosing=false;},310);
   }else{
    popup.style.transition='transform .3s ease-out';
    overlay.style.transition='opacity .3s ease-out';
@@ -4677,7 +4682,7 @@ if(document.fonts && document.fonts.load){
        sel.value=b.dataset.value;
        sel.dispatchEvent(new Event('input',{bubbles:true}));
        sel.dispatchEvent(new Event('change',{bubbles:true}));
-       sync(sel);close(true);
+       sync(sel);close(true,false);
      };
      if(isMobile()&&root===mobileList){
        root.querySelectorAll('.form-option-row').forEach(row=>{
@@ -4706,7 +4711,7 @@ if(document.fonts && document.fonts.load){
      backdrop.classList.remove('form-sheet-backdrop-enter');
      backdrop.classList.add('form-sheet-backdrop-leave');
      closeMotionTimer=window.setTimeout(()=>{closeMotionTimer=null;if(active)return;sheet.hidden=true;backdrop.hidden=true;backdrop.classList.remove('form-sheet-backdrop-leave');settle();unlock();},310);
-   }else{sheet.hidden=true;backdrop.hidden=true;unlock();}
+   }else{sheet.hidden=true;backdrop.hidden=true;backdrop.classList.remove('form-sheet-backdrop-enter','form-sheet-backdrop-leave');settle();unlock();}
    if(restoreFocus&&a.trigger.isConnected){try{a.trigger.focus({preventScroll:true});}catch(_){}}
  }
  function open(sel){
