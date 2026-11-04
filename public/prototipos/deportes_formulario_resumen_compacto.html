@@ -3870,7 +3870,8 @@ function refreshPersonalMode(){
    if(element.tagName==='SELECT')element.dispatchEvent(new Event('change',{bubbles:true}));
  }
  birthdatePicker?.setDate(isForMinor?(minorDraft.nacimiento||''):demoAdult.nacimiento);
- birthdatePicker?.lock(!isForMinor);
+ // Excepción temporal para QA: el calendario queda editable incluso con los demás datos del perfil deshabilitados.
+ birthdatePicker?.lock(false);
  personalFields.querySelectorAll('.form-select-trigger').forEach(button=>{
    const nativeSelect=button.previousElementSibling;
    if(nativeSelect?.tagName==='SELECT')button.disabled=nativeSelect.disabled;
