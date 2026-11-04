@@ -4167,7 +4167,7 @@ if(document.fonts && document.fonts.load){
      sync(sel);close(true);
    }));
  }
- function sync(sel){const i=instances.get(sel);if(!i)return;const opt=sel.selectedOptions[0];i.display.textContent=(opt&&opt.value)?opt.textContent:({'localidad':'Seleccionar localidad','tipo':'Seleccionar tipo de deportista','condicion':'Seleccionar condición'}[sel.id]||'Seleccionar');i.trigger.setAttribute('aria-label',i.label+': '+i.display.textContent);i.trigger.disabled=sel.disabled;}
+ function sync(sel){const i=instances.get(sel);if(!i)return;const opt=sel.selectedOptions[0];const next=(opt&&opt.value)?opt.textContent:({'localidad':'Seleccionar localidad','tipo':'Seleccionar tipo de deportista','condicion':'Seleccionar condición'}[sel.id]||'Seleccionar');if(i.display.textContent!==next)i.display.textContent=next;const label=i.label+': '+next;if(i.trigger.getAttribute('aria-label')!==label)i.trigger.setAttribute('aria-label',label);if(i.trigger.disabled!==sel.disabled)i.trigger.disabled=sel.disabled;}
  function unlock(){if(scrollLocked){document.body.style.overflow=previousScroll;scrollLocked=false;}}
  function settle(){sheet.classList.remove('form-sheet-open','form-sheet-grabbed','form-sheet-rebound','form-sheet-closing');sheet.style.removeProperty('height');sheet.style.removeProperty('transform');backdrop.classList.remove('is-dragging');backdrop.style.removeProperty('--form-sheet-dark');}
  function close(restoreFocus=true,animated=true){
@@ -4332,7 +4332,19 @@ if(document.fonts && document.fonts.load){
  grip.addEventListener('pointerup',e=>end(e),{passive:false});
  grip.addEventListener('pointercancel',e=>end(e,true),{passive:false});
  window.addEventListener('resize',()=>{if(active){close(false,false);}}, {passive:true});
- const observer=new MutationObserver(enhance);
- observer.observe(document.documentElement,{childList:true,subtree:true});enhance();
+ /* El observador solo debe inicializar selects NUEVOS.
+    Reejecutar enhance() para cada mutación generaba un bucle:
+    sync() modifica textContent y disparaba nuevamente el observer,
+    congelando la página al abrir el formulario. */
+ const observer=new MutationObserver(()=>{
+   const form=document.querySelector('#signup');
+   if(form){
+     if(form.querySelector('.field select:not(.form-native-select)'))enhance();
+   }else if(active){
+     enhance();
+   }
+ });
+ observer.observe(document.documentElement,{childList:true,subtree:true});
+ enhance();
 })();
 </script></body></html>
