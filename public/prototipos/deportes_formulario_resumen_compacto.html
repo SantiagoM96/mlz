@@ -3210,6 +3210,25 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  body.form-page .mlz-message .mlz-message__content>strong,
  body.form-page .mlz-message .mlz-message__content>b{font-size:17px!important;}
 }
+</style><style id="deportesMobileSelectMotion20261104">
+@media(max-width:680px){
+ .form-sheet-backdrop{opacity:1;transition:opacity .3s ease,background-color .3s ease;}
+ .form-sheet-backdrop.form-sheet-backdrop-enter{opacity:0;}
+ .form-sheet-backdrop.form-sheet-backdrop-leave{opacity:0;}
+ #formOptionSheet.form-sheet-open{animation:formSheetIntro .34s cubic-bezier(.22,1,.36,1) both;}
+ #formOptionSheet.form-sheet-closing{transition:transform .29s cubic-bezier(.4,0,.7,1)!important;}
+ #formOptionSheet .form-option-row{transition:background-color .12s ease,color .12s ease;}
+ #formOptionSheet .form-option-row.form-option-confirmed{
+  background:#e5f0ff!important;color:#006eff!important;font-weight:600!important;
+ }
+ #formOptionSheet .form-option-row.form-option-confirmed .form-option-radio{
+  border-color:#006eff!important;background:#006eff!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ #formOptionSheet.form-sheet-open{animation-duration:.01ms!important;}
+ .form-sheet-backdrop{transition-duration:.01ms!important;}
+}
 </style><style id="deportesMobileDrawerTouchFix20261104">
 @media(max-width:680px){
  /* Sin flash celeste ni estado pressed al abrir los selectores táctiles. */
@@ -4572,6 +4591,7 @@ if(document.fonts && document.fonts.load){
  const ICON_TICK='<span class="form-option-radio" aria-hidden="true"></span>';
  const instances=new WeakMap();
  let active=null,previousScroll='',gesture=null,lastFocused=null,scrollLocked=false;
+ let optionFeedbackTimer=null,closeMotionTimer=null,openingFrame=null;
  const backdrop=document.createElement('div');
  backdrop.className='form-sheet-backdrop';backdrop.id='formSelectBackdrop';backdrop.hidden=true;
  const sheet=document.createElement('section');
@@ -4591,10 +4611,22 @@ if(document.fonts && document.fonts.load){
    root.innerHTML=filtered.map(opt=>
      '<button type="button" class="form-option-row" role="option" aria-selected="'+(current===opt.value)+'" data-value="'+escape(opt.value)+'"><span>'+escape(opt.textContent)+'</span>'+ICON_TICK+'</button>').join('')||(query?'<div class="form-option-empty">No se encontraron localidades</div>':'');
    root.querySelectorAll('.form-option-row').forEach(b=>b.addEventListener('click',()=>{
-     sel.value=b.dataset.value;
-     sel.dispatchEvent(new Event('input',{bubbles:true}));
-     sel.dispatchEvent(new Event('change',{bubbles:true}));
-     sync(sel);close(true);
+     if(optionFeedbackTimer)return;
+     const commit=()=>{
+       optionFeedbackTimer=null;
+       sel.value=b.dataset.value;
+       sel.dispatchEvent(new Event('input',{bubbles:true}));
+       sel.dispatchEvent(new Event('change',{bubbles:true}));
+       sync(sel);close(true);
+     };
+     if(isMobile()&&root===mobileList){
+       root.querySelectorAll('.form-option-row').forEach(row=>{
+         row.classList.remove('form-option-confirmed');
+         row.setAttribute('aria-selected',String(row===b));
+       });
+       b.classList.add('form-option-confirmed');
+       optionFeedbackTimer=window.setTimeout(commit,170);
+     }else commit();
    }));
  }
  function sync(sel){const i=instances.get(sel);if(!i)return;const opt=sel.selectedOptions[0];const next=(opt&&opt.value)?opt.textContent:({'localidad':'Seleccionar localidad','tipo':'Seleccionar tipo de deportista','condicion':'Seleccionar condición'}[sel.id]||'Seleccionar');if(i.display.textContent!==next)i.display.textContent=next;const label=i.label+': '+next;if(i.trigger.getAttribute('aria-label')!==label)i.trigger.setAttribute('aria-label',label);if(i.trigger.disabled!==sel.disabled)i.trigger.disabled=sel.disabled;}
@@ -4602,13 +4634,17 @@ if(document.fonts && document.fonts.load){
  function settle(){sheet.classList.remove('form-sheet-open','form-sheet-grabbed','form-sheet-rebound','form-sheet-closing');sheet.style.removeProperty('height');sheet.style.removeProperty('transform');backdrop.classList.remove('is-dragging');backdrop.style.removeProperty('--form-sheet-dark');}
  function close(restoreFocus=true,animated=true){
    if(!active)return;
+   if(optionFeedbackTimer){clearTimeout(optionFeedbackTimer);optionFeedbackTimer=null;}
+   if(openingFrame){cancelAnimationFrame(openingFrame);openingFrame=null;}
+   if(closeMotionTimer){clearTimeout(closeMotionTimer);closeMotionTimer=null;}
    const a=active;active=null;gesture=null;
    a.trigger.setAttribute('aria-expanded','false');a.menu.hidden=true;
    settle();
    if(!sheet.hidden&&animated&&isMobile()){
      sheet.classList.add('form-sheet-closing');
-     backdrop.style.setProperty('--form-sheet-dark','0');
-     window.setTimeout(()=>{if(active)return;sheet.hidden=true;backdrop.hidden=true;settle();unlock();},245);
+     backdrop.classList.remove('form-sheet-backdrop-enter');
+     backdrop.classList.add('form-sheet-backdrop-leave');
+     closeMotionTimer=window.setTimeout(()=>{closeMotionTimer=null;if(active)return;sheet.hidden=true;backdrop.hidden=true;backdrop.classList.remove('form-sheet-backdrop-leave');settle();unlock();},310);
    }else{sheet.hidden=true;backdrop.hidden=true;unlock();}
    if(restoreFocus&&a.trigger.isConnected){try{a.trigger.focus({preventScroll:true});}catch(_){}}
  }
@@ -4622,12 +4658,16 @@ if(document.fonts && document.fonts.load){
      title.textContent=inst.label;
      mobileSearch.hidden=sel.id!=='localidad';mobileSearch.value='';
      optionsFor(sel,mobileList);
+     if(closeMotionTimer){clearTimeout(closeMotionTimer);closeMotionTimer=null;}
+     backdrop.classList.remove('form-sheet-backdrop-leave');
+     backdrop.classList.add('form-sheet-backdrop-enter');
      sheet.hidden=false;backdrop.hidden=false;
      sheet.classList.remove('form-sheet-closing','form-sheet-rebound','form-sheet-grabbed');
      sheet.style.removeProperty('height');sheet.style.removeProperty('transform');
      backdrop.style.setProperty('--form-sheet-dark','0.44');
      void sheet.offsetWidth;
      sheet.classList.add('form-sheet-open');
+     openingFrame=requestAnimationFrame(()=>{openingFrame=null;backdrop.classList.remove('form-sheet-backdrop-enter');});
      if(!scrollLocked){previousScroll=document.body.style.overflow;document.body.style.overflow='hidden';scrollLocked=true;}
    }else{
      inst.menu.hidden=false;
