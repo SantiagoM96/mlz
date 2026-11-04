@@ -4955,4 +4955,37 @@ document.addEventListener('click', function(event) {
   if(!switchInput || switchInput.disabled)return;
   switchInput.click();
 });
-</script></body></html>
+</script><style id="deportesSwitchNoLayoutShift20261104">
+/* Dos columnas de ancho estable: el estado del input no puede desplazar el texto. */
+body.form-page #signup :is(.minor-age-card,.form-toggle-card),
+body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within),
+body.form-page #signup :is(.minor-age-card,.form-toggle-card):has(input[role="switch"]:checked){
+ display:grid!important;
+ grid-template-columns:44px minmax(0,1fr)!important;
+ column-gap:12px!important;row-gap:0!important;
+ align-items:center!important;justify-items:stretch!important;
+}
+body.form-page #signup :is(.minor-age-card,.form-toggle-card) > :is(.minor-age-switch,.form-question-switch){
+ grid-column:1!important;grid-row:1!important;
+ inline-size:44px!important;block-size:26px!important;
+ min-inline-size:44px!important;max-inline-size:44px!important;
+ margin:0!important;padding:0!important;justify-self:start!important;
+}
+body.form-page #signup :is(.minor-age-card,.form-toggle-card) > :is(.minor-age-copy,.form-toggle-copy){
+ grid-column:2!important;grid-row:1!important;
+ inline-size:100%!important;min-inline-size:0!important;
+ margin:0!important;padding:0!important;justify-self:start!important;
+ position:relative!important;left:auto!important;right:auto!important;
+ transform:none!important;translate:none!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) .registration-switch-track{
+ box-sizing:border-box!important;inline-size:44px!important;block-size:26px!important;
+ min-inline-size:44px!important;max-inline-size:44px!important;
+ border:0!important;outline-offset:2px;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) .registration-switch-thumb{
+ box-sizing:border-box!important;inline-size:20px!important;block-size:20px!important;
+ min-inline-size:20px!important;max-inline-size:20px!important;
+ top:3px!important;left:3px!important;right:auto!important;
+}
+</style></body></html>
