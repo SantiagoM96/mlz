@@ -7,6 +7,10 @@ test('Deportes: seleccionar horario, inscribirse y usar el formulario sin bloque
   page.on('pageerror', error => errors.push(error.message));
 
   await page.goto(prototype + '#02_seleccion_horario.html', { waitUntil: 'domcontentloaded' });
+  // Hasta 850px se abre primero la pestaña Información; Horarios es una vista separada.
+  if ((page.viewportSize()?.width ?? 1415) <= 850) {
+    await page.locator('.mobile-view-schedules').click();
+  }
   const schedules = page.locator('.option');
   await expect(schedules.first()).toBeVisible();
   await schedules.first().click();
