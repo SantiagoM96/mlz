@@ -3260,7 +3260,8 @@ body.form-page #signup :is(.minor-age-switch,.form-question-switch) input:checke
 }
 @media(max-width:600px){
  body.form-page #signup :is(.minor-age-card,.form-toggle-card),
- body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within){
+ body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within),
+ body.form-page #signup :is(.minor-age-card,.form-toggle-card):has(input[role="switch"]:checked){
   padding:14px 16px!important;
  }
 }
