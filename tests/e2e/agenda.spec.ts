@@ -321,6 +321,29 @@ test('las tres rutas principales admiten recarga y generan capturas', async ({ p
   }
 });
 
+test('las superficies azules llegan al borde izquierdo sin franja de scrollbar', async ({ page }, info) => {
+  const paths = ['/', '/agenda-de-la-comunidad/actividades', '/jovenes-en-comunidad'];
+  for (const path of paths) {
+    await page.goto(path);
+    const edges = await page.evaluate(() => {
+      const rect = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
+      return {
+        htmlGutter: getComputedStyle(document.documentElement).scrollbarGutter,
+        headerLeft: rect('header')?.left,
+        footerLeft: rect('footer')?.left,
+        bodyLeft: rect('body')?.left,
+        headerWidth: rect('header')?.width,
+      };
+    });
+    expect(edges.bodyLeft, path + ' body corrido').toBe(0);
+    expect(edges.headerLeft, path + ' header con margen lateral').toBe(0);
+    expect(edges.footerLeft, path + ' footer con margen lateral').toBe(0);
+    if ((info.project.use.viewport?.width ?? 0) > 680) {
+      expect(edges.htmlGutter).toBe('stable');
+    }
+  }
+});
+
 test('todos los contenedores institucionales respetan el máximo de 1200px', async ({ page }, info) => {
   const routes = ['/', '/agenda-de-la-comunidad', '/agenda-de-la-comunidad/actividades',
     '/agenda-de-la-comunidad/actividades/actividad-1', '/jovenes-en-comunidad'];
@@ -339,8 +362,11 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
       expect(width, `Contenedor demasiado ancho en ${route}`).toBeLessThanOrEqual(1200.5);
       expect(width, `Contenedor fuera de pantalla en ${route}`).toBeLessThanOrEqual(expected + 0.5);
       if ((info.project.use.viewport?.width ?? 0) >= 1232) {
+        // Centrado respecto al área realmente disponible, excluyendo la scrollbar
+        // derecha. `both-edges` fabricaba una franja blanca en el lateral izquierdo.
+        const usableWidth = await page.evaluate(() => document.documentElement.clientWidth);
         expect(width).toBeCloseTo(1200, 0);
-        expect(x).toBeCloseTo(((info.project.use.viewport?.width ?? 0) - 1200) / 2, 0);
+        expect(x).toBeCloseTo((usableWidth - 1200) / 2, 0);
       }
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);

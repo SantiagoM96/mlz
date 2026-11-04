@@ -338,9 +338,9 @@ html::-webkit-scrollbar-thumb:hover,
 .agenda-filter-options::-webkit-scrollbar-thumb:hover {
   background: var(--mlz-scroll-thumb-hover);
 }
-/* Mantiene estable el ancho disponible al aparecer el scroll global. */
-/* Reservar espacio de scrollbar a ambos lados mantiene el centrado exacto a 1200px. */
-html { scrollbar-gutter: stable both-edges; }
+/* Reservar espacio solo para la scrollbar del lado derecho.
+   `both-edges` dejaba una franja blanca visible junto al header y al footer. */
+html { scrollbar-gutter: stable; }
 @media (max-width: 680px) { html { scrollbar-gutter: auto; } }
 
 /* Buscador y filtros: controles y menús con estados del prototipo Deportes. */
