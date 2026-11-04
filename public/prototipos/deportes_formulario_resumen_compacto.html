@@ -2926,8 +2926,8 @@ body.form-page #signup .birthdate-bottom .birthdate-confirm:disabled{opacity:.4;
  body.form-page #signup .birthdate-overlay.is-selecting{z-index:6100}
 }
 </style><style id="unified-input-focus-states">
-/* Campos editables y dropdowns: al estar enfocados/abiertos solo cambia
-   el trazo a Info 500. Sin outline, glow ni borde extra. */
+/* Foco: trazo visual Info 500 de 2 px (1 px de borde + 1 px interior).
+   Se conservan las dimensiones, el padding y los elementos internos. */
 body.form-page .field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):is(:focus,:focus-visible),
 body.form-page .field select:is(:focus,:focus-visible),
 body.form-page .field textarea:is(:focus,:focus-visible),
@@ -2947,7 +2947,7 @@ body.form-page #signup .birthdate-field .birthdate-choice-trigger:is(:focus,:foc
   outline:none!important;
   outline-width:0!important;
   outline-offset:0!important;
-  box-shadow:none!important;
+  box-shadow:inset 0 0 0 1px #006eff!important;
 }
 /* El buscador no cambia su fondo por estar en foco;
    se conserva el hover original. */
