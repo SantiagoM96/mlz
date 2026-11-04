@@ -3210,6 +3210,65 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  body.form-page .mlz-message .mlz-message__content>strong,
  body.form-page .mlz-message .mlz-message__content>b{font-size:17px!important;}
 }
+</style><style id="deportesFormSwitchConsistency20261104">
+/* Una sola superficie estática para todos los switches del formulario. */
+body.form-page #signup :is(.minor-age-card,.form-toggle-card),
+body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within),
+body.form-page #signup :is(.minor-age-card,.form-toggle-card):has(input[role="switch"]:checked){
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ justify-content:flex-start!important;gap:12px!important;
+ box-sizing:border-box!important;width:100%!important;min-height:72px!important;
+ padding:16px 20px!important;border:1px solid #d9e4ed!important;
+ border-radius:8px!important;background:#f5f8fb!important;
+ background-image:none!important;outline:0!important;box-shadow:none!important;
+ transform:none!important;transition:none!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+body.form-page #signup :is(.minor-age-copy,.form-toggle-copy),
+body.form-page #signup :is(.minor-age-copy,.form-toggle-copy):is(:hover,:active,:focus){
+ display:block!important;flex:1 1 0%!important;min-width:0!important;
+ margin:0!important;padding:0!important;
+ color:#3d3d3d!important;background:transparent!important;
+ border:0!important;outline:0!important;box-shadow:none!important;
+ font-size:16px!important;line-height:24px!important;font-weight:600!important;
+ transform:none!important;transition:none!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch).registration-switch{
+ position:relative!important;display:inline-flex!important;align-items:center!important;
+ width:44px!important;min-width:44px!important;max-width:44px!important;
+ height:26px!important;min-height:26px!important;max-height:26px!important;
+ flex:0 0 44px!important;margin:0!important;padding:0!important;
+ background:transparent!important;transform:none!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input[role="switch"]{
+ -webkit-tap-highlight-color:transparent!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) .registration-switch-track{
+ width:44px!important;height:26px!important;min-height:26px!important;
+ background:#d2d9df!important;transition:background-color .18s ease!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input:checked+.registration-switch-track{
+ background:#006eff!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) .registration-switch-thumb{
+ transform:translateX(0)!important;transition:transform .18s ease!important;
+}
+body.form-page #signup :is(.minor-age-switch,.form-question-switch) input:checked+.registration-switch-track .registration-switch-thumb{
+ transform:translateX(18px)!important;
+}
+@media(max-width:600px){
+ body.form-page #signup :is(.minor-age-card,.form-toggle-card),
+ body.form-page #signup :is(.minor-age-card,.form-toggle-card):is(:hover,:active,:focus-within){
+  padding:14px 16px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.form-page #signup :is(.minor-age-switch,.form-question-switch) :is(.registration-switch-track,.registration-switch-thumb){
+  transition:none!important;
+ }
+}
 </style><style id="deportesMobileDrawerShadowFade20261104">
 /* La sombra acompaña al scrim y al desplazamiento, sin corte al ocultar. */
 @media(max-width:680px){
