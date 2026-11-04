@@ -3255,6 +3255,38 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  body.form-page #signup .birthdate-overlay{transition:opacity .24s ease;}
  body.form-page #signup .birthdate-overlay.birthdate-overlay-dismiss{opacity:0;}
 }
+</style><style id="deportesBirthdateDrawerActionsUnified20261104">
+/* Acciones del calendario mobile = acciones de los dropdowns de filtros. */
+@media(max-width:680px){
+ body.form-page #signup .birthdate-bottom{
+  display:flex!important;align-items:stretch!important;gap:8px!important;
+  padding-top:14px!important;margin-top:12px!important;
+ }
+ body.form-page #signup .birthdate-bottom .birthdate-clear,
+ body.form-page #signup .birthdate-bottom .birthdate-confirm{
+  box-sizing:border-box!important;height:48px!important;min-height:48px!important;
+  border-radius:4px!important;font:600 16px/24px Geometria,'Century Gothic',Arial,sans-serif!important;
+  padding:0 12px!important;white-space:nowrap!important;
+  box-shadow:none!important;cursor:pointer;
+ }
+ body.form-page #signup .birthdate-bottom .birthdate-confirm{
+  order:0;flex:3 1 0!important;min-width:0!important;
+  background:var(--primario-600,#236999)!important;
+  border:1px solid var(--primario-600,#236999)!important;color:#fff!important;
+ }
+ body.form-page #signup .birthdate-bottom .birthdate-clear{
+  order:1;flex:1 1 0!important;min-width:0!important;
+  background:#fff!important;border:1px solid #c8d9e3!important;
+  color:var(--primario-600,#236999)!important;padding:0 8px!important;
+ }
+ body.form-page #signup .birthdate-bottom .birthdate-confirm:hover:not(:disabled){
+  background:#1a587f!important;border-color:#1a587f!important;
+ }
+ body.form-page #signup .birthdate-bottom .birthdate-clear:hover{background:#edf6ff!important;}
+ body.form-page #signup .birthdate-bottom .birthdate-confirm:disabled{
+  opacity:.4!important;cursor:not-allowed!important;
+ }
+}
 </style><style id="mobile-birthdate-inline-picker">
 /* En mobile, mes y año son vistas INTERNAS del calendario,
    sin drawer secundario ni backdrop adicional. */
