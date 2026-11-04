@@ -3203,6 +3203,8 @@ body.form-page .mlz-message .mlz-message__content>p{
 body.form-page #minorNote.mlz-message{
  margin:0 0 24px!important;
 }
+/* Respetar el atributo hidden incluso cuando el componente usa display:flex!important. */
+body.form-page .mlz-message[hidden]{display:none!important;}
 @media(max-width:680px){
  body.form-page .mlz-message{padding:14px 16px!important;gap:12px!important;}
  body.form-page .mlz-message .mlz-message__content>strong,
@@ -4094,7 +4096,9 @@ const minorDraft={};
 function refreshPersonalMode(){
  const isForMinor=minor.checked;
  document.getElementById('personalTitle').textContent=isForMinor?'INFORMACIÓN PERSONAL DEL MENOR':'INFORMACIÓN PERSONAL';
- document.getElementById('minorNote').style.display=isForMinor?'none':'flex';
+ const minorNote=document.getElementById('minorNote');
+ minorNote.hidden=isForMinor;
+ minorNote.style.display=isForMinor?'none':'flex';
  document.getElementById('personal-source-note').hidden=isForMinor;
  personalFields.classList.toggle('is-account-data',!isForMinor);
  for(const element of personalInputs){
