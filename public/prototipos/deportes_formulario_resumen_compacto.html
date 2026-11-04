@@ -3228,6 +3228,14 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  body.form-page #signup .birthdate-trigger:focus:not(:focus-visible){
   outline:none!important;
  }
+ /* Al cerrar el drawer, el foco vuelve al dropdown: trazo Info 500 de 2 px
+    (1 px de borde + 1 px interior), sin alterar el tamaño del control. */
+ body.form-page #signup .form-select-trigger:focus,
+ body.form-page #signup .form-select-trigger:focus-visible{
+  border:1px solid #006eff!important;
+  outline:none!important;
+  box-shadow:inset 0 0 0 1px #006eff!important;
+ }
  body.form-page #signup .form-select-trigger,
  body.form-page #signup .birthdate-trigger{touch-action:manipulation;-webkit-tap-highlight-color:transparent!important;}
  body.form-page #signup .birthdate-x{display:none!important;}
