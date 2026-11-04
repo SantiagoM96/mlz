@@ -362,11 +362,10 @@ test('todos los contenedores institucionales respetan el máximo de 1200px', asy
       expect(width, `Contenedor demasiado ancho en ${route}`).toBeLessThanOrEqual(1200.5);
       expect(width, `Contenedor fuera de pantalla en ${route}`).toBeLessThanOrEqual(expected + 0.5);
       if ((info.project.use.viewport?.width ?? 0) >= 1232) {
-        // Centrado respecto al área realmente disponible, excluyendo la scrollbar
-        // derecha. `both-edges` fabricaba una franja blanca en el lateral izquierdo.
-        const usableWidth = await page.evaluate(() => document.documentElement.clientWidth);
+        // Centrado respecto del viewport completo, sin fabricar un gutter blanco
+        // en el borde izquierdo para compensar la scrollbar derecha.
         expect(width).toBeCloseTo(1200, 0);
-        expect(x).toBeCloseTo((usableWidth - 1200) / 2, 0);
+        expect(x).toBeCloseTo(((info.project.use.viewport?.width ?? 0) - 1200) / 2, 0);
       }
     }
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);

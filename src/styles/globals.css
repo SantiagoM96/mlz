@@ -342,6 +342,14 @@ html::-webkit-scrollbar-thumb:hover,
    `both-edges` dejaba una franja blanca visible junto al header y al footer. */
 html { scrollbar-gutter: stable; }
 @media (max-width: 680px) { html { scrollbar-gutter: auto; } }
+/* Las superficies de color cubren desde x=0, pero los contenidos siguen centrados
+   en el viewport visual (Figma), compensando la mitad de la scrollbar derecha. */
+@media (min-width: 681px) {
+  [data-layout-container="true"] {
+    position: relative;
+    left: calc(50vw - 50%);
+  }
+}
 
 /* Buscador y filtros: controles y menús con estados del prototipo Deportes. */
 .agenda-filter-trigger-active {
