@@ -5013,4 +5013,24 @@ body.form-page #signup :is(.minor-age-switch,.form-question-switch) .registratio
  min-inline-size:20px!important;max-inline-size:20px!important;
  top:3px!important;left:3px!important;right:auto!important;
 }
+</style><style id="deportesSwitchMobilePaddingDefinitive20261104">
+/* Mantener el mismo padding independientemente del estado, incluso frente
+   al selector antiguo de mayor especificidad :has(#minor:checked). */
+@media (max-width:600px){
+ body.form-page #signup .minor-age-card,
+ body.form-page #signup .minor-age-card:hover,
+ body.form-page #signup .minor-age-card:active,
+ body.form-page #signup .minor-age-card:focus-within,
+ body.form-page #signup .minor-age-card:has(#minor:checked),
+ body.form-page #signup .form-toggle-card,
+ body.form-page #signup .form-toggle-card:hover,
+ body.form-page #signup .form-toggle-card:active,
+ body.form-page #signup .form-toggle-card:focus-within,
+ body.form-page #signup .form-toggle-card:has(input[role="switch"]:checked){
+  padding:14px 16px!important;
+  border-width:1px!important;
+  min-height:72px!important;
+  box-sizing:border-box!important;
+ }
+}
 </style></body></html>
