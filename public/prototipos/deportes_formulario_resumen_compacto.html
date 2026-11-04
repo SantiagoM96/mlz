@@ -3237,7 +3237,7 @@ body.form-page #minorNote.mlz-message{
  body.form-page #signup .birthdate-picker-mode .birthdate-days,
  body.form-page #signup .birthdate-picker-mode .birthdate-bottom{display:none!important;}
  body.form-page #signup .birthdate-picker-mode .birthdate-top{margin-bottom:12px;}
- body.form-page #signup .birthdate-picker-mode .birthdate-choice-menu:not([hidden]){
+ body.form-page #signup .birthdate-picker-mode>.birthdate-choice-menu:not([hidden]){
   display:flex!important;flex-direction:column!important;
   position:relative!important;inset:auto!important;
   width:100%!important;min-width:0!important;max-width:none!important;
@@ -3749,13 +3749,14 @@ function initBirthdatePicker(){
   month:{trigger:field.querySelector('#birthdate-month'),label:field.querySelector('#birthdate-month-label'),menu:field.querySelector('#birthdate-month-menu')},
   year:{trigger:field.querySelector('#birthdate-year'),label:field.querySelector('#birthdate-year-label'),menu:field.querySelector('#birthdate-year-menu')}
  };
+ for(const control of Object.values(selects))control.originalParent=control.menu.parentElement;
  let viewYear=todayYear-18,viewMonth=todayMonth,selected=null,pending=null,openSelect=null;
  const pad=n=>String(n).padStart(2,'0');
  const iso=(y,m,d)=>y+'-'+pad(m+1)+'-'+pad(d);
  const isMobile=()=>window.matchMedia('(max-width:680px)').matches;
  const isAllowed=(y,m,d)=>{const date=new Date(y,m,d);return y>=1900&&date<=today&&date.getFullYear()===y&&date.getMonth()===m;};
  function closeSelect(focus=false){
-  for(const control of Object.values(selects)){control.menu.hidden=true;control.trigger.setAttribute('aria-expanded','false');}
+  for(const control of Object.values(selects)){control.menu.hidden=true;control.trigger.setAttribute('aria-expanded','false');if(control.menu.parentElement!==control.originalParent)control.originalParent.appendChild(control.menu);}
   if(openSelect&&focus)selects[openSelect].trigger.focus();
   openSelect=null;overlay.classList.remove('is-selecting');popup.classList.remove('birthdate-picker-mode');back.hidden=true;title.textContent='Seleccionar fecha';
  }
@@ -3775,6 +3776,7 @@ function initBirthdatePicker(){
    });menu.appendChild(opt);
   }
   menu.dataset.kind=kind==='month'?'el mes':'el año';
+  if(isMobile())popup.appendChild(menu);
   menu.hidden=false;control.trigger.setAttribute('aria-expanded','true');openSelect=kind;
   if(isMobile()){popup.classList.add('birthdate-picker-mode');back.hidden=false;title.textContent=kind==='month'?'Seleccionar mes':'Seleccionar año';}
   const active=menu.querySelector('[aria-selected="true"]');
