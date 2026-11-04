@@ -2869,10 +2869,10 @@ body.form-page .enrollment-guide-contact a{color:var(--primario-600,#236999);fon
 </style><style id="birthdate-picker-styles">
 body.form-page #signup .birthdate-field{position:relative;overflow:visible;z-index:5}
 body.form-page #signup .birthdate-picker{position:relative;width:100%}
-body.form-page #signup .birthdate-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;background:#fff;border:1px solid #cbd3db;border-radius:8px;padding:10px 14px;color:#393939;font-size:16px;text-align:left;font-family:inherit;cursor:pointer}
-body.form-page #signup .birthdate-trigger:hover{border-color:#7d9cb8}
-body.form-page #signup .birthdate-trigger[aria-expanded="true"],body.form-page #signup .birthdate-trigger:focus-visible{border-color:#006eff;outline:2px solid #006eff;outline-offset:1px}
-body.form-page #signup .birthdate-trigger>.material-symbols-outlined{font-size:23px;color:var(--primario-600,#236999);flex:0 0 auto}
+body.form-page #signup .birthdate-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;height:48px;background:#fff;border:1px solid #5ba8d5;border-radius:4px;padding:8px 16px;color:var(--primario-600);font:400 16px/24px Geometria,'Century Gothic',Arial,sans-serif;text-align:left;box-shadow:none;transition:border-color .15s;cursor:pointer}
+body.form-page #signup .birthdate-trigger:hover:not(:disabled){border-color:var(--primario-600);background:#fff}
+body.form-page #signup .birthdate-trigger[aria-expanded="true"],body.form-page #signup .birthdate-trigger:focus-visible{border:1px solid #006eff;outline:none;outline-offset:0;box-shadow:none;background:#fff}
+body.form-page #signup .birthdate-trigger>.material-symbols-outlined{font-size:24px;color:var(--primario-600)!important;flex:0 0 24px}
 body.form-page #signup .birthdate-placeholder{color:#777}
 body.form-page #signup .birthdate-popup{position:absolute;top:calc(100% + 8px);left:0;width:348px;max-width:min(348px,calc(100vw - 32px));padding:22px 20px 18px;background:#fff;border:1px solid #dce3e9;border-radius:16px;box-shadow:0 14px 38px #132c4425;z-index:120;font-family:inherit}
 body.form-page #signup .birthdate-popup[hidden],body.form-page #signup .birthdate-overlay[hidden],body.form-page #signup .birthdate-choice-menu[hidden]{display:none!important}
@@ -2884,9 +2884,9 @@ body.form-page #signup .birthdate-x .material-symbols-outlined{font-size:20px}
 body.form-page #signup .birthdate-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px}
 body.form-page #signup .birthdate-period{display:flex;align-items:center;gap:7px;min-width:0}
 body.form-page #signup .birthdate-choice{position:relative;min-width:0}
-body.form-page #signup .birthdate-choice-trigger{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:7px 9px 7px 11px;min-height:36px;max-width:144px;border:1px solid #e5eaed;border-radius:8px;background:#f3f5f7;color:#3d3d3d;font-size:14px;line-height:20px;font-weight:600;white-space:nowrap;cursor:pointer}
-body.form-page #signup .birthdate-choice-trigger[aria-expanded="true"],body.form-page #signup .birthdate-choice-trigger:hover{background:#eaf3ff;border-color:#bfdafa;color:#236999}
-body.form-page #signup .birthdate-choice-trigger .material-symbols-outlined{font-size:19px;color:#5e7181;flex:0 0 19px}
+body.form-page #signup .birthdate-choice-trigger{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:7px 9px 7px 11px;min-height:36px;max-width:144px;border:1px solid #5ba8d5;border-radius:4px;background:#fff;color:var(--primario-600);font:600 14px/20px Geometria,'Century Gothic',Arial,sans-serif;white-space:nowrap;box-shadow:none;cursor:pointer;transition:border-color .15s}
+body.form-page #signup .birthdate-choice-trigger:hover{background:#fff;border-color:var(--primario-600)}body.form-page #signup .birthdate-choice-trigger[aria-expanded="true"],body.form-page #signup .birthdate-choice-trigger:focus-visible{background:#fff;border:1px solid #006eff;color:var(--primario-600);outline:none;box-shadow:none}
+body.form-page #signup .birthdate-choice-trigger .material-symbols-outlined{font-size:19px;color:var(--primario-600);flex:0 0 19px}
 body.form-page #signup .birthdate-choice-menu{position:absolute;top:calc(100% + 5px);left:0;min-width:145px;width:max-content;max-width:188px;max-height:230px;overflow:auto;overscroll-behavior:contain;padding:5px;border:1px solid #dfe7ed;border-radius:9px;background:#fff;box-shadow:0 8px 23px #15354a26;z-index:150;scrollbar-width:thin;scrollbar-color:#b2c4d2 #f4f7f9}
 body.form-page #signup .birthdate-choice-menu.birthdate-years{min-width:94px;max-width:120px}
 body.form-page #signup .birthdate-choice-option{display:block;width:100%;min-height:36px;border:0;border-radius:6px;background:transparent;text-align:left;padding:7px 10px;color:#3d3d3d;font-size:14px;line-height:22px;white-space:nowrap}
