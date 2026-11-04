@@ -57,7 +57,7 @@ test('Deportes: la URL pública directa del formulario no queda en blanco', asyn
   );
   await expect(page.locator('#signup')).toBeVisible();
   await expect(page.locator('#personalTitle')).toBeVisible();
-  await expect(page.locator('.summary-row')).toContainText('Boxeo femenino');
+  await expect(page.locator('.form-title')).toHaveText('Boxeo femenino');
   await expect(page.locator('.summary-row')).toContainText('Martes y Jueves');
   await expect(page.locator('body')).not.toBeEmpty();
   expect(errors).toEqual([]);
