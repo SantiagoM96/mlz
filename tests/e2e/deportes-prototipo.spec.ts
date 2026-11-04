@@ -44,3 +44,21 @@ test('Deportes: seleccionar horario, inscribirse y usar el formulario sin bloque
   await expect.poll(() => page.evaluate(() => document.readyState)).toBe('complete');
   expect(errors).toEqual([]);
 });
+
+// Regression: URL completa compartida por el diseñador, con query y deep-link hash.
+// Un error de sintaxis en cualquier <script> dejaba el body blanco sin mostrar el formulario.
+test('Deportes: la URL pública directa del formulario no queda en blanco', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+
+  await page.goto(
+    prototype + '?utm_source=chatgpt.com#03_formulario_inscripcion.html?ficha=act-003-gimnasio-de-deportes-de-combate&comision=1',
+    { waitUntil: 'domcontentloaded' },
+  );
+  await expect(page.locator('#signup')).toBeVisible();
+  await expect(page.locator('#personalTitle')).toBeVisible();
+  await expect(page.locator('.summary-row')).toContainText('Boxeo femenino');
+  await expect(page.locator('.summary-row')).toContainText('Martes y Jueves');
+  await expect(page.locator('body')).not.toBeEmpty();
+  expect(errors).toEqual([]);
+});
