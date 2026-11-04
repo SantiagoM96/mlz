@@ -3218,11 +3218,19 @@ body.form-page .mlz-message[hidden]{display:none!important;}
  #formOptionSheet.form-sheet-open{animation:formSheetIntro .34s cubic-bezier(.22,1,.36,1) both;}
  #formOptionSheet.form-sheet-closing{transition:transform .29s cubic-bezier(.4,0,.7,1)!important;}
  #formOptionSheet .form-option-row{transition:background-color .12s ease,color .12s ease;}
- #formOptionSheet .form-option-row.form-option-confirmed{
-  background:#e5f0ff!important;color:#006eff!important;font-weight:600!important;
+ /* Feedback táctil: idéntico al estado seleccionado, nunca al hover desktop. */
+ #formOptionSheet .form-option-row.form-option-confirmed,
+ #formOptionSheet .form-option-row.form-option-confirmed:hover,
+ #formOptionSheet .form-option-row.form-option-confirmed:focus-visible{
+  background:#006eff!important;color:#fff!important;font-weight:600!important;
  }
  #formOptionSheet .form-option-row.form-option-confirmed .form-option-radio{
-  border-color:#006eff!important;background:#006eff!important;
+  color:#fff!important;background:transparent!important;border-color:#fff!important;
+ }
+ @media(hover:none){
+  #formOptionSheet .form-option-row:not([aria-selected="true"]):hover{
+   background:#fff;color:#3d3d3d;
+  }
  }
 }
 @media(prefers-reduced-motion:reduce){
