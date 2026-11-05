@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneAsset=new Image();halftoneAsset.onload=()=>{halftone=halftoneAsset;render()};halftoneAsset.onerror=()=>console.error('No se pudo cargar halftone-editable.svg');halftoneAsset.src='./halftone-editable.svg';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+let halftone=null;const halftoneAsset=new Image();halftoneAsset.onload=()=>{halftone=halftoneAsset;render()};halftoneAsset.onerror=()=>console.error('No se pudo cargar halftone-editable.svg');halftoneAsset.src='./halftone-editable.svg?v=2';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const palette={dark:{bg:'#171717',text:'#fff',accent:'#D82626'},white:{bg:'#fff',text:'#171717',accent:'#D82626'},red:{bg:'#D82626',text:'#fff',accent:'#fff'}};
 function wrap(text,style,size){ctx.font=style+' '+size+'px "DM Serif Display",Georgia,serif';const out=[];for(const paragraph of String(text).split('\n')){let row='';for(const word of paragraph.trim().split(/\s+/).filter(Boolean)){const candidate=row?row+' '+word:word;if(row&&ctx.measureText(candidate).width>920){out.push(row);row=word}else row=candidate}if(row)out.push(row)}return out}
 function render(){
@@ -21,7 +21,7 @@ ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(
 }else{ctx.fillStyle='#343a40';ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('Cargá una fotografía',W/2,photoBottom/2);ctx.textAlign='left'}
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
-ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){ctx.filter=el('theme').value==='white'?'none':'invert(1)';ctx.drawImage(halftone,0,boxTop,1080,1235.84);ctx.filter='none'}ctx.restore();
+ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){ctx.drawImage(halftone,0,boxTop,1080,1235.84)}ctx.restore();
 ctx.fillStyle='#fff';ctx.fillRect(0,boxTop-16,W,16);
 let y=boxTop+80+size;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.font=size+'px "DM Serif Display",Georgia,serif';ctx.fillStyle=colors.text;
 for(const line of main){ctx.fillText(line,80,y);if(el('bold').checked){ctx.lineWidth=1;ctx.strokeStyle=colors.text;ctx.strokeText(line,80,y)}y+=lineHeight}
