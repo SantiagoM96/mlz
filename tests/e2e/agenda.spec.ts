@@ -925,7 +925,7 @@ test('ficha V2: descripciÃ³n antes de imagen, columna lateral y mapa para sede Ã
     expect(imageBox).not.toBeNull();
     expect(summaryBox).not.toBeNull();
     expect(mapBox).not.toBeNull();
-    expect(descriptionBox!.top ?? descriptionBox!.y).toBeLessThan(imageBox!.y);
+    expect(descriptionBox!.y).toBeLessThan(imageBox!.y);
     expect(mapBox!.y).toBeGreaterThan(imageBox!.y + imageBox!.height);
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
       expect(summaryBox!.x).toBeGreaterThan(imageBox!.x);
