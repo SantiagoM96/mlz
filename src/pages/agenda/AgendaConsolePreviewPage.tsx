@@ -4,6 +4,7 @@ import type { AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../components/agenda/ActivityBadges';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
+import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
   CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES, WEEKDAYS,
   createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule,
@@ -40,6 +41,34 @@ function scheduleKindLabel(kind: ConsoleSchedule['scheduleType']) {
   return kind === 'exact' ? 'Fecha puntual' : kind === 'range' ? 'Período' : 'Recurrente';
 }
 
+function dateForDisplay(iso: string): string {
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)) return 'Fecha a confirmar';
+  const [year, month, day] = iso.split('-');
+  return day + '/' + month + '/' + year;
+}
+
+function scheduleSummary(schedule: ConsoleSchedule): string {
+  const days: Record<number, string> = {
+    1: 'lunes', 2: 'martes', 3: 'miércoles', 4: 'jueves',
+    5: 'viernes', 6: 'sábados', 7: 'domingos',
+  };
+  const selected = [...schedule.weekdays].sort((a, b) => a - b).map(day => days[day]).filter(Boolean);
+  const recurrence = selected.length === 1
+    ? 'Todos los ' + selected[0]
+    : selected.length > 1
+      ? 'Todos los ' + selected.slice(0, -1).join(', ') + ' y ' + selected[selected.length - 1]
+      : 'Días a confirmar';
+  const dates = schedule.scheduleType === 'exact'
+    ? dateForDisplay(schedule.startDate)
+    : schedule.scheduleType === 'recurring'
+      ? recurrence + ' · Del ' + dateForDisplay(schedule.startDate) + ' al ' + dateForDisplay(schedule.endDate)
+      : 'Del ' + dateForDisplay(schedule.startDate) + ' al ' + dateForDisplay(schedule.endDate);
+  const time = schedule.startTime
+    ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
+    : 'Horario a confirmar';
+  return dates + ' · ' + time + ' · ' + venueById(schedule.venueId).name;
+}
+
 function imageForDraft(draft: ConsoleDraft): string {
   if (draft.coverDataUrl) return draft.coverDataUrl;
   const byType: Record<string, string> = {
@@ -73,6 +102,10 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
     image: imageForDraft(draft),
     badges,
     description: draft.description,
+    registrationMode: draft.registrationMode,
+    registrationInformation: draft.registrationMode === 'none' ? undefined : draft.registrationInformation,
+    // Los enlaces ingresados nunca se activan desde la vista previa.
+    registrationUrl: undefined,
     schedules: schedules.map(schedule => {
       const selectedVenue = venueById(schedule.venueId);
       return {
@@ -92,7 +125,9 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
   };
 }
 
-function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: ConsoleSchedule[] }) {
+function CardPreview({ draft, schedules, onViewDetail }: {
+  draft: ConsoleDraft; schedules: ConsoleSchedule[]; onViewDetail: () => void;
+}) {
   const activity = makePreviewActivity(draft, schedules);
   // Mostrar todas las fechas del formulario, incluso las de ejemplos históricos.
   const presentation = getActivitySchedulePresentations(activity, '1900-01-01');
@@ -118,14 +153,14 @@ function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: Con
           <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888]">{activity.type}</p>
           <h3 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h3>
           {activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
-          <div className="mt-1 space-y-3 text-[16px] leading-[23px] text-grey-900">
+          <div className="mt-1 flex flex-col gap-4 text-[18px] font-bold leading-6 text-grey-900">
             <div className="flex items-start gap-2">
               <MaterialIcon name="calendar_month" size={20} className="mt-0.5" />
               <div className="min-w-0">
-                <p className="font-bold">{main?.dateLabel ?? 'Agregá una programación'}</p>
-                {main?.periodLabel && <p className="mt-1">{main.periodLabel}</p>}
+                <p>{main?.dateLabel ?? 'Agregá una programación'}</p>
+                {main?.periodLabel && <p className="mt-1 text-[16px] font-normal leading-5">{main.periodLabel}</p>}
                 {presentedSchedules.length > 1 && (
-                  <p className="mt-1 text-[14px] text-[#687f91]">
+                  <p className="mt-1 text-[14px] font-normal text-[#687f91]">
                     + {presentedSchedules.length - 1} {presentedSchedules.length === 2 ? 'programación' : 'programaciones'}
                   </p>
                 )}
@@ -136,9 +171,10 @@ function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: Con
               <span>{main.timeLabel}</span>
             </p>}
           </div>
-          <span className="mt-1 inline-flex items-center gap-1 text-[16px] font-medium text-primary-600">
+          <button type="button" onClick={onViewDetail}
+            className="mt-1 inline-flex min-h-9 items-center self-start gap-1 rounded-[4px] text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
             Ver más <MaterialIcon name="chevron_right" size={18} />
-          </span>
+          </button>
         </div>
       </article>
       {presentedSchedules.length > 1 && (
@@ -178,6 +214,7 @@ export function AgendaConsolePreviewPage() {
   const [expanded, setExpanded] = useState<number[]>([1]);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [notice, setNotice] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
     document.title = 'Consola · Vista previa | Agenda de la Comunidad';
@@ -314,7 +351,7 @@ export function AgendaConsolePreviewPage() {
                       </div>
                       {!isExpanded ? (
                         <p className="mt-3 text-[15px] leading-6 text-[#5e6f7b]">
-                          {venue.name} · {schedule.startDate || 'Fecha a confirmar'} · {schedule.startTime || 'Sin horario'}
+                          {scheduleSummary(schedule)}
                         </p>
                       ) : (
                         <div className="mt-5 space-y-4">
@@ -335,13 +372,15 @@ export function AgendaConsolePreviewPage() {
                             </select>
                           </FormField>
                           <div className={'grid min-w-0 gap-4 ' + (schedule.scheduleType !== 'exact' ? 'sm:grid-cols-2' : '')}>
-                            <FormField label={schedule.scheduleType === 'exact' ? 'Fecha' : 'Desde'} htmlFor={'start-date-' + schedule.id}>
+                            <FormField label={schedule.scheduleType === 'exact' ? 'Fecha' : 'Desde'} htmlFor={'start-date-' + schedule.id}
+                              hint={'Formato dd/mm/aaaa · ' + dateForDisplay(schedule.startDate)}>
                               <input type="date" lang="es-AR" id={'start-date-' + schedule.id} className={inputClass}
                                 value={schedule.startDate}
                                 onChange={event => updateSchedule(schedule.id, { startDate: event.target.value })} />
                             </FormField>
                             {schedule.scheduleType !== 'exact' && (
-                              <FormField label="Hasta" htmlFor={'end-date-' + schedule.id}>
+                              <FormField label="Hasta" htmlFor={'end-date-' + schedule.id}
+                                hint={'Formato dd/mm/aaaa · ' + dateForDisplay(schedule.endDate)}>
                                 <input type="date" lang="es-AR" id={'end-date-' + schedule.id} className={inputClass}
                                   value={schedule.endDate}
                                   onChange={event => updateSchedule(schedule.id, { endDate: event.target.value })} />
@@ -528,7 +567,8 @@ export function AgendaConsolePreviewPage() {
                   subtitle="Opcional: si completás una fecha futura, la actividad se publicará automáticamente ese día." />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <FormField label="Fecha de publicación (opcional)" htmlFor="publish-date">
+                <FormField label="Fecha de publicación (opcional)" htmlFor="publish-date"
+                  hint={'Formato dd/mm/aaaa · ' + dateForDisplay(draft.publishDate)}>
                   <input id="publish-date" type="date" lang="es-AR" className={inputClass}
                     value={draft.publishDate}
                     onChange={event => updateDraft({ publishDate: event.target.value })} />
@@ -563,7 +603,7 @@ export function AgendaConsolePreviewPage() {
 
           <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
             <div className="lg:sticky lg:top-6">
-              <CardPreview draft={draft} schedules={schedules} />
+              <CardPreview draft={draft} schedules={schedules} onViewDetail={() => setShowDetail(true)} />
               <button type="button" onClick={() => setMobileView('form')}
                 className="mt-6 min-h-12 w-full rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 lg:hidden">
                 Volver al formulario
@@ -572,6 +612,13 @@ export function AgendaConsolePreviewPage() {
           </aside>
         </div>
       </main>
+      {showDetail && (
+        <ConsoleDetailDialog
+          activity={makePreviewActivity(draft, schedules)}
+          galleryImages={draft.galleryDataUrls.filter(Boolean)}
+          onClose={() => setShowDetail(false)}
+        />
+      )}
     </div>
   );
 }
