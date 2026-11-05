@@ -19,7 +19,8 @@ export function AgendaActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
   const activity = [featuredActivity, ...agendaActivities, ...agendaV2PreviewActivities].find(a => a.id === id);
   const isPreview = agendaV2PreviewActivities.some(a => a.id === id);
-  const isVisible = activity ? isAgendaActivityVisible(activity) : false;
+  const previewDateISO = isPreview ? '2026-11-05' : undefined;
+  const isVisible = activity ? isAgendaActivityVisible(activity, previewDateISO) : false;
 
   useEffect(() => {
     document.title = activity && isVisible
@@ -29,7 +30,7 @@ export function AgendaActivityDetailPage() {
 
   if (!activity || !isVisible) return <NotFoundPage />;
 
-  const schedules = getActivitySchedulePresentations(activity);
+  const schedules = getActivitySchedulePresentations(activity, previewDateISO);
   const locations = getUniqueActivityLocations(schedules);
   const onlySchedule = locations.length === 1 ? locations[0] : null;
   const locationActivity = onlySchedule ? {
@@ -75,7 +76,7 @@ export function AgendaActivityDetailPage() {
         <div className="min-w-0 space-y-4">
           <ActivityShare key={activity.id} title={activity.title} />
           <div className="lg:sticky lg:top-6">
-            <ActivitySummary activity={activity} />
+            <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
             <ActivityRegistrationLink activity={activity} />
           </div>
         </div>
