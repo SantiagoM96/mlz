@@ -53,6 +53,24 @@ export function ActivitySummary({
                   )}
                 </div>
               )}
+              {schedule.suspendedByRain !== undefined && (
+                <div className="pt-2">
+                  <span className={
+                    'inline-flex max-w-full items-center gap-2 rounded-[6px] px-3 py-2 text-[15px] font-medium leading-5 ' +
+                    (schedule.suspendedByRain
+                      ? 'bg-[#e5f0ff] text-[#006eff]'
+                      : 'bg-[#edf5f7] text-[#236999]')
+                  }>
+                    <MaterialIcon
+                      name={schedule.suspendedByRain ? 'rainy' : 'check_circle'}
+                      size={19}
+                    />
+                    {schedule.suspendedByRain
+                      ? 'Se suspende por lluvia'
+                      : 'No se suspende por lluvia'}
+                  </span>
+                </div>
+              )}
               {schedule.detail && (
                 <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
               )}
