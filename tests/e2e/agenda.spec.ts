@@ -661,7 +661,7 @@ test('excluye registros importados con datos incompletos o fecha aproximada', as
 test('una ficha omitida no se publica aunque se conozca su URL anterior', async ({ page }) => {
   await page.goto(activities + '/actividad-24');
   await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Información general' })).toHaveCount(0);
 });
 
 test('descripciones de la ficha aparecen sin marcas ni comentarios de prototipo', async ({ page }) => {
@@ -939,3 +939,33 @@ test('ficha V2: descripción antes de imagen, columna lateral y mapa para sede �
   }
 });
 
+
+test('vistas de ejemplo V2: recurrencia, dos sedes y período sin publicar datos ficticios', async ({ page }) => {
+  await page.goto(activities + '/preview-v2-compostaje');
+  await expect(page.getByRole('note')).toContainText('datos de esta actividad son ficticios');
+  const compostaje = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(compostaje).toContainText('Todos los sábados');
+  await expect(compostaje).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(compostaje).toContainText('10:00 a 12:00 h');
+  await expect(page.getByRole('button', { name: 'Inscribirse', exact: true })).toBeDisabled();
+
+  await page.goto(activities + '/preview-v2-futbol');
+  const futbol = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(futbol.locator('section')).toHaveCount(2);
+  await expect(futbol).toContainText('Todos los martes');
+  await expect(futbol).toContainText('Todos los jueves');
+  await expect(futbol).toContainText('Plaza Grigera');
+  await expect(futbol).toContainText('Parque de Lomas');
+  await expect(futbol.getByRole('link', { name: 'Ver en Google Maps' })).toHaveCount(2);
+
+  await page.goto(activities + '/preview-v2-muestra');
+  const muestra = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(muestra).toContainText('Del 10 al 17 de noviembre');
+  await expect(muestra).toContainText('Todos los días');
+  await expect(muestra).toContainText('11:00 a 19:00 h');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
+
+  await page.goto(activities);
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Taller de compostaje');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
+});
