@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
+import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../components/agenda/ActivityBadges';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
@@ -199,6 +200,44 @@ function CardPreview({ draft, schedules, onViewDetail }: {
   );
 }
 
+function getFigmaExamplePreset(id: string | null): {
+  draft: ConsoleDraft; schedules: ConsoleSchedule[];
+} | null {
+  const activity = agendaV2PreviewActivities.find(value => value.id === id);
+  if (!activity) return null;
+  const badges = activity.badges;
+  return {
+    draft: {
+      ...INITIAL_DRAFT,
+      title: activity.title,
+      category: activity.category,
+      type: activity.type,
+      description: activity.description ?? '',
+      inclusive: badges.some(item => item.kind === 'accessible'),
+      rain: badges.some(item => item.kind === 'rain'),
+      registrationMode: activity.registrationMode ?? 'none',
+      registrationInformation: activity.registrationInformation ?? '',
+      registrationUrl: activity.registrationMode === 'online'
+        ? 'https://example.org/inscripcion-de-prueba' : '',
+      featured: badges.some(item => item.kind === 'featured'),
+      coverDataUrl: activity.image,
+      galleryDataUrls: [],
+    },
+    schedules: (activity.schedules ?? []).map((schedule, index) => ({
+      ...createDemoSchedule(index + 1),
+      id: index + 1,
+      scheduleType: schedule.scheduleType,
+      startDate: schedule.startDate,
+      endDate: schedule.endDate ?? '',
+      weekdays: [...(schedule.weekdays ?? [])],
+      startTime: schedule.startTime,
+      endTime: schedule.endTime ?? '',
+      venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
+      detail: schedule.detail ?? '',
+    })),
+  };
+}
+
 function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
   if (!file || !file.type.startsWith('image/')) return;
   const reader = new FileReader();
@@ -209,8 +248,14 @@ function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => vo
 }
 
 export function AgendaConsolePreviewPage() {
-  const [draft, setDraft] = useState<ConsoleDraft>({ ...INITIAL_DRAFT });
-  const [schedules, setSchedules] = useState<ConsoleSchedule[]>(INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [draft, setDraft] = useState<ConsoleDraft>(
+    () => getFigmaExamplePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
+  );
+  const [schedules, setSchedules] = useState<ConsoleSchedule[]>(
+    () => getFigmaExamplePreset(searchParams.get('caso'))?.schedules
+      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
+  );
   const [expanded, setExpanded] = useState<number[]>([1]);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [notice, setNotice] = useState(false);
@@ -240,6 +285,17 @@ export function AgendaConsolePreviewPage() {
   const changeCategory = (category: string) => {
     updateDraft({ category, type: CATEGORY_TYPES[category]?.[0] ?? 'Taller' });
   };
+  const loadFigmaCase = (id: string) => {
+    const preset = getFigmaExamplePreset(id);
+    setSearchParams(id ? { caso: id } : {});
+    setDraft(preset?.draft ?? { ...INITIAL_DRAFT });
+    setSchedules(preset?.schedules
+      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
+    setExpanded([1]);
+    setMobileView('form');
+    setNotice(false);
+    setShowDetail(false);
+  };
 
   return (
     <div className="min-h-screen bg-white text-grey-900">
@@ -261,6 +317,27 @@ export function AgendaConsolePreviewPage() {
             Consola demostrativa · los cambios son solamente visuales
           </p>
         </div>
+
+        <section aria-label="Casos de Figma" className="mb-7 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <label htmlFor="figma-preset" className={labelClass}>Cargar ejemplo de Figma</label>
+            <select id="figma-preset" className={inputClass} value={searchParams.get('caso') ?? ''}
+              onChange={event => loadFigmaCase(event.target.value)}>
+              <option value="">Ejemplo inicial · Taller de compostaje</option>
+              {agendaV2ExampleCases.map(example => {
+                const activity = agendaV2PreviewActivities.find(item => item.id === example.id);
+                return <option key={example.id} value={example.id}>
+                  {example.label} · {activity?.title ?? ''}
+                </option>;
+              })}
+            </select>
+            <p className={noteClass}>Cargar otro caso reemplaza los campos de la demostración, sin guardar datos.</p>
+          </div>
+          <Link to="/agenda-de-la-comunidad/ejemplos"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-[4px] px-2 text-[15px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
+            Ver los siete casos
+          </Link>
+        </section>
 
         <div className="mb-6 flex gap-2 rounded-[8px] border border-[#dce7ee] bg-[#f6f9fb] p-1.5 lg:hidden" aria-label="Cambiar vista">
           <button type="button" onClick={() => setMobileView('form')}
