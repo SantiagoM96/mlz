@@ -20,6 +20,8 @@ export interface AgendaSchedule {
   venue: string;
   address?: string;
   detail?: string;
+  /** Condición de lluvia de esta programación; puede diferir entre sedes. */
+  suspendedByRain?: boolean;
 }
 
 export type AgendaRegistrationMode = 'none' | 'online' | 'in-person';
