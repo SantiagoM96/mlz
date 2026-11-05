@@ -822,7 +822,7 @@ test('ficha V2: tipo único, imagen, ubicación y sin inscripción ficticia', as
     const image = page.getByTestId('agenda-detail-image');
     await expect(image).toBeVisible();
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(400);
-    await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Información general' })).toHaveCount(0);
     const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
     await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
     await expect(summary.locator('section')).toHaveCount(1);
