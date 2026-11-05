@@ -14,9 +14,9 @@ const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').val
 ctx.font='30px Arial';const footerMetrics=ctx.measureText('baenegocios.com');
 const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||1;
-// La parte superior de la firma queda donde antes estaba su base; se desplaza un alto completo de glifo hacia abajo.
-const footerTop=H-80+footerAscent;
-const footerBaseline=footerTop+footerAscent;
+// La firma mantiene 80 px libres debajo; el texto editorial termina 70 px antes de su borde superior.
+const footerBaseline=H-80-footerDescent;
+const footerTop=footerBaseline-footerAscent;
 ctx.font=size+'px "DM Serif Display",Georgia,serif';
 const mainMetrics=ctx.measureText('Ág');
 ctx.font='italic '+size+'px "DM Serif Display",Georgia,serif';
@@ -24,7 +24,7 @@ const quoteMetrics=ctx.measureText('Ág');
 const firstAscent=(main.length?mainMetrics:quoteMetrics).actualBoundingBoxAscent||size;
 const lastDescent=(quotes.length?quoteMetrics:mainMetrics).actualBoundingBoxDescent||Math.ceil(size*.2);
 const lineCount=main.length+quotes.length;
-const lastBaseline=footerTop-80-lastDescent;
+const lastBaseline=footerTop-70-lastDescent;
 const baselineSpan=Math.max(0,lineCount-1)*lineHeight+(quotes.length&&main.length?20:0);
 const firstBaseline=lastBaseline-baselineSpan;
 const boxTop=Math.max(80,firstBaseline-firstAscent-80);
