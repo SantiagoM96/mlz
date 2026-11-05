@@ -15,14 +15,14 @@ export function validRegistrationUrl(raw?: string): string | null {
 }
 
 /** La modalidad y su enlace son generales a la actividad, nunca a cada programación. */
-export function ActivityRegistrationLink({ activity }: { activity: AgendaActivity }) {
+export function ActivityRegistrationLink({ activity, preview = false }: { activity: AgendaActivity; preview?: boolean }) {
   if (activity.registrationMode === 'none') return null;
 
   const href = activity.registrationMode === 'in-person'
     ? null : validRegistrationUrl(activity.registrationUrl);
   const information = activity.registrationInformation?.trim();
 
-  if (!href && !information) return null;
+  if (!href && !information && !preview) return null;
 
   return (
     <div className="mt-4 space-y-4">
@@ -31,6 +31,12 @@ export function ActivityRegistrationLink({ activity }: { activity: AgendaActivit
           <h3 className="font-bold">Inscripción</h3>
           <p className="mt-2 whitespace-pre-line">{information}</p>
         </section>
+      )}
+      {!href && preview && activity.registrationMode === 'online' && (
+        <button type="button" disabled title="Vista previa: no existe inscripción real"
+          className="flex min-h-12 w-full cursor-not-allowed items-center justify-center rounded-[4px] bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white opacity-75">
+          Inscribirse
+        </button>
       )}
       {href && (
         <a data-testid="agenda-registration-link" href={href} target="_blank" rel="noopener noreferrer"
