@@ -7,6 +7,7 @@ import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrat
 import { ActivityLocationMap } from '../components/detail/ActivityLocationMap';
 import { getActivitySchedulePresentations, getUniqueActivityLocations } from '../utils/activitySchedules';
 import { formatActivityAddress } from '../utils/formatActivityAddress';
+import { getActivityMapUrl } from '../utils/activityMap';
 
 /**
  * Simulación del detalle público: no navega a una actividad real y no envía datos.
@@ -130,7 +131,21 @@ export function ConsoleDetailDialog({
                         {uniqueLocations.length > 1 && (
                           <div className="space-y-1 pt-2">
                             <p className="font-bold">{schedule.venue}</p>
-                            {schedule.address && <p className="break-words">{formatActivityAddress(schedule.address, schedule.locality)}</p>}
+                            {schedule.address && (
+                              <>
+                                <p className="break-words">{formatActivityAddress(schedule.address, schedule.locality)}</p>
+                                <a
+                                  href={getActivityMapUrl({
+                                    ...activity, locality: schedule.locality,
+                                    venue: schedule.venue, address: schedule.address,
+                                  })}
+                                  target="_blank" rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
+                                >
+                                  Ver en Google Maps <MaterialIcon name="chevron_right" size={20} />
+                                </a>
+                              </>
+                            )}
                           </div>
                         )}
                         {schedule.detail && (
