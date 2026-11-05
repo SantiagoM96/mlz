@@ -5,11 +5,16 @@ const staticPaths = [
   'jovenes-en-comunidad',
   'agenda-de-la-comunidad',
   'agenda-de-la-comunidad/actividades',
+  'agenda-de-la-comunidad/ejemplos',
   'agenda-de-la-comunidad/consola-preview',
   'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
   'agenda-de-la-comunidad/actividades/preview-v2-compostaje',
   'agenda-de-la-comunidad/actividades/preview-v2-futbol',
   'agenda-de-la-comunidad/actividades/preview-v2-muestra',
+  'agenda-de-la-comunidad/actividades/preview-v2-itinerante',
+  'agenda-de-la-comunidad/actividades/preview-v2-huerta',
+  'agenda-de-la-comunidad/actividades/preview-v2-folklore',
+  'agenda-de-la-comunidad/actividades/preview-v2-reciclaje',
   ...Array.from({ length: 18 }, (_, i) => `agenda-de-la-comunidad/actividades/actividad-${i + 1}`),
 ];
 for (const route of staticPaths) {
