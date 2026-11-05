@@ -33,7 +33,7 @@ export function ActivityRegistrationLink({ activity, preview = false }: { activi
         </section>
       )}
       {!href && preview && activity.registrationMode === 'online' && (
-        <button type="button" disabled title="Vista previa: no existe inscripción real"
+        <button type="button" disabled
           className="flex min-h-12 w-full cursor-not-allowed items-center justify-center rounded-[4px] bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white opacity-75">
           Inscribirse
         </button>
