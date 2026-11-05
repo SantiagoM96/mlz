@@ -62,7 +62,7 @@ export function ActivitySummary({
                       : 'bg-[#edf5f7] text-[#236999]')
                   }>
                     <MaterialIcon
-                      name={schedule.suspendedByRain ? 'rainy' : 'check_circle'}
+                      name={schedule.suspendedByRain ? 'rainy' : 'check'}
                       size={19}
                     />
                     {schedule.suspendedByRain
