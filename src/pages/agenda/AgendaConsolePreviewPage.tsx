@@ -1,0 +1,570 @@
+import { useEffect, useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import type { AgendaActivity } from '../../data/agenda';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
+import { ActivityBadges } from '../../components/agenda/ActivityBadges';
+import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
+import {
+  CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES, WEEKDAYS,
+  createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule,
+} from '../../features/agenda/consolePreview/model';
+
+const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
+const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
+const noteClass = 'mt-2 text-[14px] leading-[21px] text-[#718092]';
+
+function FormField({ label, htmlFor, children, hint }: {
+  label: string; htmlFor: string; children: ReactNode; hint?: string;
+}) {
+  return (
+    <div className="min-w-0">
+      <label className={labelClass} htmlFor={htmlFor}>{label}</label>
+      {children}
+      {hint && <p className={noteClass}>{hint}</p>}
+    </div>
+  );
+}
+
+function SectionTitle({ number, title, subtitle }: { number: number; title: string; subtitle?: string }) {
+  return (
+    <div className="mb-5">
+      <h2 className="text-[24px] font-bold leading-[30px] text-primary-600">
+        {number}. {title}
+      </h2>
+      {subtitle && <p className="mt-1 text-[16px] leading-6 text-grey-900">{subtitle}</p>}
+    </div>
+  );
+}
+
+function scheduleKindLabel(kind: ConsoleSchedule['scheduleType']) {
+  return kind === 'exact' ? 'Fecha puntual' : kind === 'range' ? 'Período' : 'Recurrente';
+}
+
+function imageForDraft(draft: ConsoleDraft): string {
+  if (draft.coverDataUrl) return draft.coverDataUrl;
+  const byType: Record<string, string> = {
+    Taller: draft.category === 'Ambiental' ? 'taller-ambiental' : 'taller',
+    Música: 'musica', Teatro: 'teatro', Danza: 'danza', Cine: 'cine',
+    Muestra: 'muestra', Entrenamiento: 'entrenamiento', Torneo: 'torneo',
+    'Visita guiada': 'visita-guiada', Jornada: 'jornada', Charla: 'charla',
+    Presentación: 'presentacion', Literatura: 'encuentro-literario',
+    Aeróbica: 'aerobica', 'Cuerpo–mente': 'cuerpo-mente',
+  };
+  return import.meta.env.BASE_URL + 'assets/agenda/types/' +
+    (byType[draft.type] ?? 'jornada') + '.png';
+}
+
+function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSchedule[]): AgendaActivity {
+  const first = schedules[0];
+  const venue = venueById(first?.venueId ?? '');
+  const badges: AgendaActivity['badges'] = [];
+  if (draft.inclusive) badges.push({ kind: 'accessible', label: 'Disciplina inclusiva' });
+  if (draft.rain) badges.push({ kind: 'rain', label: 'Se suspende por lluvia' });
+  if (draft.registrationMode !== 'none') badges.push({ kind: 'registration', label: 'Requiere inscripción' });
+  if (draft.featured) badges.push({ kind: 'featured', label: 'Destacado' });
+  return {
+    id: 'demo-consola',
+    title: draft.title.trim() || 'Título de la actividad',
+    category: draft.category,
+    type: draft.type,
+    locality: venue.locality,
+    dayLabel: 'Fecha a confirmar',
+    timeLabel: 'Horario a confirmar',
+    image: imageForDraft(draft),
+    badges,
+    description: draft.description,
+    schedules: schedules.map(schedule => {
+      const selectedVenue = venueById(schedule.venueId);
+      return {
+        id: String(schedule.id),
+        scheduleType: schedule.scheduleType,
+        startDate: schedule.startDate,
+        endDate: schedule.scheduleType !== 'exact' ? schedule.endDate : null,
+        weekdays: schedule.scheduleType === 'recurring' ? schedule.weekdays : [],
+        startTime: schedule.startTime,
+        endTime: schedule.endTime || null,
+        locality: selectedVenue.locality,
+        venue: selectedVenue.name,
+        address: selectedVenue.address + ' - ' + selectedVenue.locality,
+        detail: schedule.detail,
+      };
+    }),
+  };
+}
+
+function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: ConsoleSchedule[] }) {
+  const activity = makePreviewActivity(draft, schedules);
+  // Mostrar todas las fechas del formulario, incluso las de ejemplos históricos.
+  const presentation = getActivitySchedulePresentations(activity, '1900-01-01');
+  const main = presentation[0];
+  return (
+    <div>
+      <h2 className="mb-6 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
+      <article data-testid="console-preview-card"
+        className="overflow-hidden rounded-[8px] border border-[#e7e7e7] bg-white shadow-sm">
+        <img
+          className="h-[154px] w-full object-cover"
+          src={activity.image}
+          alt={draft.coverDataUrl ? 'Portada elegida para la vista previa' : ''}
+        />
+        <div className="flex flex-col gap-3 px-6 pb-[18px] pt-3">
+          <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888]">{activity.type}</p>
+          <h3 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h3>
+          {activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
+          <div className="mt-1 space-y-3 text-[16px] leading-[23px] text-grey-900">
+            <div className="flex items-start gap-2">
+              <MaterialIcon name="calendar_month" size={20} className="mt-0.5" />
+              <div className="min-w-0">
+                <p className="font-bold">{main?.dateLabel ?? 'Agregá una programación'}</p>
+                {main?.periodLabel && <p className="mt-1">{main.periodLabel}</p>}
+                {presentation.length > 1 && (
+                  <p className="mt-1 text-[14px] text-[#687f91]">
+                    + {presentation.length - 1} {presentation.length === 2 ? 'programación' : 'programaciones'}
+                  </p>
+                )}
+              </div>
+            </div>
+            {main && <p className="flex items-start gap-2 font-bold">
+              <MaterialIcon name="schedule" size={20} className="mt-0.5" />
+              <span>{main.timeLabel}</span>
+            </p>}
+          </div>
+          <span className="mt-1 inline-flex items-center gap-1 text-[16px] font-medium text-primary-600">
+            Ver más <MaterialIcon name="chevron_right" size={18} />
+          </span>
+        </div>
+      </article>
+      {presentation.length > 1 && (
+        <div className="mt-5 rounded-[8px] border border-[#dbe4eb] bg-[#f6f9fb] p-4">
+          <p className="mb-3 text-[16px] font-bold text-primary-600">Programaciones de esta actividad</p>
+          <div className="space-y-3">
+            {presentation.map((schedule, index) => (
+              <div key={schedule.id} className={index > 0 ? 'border-t border-[#dbe4eb] pt-3' : ''}>
+                <p className="text-[15px] font-bold text-grey-900">{schedule.dateLabel}</p>
+                {schedule.periodLabel && <p className="text-[14px] text-grey-900">{schedule.periodLabel}</p>}
+                <p className="mt-1 text-[14px] text-grey-900">{schedule.timeLabel}</p>
+                <p className="text-[14px] text-[#6b7883]">{schedule.venue}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <p className="mt-4 text-[14px] leading-[21px] text-[#6b7883]">
+        Simulación en tiempo real. No se publican ni guardan actividades.
+      </p>
+    </div>
+  );
+}
+
+function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    if (typeof reader.result === 'string') onReady(reader.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+export function AgendaConsolePreviewPage() {
+  const [draft, setDraft] = useState<ConsoleDraft>({ ...INITIAL_DRAFT });
+  const [schedules, setSchedules] = useState<ConsoleSchedule[]>(INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
+  const [expanded, setExpanded] = useState<number[]>([1]);
+  const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
+  const [notice, setNotice] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Consola · Vista previa | Agenda de la Comunidad';
+  }, []);
+
+  const updateDraft = (changes: Partial<ConsoleDraft>) => {
+    setDraft(current => ({ ...current, ...changes }));
+    setNotice(false);
+  };
+  const updateSchedule = (id: number, changes: Partial<ConsoleSchedule>) => {
+    setSchedules(current => current.map(s => s.id === id ? { ...s, ...changes } : s));
+  };
+  const addSchedule = () => {
+    const nextId = Math.max(0, ...schedules.map(s => s.id)) + 1;
+    setSchedules(current => [...current, createDemoSchedule(nextId)]);
+    setExpanded(current => [...current, nextId]);
+    setMobileView('form');
+  };
+  const removeSchedule = (id: number) => {
+    setSchedules(current => current.filter(s => s.id !== id));
+    setExpanded(current => current.filter(value => value !== id));
+  };
+  const changeCategory = (category: string) => {
+    updateDraft({ category, type: CATEGORY_TYPES[category]?.[0] ?? 'Taller' });
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-grey-900">
+      <a href="#contenido-principal" className="skip-link">Saltar al contenido</a>
+      <main id="contenido-principal" tabIndex={-1} className="mx-auto w-full max-w-[1200px] px-4 pb-16 pt-6 min-[1232px]:px-0">
+        <nav className="flex flex-wrap items-center gap-2 text-[15px] leading-6 text-grey-900" aria-label="Ruta de navegación">
+          <Link className="rounded-sm text-primary-600 hover:underline focus-visible:outline-2" to="/agenda-de-la-comunidad/actividades">
+            Agenda de la Comunidad
+          </Link>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">Nueva actividad</span>
+        </nav>
+
+        <div className="mb-6 mt-6">
+          <h1 className="text-[28px] font-bold leading-9 text-primary-600">Nueva actividad</h1>
+          <p className="mt-1 text-[16px] leading-6">Completá la información general y agregá todas las programaciones necesarias.</p>
+          <p className="mt-2 inline-flex items-center gap-1.5 text-[14px] font-medium text-[#65788a]">
+            <MaterialIcon name="info" size={18} />
+            Consola demostrativa · los cambios son solamente visuales
+          </p>
+        </div>
+
+        <div className="mb-6 flex gap-2 rounded-[8px] border border-[#dce7ee] bg-[#f6f9fb] p-1.5 lg:hidden" aria-label="Cambiar vista">
+          <button type="button" onClick={() => setMobileView('form')}
+            aria-pressed={mobileView === 'form'}
+            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+              (mobileView === 'form' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            Formulario
+          </button>
+          <button type="button" onClick={() => setMobileView('preview')}
+            aria-pressed={mobileView === 'preview'}
+            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+              (mobileView === 'preview' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            Vista previa
+          </button>
+        </div>
+
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,860px)_minmax(0,316px)]">
+          <form onSubmit={event => event.preventDefault()}
+            className={'min-w-0 space-y-8 ' + (mobileView === 'preview' ? 'hidden lg:block' : '')}
+            aria-label="Formulario de nueva actividad (demostración)">
+            <section aria-labelledby="console-information">
+              <div id="console-information"><SectionTitle number={1} title="Información general" /></div>
+              <div className="space-y-4">
+                <FormField label="Título" htmlFor="console-title">
+                  <input id="console-title" className={inputClass} value={draft.title}
+                    onChange={event => updateDraft({ title: event.target.value })} placeholder="Nombre de la actividad" />
+                </FormField>
+                <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+                  <FormField label="Categoría" htmlFor="console-category">
+                    <select id="console-category" className={inputClass} value={draft.category}
+                      onChange={event => changeCategory(event.target.value)}>
+                      {Object.keys(CATEGORY_TYPES).map(category => (
+                        <option key={category} value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </FormField>
+                  <FormField label="Tipo de actividad" htmlFor="console-type">
+                    <select id="console-type" className={inputClass} value={draft.type}
+                      onChange={event => updateDraft({ type: event.target.value })}>
+                      {(CATEGORY_TYPES[draft.category] ?? []).map(type => <option key={type} value={type}>{type}</option>)}
+                    </select>
+                  </FormField>
+                </div>
+                <FormField label="Descripción general" htmlFor="console-description">
+                  <textarea id="console-description" rows={4} className={inputClass + ' min-h-[120px] resize-y'}
+                    value={draft.description} onChange={event => updateDraft({ description: event.target.value })}
+                    placeholder="Contá de qué se trata la actividad" />
+                </FormField>
+                <div className="space-y-3 pt-1">
+                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
+                    <input type="checkbox" checked={draft.inclusive}
+                      onChange={event => updateDraft({ inclusive: event.target.checked })}
+                      className="h-5 w-5 accent-[#236999]" />
+                    Disciplina inclusiva
+                  </label>
+                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
+                    <input type="checkbox" checked={draft.rain}
+                      onChange={event => updateDraft({ rain: event.target.checked })}
+                      className="h-5 w-5 accent-[#236999]" />
+                    Se suspende por lluvia
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section aria-labelledby="console-schedules">
+              <div id="console-schedules">
+                <SectionTitle number={2} title="Programaciones"
+                  subtitle="Cada programación puede tener fecha, horario y lugar diferentes." />
+              </div>
+              <div className="space-y-4">
+                {schedules.map((schedule, index) => {
+                  const isExpanded = expanded.includes(schedule.id);
+                  const venue = venueById(schedule.venueId);
+                  return (
+                    <div key={schedule.id} className="min-w-0 rounded-[8px] border border-[#d9e5ed] bg-[#f6f9fc] p-4 sm:p-5">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <h3 className="text-[18px] font-bold leading-6 text-grey-900">Programación {index + 1}</h3>
+                        <div className="flex items-center gap-3">
+                          <span className="rounded bg-[#e9f2f9] px-2 py-1 text-[13px] text-[#678299]">
+                            {scheduleKindLabel(schedule.scheduleType)}
+                          </span>
+                          {!isExpanded && (
+                            <button type="button" onClick={() => setExpanded(current => [...current, schedule.id])}
+                              className="text-[15px] font-bold text-primary-600 hover:underline">Editar</button>
+                          )}
+                        </div>
+                      </div>
+                      {!isExpanded ? (
+                        <p className="mt-3 text-[15px] leading-6 text-[#5e6f7b]">
+                          {venue.name} · {schedule.startDate || 'Fecha a confirmar'} · {schedule.startTime || 'Sin horario'}
+                        </p>
+                      ) : (
+                        <div className="mt-5 space-y-4">
+                          <FormField label="Tipo de fecha" htmlFor={'date-type-' + schedule.id}>
+                            <select id={'date-type-' + schedule.id} value={schedule.scheduleType}
+                              className={inputClass}
+                              onChange={event => {
+                                const kind = event.target.value as ConsoleSchedule['scheduleType'];
+                                updateSchedule(schedule.id, {
+                                  scheduleType: kind,
+                                  endDate: kind === 'exact' ? '' : schedule.endDate,
+                                  weekdays: kind === 'recurring' ? (schedule.weekdays.length ? schedule.weekdays : [6]) : [],
+                                });
+                              }}>
+                              <option value="exact">Fecha puntual</option>
+                              <option value="range">Período</option>
+                              <option value="recurring">Recurrente</option>
+                            </select>
+                          </FormField>
+                          <div className={'grid min-w-0 gap-4 ' + (schedule.scheduleType !== 'exact' ? 'sm:grid-cols-2' : '')}>
+                            <FormField label={schedule.scheduleType === 'exact' ? 'Fecha' : 'Desde'} htmlFor={'start-date-' + schedule.id}>
+                              <input type="date" lang="es-AR" id={'start-date-' + schedule.id} className={inputClass}
+                                value={schedule.startDate}
+                                onChange={event => updateSchedule(schedule.id, { startDate: event.target.value })} />
+                            </FormField>
+                            {schedule.scheduleType !== 'exact' && (
+                              <FormField label="Hasta" htmlFor={'end-date-' + schedule.id}>
+                                <input type="date" lang="es-AR" id={'end-date-' + schedule.id} className={inputClass}
+                                  value={schedule.endDate}
+                                  onChange={event => updateSchedule(schedule.id, { endDate: event.target.value })} />
+                              </FormField>
+                            )}
+                          </div>
+                          {schedule.scheduleType === 'recurring' && (
+                            <fieldset>
+                              <legend className={labelClass}>Se repite los días</legend>
+                              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                                {WEEKDAYS.map(day => {
+                                  const selected = schedule.weekdays.includes(day.number);
+                                  return (
+                                    <button key={day.number} type="button" aria-pressed={selected}
+                                      aria-label={'Todos los ' + day.short}
+                                      onClick={() => updateSchedule(schedule.id, {
+                                        weekdays: selected
+                                          ? schedule.weekdays.filter(value => value !== day.number)
+                                          : [...schedule.weekdays, day.number].sort((a, b) => a - b),
+                                      })}
+                                      className={'min-h-11 rounded-[4px] border px-1 text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+                                        (selected ? 'border-[#80b4db] bg-[#dceefa] text-primary-600' :
+                                          'border-[#d6e2eb] bg-white text-[#8294a4] hover:border-[#93bfe0]')}>
+                                      {day.short}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </fieldset>
+                          )}
+                          <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+                            <FormField label="Horario de inicio" htmlFor={'start-time-' + schedule.id}>
+                              <input type="time" lang="es-AR" id={'start-time-' + schedule.id} className={inputClass}
+                                value={schedule.startTime}
+                                onChange={event => updateSchedule(schedule.id, { startTime: event.target.value })} />
+                            </FormField>
+                            <FormField label="Horario de fin (opcional)" htmlFor={'end-time-' + schedule.id}>
+                              <input type="time" lang="es-AR" id={'end-time-' + schedule.id} className={inputClass}
+                                value={schedule.endTime}
+                                onChange={event => updateSchedule(schedule.id, { endTime: event.target.value })} />
+                            </FormField>
+                          </div>
+                          <FormField label="Lugar" htmlFor={'venue-' + schedule.id}>
+                            <select id={'venue-' + schedule.id} className={inputClass} value={schedule.venueId}
+                              onChange={event => updateSchedule(schedule.id, { venueId: event.target.value })}>
+                              {DEMO_VENUES.map(place => (
+                                <option key={place.id} value={place.id}>{place.name}</option>
+                              ))}
+                            </select>
+                          </FormField>
+                          <div className="space-y-1 text-[14px] leading-5 text-[#5d7182]">
+                            <p className="font-medium">Información de la sede seleccionada</p>
+                            <dl className="grid grid-cols-[90px_minmax(0,1fr)] gap-x-3 gap-y-1">
+                              <dt className="text-[#92a0ac]">Localidad</dt><dd>{venue.locality}</dd>
+                              <dt className="text-[#92a0ac]">Dirección</dt><dd>{venue.address}</dd>
+                              <dt className="text-[#92a0ac]">Google Maps</dt>
+                              <dd><a href={'https://www.google.com/maps/search/?api=1&query=' +
+                                encodeURIComponent(venue.address + ', ' + venue.locality + ', Buenos Aires, Argentina')}
+                                target="_blank" rel="noopener noreferrer"
+                                className="font-medium text-primary-600 underline underline-offset-2">
+                                Ver ubicación ↗
+                              </a></dd>
+                            </dl>
+                          </div>
+                          <FormField label="Detalle de esta programación (opcional)" htmlFor={'schedule-detail-' + schedule.id}>
+                            <textarea id={'schedule-detail-' + schedule.id} rows={3}
+                              className={inputClass + ' min-h-[108px] resize-y'}
+                              value={schedule.detail}
+                              onChange={event => updateSchedule(schedule.id, { detail: event.target.value })} />
+                          </FormField>
+                        </div>
+                      )}
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                        <button type="button" onClick={() => removeSchedule(schedule.id)}
+                          className="text-[14px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
+                          Eliminar programación
+                        </button>
+                        {isExpanded && schedules.length > 1 && (
+                          <button type="button" onClick={() => setExpanded(current => current.filter(id => id !== schedule.id))}
+                            className="text-[14px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
+                            Contraer
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                <button type="button" onClick={addSchedule}
+                  className="flex min-h-12 w-full items-center rounded-[4px] border border-[#d6e2eb] bg-white px-4 text-left text-[16px] font-bold text-primary-600 transition-colors hover:bg-[#f4f9fc] focus-visible:outline-2 focus-visible:outline-primary-600">
+                  + &nbsp;Agregar otra programación
+                </button>
+                <p className={noteClass}>Podés combinar varias fechas, sedes y horarios en una sola actividad.</p>
+              </div>
+            </section>
+
+            <section aria-labelledby="console-registration">
+              <div id="console-registration">
+                <SectionTitle number={3} title="Inscripción"
+                  subtitle="Una misma modalidad de inscripción para todas las fechas de la actividad." />
+              </div>
+              <div className="space-y-4">
+                <FormField label="Modalidad" htmlFor="registration-mode">
+                  <select id="registration-mode" className={inputClass} value={draft.registrationMode}
+                    onChange={event => updateDraft({
+                      registrationMode: event.target.value as ConsoleDraft['registrationMode'],
+                    })}>
+                    <option value="none">Sin inscripción</option>
+                    <option value="online">Inscripción online</option>
+                    <option value="in-person">Inscripción presencial</option>
+                  </select>
+                </FormField>
+                {draft.registrationMode === 'online' && (
+                  <FormField label="Enlace de inscripción" htmlFor="registration-url">
+                    <input id="registration-url" type="url" className={inputClass}
+                      placeholder="https://ejemplo.gob.ar/inscripcion"
+                      value={draft.registrationUrl}
+                      onChange={event => updateDraft({ registrationUrl: event.target.value })} />
+                  </FormField>
+                )}
+                {draft.registrationMode !== 'none' && (
+                  <FormField label={'Información de inscripción ' +
+                    (draft.registrationMode === 'online' ? '(opcional)' : '')}
+                    htmlFor="registration-info">
+                    <textarea id="registration-info" className={inputClass + ' min-h-[100px] resize-y'} rows={3}
+                      value={draft.registrationInformation}
+                      placeholder={draft.registrationMode === 'in-person'
+                        ? 'Indicá dónde y cómo inscribirse presencialmente' : 'Aclaraciones para inscribirse'}
+                      onChange={event => updateDraft({ registrationInformation: event.target.value })} />
+                  </FormField>
+                )}
+                <p className={noteClass}>
+                  La información de inscripción se mostrará en la ficha pública, debajo de «Cuándo y dónde».
+                </p>
+              </div>
+            </section>
+
+            <section aria-labelledby="console-images">
+              <div id="console-images">
+                <SectionTitle number={4} title="Imágenes y portada"
+                  subtitle="Agregá una portada opcional y fotos adicionales para la galería." />
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <label htmlFor="cover-image" className="flex min-h-[122px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-[6px] bg-[#f0f0f0] text-center text-[15px] font-medium text-primary-600 hover:bg-[#e8eef2]">
+                  {draft.coverDataUrl ? <img className="h-[122px] w-full object-cover" src={draft.coverDataUrl} alt="Portada seleccionada" /> : (
+                    <><span className="text-[24px] leading-none">⊕</span>Agregar portada</>
+                  )}
+                  <input id="cover-image" type="file" accept="image/*" className="sr-only"
+                    onChange={event => readLocalImage(event.target.files?.[0],
+                      dataUrl => updateDraft({ coverDataUrl: dataUrl }))} />
+                </label>
+                {[0, 1].map(index => (
+                  <label key={index} htmlFor={'gallery-' + index}
+                    className="flex min-h-[122px] cursor-pointer items-center justify-center overflow-hidden rounded-[6px] border border-[#d6e2eb] bg-[#f6f9fc] text-center text-[15px] text-[#748395] hover:border-[#93bfe0]">
+                    {draft.galleryDataUrls[index]
+                      ? <img className="h-[122px] w-full object-cover" src={draft.galleryDataUrls[index]} alt={'Foto adicional ' + (index + 1)} />
+                      : 'Foto adicional'}
+                    <input id={'gallery-' + index} type="file" accept="image/*" className="sr-only"
+                      onChange={event => readLocalImage(event.target.files?.[0], dataUrl => {
+                        setDraft(current => {
+                          const next = [...current.galleryDataUrls];
+                          next[index] = dataUrl;
+                          return { ...current, galleryDataUrls: next };
+                        });
+                      })} />
+                  </label>
+                ))}
+              </div>
+              {draft.coverDataUrl && (
+                <button type="button" onClick={() => updateDraft({ coverDataUrl: '' })}
+                  className="mt-2 text-[14px] font-medium text-primary-600 hover:underline">
+                  Quitar portada
+                </button>
+              )}
+              <label className="mt-4 flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
+                <input type="checkbox" className="h-5 w-5 accent-[#236999]" checked={draft.featured}
+                  onChange={event => updateDraft({ featured: event.target.checked })} />
+                Destacar actividad
+              </label>
+            </section>
+
+            <section aria-labelledby="console-publishing">
+              <div id="console-publishing">
+                <SectionTitle number={5} title="Publicación"
+                  subtitle="Opcional: si completás una fecha futura, la actividad se publicará automáticamente ese día." />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField label="Fecha de publicación (opcional)" htmlFor="publish-date">
+                  <input id="publish-date" type="date" lang="es-AR" className={inputClass}
+                    value={draft.publishDate}
+                    onChange={event => updateDraft({ publishDate: event.target.value })} />
+                </FormField>
+                <FormField label="Hora de publicación" htmlFor="publish-time">
+                  <input id="publish-time" type="time" lang="es-AR" className={inputClass}
+                    value={draft.publishTime}
+                    onChange={event => updateDraft({ publishTime: event.target.value })} />
+                </FormField>
+              </div>
+              <p className={noteClass}>
+                Sin fecha de publicación, se publica al guardar. Se oculta a las 00:00 del día siguiente a la última fecha de actividad.
+              </p>
+            </section>
+
+            <div className="flex flex-wrap justify-end gap-3 border-t border-[#edf0f3] pt-6">
+              <button type="button" onClick={() => setMobileView('preview')}
+                className="min-h-12 rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 hover:bg-[#edf6fc] lg:hidden">
+                Ver vista previa
+              </button>
+              <button type="button" onClick={() => setNotice(true)}
+                className="min-h-12 rounded-[4px] bg-primary-600 px-6 text-[16px] font-bold text-white hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                Guardar actividad
+              </button>
+            </div>
+            {notice && (
+              <p role="status" className="rounded-[6px] border border-[#d6e2eb] bg-[#f6f9fc] p-3 text-[15px] leading-6 text-grey-900">
+                Esta es una demostración. No se guardó ni publicó ninguna actividad.
+              </p>
+            )}
+          </form>
+
+          <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
+            <div className="lg:sticky lg:top-6">
+              <CardPreview draft={draft} schedules={schedules} />
+              <button type="button" onClick={() => setMobileView('form')}
+                className="mt-6 min-h-12 w-full rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 lg:hidden">
+                Volver al formulario
+              </button>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  );
+}
