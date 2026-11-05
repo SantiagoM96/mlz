@@ -131,7 +131,7 @@ test('Yoga en Comunidad: una sola ficha, dos sedes con condiciones de lluvia ind
   const indoors = schedules.nth(1);
   await expect(indoors).toContainText('Todos los jueves');
   await expect(indoors).toContainText('Polideportivo Evita (bajo techo)');
-  await expect(indoors).toContainText('No se suspende por lluvia');
+  await expect(indoors).not.toContainText('suspende por lluvia');
 
   await expect(summary.getByRole('link', { name: /Ver en Google Maps/ })).toHaveCount(2);
   await expect(page.getByRole('note')).toHaveCount(0);
