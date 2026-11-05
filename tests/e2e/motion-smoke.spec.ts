@@ -208,7 +208,7 @@ test('ficha V2: Cuándo y dónde sticky, mapa compacto y tipografía institucion
   const height = await iframe.evaluate(el => el.getBoundingClientRect().height);
   expect(height).toBeLessThanOrEqual(mobile ? 201 : 221);
   await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toHaveCSS('font-size', '24px');
-  await expect(summary.locator('section').first()).toHaveCSS('font-size', '18px');
+  await expect(summary.locator('section > div').first()).toHaveCSS('font-size', '18px');
   if (!mobile) {
     const base = await summary.boundingBox();
     await page.evaluate(() => window.scrollBy(0, 180));
