@@ -5,7 +5,6 @@ import { AgendaPage } from '../pages/agenda/AgendaPage';
 import { AgendaHomePage } from '../pages/agenda/AgendaHomePage';
 import { AgendaActivityDetailPage } from '../pages/agenda/AgendaActivityDetailPage';
 import { AgendaConsolePreviewPage } from '../pages/agenda/AgendaConsolePreviewPage';
-import { AgendaExamplesPage } from '../pages/agenda/AgendaExamplesPage';
 import { JovenesEnComunidadPage } from '../pages/jovenes-en-comunidad/JovenesEnComunidadPage';
 import { NotFoundPage } from '../pages/not-found/NotFoundPage';
 
@@ -16,7 +15,6 @@ const router = createBrowserRouter([{
     { path: '/', element: <HomePage /> },
     { path: '/agenda-de-la-comunidad', element: <AgendaHomePage /> },
     { path: '/agenda-de-la-comunidad/actividades', element: <AgendaPage /> },
-    { path: '/agenda-de-la-comunidad/ejemplos', element: <AgendaExamplesPage /> },
     { path: '/agenda-de-la-comunidad/actividades/:id', element: <AgendaActivityDetailPage /> },
     { path: '/jovenes-en-comunidad', element: <JovenesEnComunidadPage /> },
     { path: '*', element: <NotFoundPage /> },
