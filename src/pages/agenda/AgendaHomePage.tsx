@@ -43,19 +43,6 @@ export function AgendaHomePage() {
           {agendaActivities.slice(0, 3).map(activity => <ActivityCard key={activity.id} activity={activity} />)}
         </div>
       </section>
-      <section aria-label="Revisión de ejemplos Agenda V2"
-        className="mt-10 flex flex-col items-start justify-between gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-5 sm:flex-row sm:items-center">
-        <div className="min-w-0">
-          <h2 className="text-[20px] font-bold text-primary-600">Ejemplos de Agenda V2 · Figma</h2>
-          <p className="mt-1 text-[15px] leading-6 text-grey-900">
-            Siete casos ficticios para comparar fechas, sedes e inscripción. No son actividades publicadas.
-          </p>
-        </div>
-        <Link className="inline-flex min-h-11 shrink-0 items-center gap-1 text-[16px] font-bold text-primary-600 hover:underline"
-          to="/agenda-de-la-comunidad/ejemplos">
-          Ver los 7 casos <MaterialIcon name="chevron_right" size={20} />
-        </Link>
-      </section>
       <section aria-label="Circuitos de la Comunidad" className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
         {circuits.map(circuit => <AgendaCircuitCard key={circuit.title} circuit={circuit} />)}
       </section>
