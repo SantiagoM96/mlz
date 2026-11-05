@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
@@ -34,6 +35,23 @@ export function AgendaPage() {
   return (
     <PageContainer className="pt-6 pb-6" >
       <AgendaIntro className="mb-6" />
+
+      <section aria-label="Ejemplos de Figma Agenda V2"
+        className="mb-6 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="min-w-0 space-y-1">
+          <p className="text-[16px] font-bold leading-6 text-primary-600">
+            Revisión de diseño · Agenda V2
+          </p>
+          <p className="text-[15px] leading-6 text-grey-900">
+            Explorá los 7 ejemplos de Figma: fechas, recurrencias, dos sedes e inscripción.
+            Son demostraciones, no actividades publicadas.
+          </p>
+        </div>
+        <Link to="/agenda-de-la-comunidad/ejemplos"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-[4px] border border-primary-600 bg-white px-4 text-[15px] font-bold text-primary-600 hover:bg-[#e8f1f8] focus-visible:outline-2 focus-visible:outline-primary-600">
+          Ver los 7 ejemplos
+        </Link>
+      </section>
 
       <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters} resultCount={filtered.length}
         onFilters={value => { setFilters(value); setLimit(9); }} onReset={onReset} />
