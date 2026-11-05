@@ -10,6 +10,7 @@ export interface AgendaSchedulePresentation {
   venue?: string;
   address?: string;
   detail?: string;
+  suspendedByRain?: boolean;
 }
 
 const weekdays: Record<number, string> = {
@@ -90,6 +91,7 @@ function toPresentation(schedule: AgendaSchedule): AgendaSchedulePresentation {
     venue: schedule.venue,
     address: schedule.address,
     detail: schedule.detail,
+    suspendedByRain: schedule.suspendedByRain,
   };
 }
 
