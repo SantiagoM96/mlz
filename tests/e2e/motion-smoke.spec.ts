@@ -111,32 +111,28 @@ test('Abrir una ficha desde el listado respeta scroll y diseño responsive', asy
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toBeInViewport();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   await expect(page.getByTestId('agenda-detail-image')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Copiar enlace' })).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ page }, info) => {
-  for (const route of ['/agenda-de-la-comunidad/actividades/actividad-1',
+test('ficha V2: descripción primero, Cuándo y dónde y mapa debajo', async ({ page }, info) => {
+  for (const path of ['/agenda-de-la-comunidad/actividades/actividad-1',
     '/agenda-de-la-comunidad/actividades/tita-y-rhodesia']) {
-    await page.goto(route);
+    await page.goto(path);
     const desc = page.getByRole('region', { name: 'Descripción de la actividad' });
     const image = page.getByTestId('agenda-detail-image');
-    const sidebar = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const sidebar = page.getByRole('complementary', { name: 'Cuándo y dónde' });
     const map = page.getByRole('region', { name: 'Mapa de ubicación' });
     await expect(desc).toBeVisible();
     await expect(image).toBeVisible();
     await expect(sidebar).toBeVisible();
     await expect(map).toBeVisible();
-    await expect(sidebar.getByRole('heading', { name: 'Resumen' })).toBeVisible();
-    await expect(sidebar).toContainText('Fecha');
-    await expect(sidebar).toContainText('Horario');
-    await expect(sidebar.locator('dt').last()).toHaveText(
-      route.endsWith('/tita-y-rhodesia') ? 'Teatro Municipal' : 'Teatro del Municipio',
-    );
-    // El componente admite actividades sin avisos. Se comprueban los avisos de la destacada.
-    if (route.endsWith('/tita-y-rhodesia')) {
+    await expect(sidebar.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
+    await expect(sidebar.locator('section')).toHaveCount(1);
+
+    if (path.endsWith('/tita-y-rhodesia')) {
       await expect(sidebar.locator('[data-agenda-chip="activity"]')).not.toHaveCount(0);
     }
     const positions = await page.evaluate(() => {
@@ -145,22 +141,17 @@ test('ficha: descripción primero, resumen con avisos y mapa debajo', async ({ p
         desc: rect('[aria-label="Descripción de la actividad"]').top,
         image: rect('[data-testid="agenda-detail-image"]').top,
         imageBottom: rect('[data-testid="agenda-detail-image"]').bottom,
-        summaryX: rect('[aria-label="Resumen de actividad"]').x,
+        sidebarX: rect('[aria-label="Cuándo y dónde"]').x,
         imageX: rect('[data-testid="agenda-detail-image"]').x,
         map: rect('[aria-label="Mapa de ubicación"]').top,
       };
     });
     expect(positions.desc).toBeLessThan(positions.image);
     expect(positions.map).toBeGreaterThan(positions.imageBottom);
-    const mapBeforeInfo = await page.evaluate(() =>
-      Boolean(document.querySelector('[aria-label="Mapa de ubicación"]')
-        ?.compareDocumentPosition(document.getElementById('agenda-general-information')!)
-        & Node.DOCUMENT_POSITION_FOLLOWING));
-    expect(mapBeforeInfo).toBe(true);
     await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(map.getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
-      expect(positions.summaryX).toBeGreaterThan(positions.imageX);
+      expect(positions.sidebarX).toBeGreaterThan(positions.imageX);
     }
     await expect(page.getByRole('navigation', { name: 'Ruta de navegación' }))
       .toHaveCSS('color', 'rgb(35, 105, 153)');
@@ -204,9 +195,9 @@ test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como e
   await expect(sheet).toHaveCount(0);
 });
 
-test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', async ({ page }, info) => {
+test('ficha V2: Cuándo y dónde sticky, mapa compacto y tipografía institucional', async ({ page }, info) => {
   await page.goto('/agenda-de-la-comunidad/actividades/actividad-1');
-  const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   const map = page.getByRole('region', { name: 'Mapa de ubicación' });
   const iframe = map.locator('iframe');
   await expect(summary).toBeVisible();
@@ -216,8 +207,8 @@ test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', a
   await expect(summary).toHaveCSS('font-family', /^Geometria(?:,|$)/);
   const height = await iframe.evaluate(el => el.getBoundingClientRect().height);
   expect(height).toBeLessThanOrEqual(mobile ? 201 : 221);
-  await expect(summary.locator('dt').first()).toHaveCSS('font-size', '18px');
-  await expect(summary.locator('dd').first()).toHaveCSS('font-size', '16px');
+  await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toHaveCSS('font-size', '24px');
+  await expect(summary.locator('section').first()).toHaveCSS('font-size', '18px');
   if (!mobile) {
     const base = await summary.boundingBox();
     await page.evaluate(() => window.scrollBy(0, 180));
@@ -228,3 +219,4 @@ test('ficha desktop: resumen sticky, mapa compacto y tipografía consistente', a
     expect(moved!.y).toBeLessThanOrEqual(base!.y + 1);
   }
 });
+
