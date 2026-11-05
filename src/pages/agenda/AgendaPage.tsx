@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
+import { isAgendaActivityVisible } from '../../features/agenda/utils/activitySchedules';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
@@ -23,7 +24,7 @@ export function AgendaPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    return filterAgendaActivities(search, filters, sort);
+    return filterAgendaActivities(search, filters, sort).filter(activity => isAgendaActivityVisible(activity));
   }, [search, filters, sort]);
 
   const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); };
