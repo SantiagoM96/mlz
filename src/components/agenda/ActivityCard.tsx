@@ -4,8 +4,8 @@ import { ActivityBadges } from './ActivityBadges';
 import { Link } from 'react-router-dom';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
 
-export function ActivityCard({ activity }: { activity: AgendaActivity }) {
-  const schedule = getActivitySchedulePresentations(activity)[0];
+export function ActivityCard({ activity, previewDateISO }: { activity: AgendaActivity; previewDateISO?: string }) {
+  const schedule = getActivitySchedulePresentations(activity, previewDateISO)[0];
   return (
     <article
       data-testid="agenda-card"
