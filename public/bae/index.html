@@ -14,8 +14,8 @@ const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').val
 ctx.font='30px Arial';const footerMetrics=ctx.measureText('baenegocios.com');
 const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||1;
-// La firma ocupa el inicio de la franja inferior de 80 px; no agrega altura extra al bloque.
-const footerTop=H-80;
+// La parte superior de la firma queda donde antes estaba su base; se desplaza un alto completo de glifo hacia abajo.
+const footerTop=H-80+footerAscent;
 const footerBaseline=footerTop+footerAscent;
 ctx.font=size+'px "DM Serif Display",Georgia,serif';
 const mainMetrics=ctx.measureText('Ág');
