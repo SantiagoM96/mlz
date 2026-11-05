@@ -38,7 +38,7 @@ export function AgendaPage() {
   }, [search, filters, sort]);
 
   const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); };
-  const visible = filtered.slice(0, Math.max(pageSize, limit === 9 ? pageSize : limit));
+  const visible = filtered.slice(0, Math.max(7, pageSize, limit === 9 ? pageSize : limit));
   const hasMore = filtered.length > visible.length;
 
   return (
