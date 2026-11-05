@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
 const list = '/agenda-de-la-comunidad/actividades';
-const gallery = '/agenda-de-la-comunidad/ejemplos';
 const consoleRoute = '/agenda-de-la-comunidad/consola-preview';
 const items = [
   ['preview-v2-reciclaje', 'Jornada de reciclaje'],
@@ -13,21 +12,27 @@ const items = [
   ['preview-v2-itinerante', 'Jornada ambiental itinerante'],
 ] as const;
 
-test('Agenda V2: los siete casos Figma están juntos y separados de resultados oficiales', async ({ page }) => {
+test('Agenda V2: los siete ejemplos se muestran en el listado normal, sin página extra', async ({ page }) => {
   await page.goto(list);
-  await expect(page.getByRole('link', { name: 'Ver los 7 ejemplos' })).toBeVisible();
-  await page.getByRole('link', { name: 'Ver los 7 ejemplos' }).click();
-  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/ejemplos\/?$/);
-  await expect(page.getByRole('heading', { name: 'Ejemplos de actividades' })).toBeVisible();
-  await expect(page.getByRole('note')).toContainText('ejemplos ficticios');
-  const grid = page.getByTestId('agenda-examples-grid');
-  await expect(grid.getByTestId('agenda-card')).toHaveCount(7);
-  await expect(grid.getByRole('link', { name: /Probar este caso en la consola/ })).toHaveCount(7);
-  for (const [, title] of items) {
-    await expect(grid.getByRole('link', { name: 'Ver más sobre ' + title })).toBeVisible();
+  const grid = page.getByTestId('agenda-grid');
+  await expect(grid).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Ver los 7 ejemplos' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Ejemplos de actividades' })).toHaveCount(0);
+  await expect(grid.getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(7);
+
+  for (const [index, [, title]] of items.entries()) {
+    const card = grid.getByTestId('agenda-card').nth(index);
+    await expect(card).toContainText(title);
+    await expect(card).toContainText('Ejemplo de diseño');
+    await expect(card.getByRole('link', { name: 'Ver más sobre ' + title })).toBeVisible();
   }
+
   await expect(grid).toContainText('Todos los sábados');
   await expect(grid).toContainText('Del 07/11/2026 al 28/11/2026');
+
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Jornada ambiental itinerante');
+  await expect(page.getByTestId('agenda-grid')).toContainText('Jornada ambiental itinerante');
+  await expect(page.getByTestId('agenda-grid').getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -76,8 +81,7 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
 });
 
 test('Consola V2: desde cada ficha de ejemplo se cargan fechas y campos editables', async ({ page }, info) => {
-  await page.goto(gallery);
-  await page.getByRole('link', { name: 'Probar este caso en la consola' }).nth(3).click();
+  await page.goto(consoleRoute + '?caso=preview-v2-futbol');
   await expect(page).toHaveURL(/caso=preview-v2-futbol/);
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Fútbol en Comunidad');
   await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
