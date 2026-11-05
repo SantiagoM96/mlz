@@ -940,9 +940,9 @@ test('ficha V2: descripción antes de imagen, columna lateral y mapa para sede �
 });
 
 
-test('vistas de ejemplo V2: recurrencia, dos sedes y período sin publicar datos ficticios', async ({ page }) => {
+test('vistas de Agenda V2: recurrencia, dos sedes y período', async ({ page }) => {
   await page.goto(activities + '/preview-v2-compostaje');
-  await expect(page.getByRole('note')).toContainText('datos de esta actividad son ficticios');
+  await expect(page.getByRole('note')).toHaveCount(0);
   const compostaje = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(compostaje).toContainText('Todos los sábados');
   await expect(compostaje).toContainText('Del 07/11/2026 al 28/11/2026');
