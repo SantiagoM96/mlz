@@ -114,3 +114,26 @@ test('Consola V2: portada, detalle y texto de programación se visualizan sin pu
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
 });
+
+test('Yoga en Comunidad: una sola ficha, dos sedes con condiciones de lluvia independientes', async ({ page }) => {
+  await page.goto(list + '/preview-v2-yoga-dos-sedes/');
+  await expect(page.getByRole('heading', { name: 'Yoga en Comunidad', exact: true, level: 1 })).toHaveCount(1);
+  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  const schedules = summary.locator('section');
+  await expect(schedules).toHaveCount(2);
+
+  const outdoors = schedules.nth(0);
+  await expect(outdoors).toContainText('Todos los martes');
+  await expect(outdoors).toContainText('Plaza Grigera (al aire libre)');
+  await expect(outdoors).toContainText('Se suspende por lluvia');
+  await expect(outdoors).not.toContainText('No se suspende por lluvia');
+
+  const indoors = schedules.nth(1);
+  await expect(indoors).toContainText('Todos los jueves');
+  await expect(indoors).toContainText('Polideportivo Evita (bajo techo)');
+  await expect(indoors).toContainText('No se suspende por lluvia');
+
+  await expect(summary.getByRole('link', { name: /Ver en Google Maps/ })).toHaveCount(2);
+  await expect(page.getByRole('note')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+});
