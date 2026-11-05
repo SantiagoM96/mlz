@@ -18,12 +18,12 @@ test('Agenda V2: los siete ejemplos se muestran en el listado normal, sin págin
   await expect(grid).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ver los 7 ejemplos' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Ejemplos de actividades' })).toHaveCount(0);
-  await expect(grid.getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(7);
+  await expect(grid.getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(0);
 
   for (const [index, [, title]] of items.entries()) {
     const card = grid.getByTestId('agenda-card').nth(index);
     await expect(card).toContainText(title);
-    await expect(card).toContainText('Ejemplo de diseño');
+    await expect(card).not.toContainText('Ejemplo de diseño');
     await expect(card.getByRole('link', { name: 'Ver más sobre ' + title })).toBeVisible();
   }
 
@@ -32,7 +32,7 @@ test('Agenda V2: los siete ejemplos se muestran en el listado normal, sin págin
 
   await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Jornada ambiental itinerante');
   await expect(page.getByTestId('agenda-grid')).toContainText('Jornada ambiental itinerante');
-  await expect(page.getByTestId('agenda-grid').getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(1);
+  await expect(page.getByTestId('agenda-grid').getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -40,7 +40,7 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   for (const [id, title] of items) {
     await page.goto(list + '/' + id);
     await expect(page.getByRole('heading', { name: title, exact: true, level: 1 })).toBeVisible();
-    await expect(page.getByRole('note')).toContainText('ficticios');
+    await expect(page.getByRole('note')).toHaveCount(0);
     await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toBeVisible();
   }
 
