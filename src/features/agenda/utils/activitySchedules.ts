@@ -58,10 +58,7 @@ function recurringLabel(days: readonly number[] | null | undefined): string {
     .sort((a, b) => a - b);
   const labels = sorted.map(day => weekdays[day]);
   if (labels.length === 0) return 'Días a confirmar';
-  if (labels.length === 1) {
-    const singular = labels[0] === 'sábados' ? 'sábado' : labels[0] === 'domingos' ? 'domingo' : labels[0];
-    return 'Todos los ' + (singular === 'sábado' || singular === 'domingo' ? labels[0] : labels[0]);
-  }
+  if (labels.length === 1) return 'Todos los ' + labels[0];
   return 'Todos los ' + labels.slice(0, -1).join(', ') + ' y ' + labels[labels.length - 1];
 }
 
@@ -120,4 +117,18 @@ export function isAgendaActivityVisible(
 ): boolean {
   return activity.schedules === undefined ||
     getActivitySchedulePresentations(activity, todayISO).length > 0;
+}
+
+/** Detecta si la actividad utiliza una sola sede física, aunque tenga varios horarios. */
+export function getUniqueActivityLocations(
+  schedules: readonly AgendaSchedulePresentation[],
+): AgendaSchedulePresentation[] {
+  const found = new Set<string>();
+  return schedules.filter(schedule => {
+    const key = [schedule.locality, schedule.venue, schedule.address]
+      .map(value => value?.trim().toLocaleLowerCase('es-AR') ?? '').join('|');
+    if (found.has(key)) return false;
+    found.add(key);
+    return true;
+  });
 }
