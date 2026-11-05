@@ -4189,7 +4189,7 @@ document.body.classList.remove('catalog-page');
 document.body.classList.remove('detail-page');window.__detailPanelCleanup?.();window.__detailPanelCleanup=null;
 document.getElementById('sportsAgendaCSS')?.remove();
 window.__sportsCatalogCleanup?.();window.__sportsCatalogCleanup=null;
-initChrome('form');const a=getCard(getParams().get('ficha'));let ix=Number(getParams().get('comision')||0);if(!Number.isInteger(ix)||ix<0||ix>=a.commissions.length)ix=0;const c=a.commissions[ix];const isMinor=a.max<18;
+initChrome('form');const a=getCard(getParams().get('ficha'));let ix=Number(getParams().get('comision')||0);if(!Number.isInteger(ix)||ix<0||ix>=a.commissions.length)ix=0;const c=a.commissions[ix];const isMinor=false; // Cada inscripción comienza para la persona titular de la cuenta.
 // Las modalidades provienen de la comisión seleccionada, no de una lista global.
 const SPORT_TYPES=['Recreativo','Competitivo','Federado'];
 const availableSportTypes=SPORT_TYPES.filter(t=>new RegExp(t,'i').test(String(c.tipo||'')));
