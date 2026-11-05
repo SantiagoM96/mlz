@@ -333,9 +333,9 @@ export function AgendaConsolePreviewPage() {
             </select>
             <p className={noteClass}>Cargar otro caso reemplaza los campos de la demostración, sin guardar datos.</p>
           </div>
-          <Link to="/agenda-de-la-comunidad/ejemplos"
+          <Link to="/agenda-de-la-comunidad/actividades"
             className="inline-flex min-h-11 shrink-0 items-center rounded-[4px] px-2 text-[15px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-            Ver los siete casos
+            Ver en la Agenda
           </Link>
         </section>
 
