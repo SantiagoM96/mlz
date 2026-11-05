@@ -31,10 +31,10 @@ test('consola demostrativa: muestra formulario y actualiza la tarjeta en vivo', 
 
 test('consola demostrativa: programaciones e inscripción son editables sin guardar', async ({ page }, info) => {
   await page.goto(route);
-  await page.getByLabel('Modalidad').selectOption('in-person');
+  await page.getByRole('combobox', { name: 'Modalidad', exact: true }).selectOption('in-person');
   await expect(page.getByLabel('Enlace de inscripción')).toHaveCount(0);
-  await expect(page.getByLabel('Información de inscripción')).toBeVisible();
-  await page.getByLabel('Tipo de fecha').selectOption('exact');
+  await expect(page.getByLabel('Información de inscripción', { exact: true })).toBeVisible();
+  await page.getByRole('combobox', { name: 'Tipo de fecha', exact: true }).selectOption('exact');
   await expect(page.getByLabel('Hasta')).toHaveCount(0);
   await page.getByRole('button', { name: /Agregar otra programación/ }).click();
   await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
