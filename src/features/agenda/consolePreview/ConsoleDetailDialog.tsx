@@ -149,10 +149,7 @@ export function ConsoleDetailDialog({
                           </div>
                         )}
                         {schedule.detail && (
-                          <div className="pt-2">
-                            <p className="font-bold">En este encuentro</p>
-                            <p className="mt-1 whitespace-pre-line">{schedule.detail}</p>
-                          </div>
+                          <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
                         )}
                       </div>
                     </section>
