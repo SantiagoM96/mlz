@@ -1,0 +1,103 @@
+import type { AgendaActivity } from './agenda';
+
+/**
+ * Casos ficticios del estudio Figma Agenda V2 para revisar el diseño en GitHub Pages.
+ * Nunca se agregan al listado público ni se envían al backend.
+ */
+const asset = (name: string) => import.meta.env.BASE_URL + 'assets/agenda/types/' + name + '.png';
+
+export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
+  {
+    id: 'preview-v2-compostaje',
+    title: 'Taller de compostaje',
+    category: 'Ambiental',
+    type: 'Taller',
+    locality: 'Lomas de Zamora',
+    dayLabel: 'Todos los sábados',
+    timeLabel: '10:00 a 12:00 h',
+    image: asset('taller-ambiental'),
+    badges: [
+      { kind: 'accessible', label: 'Disciplina inclusiva' },
+      { kind: 'registration', label: 'Requiere inscripción' },
+    ],
+    description: 'Taller gratuito para aprender prácticas de compostaje domiciliario y separación de residuos orgánicos mediante encuentros semanales.\nCada encuentro combina una explicación sencilla y una actividad práctica. No se requieren conocimientos previos.',
+    descriptionIsIllustrative: true,
+    registrationMode: 'online',
+    registrationInformation: 'Para participar, completá el formulario de inscripción. Este es un ejemplo visual: no hay formulario real asociado.',
+    schedules: [{
+      id: 'compostaje-sabados',
+      scheduleType: 'recurring',
+      startDate: '2026-11-07',
+      endDate: '2026-11-28',
+      weekdays: [6],
+      startTime: '10:00',
+      endTime: '12:00',
+      locality: 'Lomas de Zamora',
+      venue: 'Parque de Lomas',
+      address: 'Frías y Portela - Lomas de Zamora',
+    }],
+  },
+  {
+    id: 'preview-v2-futbol',
+    title: 'Fútbol en Comunidad',
+    category: 'Deportiva y recreativa',
+    type: 'Entrenamiento',
+    locality: 'Lomas de Zamora',
+    dayLabel: 'Todos los martes y jueves',
+    timeLabel: '16:00 a 18:00 h',
+    image: asset('entrenamiento'),
+    badges: [{ kind: 'rain', label: 'Se suspende por lluvia' }],
+    description: 'Entrenamientos gratuitos de fútbol abiertos a la comunidad en distintos espacios de Lomas de Zamora. Cada día se desarrolla en una sede diferente.\nLas actividades comparten una misma propuesta y se organizan en distintas programaciones para facilitar la asistencia en cada barrio.',
+    descriptionIsIllustrative: true,
+    schedules: [
+      {
+        id: 'futbol-martes',
+        scheduleType: 'recurring',
+        startDate: '2026-11-10',
+        endDate: '2026-11-30',
+        weekdays: [2],
+        startTime: '16:00',
+        endTime: '18:00',
+        locality: 'Lomas de Zamora',
+        venue: 'Plaza Grigera',
+        address: 'Av. Hipólito Yrigoyen 8700 - Lomas de Zamora',
+      },
+      {
+        id: 'futbol-jueves',
+        scheduleType: 'recurring',
+        startDate: '2026-11-12',
+        endDate: '2026-11-30',
+        weekdays: [4],
+        startTime: '16:00',
+        endTime: '18:00',
+        locality: 'Lomas de Zamora',
+        venue: 'Parque de Lomas',
+        address: 'Frías y Portela - Lomas de Zamora',
+      },
+    ],
+  },
+  {
+    id: 'preview-v2-muestra',
+    title: 'Muestra fotográfica barrial',
+    category: 'Cultural',
+    type: 'Muestra',
+    locality: 'Lomas de Zamora',
+    dayLabel: 'Del 10 al 17 de noviembre',
+    timeLabel: '11:00 a 19:00 h',
+    image: asset('muestra'),
+    badges: [],
+    description: 'Exposición abierta con producciones fotográficas de vecinos y vecinas de distintos barrios de Lomas de Zamora.\nLa propuesta invita a conocer miradas de nuestra comunidad a través de fotografías y relatos visuales.',
+    descriptionIsIllustrative: true,
+    schedules: [{
+      id: 'muestra-periodo',
+      scheduleType: 'range',
+      startDate: '2026-11-10',
+      endDate: '2026-11-17',
+      startTime: '11:00',
+      endTime: '19:00',
+      locality: 'Lomas de Zamora',
+      venue: 'Parque de Lomas',
+      address: 'Frías y Portela - Lomas de Zamora',
+    }],
+  },
+];

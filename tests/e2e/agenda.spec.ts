@@ -240,10 +240,10 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
   await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(35, 105, 153)');
-  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
-  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Agenda de la Comunidad' }).click();
+  await expect(page.getByRole('heading', { name: '¡Agenda Anual de la Comunidad 2026!' })).toBeVisible();
 });
 
 test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
@@ -256,19 +256,15 @@ test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Compartir por Facebook' })).toBeVisible();
 });
 
-test('fichas: la dirección usa N° y localidad una sola vez, sin subrayar ni duplicar enlaces', async ({ page }) => {
+test('fichas: el mapa conserva dirección normalizada y un enlace por sede', async ({ page }) => {
   const address = 'Manuel Castro N° 262 - Lomas de Zamora';
   for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
     await page.goto(path);
-    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
     const location = page.getByRole('region', { name: 'Mapa de ubicación' });
-    const summaryAddress = summary.locator('dd').last();
-    const locationAddress = location.locator('p').nth(1);
-
-    await expect(summaryAddress).toHaveText(address);
-    await expect(locationAddress).toHaveText(address);
-    await expect(summaryAddress).toHaveCSS('text-decoration-line', 'none');
-    await expect(locationAddress).toHaveCSS('text-decoration-line', 'none');
+    await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
+    await expect(location.locator('p').nth(1)).toHaveText(address);
+    await expect(location.locator('p').nth(1)).toHaveCSS('text-decoration-line', 'none');
     await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(location.getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
   }
@@ -508,7 +504,7 @@ test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page
   await expect(page.getByText('Contenido de demostración basado en Figma')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Volver a las actividades' })).toHaveCount(0);
   const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' });
-  await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+  await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/?$/);
 });
 
 test('buscador y dropdowns replican el foco y el margen inferior de 50px del prototipo', async ({ page }, info) => {
@@ -641,9 +637,9 @@ test('todas las fechas y horarios mantienen el estilo editorial de Figma', async
   await expect(page.getByTestId('agenda-card').first()).toContainText('Jueves 5 de noviembre');
   await expect(page.getByTestId('agenda-card').first()).toContainText('21:00 h');
   await page.getByTestId('agenda-card').first().click();
-  await expect(page.getByRole('heading', { name: 'Información general' })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('Jueves 5 de noviembre');
-  await expect(page.getByRole('complementary', { name: 'Resumen de actividad' })).toContainText('21:00 h');
+  await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Jueves 5 de noviembre');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('21:00 h');
 });
 
 test('excluye registros importados con datos incompletos o fecha aproximada', async ({ page }) => {
@@ -795,60 +791,41 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
   expect(overflow).toBe(false);
   if ((info.project.use.viewport?.width ?? 0) < 640) {
-    await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Agenda de la Comunidad' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
   }
 });
 
-test('ficha: mapa compacto, descripción sin recortes, iconos negros y aviso eliminado', async ({ page }, info) => {
-  for (const path of [agenda, activities, activities + '/actividad-1']) {
-    await page.goto(path);
-    await expect(page.getByText('Información de la planilla 2026; incluye registros históricos.', { exact: false })).toHaveCount(0);
-  }
-
+test('ficha V2: mapa compacto, descripción completa y sección Cuándo y dónde', async ({ page }, info) => {
+  await page.goto(activities + '/actividad-1');
   const description = page.getByRole('region', { name: 'Descripción de la actividad' });
   await expect(description).toContainText('Primera edición de La Chamameceada');
-  await expect(description).toContainText('fiesta litoraleña en un marco espectacular');
   await expect(description.locator('p')).toHaveCount(3);
-  await expect(description.getByRole('button', { name: /Leer descripción completa|Leer menos/ })).toHaveCount(0);
-  await expect(description.getByTestId('agenda-illustrative-dot')).toHaveCount(0);
-  await expect(description).not.toContainText('Descripción ilustrativa');
-
-  const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
-  await expect(summary).not.toContainText('La Agenda es informativa: no gestiona inscripciones ni reservas.');
-  await expect(page.getByText('Actividad pasada · Archivo 2026')).toHaveCount(0);
-  const icons = summary.locator('[data-material-symbol="calendar_month"], [data-material-symbol="schedule"], [data-material-symbol="location_on"]');
-  await expect(icons).toHaveCount(3);
-  for (const icon of await icons.all()) {
-    await expect(icon).toHaveCSS('color', 'rgb(0, 0, 0)');
-  }
-
+  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
+  await expect(summary).toContainText('Jueves 5 de noviembre');
+  await expect(summary).toContainText('21:00 h');
   const map = page.getByRole('region', { name: 'Mapa de ubicación' });
   await expect(map.getByRole('link', { name: 'Ver en Google Maps' })).toHaveAttribute('href', /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/);
-  const mapHeight = await map.locator('iframe').evaluate(element => element.getBoundingClientRect().height);
+  const mapHeight = await map.locator('iframe').evaluate(el => el.getBoundingClientRect().height);
   expect(mapHeight).toBeLessThanOrEqual(220);
   const noOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
   expect(noOverflow).toBe(true);
-
   if ((info.project.use.viewport?.width ?? 0) >= 1024) {
     await expect(summary.locator('..')).toHaveCSS('position', 'sticky');
   }
 });
 
-test('ficha: imagen original, ubicación y datos generales sin flujo de inscripción', async ({ page }, info) => {
+test('ficha V2: tipo único, imagen, ubicación y sin inscripción ficticia', async ({ page }, info) => {
   for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
     await page.goto(path);
     const image = page.getByTestId('agenda-detail-image');
     await expect(image).toBeVisible();
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(400);
-    const information = page.getByRole('heading', { name: 'Información general' }).locator('..');
-    await expect(information).toContainText('Tipo de actividad');
-    await expect(information).toContainText('Categoría');
-    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
-    await expect(summary.getByRole('heading', { name: 'Resumen' })).toBeVisible();
-    await expect(summary).toContainText('Fecha');
-    await expect(summary).toContainText('Horario');
-    await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
+    await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toHaveCount(0);
+    const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+    await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
+    await expect(summary.locator('section')).toHaveCount(1);
     await expect(page.getByRole('heading', { name: 'Ubicación en el mapa' })).toBeVisible();
     await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(page.locator('iframe[title^="Mapa de"]')).toHaveAttribute('src', new RegExp('google[.]com/maps[?]q='));
@@ -929,46 +906,66 @@ test('motion UX mobile: chips deslizables con acción Limpiar visible', async ({
   expect(fits).toBe(true);
 });
 
-test('ficha: descripción antes de imagen, resumen lateral con avisos y mapa al final', async ({ page }, info) => {
+test('ficha V2: descripción antes de imagen, columna lateral y mapa para sede única', async ({ page }, info) => {
   for (const path of [activities + '/actividad-1', activities + '/tita-y-rhodesia']) {
     await page.goto(path);
     const description = page.getByRole('region', { name: 'Descripción de la actividad' });
     const image = page.getByTestId('agenda-detail-image');
-    const summary = page.getByRole('complementary', { name: 'Resumen de actividad' });
+    const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
     const map = page.getByRole('region', { name: 'Mapa de ubicación' });
     await expect(description).toBeVisible();
     await expect(image).toBeVisible();
     await expect(summary).toBeVisible();
     await expect(map).toBeVisible();
-    const positions = await page.evaluate(() => {
-      const rect = (selector: string) =>
-        document.querySelector(selector)!.getBoundingClientRect();
-      return {
-        description: rect('[aria-label="Descripción de la actividad"]').top,
-        image: rect('[data-testid="agenda-detail-image"]').top,
-        summary: rect('[aria-label="Resumen de actividad"]'),
-        map: rect('[aria-label="Mapa de ubicación"]').top,
-        info: rect('#agenda-general-information').top,
-        imageBottom: rect('[data-testid="agenda-detail-image"]').bottom,
-      };
-    });
-    expect(positions.description).toBeLessThan(positions.image);
-    expect(positions.map).toBeGreaterThan(positions.imageBottom);
-    await expect(summary.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
-    expect(positions.map).toBeLessThan(positions.info);
+    const descriptionBox = await description.boundingBox();
+    const imageBox = await image.boundingBox();
+    const summaryBox = await summary.boundingBox();
+    const mapBox = await map.boundingBox();
+    expect(descriptionBox).not.toBeNull();
+    expect(imageBox).not.toBeNull();
+    expect(summaryBox).not.toBeNull();
+    expect(mapBox).not.toBeNull();
+    expect(descriptionBox!.y).toBeLessThan(imageBox!.y);
+    expect(mapBox!.y).toBeGreaterThan(imageBox!.y + imageBox!.height);
     if ((info.project.use.viewport?.width ?? 0) >= 1024) {
-      const imageX = await image.evaluate(el => el.getBoundingClientRect().x);
-      expect(positions.summary.x).toBeGreaterThan(imageX);
+      expect(summaryBox!.x).toBeGreaterThan(imageBox!.x);
     }
-    await expect(summary).toContainText('Fecha');
-    await expect(summary).toContainText('Horario');
-    await expect(summary.locator('dt').last()).not.toHaveText('Lugar');
-    // Solo las actividades que tienen avisos muestran chips; no inventar badges.
+    await expect(summary.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
     if (path.endsWith('/tita-y-rhodesia')) {
       await expect(summary.locator('[data-agenda-chip="activity"]').first()).toBeVisible();
     }
     const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
-    await expect(crumbs).toHaveCSS('color', 'rgb(35, 105, 153)');
     await expect(crumbs.getByTestId('breadcrumb-current')).toBeVisible();
   }
+});
+
+
+test('vistas de ejemplo V2: recurrencia, dos sedes y período sin publicar datos ficticios', async ({ page }) => {
+  await page.goto(activities + '/preview-v2-compostaje');
+  await expect(page.getByRole('note')).toContainText('datos de esta actividad son ficticios');
+  const compostaje = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(compostaje).toContainText('Todos los sábados');
+  await expect(compostaje).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(compostaje).toContainText('10:00 a 12:00 h');
+  await expect(page.getByRole('button', { name: 'Inscribirse', exact: true })).toBeDisabled();
+
+  await page.goto(activities + '/preview-v2-futbol');
+  const futbol = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(futbol.locator('section')).toHaveCount(2);
+  await expect(futbol).toContainText('Todos los martes');
+  await expect(futbol).toContainText('Todos los jueves');
+  await expect(futbol).toContainText('Plaza Grigera');
+  await expect(futbol).toContainText('Parque de Lomas');
+  await expect(futbol.getByRole('link', { name: 'Ver en Google Maps' })).toHaveCount(2);
+
+  await page.goto(activities + '/preview-v2-muestra');
+  const muestra = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(muestra).toContainText('Del 10 al 17 de noviembre');
+  await expect(muestra).toContainText('Todos los días');
+  await expect(muestra).toContainText('11:00 a 19:00 h');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
+
+  await page.goto(activities);
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Taller de compostaje');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
 });

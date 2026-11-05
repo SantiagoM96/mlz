@@ -1,44 +1,68 @@
 import type { AgendaActivity } from '../../../../data/agenda';
-import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
+import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
+import { getActivityMapUrl } from '../../utils/activityMap';
 import { formatActivityAddress } from '../../utils/formatActivityAddress';
+import {
+  getActivitySchedulePresentations, getUniqueActivityLocations,
+} from '../../utils/activitySchedules';
 
-export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
-  const venue = activity.venue || activity.locality;
-  const address = activity.address;
+/** Presenta una tarjeta por programación; no genera una tarjeta por cada sábado. */
+export function ActivitySummary({
+  activity, previewDateISO,
+}: { activity: AgendaActivity; previewDateISO?: string }) {
+  const schedules = getActivitySchedulePresentations(activity, previewDateISO);
+  const multiple = getUniqueActivityLocations(schedules).length > 1;
 
   return (
-    <aside aria-label="Resumen de actividad"
-      className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-6">
-      <h2 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Resumen</h2>
+    <aside aria-label="Cuándo y dónde" className="min-w-0">
+      <h2 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">
+        Cuándo y dónde
+      </h2>
       {activity.badges.length > 0 && (
         <div className="mb-4">
-          <ActivityBadges badges={activity.badges} variant="summary" />
+          <ActivityBadges badges={activity.badges} />
         </div>
       )}
-      <dl className="space-y-4 text-[16px] leading-5 text-grey-900">
-        <div className="flex min-w-0 items-start gap-2">
-          <MaterialIcon name="calendar_month" size={24} className="shrink-0 text-black" />
-          <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-5">Fecha</dt>
-            <dd className="mt-2">{activity.dayLabel}</dd>
-          </div>
-        </div>
-        <div className="flex min-w-0 items-start gap-2">
-          <MaterialIcon name="schedule" size={24} className="shrink-0 text-black" />
-          <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-5">Horario</dt>
-            <dd className="mt-2">{activity.timeLabel}</dd>
-          </div>
-        </div>
-        <div className="flex min-w-0 items-start gap-2">
-          <MaterialIcon name="location_on" size={24} className="shrink-0 text-black" />
-          <div className="min-w-0">
-            <dt className="text-[18px] font-bold leading-5">{venue}</dt>
-            <dd className="mt-1 break-words">{formatActivityAddress(address, activity.locality)}</dd>
-          </div>
-        </div>
-      </dl>
+      <div className="space-y-4">
+        {schedules.map(schedule => (
+          <section key={schedule.id} className="min-w-0 rounded-[4px] border border-[#d1d1d1] bg-white p-4">
+            <div className="space-y-2 text-[18px] leading-[26px] text-grey-900">
+              <p className="font-bold">{schedule.dateLabel}</p>
+              {schedule.periodLabel && <p>{schedule.periodLabel}</p>}
+              <p>{schedule.timeLabel}</p>
+              {multiple && (
+                <div className="space-y-2 pt-2">
+                  <p className="font-bold">{schedule.venue || schedule.locality}</p>
+                  <p className="break-words">{formatActivityAddress(schedule.address, schedule.locality)}</p>
+                  {schedule.address && (
+                    <a
+                      href={getActivityMapUrl({
+                        ...activity,
+                        venue: schedule.venue,
+                        locality: schedule.locality,
+                        address: schedule.address,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                    >
+                      Ver en Google Maps
+                      <MaterialIcon name="chevron_right" size={20} />
+                    </a>
+                  )}
+                </div>
+              )}
+              {schedule.detail && (
+                <div className="pt-2">
+                  <p className="font-bold">En este encuentro</p>
+                  <p className="mt-1 whitespace-pre-line">{schedule.detail}</p>
+                </div>
+              )}
+            </div>
+          </section>
+        ))}
+      </div>
     </aside>
   );
 }

@@ -4,6 +4,26 @@ import { originalActivityDescriptions } from './agenda-descriptions';
 export type ActivityCategory = string;
 export type FilterGroup = 'type' | 'category' | 'locality' | 'date';
 
+export type AgendaScheduleType = 'exact' | 'range' | 'recurring';
+
+/** Una programación corresponde a un horario y sede, no a cada ocurrencia semanal. */
+export interface AgendaSchedule {
+  id: string;
+  scheduleType: AgendaScheduleType;
+  startDate: string; // ISO YYYY-MM-DD
+  endDate?: string | null;
+  /** ISO weekday: lunes=1 ... domingo=7. */
+  weekdays?: readonly number[] | null;
+  startTime: string; // HH:mm
+  endTime?: string | null;
+  locality: string;
+  venue: string;
+  address?: string;
+  detail?: string;
+}
+
+export type AgendaRegistrationMode = 'none' | 'online' | 'in-person';
+
 export interface AgendaActivity {
   id: string;
   title: string;
@@ -23,6 +43,10 @@ export interface AgendaActivity {
   source?: string;
   /** URL externa de inscripción asignada de forma explícita a esta actividad. */
   registrationUrl?: string;
+  /** Datos de Agenda V2; la ausencia conserva la representación de registros importados. */
+  schedules?: readonly AgendaSchedule[];
+  registrationMode?: AgendaRegistrationMode;
+  registrationInformation?: string;
 }
 
 /** Fecha municipal, independiente de la zona horaria del dispositivo visitante. */

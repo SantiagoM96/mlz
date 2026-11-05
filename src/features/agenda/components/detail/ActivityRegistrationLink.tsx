@@ -1,7 +1,7 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 
-/** Solo URLs http(s) absolutas; nunca usar datos de inscripción como enlaces. */
+/** Solo URLs absolutas http(s); no convertir textos de inscripción en enlaces. */
 export function validRegistrationUrl(raw?: string): string | null {
   if (!raw) return null;
   try {
@@ -14,17 +14,38 @@ export function validRegistrationUrl(raw?: string): string | null {
   }
 }
 
-/** CTA debajo de la caja, dentro de la columna sticky del resumen. */
-export function ActivityRegistrationLink({ activity }: { activity: AgendaActivity }) {
-  const href = validRegistrationUrl(activity.registrationUrl);
-  if (!href) return null;
+/** La modalidad y su enlace son generales a la actividad, nunca a cada programación. */
+export function ActivityRegistrationLink({ activity, preview = false }: { activity: AgendaActivity; preview?: boolean }) {
+  if (activity.registrationMode === 'none') return null;
+
+  const href = activity.registrationMode === 'in-person'
+    ? null : validRegistrationUrl(activity.registrationUrl);
+  const information = activity.registrationInformation?.trim();
+
+  if (!href && !information && !preview) return null;
 
   return (
-    <a data-testid="agenda-registration-link" href={href} target="_blank" rel="noopener noreferrer"
-      aria-label={`Inscribirme a ${activity.title} (se abre en una pestaña nueva)`}
-      className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white transition-colors hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info-500">
-      Inscribirme
-      <MaterialIcon name="arrow_forward" size={22} />
-    </a>
+    <div className="mt-4 space-y-4">
+      {information && (
+        <section aria-label="Información de inscripción" className="text-[18px] leading-[26px] text-grey-900">
+          <h3 className="font-bold">Inscripción</h3>
+          <p className="mt-2 whitespace-pre-line">{information}</p>
+        </section>
+      )}
+      {!href && preview && activity.registrationMode === 'online' && (
+        <button type="button" disabled title="Vista previa: no existe inscripción real"
+          className="flex min-h-12 w-full cursor-not-allowed items-center justify-center rounded-[4px] bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white opacity-75">
+          Inscribirse
+        </button>
+      )}
+      {href && (
+        <a data-testid="agenda-registration-link" href={href} target="_blank" rel="noopener noreferrer"
+          aria-label={'Inscribirme a ' + activity.title + ' (se abre en una pestaña nueva)'}
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[4px] bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white transition-colors hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info-500">
+          Inscribirse
+          <MaterialIcon name="arrow_forward" size={22} />
+        </a>
+      )}
+    </div>
   );
 }

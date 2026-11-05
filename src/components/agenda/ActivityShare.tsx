@@ -58,6 +58,7 @@ export function ActivityShare({ title }: { title: string }) {
         title={copyState === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
         <MaterialIcon name={copyState === 'copied' ? 'check' : 'link'} size={20} />
       </button>
+      <span className="text-[18px] font-bold leading-[26px]">Compartir</span>
       <span className="sr-only" role="status" aria-live="polite">
         {copyState === 'copied' ? 'Enlace copiado al portapapeles' :
           copyState === 'error' ? 'No se pudo copiar el enlace' : ''}

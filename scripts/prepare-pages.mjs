@@ -6,6 +6,9 @@ const staticPaths = [
   'agenda-de-la-comunidad',
   'agenda-de-la-comunidad/actividades',
   'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
+  'agenda-de-la-comunidad/actividades/preview-v2-compostaje',
+  'agenda-de-la-comunidad/actividades/preview-v2-futbol',
+  'agenda-de-la-comunidad/actividades/preview-v2-muestra',
   ...Array.from({ length: 18 }, (_, i) => `agenda-de-la-comunidad/actividades/actividad-${i + 1}`),
 ];
 for (const route of staticPaths) {
