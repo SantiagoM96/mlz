@@ -47,24 +47,27 @@ window.BAEEditor={setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},r
 const $=id=>document.getElementById(id);
 const article=$('articleUrl'),button=$('importArticle'),status=$('importStatus');
 const timeout=ms=>AbortSignal.timeout(ms);
+function fixEncoding(s){s=String(s||'');if(!/[ÃÂâ][\x80-\xBF\xA0-\xFF]/.test(s))return s;try{const bytes=Uint8Array.from([...s].map(c=>c.charCodeAt(0)));const fixed=new TextDecoder('utf-8',{fatal:true}).decode(bytes);return fixed.includes('�')?s:fixed}catch{return s}}
 function getMeta(html,base){
 const doc=new DOMParser().parseFromString(html,'text/html');
 const meta=key=>doc.querySelector('meta[property="'+key+'"],meta[name="'+key+'"]')?.getAttribute('content')?.trim()||'';
-const title=(meta('og:title')||meta('twitter:title')||doc.querySelector('h1')?.textContent||doc.title||'').replace(/\s*[|\-–]\s*BAE Negocios\s*$/i,'').trim();
-let image=meta('og:image:secure_url')||meta('og:image')||meta('twitter:image')||'';
+const title=fixEncoding((meta('og:title')||meta('twitter:title')||doc.querySelector('h1')?.textContent||doc.title||'').replace(/\s*[|\-–]\s*BAE Negocios\s*$/i,'').trim());
+let image=meta('og:image:secure_url')||meta('og:image')||meta('twitter:image')||doc.querySelector('article img[src], .image img[src], .media img[src], img[data-src]')?.getAttribute('data-src')||doc.querySelector('article img[src], .image img[src], .media img[src]')?.getAttribute('src')||'';
 try{image=image?new URL(image,base).href:''}catch{image=''}
 return {title,image};
 }
 async function fetchText(url){const res=await fetch(url,{signal:timeout(10000)});if(!res.ok)throw Error('HTTP '+res.status);return res.text()}
 async function extract(url){
 const services=[
-async()=>{const response=JSON.parse(await fetchText('https://api.microlink.io?url='+encodeURIComponent(url)));if(response.status!=='success'||!response.data?.title)throw Error(response.message||'Microlink sin datos');return {title:response.data.title.replace(/\s*[|\-–]\s*BAE Negocios\s*$/i,'').trim(),image:response.data.image?.url||''}},
+async()=>{const response=JSON.parse(await fetchText('https://api.microlink.io?url='+encodeURIComponent(url)));if(response.status!=='success')throw Error(response.message||'Microlink sin datos');return {title:fixEncoding(response.data?.title||''),image:response.data?.image?.url||response.data?.logo?.url||''}},
 async()=>getMeta(await fetchText('https://api.allorigins.win/raw?url='+encodeURIComponent(url)),url),
 async()=>getMeta(await fetchText('https://corsproxy.io/?url='+encodeURIComponent(url)),url),
-async()=>{const txt=await fetchText('https://r.jina.ai/'+url);const title=txt.match(/^Title:\s*(.+)$/mi)?.[1]?.replace(/\s*[|\-–]\s*BAE Negocios\s*$/i,'').trim()||'';const image=txt.match(/^Image:\s*(https?:\/\/\S+)/mi)?.[1]||txt.match(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/)?.[1]||'';return {title,image}}
+async()=>{const txt=await fetchText('https://r.jina.ai/'+url);const title=fixEncoding(txt.match(/^Title:\s*(.+)$/mi)?.[1]||'');const images=[...txt.matchAll(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g)].map(m=>m[1]);return {title,image:images.find(u=>!/(logo|icon|avatar|favicon|pixel|tracking)/i.test(u))||images[0]||''}}
 ];
-const errors=[];for(const service of services){try{const data=await service();if(data.title)return data;errors.push('Sin título')}catch(e){errors.push(e.message)}}
-throw Error('No fue posible acceder a los metadatos de esta noticia. '+errors.join('; '));
+const errors=[],result={title:'',image:''};
+for(const service of services){try{const data=await service();if(data.title&&!result.title)result.title=fixEncoding(data.title).replace(/\s*[|\-–]\s*BAE Negocios\s*$/i,'').trim();if(data.image&&!result.image)result.image=data.image;if(result.title&&result.image)break}catch(e){errors.push(e.message)}}
+if(result.title)return result;
+throw Error('No fue posible obtener el título. '+errors.join('; '));
 }
 async function fetchImage(url){
 const options=[url,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://corsproxy.io/?url='+encodeURIComponent(url)];
