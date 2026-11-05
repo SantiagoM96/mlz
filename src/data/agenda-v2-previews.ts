@@ -29,7 +29,7 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
     timeLabel: 'Martes 09:00 h · Jueves 18:00 h',
     image: asset('cuerpo-mente'),
     badges: [],
-    description: 'Clases de yoga abiertas a la comunidad para trabajar la movilidad, la respiración y la relajación. La propuesta es la misma en ambas sedes y está pensada para personas con distintos niveles de experiencia.\nElegí el día y lugar que te resulte más cómodo: los encuentros de los martes son al aire libre y se suspenden por lluvia; los de los jueves se realizan bajo techo y no se suspenden por lluvia.',
+    description: 'Clases de yoga abiertas a la comunidad para trabajar la movilidad, la respiración y la relajación. La propuesta es la misma en ambas sedes y está pensada para personas con distintos niveles de experiencia.\nElegí el día y lugar que te resulte más cómodo.',
     descriptionIsIllustrative: true,
     schedules: [
       {
@@ -41,7 +41,7 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
         startTime: '09:00',
         endTime: '10:00',
         locality: 'Lomas de Zamora',
-        venue: 'Plaza Grigera (al aire libre)',
+        venue: 'Plaza Grigera',
         address: 'Av. Hipólito Yrigoyen 8700 - Lomas de Zamora',
         suspendedByRain: true,
       },
@@ -54,7 +54,7 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
         startTime: '18:00',
         endTime: '19:00',
         locality: 'Albertina',
-        venue: 'Polideportivo Evita (bajo techo)',
+        venue: 'Polideportivo Evita',
         address: 'Atenas 2002 - Albertina',
         suspendedByRain: false,
       },
