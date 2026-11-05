@@ -8,7 +8,7 @@ import { ActivitySummary } from '../../features/agenda/components/detail/Activit
 import { ActivityRegistrationLink } from '../../features/agenda/components/detail/ActivityRegistrationLink';
 import { ActivityLocationMap } from '../../features/agenda/components/detail/ActivityLocationMap';
 import {
-  getActivitySchedulePresentations, isAgendaActivityVisible,
+  getActivitySchedulePresentations, getUniqueActivityLocations, isAgendaActivityVisible,
 } from '../../features/agenda/utils/activitySchedules';
 import { agendaActivities } from '../../data/agenda';
 import { featuredActivity } from '../../data/agenda-featured';
@@ -28,7 +28,8 @@ export function AgendaActivityDetailPage() {
   if (!activity || !isVisible) return <NotFoundPage />;
 
   const schedules = getActivitySchedulePresentations(activity);
-  const onlySchedule = schedules.length === 1 ? schedules[0] : null;
+  const locations = getUniqueActivityLocations(schedules);
+  const onlySchedule = locations.length === 1 ? locations[0] : null;
   const locationActivity = onlySchedule ? {
     ...activity,
     locality: onlySchedule.locality,
