@@ -3,12 +3,14 @@ import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { getActivityMapUrl } from '../../utils/activityMap';
 import { formatActivityAddress } from '../../utils/formatActivityAddress';
-import { getActivitySchedulePresentations } from '../../utils/activitySchedules';
+import {
+  getActivitySchedulePresentations, getUniqueActivityLocations,
+} from '../../utils/activitySchedules';
 
 /** Presenta una tarjeta por programación; no genera una tarjeta por cada sábado. */
 export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
   const schedules = getActivitySchedulePresentations(activity);
-  const multiple = schedules.length > 1;
+  const multiple = getUniqueActivityLocations(schedules).length > 1;
 
   return (
     <aside aria-label="Cuándo y dónde" className="min-w-0">
