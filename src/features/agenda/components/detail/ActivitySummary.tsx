@@ -8,8 +8,10 @@ import {
 } from '../../utils/activitySchedules';
 
 /** Presenta una tarjeta por programación; no genera una tarjeta por cada sábado. */
-export function ActivitySummary({ activity }: { activity: AgendaActivity }) {
-  const schedules = getActivitySchedulePresentations(activity);
+export function ActivitySummary({
+  activity, previewDateISO,
+}: { activity: AgendaActivity; previewDateISO?: string }) {
+  const schedules = getActivitySchedulePresentations(activity, previewDateISO);
   const multiple = getUniqueActivityLocations(schedules).length > 1;
 
   return (
