@@ -87,7 +87,7 @@ test('Consola V2: desde cada ficha de ejemplo se cargan fechas y campos editable
   await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
   await expect(page.getByText('Todos los jueves · Del 12/11/2026 al 30/11/2026 · 16:00 a 18:00 h · Parque de Lomas')).toBeVisible();
 
-  await page.getByRole('combobox', { name: 'Cargar ejemplo de Figma' }).selectOption('preview-v2-huerta');
+  await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-huerta');
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Taller de huerta comunitaria');
   await expect(page.getByRole('combobox', { name: 'Modalidad', exact: true })).toHaveValue('in-person');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
