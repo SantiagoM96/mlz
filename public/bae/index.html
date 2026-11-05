@@ -8,9 +8,26 @@ function wrap(text,style,size){ctx.font=style+' '+size+'px "DM Serif Display",Ge
 function render(){
 try{
 const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').value),lineHeight=Math.round(size*1.12),main=wrap(el('headline').value,'normal',size),quotes=el('enableQuote').checked?wrap(el('quote').value,'italic',size):[];
-const bodyHeight=(main.length+quotes.length)*lineHeight+(quotes.length?20:0);
-const boxHeight=Math.max(230,bodyHeight+130);
-const boxTop=Math.max(80,H-boxHeight);photoBottom=boxTop-16;
+// Espaciado editorial: 80 px desde la línea hasta el primer glifo,
+ // 80 px entre el último glifo del título/textual y la firma,
+ // y 80 px entre la firma y el borde inferior.
+ctx.font='30px Arial';const footerMetrics=ctx.measureText('baenegocios.com');
+const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
+const footerDescent=footerMetrics.actualBoundingBoxDescent||1;
+const footerBaseline=H-80-footerDescent;
+const footerTop=footerBaseline-footerAscent;
+ctx.font=size+'px "DM Serif Display",Georgia,serif';
+const mainMetrics=ctx.measureText('Ág');
+ctx.font='italic '+size+'px "DM Serif Display",Georgia,serif';
+const quoteMetrics=ctx.measureText('Ág');
+const firstAscent=mainMetrics.actualBoundingBoxAscent||size;
+const lastDescent=(quotes.length?quoteMetrics:mainMetrics).actualBoundingBoxDescent||Math.ceil(size*.2);
+const lineCount=main.length+quotes.length;
+const lastBaseline=footerTop-80-lastDescent;
+const baselineSpan=Math.max(0,lineCount-1)*lineHeight+(quotes.length&&main.length?20+lineHeight:0);
+const firstBaseline=lastBaseline-baselineSpan;
+const boxTop=Math.max(80,firstBaseline-firstAscent-80);
+photoBottom=boxTop-16;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
 if(image){
@@ -23,10 +40,10 @@ ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
 ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';halftoneCtx.drawImage(halftone,0,0,1080,1235.84);halftoneCtx.globalCompositeOperation='source-in';halftoneCtx.fillStyle=el('dotColor').value;halftoneCtx.fillRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';ctx.drawImage(halftoneLayer,0,boxTop)}ctx.restore();
 ctx.fillStyle='#fff';ctx.fillRect(0,boxTop-16,W,16);
-let y=boxTop+80+size;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.font=size+'px "DM Serif Display",Georgia,serif';ctx.fillStyle=colors.text;
+let y=firstBaseline;ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.font=size+'px "DM Serif Display",Georgia,serif';ctx.fillStyle=colors.text;
 for(const line of main){ctx.fillText(line,80,y);if(el('bold').checked){ctx.lineWidth=1;ctx.strokeStyle=colors.text;ctx.strokeText(line,80,y)}y+=lineHeight}
 if(quotes.length){y+=20;ctx.font='italic '+size+'px "DM Serif Display",Georgia,serif';ctx.fillStyle=colors.accent;for(const line of quotes){ctx.fillText(line,80,y);y+=lineHeight}}
-ctx.fillStyle=colors.text;ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('baenegocios.com',W/2,H-32);ctx.textAlign='left';
+ctx.fillStyle=colors.text;ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('baenegocios.com',W/2,footerBaseline);ctx.textAlign='left';
 el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para moverla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 }
