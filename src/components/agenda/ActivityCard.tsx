@@ -23,6 +23,11 @@ export function ActivityCard({ activity, previewDateISO }: { activity: AgendaAct
       >
         <img src={activity.image} alt="" className="h-[154px] w-full object-cover" loading="lazy" />
         <div className="flex flex-1 flex-col gap-3 px-6 pt-3 pb-[18px]">
+          {activity.id.startsWith('preview-v2-') && (
+            <p className="text-[13px] font-bold leading-5 text-[#647687]">
+              Ejemplo de diseño · No es una convocatoria
+            </p>
+          )}
           <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888888]">{activity.type}</p>
           <h2 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h2>
           <ActivityBadges badges={activity.badges} />
