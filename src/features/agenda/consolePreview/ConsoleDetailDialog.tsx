@@ -59,7 +59,6 @@ export function ConsoleDetailDialog({
         <div className="sticky top-0 z-10 flex min-h-[64px] items-center justify-between gap-3 border-b border-[#dbe4eb] bg-white px-4 py-3 sm:px-6">
           <div className="min-w-0">
             <p className="text-[16px] font-bold text-primary-600">Vista previa · Ficha pública</p>
-            <p className="text-[13px] leading-5 text-[#6d7e8a]">Simulación: no está publicada</p>
           </div>
           <button ref={closeRef} type="button" onClick={onClose}
             className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-[6px] border border-[#d9e5ed] px-3 text-[16px] font-bold text-primary-600 hover:bg-[#f2f8fc] focus-visible:outline-2 focus-visible:outline-primary-600"
@@ -169,9 +168,6 @@ export function ConsoleDetailDialog({
                 activity={{ ...activity, registrationUrl: undefined }}
                 preview
               />
-              <p className="text-[14px] leading-[21px] text-[#6b7883]">
-                Los enlaces de inscripción de esta demostración están deshabilitados.
-              </p>
             </div>
           </div>
         </div>
