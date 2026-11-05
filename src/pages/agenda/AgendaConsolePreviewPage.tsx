@@ -484,9 +484,15 @@ export function AgendaConsolePreviewPage() {
               <div className="space-y-4">
                 <FormField label="Modalidad" htmlFor="registration-mode">
                   <select id="registration-mode" className={inputClass} value={draft.registrationMode}
-                    onChange={event => updateDraft({
-                      registrationMode: event.target.value as ConsoleDraft['registrationMode'],
-                    })}>
+                    onChange={event => {
+                      const registrationMode = event.target.value as ConsoleDraft['registrationMode'];
+                      updateDraft({
+                        registrationMode,
+                        registrationInformation: registrationMode === 'in-person'
+                          && draft.registrationInformation === INITIAL_DRAFT.registrationInformation
+                          ? '' : draft.registrationInformation,
+                      });
+                    }}>
                     <option value="none">Sin inscripción</option>
                     <option value="online">Inscripción online</option>
                     <option value="in-person">Inscripción presencial</option>
