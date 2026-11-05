@@ -77,7 +77,7 @@ export function AgendaActivityDetailPage() {
           <ActivityShare key={activity.id} title={activity.title} />
           <div className="lg:sticky lg:top-6">
             <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
-            <ActivityRegistrationLink activity={activity} />
+            <ActivityRegistrationLink activity={activity} preview={isPreview} />
           </div>
         </div>
       </div>
