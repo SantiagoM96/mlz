@@ -68,6 +68,7 @@ function normalizeTime(raw: string): string {
 
 function scheduleTime(schedule: AgendaSchedule): string {
   const start = normalizeTime(schedule.startTime);
+  if (!start) return 'Horario a confirmar';
   const end = schedule.endTime ? normalizeTime(schedule.endTime) : null;
   return end ? start + ' a ' + end + ' h' : start + ' h';
 }
