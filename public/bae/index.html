@@ -103,7 +103,25 @@ el('clearAll').addEventListener('click',()=>{
  el('importStatus').textContent='Pegá una URL de BAE Negocios.';
  render();
 });
-el('download').addEventListener('click',()=>{render();canvas.toBlob(blob=>{if(!blob){el('status').textContent='No se pudo generar el PNG';return}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='BAE-posteo.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);el('status').textContent='PNG descargado';},'image/png')});
+el('download').addEventListener('click',()=>{
+ const button=el('download');
+ button.disabled=true;
+ try{
+  render();
+  canvas.toBlob(blob=>{
+   button.disabled=false;
+   if(!blob){el('status').textContent='No se pudo generar el PNG. Probá cargar la fotografía manualmente.';return}
+   const url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download='BAE-posteo.png';document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),30000);
+   el('status').textContent='PNG listo para descargar · 1080 × 1440 px';
+  },'image/png');
+ }catch(error){
+  button.disabled=false;
+  console.error('Error al exportar PNG:',error);
+  el('status').textContent=error.name==='SecurityError'?'La fotografía importada bloquea la exportación. Volvé a importar la URL o cargá la foto manualmente.':'No se pudo exportar: '+error.message;
+ }
+});
 window.BAEEditor={setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
 })();</script><script>
 (function(){
@@ -133,11 +151,33 @@ for(const service of services){try{const data=await service();if(data.title&&!re
 if(result.title)return result;
 throw Error('No fue posible obtener el título. '+errors.join('; '));
 }
-function loadRemoteImage(url){return new Promise((resolve,reject)=>{const img=new Image();img.crossOrigin='anonymous';const timer=setTimeout(()=>reject(Error('Imagen remota agotó el tiempo')),9000);img.onload=()=>{clearTimeout(timer);resolve(img)};img.onerror=()=>{clearTimeout(timer);reject(Error('No se pudo abrir la imagen'))};img.src=url})}
+function validateExportableImage(img){
+ const test=document.createElement('canvas');test.width=2;test.height=2;
+ const testCtx=test.getContext('2d');testCtx.drawImage(img,0,0,2,2);
+ testCtx.getImageData(0,0,1,1);
+ return img;
+}
 async function fetchImage(url){
-const options=[url,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://corsproxy.io/?url='+encodeURIComponent(url)];
-for(const endpoint of options){try{const res=await fetch(endpoint,{signal:timeout(12000)});if(!res.ok)continue;const blob=await res.blob();if(blob.type.includes('text/html')||blob.type.includes('application/json'))continue;const objectURL=URL.createObjectURL(blob);try{const img=new Image();img.src=objectURL;await img.decode();return img}finally{URL.revokeObjectURL(objectURL)}}catch(e){console.warn('Image attempt:',e)}}
-try{return await loadRemoteImage(url)}catch{}throw Error('La foto no pudo descargarse por restricciones de acceso');
+ const options=[
+  url,
+  'https://wsrv.nl/?url='+encodeURIComponent(url)+'&output=jpg',
+  'https://api.allorigins.win/raw?url='+encodeURIComponent(url),
+  'https://corsproxy.io/?url='+encodeURIComponent(url)
+ ];
+ for(const endpoint of options){
+  try{
+   const res=await fetch(endpoint,{signal:timeout(12000)});
+   if(!res.ok)continue;
+   const blob=await res.blob();
+   if(!blob.type.startsWith('image/'))continue;
+   const objectURL=URL.createObjectURL(blob);
+   try{
+    const img=new Image();img.src=objectURL;await img.decode();
+    return validateExportableImage(img);
+   }finally{URL.revokeObjectURL(objectURL)}
+  }catch(error){console.warn('No se pudo importar fotografía exportable:',error)}
+ }
+ throw Error('No se pudo descargar una versión exportable de la foto. Cargala manualmente.');
 }
 button.addEventListener('click',async()=>{
 let url;try{url=new URL(article.value.trim());if(url.protocol!=='https:'||!['www.baenegocios.com','baenegocios.com'].includes(url.hostname))throw Error('Ingresá una URL HTTPS de baenegocios.com')}catch(e){status.textContent=e.message;return}
