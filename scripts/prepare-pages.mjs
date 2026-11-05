@@ -7,6 +7,7 @@ const staticPaths = [
   'agenda-de-la-comunidad/actividades',
   'agenda-de-la-comunidad/consola-preview',
   'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
+  'agenda-de-la-comunidad/actividades/preview-v2-yoga-dos-sedes',
   'agenda-de-la-comunidad/actividades/preview-v2-compostaje',
   'agenda-de-la-comunidad/actividades/preview-v2-futbol',
   'agenda-de-la-comunidad/actividades/preview-v2-muestra',
