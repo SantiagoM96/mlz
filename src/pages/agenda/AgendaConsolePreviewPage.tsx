@@ -193,9 +193,6 @@ function CardPreview({ draft, schedules, onViewDetail }: {
           </div>
         </div>
       )}
-      <p className="mt-4 text-[14px] leading-[21px] text-[#6b7883]">
-        Simulación en tiempo real. No se publican ni guardan actividades.
-      </p>
     </div>
   );
 }
@@ -258,7 +255,6 @@ export function AgendaConsolePreviewPage() {
   );
   const [expanded, setExpanded] = useState<number[]>([1]);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
-  const [notice, setNotice] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
@@ -267,7 +263,6 @@ export function AgendaConsolePreviewPage() {
 
   const updateDraft = (changes: Partial<ConsoleDraft>) => {
     setDraft(current => ({ ...current, ...changes }));
-    setNotice(false);
   };
   const updateSchedule = (id: number, changes: Partial<ConsoleSchedule>) => {
     setSchedules(current => current.map(s => s.id === id ? { ...s, ...changes } : s));
@@ -293,7 +288,6 @@ export function AgendaConsolePreviewPage() {
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
     setExpanded([1]);
     setMobileView('form');
-    setNotice(false);
     setShowDetail(false);
   };
 
@@ -312,10 +306,6 @@ export function AgendaConsolePreviewPage() {
         <div className="mb-6 mt-6">
           <h1 className="text-[28px] font-bold leading-9 text-primary-600">Nueva actividad</h1>
           <p className="mt-1 text-[16px] leading-6">Completá la información general y agregá todas las programaciones necesarias.</p>
-          <p className="mt-2 inline-flex items-center gap-1.5 text-[14px] font-medium text-[#65788a]">
-            <MaterialIcon name="info" size={18} />
-            Consola demostrativa · los cambios son solamente visuales
-          </p>
         </div>
 
         <section aria-label="Casos de Figma" className="mb-7 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-end sm:justify-between">
@@ -331,8 +321,7 @@ export function AgendaConsolePreviewPage() {
                 </option>;
               })}
             </select>
-            <p className={noteClass}>Cargar otro caso reemplaza los campos de la demostración, sin guardar datos.</p>
-          </div>
+                      </div>
           <Link to="/agenda-de-la-comunidad/actividades"
             className="inline-flex min-h-11 shrink-0 items-center rounded-[4px] px-2 text-[15px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
             Ver en la Agenda
@@ -357,7 +346,7 @@ export function AgendaConsolePreviewPage() {
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,860px)_minmax(0,316px)]">
           <form onSubmit={event => event.preventDefault()}
             className={'min-w-0 space-y-8 ' + (mobileView === 'preview' ? 'hidden lg:block' : '')}
-            aria-label="Formulario de nueva actividad (demostración)">
+            aria-label="Formulario de nueva actividad">
             <section aria-labelledby="console-information">
               <div id="console-information"><SectionTitle number={1} title="Información general" /></div>
               <div className="space-y-4">
@@ -672,16 +661,11 @@ export function AgendaConsolePreviewPage() {
                 className="min-h-12 rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 hover:bg-[#edf6fc] lg:hidden">
                 Ver vista previa
               </button>
-              <button type="button" onClick={() => setNotice(true)}
-                className="min-h-12 rounded-[4px] bg-primary-600 px-6 text-[16px] font-bold text-white hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+              <button type="button" disabled
+                className="min-h-12 rounded-[4px] bg-primary-600 px-6 text-[16px] font-bold text-white opacity-60">
                 Guardar actividad
               </button>
             </div>
-            {notice && (
-              <p role="status" className="rounded-[6px] border border-[#d6e2eb] bg-[#f6f9fc] p-3 text-[15px] leading-6 text-grey-900">
-                Esta es una demostración. No se guardó ni publicó ninguna actividad.
-              </p>
-            )}
           </form>
 
           <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
