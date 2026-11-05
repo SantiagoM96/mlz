@@ -48,11 +48,6 @@ export function AgendaActivityDetailPage() {
         { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad' },
         { label: activity.title },
       ]} />
-      {isPreview && (
-        <p role="note" className="mt-4 rounded-md border border-[#d1d1d1] bg-[#f3f7fc] p-3 text-[16px] leading-6 text-grey-900">
-          Vista previa del diseño Agenda V2. Los datos de esta actividad son ficticios y no constituyen una convocatoria oficial.
-        </p>
-      )}
       <div className="agenda-motion-detail mt-6 grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
         <div className="min-w-0 space-y-6">
           <div className="space-y-4">
