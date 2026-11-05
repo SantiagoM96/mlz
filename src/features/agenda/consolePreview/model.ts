@@ -61,7 +61,7 @@ export const INITIAL_DRAFT: ConsoleDraft = {
   inclusive: true,
   rain: false,
   registrationMode: 'online',
-  registrationUrl: '',
+  registrationUrl: 'https://example.org/inscripcion-taller',
   registrationInformation: 'Para participar, completá el formulario desde el botón de inscripción.',
   featured: false,
   publishDate: '',
