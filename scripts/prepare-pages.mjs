@@ -5,6 +5,7 @@ const staticPaths = [
   'jovenes-en-comunidad',
   'agenda-de-la-comunidad',
   'agenda-de-la-comunidad/actividades',
+  'agenda-de-la-comunidad/consola-preview',
   'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
   'agenda-de-la-comunidad/actividades/preview-v2-compostaje',
   'agenda-de-la-comunidad/actividades/preview-v2-futbol',
