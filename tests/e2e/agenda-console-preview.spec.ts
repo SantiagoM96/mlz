@@ -45,8 +45,8 @@ test('consola demostrativa: programaciones e inscripción son editables sin guar
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Formulario', exact: true }).click();
   }
-  await page.getByRole('button', { name: 'Guardar actividad' }).click();
-  await expect(page.getByRole('status')).toContainText('No se guardó ni publicó ninguna actividad');
+  await expect(page.getByRole('button', { name: 'Guardar actividad' })).toBeDisabled();
+  await expect(page.getByText('Esta es una demostración. No se guardó ni publicó ninguna actividad.')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
