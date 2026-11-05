@@ -7,7 +7,7 @@ const palette={dark:{bg:'#171717',text:'#fff',accent:'#D82626'},white:{bg:'#fff'
 function wrap(text,style,size){ctx.font=style+' '+size+'px "DM Serif Display",Georgia,serif';const out=[];for(const paragraph of String(text).split('\n')){let row='';for(const word of paragraph.trim().split(/\s+/).filter(Boolean)){const candidate=row?row+' '+word:word;if(row&&ctx.measureText(candidate).width>920){out.push(row);row=word}else row=candidate}if(row)out.push(row)}return out}
 function render(){
 try{
-const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').value),lineHeight=Math.round(size*1.12),main=wrap(el('headline').value,'normal',size),quotes=el('enableQuote').checked?wrap(el('quote').value,'italic',size):[];
+const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8),main=wrap(el('headline').value,'normal',size),quotes=el('enableQuote').checked?wrap(el('quote').value,'italic',size):[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
 ctx.textBaseline='alphabetic';
