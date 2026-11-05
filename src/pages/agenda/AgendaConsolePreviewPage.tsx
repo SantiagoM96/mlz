@@ -96,7 +96,14 @@ function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: Con
   const activity = makePreviewActivity(draft, schedules);
   // Mostrar todas las fechas del formulario, incluso las de ejemplos históricos.
   const presentation = getActivitySchedulePresentations(activity, '1900-01-01');
-  const main = presentation[0];
+  const presentedSchedules = schedules.map(schedule => presentation.find(value => value.id === String(schedule.id)) ?? {
+    id: String(schedule.id),
+    dateLabel: 'Fecha a confirmar',
+    timeLabel: 'Horario a confirmar',
+    venue: venueById(schedule.venueId).name,
+    locality: venueById(schedule.venueId).locality,
+  });
+  const main = presentedSchedules[0];
   return (
     <div>
       <h2 className="mb-6 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
@@ -117,9 +124,9 @@ function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: Con
               <div className="min-w-0">
                 <p className="font-bold">{main?.dateLabel ?? 'Agregá una programación'}</p>
                 {main?.periodLabel && <p className="mt-1">{main.periodLabel}</p>}
-                {presentation.length > 1 && (
+                {presentedSchedules.length > 1 && (
                   <p className="mt-1 text-[14px] text-[#687f91]">
-                    + {presentation.length - 1} {presentation.length === 2 ? 'programación' : 'programaciones'}
+                    + {presentedSchedules.length - 1} {presentedSchedules.length === 2 ? 'programación' : 'programaciones'}
                   </p>
                 )}
               </div>
@@ -134,11 +141,11 @@ function CardPreview({ draft, schedules }: { draft: ConsoleDraft; schedules: Con
           </span>
         </div>
       </article>
-      {presentation.length > 1 && (
+      {presentedSchedules.length > 1 && (
         <div className="mt-5 rounded-[8px] border border-[#dbe4eb] bg-[#f6f9fb] p-4">
           <p className="mb-3 text-[16px] font-bold text-primary-600">Programaciones de esta actividad</p>
           <div className="space-y-3">
-            {presentation.map((schedule, index) => (
+            {presentedSchedules.map((schedule, index) => (
               <div key={schedule.id} className={index > 0 ? 'border-t border-[#dbe4eb] pt-3' : ''}>
                 <p className="text-[15px] font-bold text-grey-900">{schedule.dateLabel}</p>
                 {schedule.periodLabel && <p className="text-[14px] text-grey-900">{schedule.periodLabel}</p>}
