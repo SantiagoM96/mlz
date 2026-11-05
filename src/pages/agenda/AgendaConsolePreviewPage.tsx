@@ -308,12 +308,12 @@ export function AgendaConsolePreviewPage() {
           <p className="mt-1 text-[16px] leading-6">Completá la información general y agregá todas las programaciones necesarias.</p>
         </div>
 
-        <section aria-label="Casos de Figma" className="mb-7 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-end sm:justify-between">
+        <section aria-label="Actividades para cargar" className="mb-7 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1">
-            <label htmlFor="figma-preset" className={labelClass}>Cargar ejemplo de Figma</label>
+            <label htmlFor="figma-preset" className={labelClass}>Cargar actividad</label>
             <select id="figma-preset" className={inputClass} value={searchParams.get('caso') ?? ''}
               onChange={event => loadFigmaCase(event.target.value)}>
-              <option value="">Ejemplo inicial · Taller de compostaje</option>
+              <option value="">Taller de compostaje · Inicial</option>
               {agendaV2ExampleCases.map(example => {
                 const activity = agendaV2PreviewActivities.find(item => item.id === example.id);
                 return <option key={example.id} value={example.id}>
