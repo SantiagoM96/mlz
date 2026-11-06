@@ -67,12 +67,6 @@ export function AgendaActivityDetailPage() {
           <div className="space-y-4">
             <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
             <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-            {activity.id.includes('--sede-') && activity.venue && (
-              <p className="flex items-center gap-2 text-[18px] font-bold leading-6 text-grey-900">
-                <span>{activity.venue}</span>
-                <span className="font-normal text-[#687d8d]">· {activity.locality}</span>
-              </p>
-            )}
             <ActivityDescription key={activity.id} activity={activity} />
           </div>
           <img
