@@ -10,6 +10,7 @@ export interface AgendaSchedulePresentation {
   venue?: string;
   address?: string;
   detail?: string;
+  detailType?: 'artists';
   suspendedByRain?: boolean;
 }
 
@@ -91,6 +92,7 @@ function toPresentation(schedule: AgendaSchedule): AgendaSchedulePresentation {
     venue: schedule.venue,
     address: schedule.address,
     detail: schedule.detail,
+    detailType: schedule.detailType,
     suspendedByRain: schedule.suspendedByRain,
   };
 }

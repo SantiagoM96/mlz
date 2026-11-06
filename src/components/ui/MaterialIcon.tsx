@@ -28,6 +28,7 @@ export type MaterialIconName =
   | 'accessible_forward'
   | 'accessible'
   | 'rainy'
+  | 'comedy_mask'
   | 'check'
   | 'link'
   | 'content_copy'

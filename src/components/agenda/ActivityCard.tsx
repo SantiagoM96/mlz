@@ -92,6 +92,15 @@ function CardContents({
               label={venue}
               value={formatActivityCardAddress(address, locality)}
             />
+            {schedules.map(schedule => schedule.detailType === 'artists' && schedule.detail?.trim() && (
+              <ActivityCharacteristic
+                key={schedule.id}
+                variant="sin-label"
+                icon="comedy_mask"
+                field="artists"
+                value={schedule.detail.trim()}
+              />
+            ))}
           </div>
         )}
         <div className="mt-auto">{action}</div>

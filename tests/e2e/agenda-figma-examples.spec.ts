@@ -83,7 +83,9 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   const folklore14 = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(folklore14.locator('section')).toHaveCount(1);
   await expect(folklore14).toContainText('Sábado 14 de noviembre');
-  await expect(folklore14).toContainText('Participan Andrea Gauna y Lautaro Rotela.');
+  await expect(folklore14).toContainText('Andrea Gauna y Lautaro Rotela');
+  await expect(folklore14).not.toContainText('Participan');
+  await expect(folklore14.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
   await expect(folklore14).not.toContainText('Brian Albornoz');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
 
@@ -91,7 +93,9 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   const folklore21 = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(folklore21.locator('section')).toHaveCount(1);
   await expect(folklore21).toContainText('Sábado 21 de noviembre');
-  await expect(folklore21).toContainText('Participan Brian Albornoz y Luz Pedrosa.');
+  await expect(folklore21).toContainText('Brian Albornoz y Luz Pedrosa');
+  await expect(folklore21).not.toContainText('Participan');
+  await expect(folklore21.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
   await expect(folklore21).not.toContainText('Andrea Gauna');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
 
@@ -144,17 +148,25 @@ test('Consola V2: portada, detalle y texto de programación se visualizan sin pu
   await expect(folkloreCards.nth(0)).not.toContainText('Sábado 21 de noviembre');
   await expect(folkloreCards.nth(1)).toContainText('Sábado 21 de noviembre');
   await expect(folkloreCards.nth(1)).not.toContainText('Sábado 14 de noviembre');
+  await expect(folkloreCards.nth(0)).toContainText('Andrea Gauna y Lautaro Rotela');
+  await expect(folkloreCards.nth(1)).toContainText('Brian Albornoz y Luz Pedrosa');
   for (const card of await folkloreCards.all()) {
-    await expect(card.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
+    await expect(card.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
+    await expect(card).not.toContainText('Participan');
+    await expect(card.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(4);
     await expect(card.locator('[data-agenda-programming-divider]')).toHaveCount(0);
   }
   await folkloreCards.nth(0).getByRole('button', { name: 'Ver más' }).click();
   const dialog = page.getByTestId('console-detail-preview');
-  await expect(dialog).toContainText('Participan Andrea Gauna y Lautaro Rotela.');
+  await expect(dialog).toContainText('Andrea Gauna y Lautaro Rotela');
+  await expect(dialog).not.toContainText('Participan');
+  await expect(dialog.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
   await expect(dialog).not.toContainText('Brian Albornoz');
   await page.keyboard.press('Escape');
   await folkloreCards.nth(1).getByRole('button', { name: 'Ver más' }).click();
-  await expect(dialog).toContainText('Participan Brian Albornoz y Luz Pedrosa.');
+  await expect(dialog).toContainText('Brian Albornoz y Luz Pedrosa');
+  await expect(dialog).not.toContainText('Participan');
+  await expect(dialog.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
   await expect(dialog).not.toContainText('Andrea Gauna');
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
@@ -258,13 +270,19 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
   await search.fill('Folklore en Comunidad');
   const folkloreCards = page.getByTestId('agenda-card');
   await expect(folkloreCards).toHaveCount(2);
-  await expect(folkloreCards.nth(0).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
-  await expect(folkloreCards.nth(1).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
+  await expect(folkloreCards.nth(0).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(4);
+  await expect(folkloreCards.nth(1).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(4);
   await expect(page.locator('[data-agenda-programming-divider]')).toHaveCount(0);
   await expect(folkloreCards.nth(0)).toContainText('Sábado 14 de noviembre');
   await expect(folkloreCards.nth(1)).toContainText('Sábado 21 de noviembre');
   await expect(folkloreCards.nth(0)).not.toContainText('Sábado 21 de noviembre');
   await expect(folkloreCards.nth(1)).not.toContainText('Sábado 14 de noviembre');
+  await expect(folkloreCards.nth(0)).toContainText('Andrea Gauna y Lautaro Rotela');
+  await expect(folkloreCards.nth(1)).toContainText('Brian Albornoz y Luz Pedrosa');
+  for (const card of await folkloreCards.all()) {
+    await expect(card.locator('[data-agenda-field="artists"] [data-material-symbol="comedy_mask"]')).toHaveCount(1);
+    await expect(card).not.toContainText('Participan');
+  }
 
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);

@@ -159,12 +159,12 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
       {
         id: 'folklore-14', scheduleType: 'exact',
         startDate: '2026-11-14', startTime: '17:00',
-        detail: 'Participan Andrea Gauna y Lautaro Rotela.', ...grigera,
+        detail: 'Andrea Gauna y Lautaro Rotela', detailType: 'artists', ...grigera,
       },
       {
         id: 'folklore-21', scheduleType: 'exact',
         startDate: '2026-11-21', startTime: '17:00',
-        detail: 'Participan Brian Albornoz y Luz Pedrosa.', ...grigera,
+        detail: 'Brian Albornoz y Luz Pedrosa', detailType: 'artists', ...grigera,
       },
     ],
   },

@@ -11,6 +11,7 @@ export interface ConsoleSchedule {
   venueId: string;
   suspendedByRain: boolean;
   detail: string;
+  detailType?: 'artists';
 }
 
 export interface ConsoleDraft {

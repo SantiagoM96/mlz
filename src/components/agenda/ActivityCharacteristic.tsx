@@ -8,7 +8,7 @@ import { MaterialIcon, type MaterialIconName } from '../ui/MaterialIcon';
  */
 type Props = {
   icon: MaterialIconName;
-  field?: 'date' | 'time' | 'place';
+  field?: 'date' | 'time' | 'place' | 'artists';
 } & (
   | { variant: 'con-label'; label: string; value: string }
   | { variant: 'sin-label'; value: string; label?: never }

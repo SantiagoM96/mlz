@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
+import { ActivityCharacteristic } from '../../../components/agenda/ActivityCharacteristic';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrationLink';
@@ -156,8 +157,9 @@ export function ConsoleDetailDialog({
                             )}
                           </div>
                         )}
-                        {schedule.detail && (
-                          <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
+                        {schedule.detail?.trim() && (schedule.detailType === 'artists'
+                          ? <ActivityCharacteristic variant="sin-label" icon="comedy_mask" field="artists" value={schedule.detail.trim()} />
+                          : <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
                         )}
                       </div>
                     </section>

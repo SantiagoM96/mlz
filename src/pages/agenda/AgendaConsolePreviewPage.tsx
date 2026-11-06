@@ -119,6 +119,7 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
         venue: selectedVenue.name,
         address: selectedVenue.address + ' - ' + selectedVenue.locality,
         detail: schedule.detail,
+        detailType: schedule.detailType,
         suspendedByRain: schedule.suspendedByRain,
       };
     }),
@@ -190,6 +191,7 @@ function getFigmaExamplePreset(id: string | null): {
       venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
       suspendedByRain: schedule.suspendedByRain ?? badges.some(item => item.kind === 'rain'),
       detail: schedule.detail ?? '',
+      detailType: schedule.detailType,
     })),
   };
 }
@@ -470,7 +472,7 @@ export function AgendaConsolePreviewPage() {
                               className="h-5 w-5 accent-[#236999]" />
                             Se suspende por lluvia
                           </label>
-                          <FormField label="Detalle de esta programación (opcional)" htmlFor={'schedule-detail-' + schedule.id}>
+                          <FormField label={schedule.detailType === 'artists' ? 'Artistas' : 'Detalle de esta programación (opcional)'} htmlFor={'schedule-detail-' + schedule.id}>
                             <textarea id={'schedule-detail-' + schedule.id} rows={3}
                               className={inputClass + ' min-h-[108px] resize-y'}
                               value={schedule.detail}
