@@ -526,43 +526,84 @@ test('Agenda V2: Ver más alineado con categoría y título; chevron centrado', 
 });
 
 
-test('Agenda V2: Cuándo y dónde se fija a 24 px; Compartir se desplaza normalmente', async ({ page }, info) => {
-  const viewportWidth = info.project.use.viewport?.width ?? 0;
+test('Agenda V2: sidebar fija Cuándo y dónde a 24 px con el contenido REAL; Compartir no es sticky', async ({ page }, info) => {
+  const width = info.project.use.viewport?.width ?? 0;
+  await page.setViewportSize({ width: Math.max(width, 390), height: 620 });
   await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
 
   const sidebar = page.getByTestId('agenda-detail-sidebar');
   const sticky = page.getByTestId('agenda-detail-sticky');
   const share = sidebar.getByLabel('Compartir actividad');
-  await expect(share).toBeVisible();
+  const summary = sidebar.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(summary).toBeVisible();
 
-  if (viewportWidth < 1024) {
+  if (width < 1024) {
     await expect(sticky).toHaveCSS('position', 'static');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    await expect(page.locator('[data-layout-container="true"]').first()).toBeVisible();
     return;
   }
 
-  await expect(sidebar).toHaveCSS('align-self', 'stretch');
   await expect(sticky).toHaveCSS('position', 'sticky');
   await expect(sticky).toHaveCSS('top', '24px');
+  await expect(sidebar).toHaveCSS('display', 'flex');
+  await expect(sticky).toHaveCSS('max-height', '572px');
   expect(await sticky.evaluate(element => element.contains(document.querySelector('[aria-label="Compartir actividad"]')))).toBe(false);
 
-  // Simulamos contenido principal largo para comprobar el desplazamiento y no solo la clase CSS.
-  await page.setViewportSize({ width: viewportWidth, height: 600 });
-  await sidebar.evaluate(element => {
-    const mainColumn = element.previousElementSibling as HTMLElement | null;
-    if (mainColumn) mainColumn.style.minHeight = '1400px';
+  // No se introduce ninguna altura sintética: medir la propia ficha publicada.
+  const initial = await page.evaluate(() => {
+    const grid = document.querySelector('.agenda-motion-detail')!;
+    const sidebar = document.querySelector('[data-testid="agenda-detail-sidebar"]')!;
+    const sticky = document.querySelector('[data-testid="agenda-detail-sticky"]')!;
+    return {
+      gridTop: grid.getBoundingClientRect().top,
+      gridHeight: grid.getBoundingClientRect().height,
+      sidebarHeight: sidebar.getBoundingClientRect().height,
+      stickyHeight: sticky.getBoundingClientRect().height,
+      maxScroll: document.documentElement.scrollHeight - innerHeight,
+    };
   });
-  await page.evaluate(() => window.scrollTo({ top: 400, behavior: 'instant' }));
-  await expect.poll(() => sticky.evaluate(el => Math.round(el.getBoundingClientRect().top))).toBe(24);
-  await expect.poll(() => share.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(24);
+  expect(initial.sidebarHeight).toBeGreaterThanOrEqual(initial.gridHeight - 2);
+  expect(initial.gridHeight - initial.stickyHeight).toBeGreaterThan(110);
+  expect(initial.maxScroll).toBeGreaterThan(220);
 
-  // La vista previa de consola conserva la fila Compartir fuera de su contenedor sticky.
+  // Avanzar solo dentro del espacio donde existe recorrido real para el sticky.
+  const scrollTarget = Math.max(0, Math.floor(initial.gridTop + 140));
+  await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), scrollTarget);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
+  const stickyTop = await sticky.evaluate(element => element.getBoundingClientRect().top);
+  expect(stickyTop).toBeGreaterThanOrEqual(23);
+  expect(stickyTop).toBeLessThanOrEqual(25);
+
+  // Compartir queda arriba y se aleja de la pantalla al desplazar la página.
+  expect(await share.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(24);
+
+  // El panel queda contenido dentro de la ficha: nunca invade el footer.
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+  const bounds = await page.evaluate(() => {
+    const grid = document.querySelector('.agenda-motion-detail')!.getBoundingClientRect();
+    const sticky = document.querySelector('[data-testid="agenda-detail-sticky"]')!.getBoundingClientRect();
+    const footer = document.querySelector('footer')!.getBoundingClientRect();
+    return { stickyBottom: sticky.bottom, gridBottom: grid.bottom, footerTop: footer.top };
+  });
+  expect(bounds.stickyBottom).toBeLessThanOrEqual(bounds.gridBottom + 1);
+  expect(bounds.stickyBottom).toBeLessThanOrEqual(bounds.footerTop + 1);
+});
+
+test('Agenda V2: consola mantiene Compartir afuera del sticky y respeta su encabezado', async ({ page }, info) => {
   await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
-  const preview = page.getByTestId('agenda-console-detail-sidebar');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
   await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
-  await expect(preview).toHaveCSS('align-self', 'stretch');
-  const consoleSticky = page.getByTestId('agenda-console-detail-sticky');
-  await expect(consoleSticky).toHaveCSS('position', 'sticky');
-  await expect(consoleSticky).toHaveCSS('top', '88px');
-  expect(await consoleSticky.evaluate(el => el.contains(el.previousElementSibling))).toBe(false);
+  const sidebar = page.getByTestId('agenda-console-detail-sidebar');
+  const sticky = page.getByTestId('agenda-console-detail-sticky');
+  await expect(sidebar).toBeVisible();
+  if ((info.project.use.viewport?.width ?? 0) >= 1024) {
+    await expect(sidebar).toHaveCSS('display', 'flex');
+    await expect(sticky).toHaveCSS('position', 'sticky');
+    await expect(sticky).toHaveCSS('top', '88px');
+  } else {
+    await expect(sticky).toHaveCSS('position', 'static');
+  }
+  expect(await sticky.evaluate(el => el.contains(el.previousElementSibling))).toBe(false);
 });

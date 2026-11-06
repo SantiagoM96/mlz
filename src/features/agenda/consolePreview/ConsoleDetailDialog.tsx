@@ -78,7 +78,7 @@ export function ConsoleDetailDialog({
             Inicio <span className="px-2">›</span> Agenda de la Comunidad
             <span className="px-2">›</span> <strong>{activity.title}</strong>
           </p>
-          <div className="grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
+          <div className="grid min-w-0 items-start gap-6 lg:items-stretch lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
             <div className="min-w-0 space-y-6">
               <div className="space-y-4">
                 <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
@@ -113,11 +113,11 @@ export function ConsoleDetailDialog({
               )}
             </div>
 
-            <div data-testid="agenda-console-detail-sidebar" className="min-w-0 space-y-4 lg:self-stretch">
+            <div data-testid="agenda-console-detail-sidebar" className="min-w-0 space-y-4 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0">
               <p className="flex items-center gap-2 text-[18px] font-bold text-primary-600">
                 <MaterialIcon name="link" size={20} /> Compartir
               </p>
-              <div data-testid="agenda-console-detail-sticky" className="lg:sticky lg:top-[88px]">
+              <div data-testid="agenda-console-detail-sticky" className="lg:sticky lg:top-[88px] lg:max-h-[calc(100dvh-112px)] lg:overflow-y-auto lg:overscroll-contain">
               <aside aria-label="Cuándo y dónde" className="min-w-0">
                 <h3 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Cuándo y dónde</h3>
                 {badges.length > 0 && <div className="mb-4"><ActivityBadges badges={badges} /></div>}

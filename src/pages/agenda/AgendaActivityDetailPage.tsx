@@ -62,7 +62,7 @@ export function AgendaActivityDetailPage() {
         { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad' },
         { label: activity.title },
       ]} />
-      <div className="agenda-motion-detail mt-6 grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
+      <div className="agenda-motion-detail mt-6 grid min-w-0 items-start gap-6 lg:items-stretch lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
         <div className="min-w-0 space-y-6">
           <div className="space-y-4">
             <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
@@ -82,9 +82,9 @@ export function AgendaActivityDetailPage() {
           />
           {onlySchedule && <ActivityLocationMap activity={locationActivity} />}
         </div>
-        <div data-testid="agenda-detail-sidebar" className="min-w-0 space-y-4 lg:self-stretch">
+        <div data-testid="agenda-detail-sidebar" className="min-w-0 space-y-4 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0">
           <ActivityShare key={activity.id} title={activity.title} />
-          <div data-testid="agenda-detail-sticky" className="lg:sticky lg:top-6">
+          <div data-testid="agenda-detail-sticky" className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto lg:overscroll-contain">
             <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
             <ActivityRegistrationLink activity={activity} preview={isPreview} />
           </div>
