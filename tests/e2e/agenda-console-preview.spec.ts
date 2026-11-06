@@ -41,7 +41,8 @@ test('consola demostrativa: programaciones e inscripción son editables sin guar
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
-  await expect(page.getByTestId('console-preview-card')).toContainText('programación');
+  await expect(page.getByTestId('console-preview-card')).toContainText('Todos los sábados');
+  await expect(page.getByTestId('console-preview-card')).not.toContainText('+ 1 programación');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Formulario', exact: true }).click();
   }
