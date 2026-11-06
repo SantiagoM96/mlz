@@ -80,7 +80,6 @@ function CardContents({
             )}
             <ActivityCharacteristic
               variant="con-label"
-              size="place"
               icon="location_on"
               label={venue}
               value={formatActivityCardAddress(address, locality)}
