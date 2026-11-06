@@ -9,6 +9,7 @@ export interface ConsoleSchedule {
   startTime: string;
   endTime: string;
   venueId: string;
+  suspendedByRain: boolean;
   detail: string;
 }
 
@@ -18,7 +19,6 @@ export interface ConsoleDraft {
   type: string;
   description: string;
   inclusive: boolean;
-  rain: boolean;
   registrationMode: AgendaRegistrationMode;
   registrationUrl: string;
   registrationInformation: string;
@@ -59,7 +59,6 @@ export const INITIAL_DRAFT: ConsoleDraft = {
   type: 'Taller',
   description: 'Taller abierto para aprender prácticas de compostaje y separación de residuos orgánicos.',
   inclusive: true,
-  rain: false,
   registrationMode: 'online',
   registrationUrl: 'https://example.org/inscripcion-taller',
   registrationInformation: 'Para participar, completá el formulario desde el botón de inscripción.',
@@ -79,6 +78,7 @@ export const INITIAL_SCHEDULES: ConsoleSchedule[] = [{
   startTime: '10:00',
   endTime: '12:00',
   venueId: 'plaza-grigera',
+  suspendedByRain: false,
   detail: 'Cada encuentro incluye una parte teórica y una práctica de armado de compostera.',
 }];
 
@@ -92,6 +92,7 @@ export function createDemoSchedule(id: number): ConsoleSchedule {
     startTime: '',
     endTime: '',
     venueId: 'plaza-grigera',
+    suspendedByRain: false,
     detail: '',
   };
 }

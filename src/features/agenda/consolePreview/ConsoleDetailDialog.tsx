@@ -36,6 +36,9 @@ export function ConsoleDetailDialog({
   }, [onClose]);
 
   const presentations = getActivitySchedulePresentations(activity, '1900-01-01');
+  const badges = activity.badges.filter(badge =>
+    badge.kind !== 'rain' || !presentations.some(schedule => schedule.suspendedByRain !== undefined),
+  );
   const missing = (activity.schedules ?? []).filter(
     schedule => !presentations.some(item => item.id === schedule.id),
   );
@@ -80,6 +83,9 @@ export function ConsoleDetailDialog({
                 <h2 id="console-detail-heading" className="break-words text-[32px] font-bold leading-10 text-primary-600">
                   {activity.title}
                 </h2>
+                {activity.id.includes('--sede-') && activity.venue && (
+                  <p className="text-[18px] font-bold text-grey-900">{activity.venue} · {activity.locality}</p>
+                )}
                 <ActivityDescription activity={activity} />
               </div>
               <img
@@ -114,7 +120,7 @@ export function ConsoleDetailDialog({
               </p>
               <aside aria-label="Cuándo y dónde" className="min-w-0">
                 <h3 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Cuándo y dónde</h3>
-                {activity.badges.length > 0 && <div className="mb-4"><ActivityBadges badges={activity.badges} /></div>}
+                {badges.length > 0 && <div className="mb-4"><ActivityBadges badges={badges} /></div>}
                 {presentations.length === 0 && missing.length === 0 && (
                   <p className="rounded-[4px] border border-[#d1d1d1] p-4 text-[16px] text-grey-900">
                     Agregá una programación para ver las fechas.
@@ -127,6 +133,12 @@ export function ConsoleDetailDialog({
                         <p className="font-bold">{schedule.dateLabel}</p>
                         {schedule.periodLabel && <p>{schedule.periodLabel}</p>}
                         <p>{schedule.timeLabel}</p>
+                        {schedule.suspendedByRain && (
+                          <span className="inline-flex items-center gap-2 rounded-[6px] bg-[#e5f0ff] px-3 py-2 text-[15px] font-medium leading-5 text-[#006eff]">
+                            <MaterialIcon name="rainy" size={19} />
+                            Se suspende por lluvia
+                          </span>
+                        )}
                         {uniqueLocations.length > 1 && (
                           <div className="space-y-1 pt-2">
                             <p className="font-bold">{schedule.venue}</p>

@@ -949,14 +949,15 @@ test('vistas de Agenda V2: recurrencia, dos sedes y período', async ({ page }) 
   await expect(compostaje).toContainText('10:00 a 12:00 h');
   await expect(page.getByRole('button', { name: 'Inscribirse', exact: true })).toBeDisabled();
 
-  await page.goto(activities + '/preview-v2-futbol');
+  await page.goto(activities + '/preview-v2-futbol--sede-plaza-grigera');
   const futbol = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-  await expect(futbol.locator('section')).toHaveCount(2);
+  await expect(futbol.locator('section')).toHaveCount(1);
   await expect(futbol).toContainText('Todos los martes');
-  await expect(futbol).toContainText('Todos los jueves');
-  await expect(futbol).toContainText('Plaza Grigera');
-  await expect(futbol).toContainText('Parque de Lomas');
-  await expect(futbol.getByRole('link', { name: 'Ver en Google Maps' })).toHaveCount(2);
+  await expect(futbol).not.toContainText('Todos los jueves');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
+  await page.goto(activities + '/preview-v2-futbol--sede-parque-de-lomas');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Todos los jueves');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Parque de Lomas');
 
   await page.goto(activities + '/preview-v2-muestra');
   const muestra = page.getByRole('complementary', { name: 'Cuándo y dónde' });
@@ -967,5 +968,5 @@ test('vistas de Agenda V2: recurrencia, dos sedes y período', async ({ page }) 
 
   await page.goto(activities);
   await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Taller de compostaje');
-  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
+  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
 });
