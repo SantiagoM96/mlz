@@ -1,6 +1,7 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
 import { ActivityCharacteristic } from '../../../../components/agenda/ActivityCharacteristic';
+import { ActivityScheduleDateTime } from '../../../../components/agenda/ActivityScheduleDateTime';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { getActivityMapUrl } from '../../utils/activityMap';
 import { formatActivityAddress } from '../../utils/formatActivityAddress';
@@ -31,10 +32,8 @@ export function ActivitySummary({
       <div className="space-y-4">
         {schedules.map(schedule => (
           <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
-            <div className="space-y-2 text-[18px] leading-[26px] text-grey-900">
-              <p className="font-bold">{schedule.dateLabel}</p>
-              {schedule.periodLabel && <p>{schedule.periodLabel}</p>}
-              <p>{schedule.timeLabel}</p>
+            <div className="space-y-4 text-[18px] leading-[26px] text-grey-900">
+              <ActivityScheduleDateTime schedule={schedule} timeWeight="normal" />
               {multiple && (
                 <div className="space-y-2 pt-2">
                   <p className="font-bold">{schedule.venue || schedule.locality}</p>

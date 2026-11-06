@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
 import { ActivityCharacteristic } from '../../../components/agenda/ActivityCharacteristic';
+import { ActivityScheduleDateTime } from '../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrationLink';
@@ -127,10 +128,8 @@ export function ConsoleDetailDialog({
                 <div className="space-y-4">
                   {presentations.map(schedule => (
                     <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
-                      <div className="space-y-2 text-[18px] leading-[26px] text-grey-900">
-                        <p className="font-bold">{schedule.dateLabel}</p>
-                        {schedule.periodLabel && <p>{schedule.periodLabel}</p>}
-                        <p>{schedule.timeLabel}</p>
+                      <div className="space-y-4 text-[18px] leading-[26px] text-grey-900">
+                        <ActivityScheduleDateTime schedule={schedule} timeWeight="normal" />
                         {schedule.suspendedByRain && (
                           <span className="inline-flex items-center gap-2 rounded-[6px] bg-[#e5f0ff] px-3 py-2 text-[15px] font-medium leading-5 text-[#006eff]">
                             <MaterialIcon name="rainy" size={19} />
@@ -166,11 +165,18 @@ export function ConsoleDetailDialog({
                   ))}
                   {missing.map(schedule => (
                     <section key={schedule.id} className="rounded-lg border border-[#d1d1d1] bg-white p-4 text-[18px] leading-[26px]">
-                      <p className="font-bold">Fecha a confirmar</p>
-                      <p>{schedule.startTime
-                        ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
-                        : 'Horario a confirmar'}</p>
-                      <p>{schedule.venue}</p>
+                      <div className="space-y-4">
+                        <ActivityScheduleDateTime
+                          schedule={{
+                            dateLabel: 'Fecha a confirmar',
+                            timeLabel: schedule.startTime
+                              ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
+                              : 'Horario a confirmar',
+                          }}
+                          timeWeight="normal"
+                        />
+                        <p>{schedule.venue}</p>
+                      </div>
                     </section>
                   ))}
                 </div>

@@ -3,6 +3,7 @@ import type { AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { ActivityBadges } from './ActivityBadges';
 import { ActivityCharacteristic } from './ActivityCharacteristic';
+import { ActivityScheduleDateTime } from './ActivityScheduleDateTime';
 import { formatActivityCardAddress } from '../../features/agenda/utils/formatActivityAddress';
 import { Link } from 'react-router-dom';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
@@ -55,35 +56,11 @@ function CardContents({
                   <div aria-hidden="true" data-agenda-programming-divider
                     className="h-px w-full bg-[#e7e7e7]" />
                 )}
-                {schedule.periodLabel ? (
-                  <ActivityCharacteristic
-                    variant="con-label"
-                    icon="event_available"
-                    field="date"
-                    label={schedule.dateLabel}
-                    value={schedule.periodLabel}
-                  />
-                ) : (
-                  <ActivityCharacteristic
-                    variant="sin-label"
-                    icon="event_available"
-                    field="date"
-                    value={schedule.dateLabel}
-                  />
-                )}
-                <ActivityCharacteristic
-                  variant="sin-label"
-                  icon="schedule"
-                  field="time"
-                  value={schedule.timeLabel}
-                />
+                <ActivityScheduleDateTime schedule={schedule} />
               </Fragment>
             ))}
             {schedules.length === 0 && (
-              <>
-                <ActivityCharacteristic variant="sin-label" icon="event_available" field="date" value={activity.dayLabel} />
-                <ActivityCharacteristic variant="sin-label" icon="schedule" field="time" value={activity.timeLabel} />
-              </>
+              <ActivityScheduleDateTime schedule={{ dateLabel: activity.dayLabel, timeLabel: activity.timeLabel }} />
             )}
             <ActivityCharacteristic
               variant="con-label"
