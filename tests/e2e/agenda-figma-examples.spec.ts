@@ -17,6 +17,10 @@ test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ pag
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   const grid = page.getByTestId('agenda-grid');
   await expect(grid).toBeVisible();
+  await expect(grid.getByTestId('agenda-card')).toHaveCount(10);
+  await expect(page.getByText('Mostrando - 10 de 10 actividades')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mostrar más actividades' })).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Buscar actividades' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ver los 7 ejemplos' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Ejemplos de actividades' })).toHaveCount(0);
 
@@ -27,7 +31,6 @@ test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ pag
     ['Fútbol en Comunidad', 2],
     ['Folklore en Comunidad', 2],
     ['Taller de huerta comunitaria', 1],
-    ['Jornada ambiental itinerante', 2],
     ['Yoga en Comunidad', 2],
   ] as const;
   for (const [title, count] of expected) {
@@ -35,6 +38,8 @@ test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ pag
     await expect(grid.locator('a[href*="preview-v2-"]')).toHaveCount(count);
     await expect(grid.getByRole('link', { name: 'Ver más sobre ' + title })).toHaveCount(count);
   }
+  await search.fill('Jornada ambiental itinerante');
+  await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
   await search.fill('Yoga en Comunidad');
   await expect(grid).toContainText('Plaza Grigera');
   await expect(grid).toContainText('Polideportivo Evita');

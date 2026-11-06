@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useAgendaPageSize } from '../../features/agenda/hooks/useAgendaPageSize';
-import { agendaActivities, argentinaTodayISO } from '../../data/agenda';
+import { argentinaTodayISO } from '../../data/agenda';
 import { agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
@@ -14,15 +13,30 @@ import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
 import { emptyFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
 
-const publicActivities = getPublicActivityList([...agendaV2PreviewActivities, ...agendaActivities]);
+/**
+ * 10 tarjetas públicas para revisión visual de Agenda V2.
+ * Una actividad puede generar dos tarjetas por sede o encuentro.
+ * No se borran datos: los demás casos siguen disponibles en la consola
+ * y las fichas pueden abrirse directamente por su URL.
+ */
+const showcaseIds = new Set([
+  'preview-v2-yoga-dos-sedes', // 2 sedes
+  'preview-v2-folklore',       // 2 encuentros con artistas distintos
+  'preview-v2-futbol',         // 2 sedes
+  'preview-v2-reciclaje',      // fecha puntual
+  'preview-v2-muestra',        // período
+  'preview-v2-compostaje',     // recurrencia e inscripción online
+  'preview-v2-huerta',         // inscripción presencial
+]);
+const publicActivities = getPublicActivityList(
+  agendaV2PreviewActivities.filter(activity => showcaseIds.has(activity.id)),
+);
 
 /** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
-  const pageSize = useAgendaPageSize();
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<SelectedFilters>(emptyFilters);
   const [sort, setSort] = useState<AgendaSortValue>('default');
-  const [limit, setLimit] = useState(9);
 
   useEffect(() => {
     document.title = 'Actividades | Agenda de la Comunidad | Municipio Lomas de Zamora';
@@ -40,16 +54,15 @@ export function AgendaPage() {
     );
   }, [search, filters, sort]);
 
-  const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); setLimit(9); };
-  const visible = filtered.slice(0, Math.max(7, pageSize, limit === 9 ? pageSize : limit));
-  const hasMore = filtered.length > visible.length;
+  const onReset = () => { setSearch(''); setFilters(emptyFilters()); setSort('default'); };
+  const visible = filtered;
 
   return (
     <PageContainer className="pt-6 pb-6" >
       <AgendaIntro className="mb-6" />
 
-      <AgendaToolbar search={search} onSearch={value => { setSearch(value); setLimit(9); }} filters={filters} resultCount={filtered.length}
-        onFilters={value => { setFilters(value); setLimit(9); }} onReset={onReset} />
+      <AgendaToolbar search={search} onSearch={setSearch} filters={filters} resultCount={filtered.length}
+        onFilters={setFilters} onReset={onReset} />
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p aria-live="polite" className="text-[16px] leading-[26px] text-grey-900">
@@ -76,16 +89,14 @@ export function AgendaPage() {
         </section>
       ) : (
         <>
-          <div key={JSON.stringify({ filters, sort, limit })} data-testid="agenda-grid" className="agenda-motion-grid mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div key={JSON.stringify({ filters, sort })} data-testid="agenda-grid" className="agenda-motion-grid mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {visible.map(activity => <ActivityCard
               key={activity.id}
               activity={activity}
               previewDateISO={activity.id.startsWith('preview-v2-') ? '1900-01-01' : undefined}
             />)}
           </div>
-          {hasMore && <div className="mt-7 text-center">
-            <button type="button" onClick={() => setLimit(n => Math.max(n, pageSize) + pageSize)} className="rounded bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700">Mostrar más actividades</button>
-          </div>}
+
         </>
       )}
 

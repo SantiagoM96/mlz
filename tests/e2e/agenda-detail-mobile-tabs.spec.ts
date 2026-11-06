@@ -81,3 +81,45 @@ test('Consola Agenda: las tabs móviles también se aplican a la ficha de vista 
   await dialog.getByRole('button', { name: 'Cerrar vista previa del detalle' }).click();
   await expect(dialog).toHaveCount(0);
 });
+
+
+test('Agenda V2: lluvia arriba y afuera de la caja en public y consola, incluidas mobile tabs', async ({ page }, info) => {
+  await page.goto(base + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('tab', { name: 'Cuándo y dónde' }).click();
+  }
+  const programming = page.getByTestId('agenda-detail-programming').first();
+  const rain = programming.getByTestId('agenda-schedule-rain');
+  const card = programming.locator(':scope > section');
+  await expect(rain).toBeVisible();
+  await expect(card).toBeVisible();
+  await expect(programming.locator('section [data-agenda-chip-kind="rain"]')).toHaveCount(0);
+  const geometry = await programming.evaluate(element => {
+    const badge = element.querySelector('[data-testid="agenda-schedule-rain"]')!;
+    const box = element.querySelector(':scope > section')!;
+    const outer = badge.getBoundingClientRect();
+    const inner = box.getBoundingClientRect();
+    return { outside: !box.contains(badge), distance: Math.round(inner.top - outer.bottom), alignment: Math.abs(outer.left - inner.left) };
+  });
+  expect(geometry).toEqual({ outside: true, distance: 8, alignment: 0 });
+
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
+  const modal = page.getByTestId('console-detail-preview');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await modal.getByRole('tab', { name: 'Cuándo y dónde' }).click();
+  }
+  const previewProgramming = modal.getByTestId('agenda-detail-programming').first();
+  const previewRain = previewProgramming.getByTestId('agenda-schedule-rain');
+  await expect(previewRain).toBeVisible();
+  await expect(previewProgramming.locator('section [data-agenda-chip-kind="rain"]')).toHaveCount(0);
+  const previewGap = await previewProgramming.evaluate(element => {
+    const badge = element.querySelector('[data-testid="agenda-schedule-rain"]')!;
+    const box = element.querySelector(':scope > section')!;
+    return Math.round(box.getBoundingClientRect().top - badge.getBoundingClientRect().bottom);
+  });
+  expect(previewGap).toBe(8);
+});
