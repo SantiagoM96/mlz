@@ -10,9 +10,9 @@ import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTabl
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
 import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
-import type { ConsoleDraft, ConsoleSchedule, ConsoleVenue } from '../../features/agenda/consolePreview/model';
-import { CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
-import { createDemoSchedule } from '../../features/agenda/consolePreview/scheduleRules';
+import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
+import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
+import { useConsoleSchedules } from '../../features/agenda/consolePreview/useConsoleSchedules';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
 const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
@@ -55,17 +55,15 @@ export function AgendaConsolePreviewPage() {
   const [draft, setDraft] = useState<ConsoleDraft>(
     () => getDemoCasePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
   );
-  const [schedules, setSchedules] = useState<ConsoleSchedule[]>(
-    () => getDemoCasePreset(searchParams.get('caso'))?.schedules
-      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
-  );
-  const [scheduleEditor, setScheduleEditor] = useState<{
-    mode: 'create' | 'edit' | 'duplicate'; schedule: ConsoleSchedule;
-  } | null>(null);
-  const [venues, setVenues] = useState<ConsoleVenue[]>(() => DEMO_VENUES.map(item => ({ ...item })));
   const [typesByCategory, setTypesByCategory] = useState<Record<string, string[]>>(
     () => Object.fromEntries(Object.entries(CATEGORY_TYPES).map(([key, values]) => [key, [...values]])),
   );
+  const {
+    schedules, scheduleEditor, venues,
+    beginNewSchedule, editSchedule, saveSchedule, duplicateSchedule,
+    createVenue, removeSchedule, resetSchedules, closeScheduleEditor,
+  } = useConsoleSchedules(() => getDemoCasePreset(searchParams.get('caso'))?.schedules
+    ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
   const [addingType, setAddingType] = useState(false);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [detailPreview, setDetailPreview] = useState<AgendaActivity | null>(null);
@@ -78,32 +76,8 @@ export function AgendaConsolePreviewPage() {
     setDraft(current => ({ ...current, ...changes }));
   };
   const openNewSchedule = () => {
-    const nextId = Math.max(0, ...schedules.map(schedule => schedule.id)) + 1;
-    setScheduleEditor({ mode: 'create', schedule: createDemoSchedule(nextId) });
+    beginNewSchedule();
     setMobileView('form');
-  };
-  const editSchedule = (schedule: ConsoleSchedule) => {
-    setScheduleEditor({ mode: 'edit', schedule: { ...schedule, weekdays: [...schedule.weekdays] } });
-  };
-  const saveSchedule = (schedule: ConsoleSchedule) => {
-    setSchedules(current => scheduleEditor?.mode === 'edit'
-      ? current.map(item => item.id === schedule.id ? schedule : item)
-      : [...current, schedule]);
-    setScheduleEditor(null);
-  };
-  const duplicateSchedule = (schedule: ConsoleSchedule) => {
-    const nextId = Math.max(0, ...schedules.map(item => item.id)) + 1;
-    setScheduleEditor({
-      mode: 'duplicate',
-      schedule: { ...schedule, id: nextId, weekdays: [...schedule.weekdays] },
-    });
-  };
-  const createVenue = (venue: Omit<ConsoleVenue, 'id'>): string => {
-    const nextId = 'nueva-sede-' + (Math.max(0, ...venues
-      .map(item => Number(item.id.replace('nueva-sede-', '')))
-      .filter(Number.isFinite)) + 1);
-    setVenues(current => [...current, { id: nextId, ...venue }]);
-    return nextId;
   };
   const createType = (name: string) => {
     setTypesByCategory(current => ({
@@ -113,9 +87,6 @@ export function AgendaConsolePreviewPage() {
     updateDraft({ type: name });
     setAddingType(false);
   };
-  const removeSchedule = (id: number) => {
-    setSchedules(current => current.filter(schedule => schedule.id !== id));
-  };
   const changeCategory = (category: string) => {
     updateDraft({ category, type: typesByCategory[category]?.[0] ?? 'Taller' });
   };
@@ -123,9 +94,7 @@ export function AgendaConsolePreviewPage() {
     const preset = getDemoCasePreset(id);
     setSearchParams(id ? { caso: id } : {});
     setDraft(preset?.draft ?? { ...INITIAL_DRAFT });
-    setSchedules(preset?.schedules
-      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
-    setScheduleEditor(null);
+    resetSchedules(preset?.schedules ?? INITIAL_SCHEDULES);
     setMobileView('form');
     setDetailPreview(null);
   };
@@ -378,7 +347,7 @@ export function AgendaConsolePreviewPage() {
           venues={venues}
           onCreateVenue={createVenue}
           onSave={saveSchedule}
-          onClose={() => setScheduleEditor(null)}
+          onClose={closeScheduleEditor}
         />
       )}
       {detailPreview && (
