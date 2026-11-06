@@ -26,13 +26,19 @@ export interface ConsoleDraft {
   registrationUrl: string;
   registrationInformation: string;
   featured: boolean;
-  publishDate: string;
-  publishTime: string;
   coverDataUrl: string;
   galleryDataUrls: string[];
 }
 
-export const DEMO_VENUES = [
+export interface ConsoleVenue {
+  id: string;
+  name: string;
+  locality: string;
+  address: string;
+}
+
+/** Las sedes guardadas pueden ampliarse dentro de la sesión de la consola. */
+export const DEMO_VENUES: readonly ConsoleVenue[] = [
   { id: 'plaza-grigera', name: 'Plaza Grigera', locality: 'Lomas de Zamora', address: 'Av. Hipólito Yrigoyen 8700' },
   { id: 'parque-lomas', name: 'Parque de Lomas', locality: 'Lomas de Zamora', address: 'Frías y Portela' },
   { id: 'museo-americanista', name: 'Museo Americanista', locality: 'Lomas de Zamora', address: 'Manuel Castro 254' },
@@ -66,8 +72,6 @@ export const INITIAL_DRAFT: ConsoleDraft = {
   registrationUrl: 'https://example.org/inscripcion-taller',
   registrationInformation: 'Para participar, completá el formulario desde el botón de inscripción.',
   featured: false,
-  publishDate: '',
-  publishTime: '',
   coverDataUrl: '',
   galleryDataUrls: [],
 };
@@ -104,6 +108,22 @@ export function createDemoSchedule(id: number): ConsoleSchedule {
   };
 }
 
-export function venueById(id: string) {
-  return DEMO_VENUES.find(venue => venue.id === id) ?? DEMO_VENUES[0];
+export function venueById(id: string, venues: readonly ConsoleVenue[] = DEMO_VENUES): ConsoleVenue {
+  return venues.find(venue => venue.id === id) ?? venues[0] ?? DEMO_VENUES[0];
+}
+
+/** Evita publicar dos programaciones idénticas aunque sus IDs sean distintos. */
+export function sameScheduleContent(a: ConsoleSchedule, b: ConsoleSchedule): boolean {
+  return a.scheduleType === b.scheduleType
+    && a.startDate === b.startDate
+    && (a.scheduleType === 'exact' || a.endDate === b.endDate)
+    && (a.scheduleType !== 'recurring' ||
+      [...new Set(a.weekdays)].sort().join(',') === [...new Set(b.weekdays)].sort().join(','))
+    && a.startTime === b.startTime
+    && a.endTime === b.endTime
+    && a.venueId === b.venueId
+    && a.suspendedByRain === b.suspendedByRain
+    && a.participantsType === b.participantsType
+    && a.participants.trim() === b.participants.trim()
+    && a.detail.trim() === b.detail.trim();
 }
