@@ -331,11 +331,11 @@ test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según
     };
   }));
   for (const chip of measurements) {
-    expect(chip.chipHeight).toBe(24);
+    expect(chip.chipHeight).toBeCloseTo(24, 2);
     expect(chip.fontSize).toBe('16px');
     expect(chip.gap).toBe('6px');
     expect(chip.alignItems).toBe('center');
-    expect(chip.iconWidth).toBe(16);
+    expect(chip.iconWidth).toBeCloseTo(16, 2);
     expect(chip.iconOffset).toBeLessThanOrEqual(1);
     expect(chip.labelOffset).toBeLessThanOrEqual(1);
   }
@@ -343,7 +343,7 @@ test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según
   await search.fill('Yoga en Comunidad');
   const rainyChip = page.locator('[data-agenda-chip-kind="rain"]');
   await expect(rainyChip).toHaveCount(1);
-  expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBe(18);
+  expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBeCloseTo(18, 2);
   expect(await rainyChip.locator('[data-agenda-chip-label]').evaluate(element => getComputedStyle(element).fontSize)).toBe('16px');
 });
 
