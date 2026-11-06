@@ -151,3 +151,22 @@ test('Ficha mobile: sin margen fantasma tras horarios y descripción a imagen a 
     expect(extra).toBe(0);
   }
 });
+
+test('Agenda mobile: breadcrumb sin título truncado y vínculo al listado', async ({ page }, info) => {
+  await page.goto(base + '/preview-v2-yoga-dos-sedes--sede-polideportivo-evita');
+  const nav = page.getByRole('navigation', { name: 'Ruta de navegación' });
+  const back = nav.getByTestId('breadcrumb-mobile-back');
+  if ((info.project.use.viewport?.width ?? 0) < 640) {
+    await expect(back).toBeVisible();
+    await expect(back).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+    await expect(back.getByText('Agenda de la Comunidad')).toBeVisible();
+    await expect(back.locator('[data-material-symbol="arrow_back"]')).toHaveCount(1);
+    await expect(nav.getByTestId('breadcrumb-current')).toBeHidden();
+    await back.click();
+    await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/?$/);
+    await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+  } else {
+    await expect(back).toHaveCount(0);
+    await expect(nav.getByTestId('breadcrumb-current')).toBeVisible();
+  }
+});
