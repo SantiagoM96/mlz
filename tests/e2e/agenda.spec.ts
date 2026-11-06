@@ -236,14 +236,18 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await page.getByRole('link', { name: /Ver todas las actividades/ }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/?$'));
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Yoga en Comunidad');
   await page.getByTestId('agenda-card').first().getByRole('link', { name: /Ver más/ }).click();
-  await expect(page).toHaveURL(new RegExp(activities + '/actividad-1/?$'));
-  await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
+  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/preview-v2-yoga-dos-sedes--sede-/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Yoga en Comunidad' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(35, 105, 153)');
   await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Agenda de la Comunidad' }).click();
-  await expect(page).toHaveURL(new RegExp(activities + '/? accede a su propia ficha por URL', async ({ page }) => {
+  await expect(page).toHaveURL(new RegExp(activities + '/?$'));
+  await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
+});
+
+test('evento destacado accede a su propia ficha por URL', async ({ page }) => {
   await page.goto(agenda);
   await page.getByTestId('agenda-featured').getByRole('link', { name: 'Ver más' }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/tita-y-rhodesia/?$'));
