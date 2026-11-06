@@ -382,3 +382,27 @@ test('Consola: detalle sin programaciones conserva el estado vacío y no publica
   await modal.getByRole('button', { name: 'Cerrar vista previa del detalle' }).click();
   await expect(modal).toHaveCount(0);
 });
+
+test('Consola: al guardar o cancelar una sede nueva el foco permanece en el editor', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  const toggle = editor.getByRole('button', { name: 'Agregar nuevo lugar' });
+  const selectedVenue = editor.getByRole('combobox', { name: 'Lugar' });
+
+  await toggle.click();
+  let venuePanel = editor.getByTestId('console-new-venue');
+  await venuePanel.getByRole('button', { name: 'Cancelar lugar' }).click();
+  await expect(venuePanel).toHaveCount(0);
+  await expect(toggle).toBeFocused();
+
+  await toggle.click();
+  venuePanel = editor.getByTestId('console-new-venue');
+  await venuePanel.getByLabel('Nombre del lugar').fill('Club Vecinal de Prueba');
+  await venuePanel.getByLabel('Localidad').fill('Banfield');
+  await venuePanel.getByLabel('Dirección').fill('Calle Ejemplo 123');
+  await venuePanel.getByRole('button', { name: 'Guardar lugar' }).click();
+  await expect(venuePanel).toHaveCount(0);
+  await expect(selectedVenue).toBeFocused();
+  await expect(selectedVenue.locator('option:checked')).toHaveText('Club Vecinal de Prueba');
+});
