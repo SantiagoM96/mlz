@@ -166,7 +166,7 @@ test('Agenda mobile: breadcrumb sin título truncado y vínculo al listado', asy
     await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/?$/);
     await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
   } else {
-    await expect(back).toHaveCount(0);
+    await expect(back).toBeHidden();
     await expect(nav.getByTestId('breadcrumb-current')).toBeVisible();
   }
 });
