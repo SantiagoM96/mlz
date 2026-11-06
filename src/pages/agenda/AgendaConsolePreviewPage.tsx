@@ -5,6 +5,7 @@ import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agen
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityBadges } from '../../components/agenda/ActivityBadges';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
+import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
   CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES, WEEKDAYS,
@@ -89,7 +90,6 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
   const venue = venueById(first?.venueId ?? '');
   const badges: AgendaActivity['badges'] = [];
   if (draft.inclusive) badges.push({ kind: 'accessible', label: 'Disciplina inclusiva' });
-  if (draft.rain) badges.push({ kind: 'rain', label: 'Se suspende por lluvia' });
   if (draft.registrationMode !== 'none') badges.push({ kind: 'registration', label: 'Requiere inscripción' });
   if (draft.featured) badges.push({ kind: 'featured', label: 'Destacado' });
   return {
@@ -121,78 +121,78 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
         venue: selectedVenue.name,
         address: selectedVenue.address + ' - ' + selectedVenue.locality,
         detail: schedule.detail,
+        suspendedByRain: schedule.suspendedByRain,
       };
     }),
   };
 }
 
 function CardPreview({ draft, schedules, onViewDetail }: {
-  draft: ConsoleDraft; schedules: ConsoleSchedule[]; onViewDetail: () => void;
+  draft: ConsoleDraft;
+  schedules: ConsoleSchedule[];
+  onViewDetail: (activity: AgendaActivity) => void;
 }) {
-  const activity = makePreviewActivity(draft, schedules);
-  // Mostrar todas las fechas del formulario, incluso las de ejemplos históricos.
-  const presentation = getActivitySchedulePresentations(activity, '1900-01-01');
-  const presentedSchedules = schedules.map(schedule => presentation.find(value => value.id === String(schedule.id)) ?? {
-    id: String(schedule.id),
-    dateLabel: 'Fecha a confirmar',
-    timeLabel: 'Horario a confirmar',
-    venue: venueById(schedule.venueId).name,
-    locality: venueById(schedule.venueId).locality,
-  });
-  const main = presentedSchedules[0];
+  const editorialActivity = makePreviewActivity(draft, schedules);
+  const publicViews = getPublicActivityViews(editorialActivity);
+
   return (
     <div>
-      <h2 className="mb-6 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
-      <article data-testid="console-preview-card"
-        className="overflow-hidden rounded-[8px] border border-[#e7e7e7] bg-white shadow-sm">
-        <img
-          className="h-[154px] w-full object-cover"
-          src={activity.image}
-          alt={draft.coverDataUrl ? 'Portada elegida para la vista previa' : ''}
-        />
-        <div className="flex flex-col gap-3 px-6 pb-[18px] pt-3">
-          <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888]">{activity.type}</p>
-          <h3 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h3>
-          {activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
-          <div className="mt-1 flex flex-col gap-4 text-[18px] font-bold leading-6 text-grey-900">
-            <div className="flex items-start gap-2">
-              <MaterialIcon name="calendar_month" size={20} className="mt-0.5" />
-              <div className="min-w-0">
-                <p>{main?.dateLabel ?? 'Agregá una programación'}</p>
-                {main?.periodLabel && <p className="mt-1 text-[16px] font-normal leading-5">{main.periodLabel}</p>}
-                {presentedSchedules.length > 1 && (
-                  <p className="mt-1 text-[14px] font-normal text-[#687f91]">
-                    + {presentedSchedules.length - 1} {presentedSchedules.length === 2 ? 'programación' : 'programaciones'}
+      <h2 className="mb-2 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
+      <p className="mb-5 text-[14px] leading-5 text-[#687f91]">
+        {publicViews.length === 1
+          ? 'Una ficha pública para esta actividad'
+          : publicViews.length + ' fichas públicas, una por sede'}
+      </p>
+      <div className="space-y-5">
+        {publicViews.map(activity => {
+          const presentedSchedules = getActivitySchedulePresentations(activity, '1900-01-01');
+          const main = presentedSchedules[0];
+          const multiple = publicViews.length > 1;
+          return (
+            <article key={activity.id} data-testid="console-preview-card"
+              className="overflow-hidden rounded-[8px] border border-[#e7e7e7] bg-white shadow-sm">
+              <img
+                className="h-[154px] w-full object-cover"
+                src={activity.image}
+                alt={draft.coverDataUrl ? 'Portada seleccionada' : ''}
+              />
+              <div className="flex flex-col gap-3 px-6 pb-[18px] pt-3">
+                <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888]">{activity.type}</p>
+                <h3 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h3>
+                {activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
+                {multiple && activity.venue && (
+                  <p className="flex items-start gap-2 text-[16px] font-bold leading-6 text-grey-900">
+                    <MaterialIcon name="location_on" size={20} className="mt-0.5" />
+                    <span>{activity.venue}</span>
                   </p>
                 )}
+                <div className="mt-1 flex flex-col gap-4 text-[18px] font-bold leading-6 text-grey-900">
+                  <div className="flex items-start gap-2">
+                    <MaterialIcon name="calendar_month" size={20} className="mt-0.5" />
+                    <div className="min-w-0">
+                      <p>{main?.dateLabel ?? 'Fecha a confirmar'}</p>
+                      {main?.periodLabel && <p className="mt-1 text-[16px] font-normal leading-5">{main.periodLabel}</p>}
+                      {activity.schedules && activity.schedules.length > 1 && (
+                        <p className="mt-1 text-[14px] font-normal leading-5 text-[#687f91]">
+                          + {activity.schedules.length - 1} {activity.schedules.length === 2 ? 'programación' : 'programaciones'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <p className="flex items-start gap-2">
+                    <MaterialIcon name="schedule" size={20} className="mt-0.5" />
+                    <span>{main?.timeLabel ?? 'Horario a confirmar'}</span>
+                  </p>
+                </div>
+                <button type="button" onClick={() => onViewDetail(activity)}
+                  className="mt-1 inline-flex min-h-9 items-center self-start gap-1 rounded-[4px] text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
+                  Ver más <MaterialIcon name="chevron_right" size={18} />
+                </button>
               </div>
-            </div>
-            {main && <p className="flex items-start gap-2 font-bold">
-              <MaterialIcon name="schedule" size={20} className="mt-0.5" />
-              <span>{main.timeLabel}</span>
-            </p>}
-          </div>
-          <button type="button" onClick={onViewDetail}
-            className="mt-1 inline-flex min-h-9 items-center self-start gap-1 rounded-[4px] text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-            Ver más <MaterialIcon name="chevron_right" size={18} />
-          </button>
-        </div>
-      </article>
-      {presentedSchedules.length > 1 && (
-        <div className="mt-5 rounded-[8px] border border-[#dbe4eb] bg-[#f6f9fb] p-4">
-          <p className="mb-3 text-[16px] font-bold text-primary-600">Programaciones de esta actividad</p>
-          <div className="space-y-3">
-            {presentedSchedules.map((schedule, index) => (
-              <div key={schedule.id} className={index > 0 ? 'border-t border-[#dbe4eb] pt-3' : ''}>
-                <p className="text-[15px] font-bold text-grey-900">{schedule.dateLabel}</p>
-                {schedule.periodLabel && <p className="text-[14px] text-grey-900">{schedule.periodLabel}</p>}
-                <p className="mt-1 text-[14px] text-grey-900">{schedule.timeLabel}</p>
-                <p className="text-[14px] text-[#6b7883]">{schedule.venue}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -211,7 +211,6 @@ function getFigmaExamplePreset(id: string | null): {
       type: activity.type,
       description: activity.description ?? '',
       inclusive: badges.some(item => item.kind === 'accessible'),
-      rain: badges.some(item => item.kind === 'rain'),
       registrationMode: activity.registrationMode ?? 'none',
       registrationInformation: activity.registrationInformation ?? '',
       registrationUrl: activity.registrationMode === 'online'
@@ -230,6 +229,7 @@ function getFigmaExamplePreset(id: string | null): {
       startTime: schedule.startTime,
       endTime: schedule.endTime ?? '',
       venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
+      suspendedByRain: schedule.suspendedByRain ?? badges.some(item => item.kind === 'rain'),
       detail: schedule.detail ?? '',
     })),
   };
@@ -255,7 +255,7 @@ export function AgendaConsolePreviewPage() {
   );
   const [expanded, setExpanded] = useState<number[]>([1]);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
-  const [showDetail, setShowDetail] = useState(false);
+  const [detailPreview, setDetailPreview] = useState<AgendaActivity | null>(null);
 
   useEffect(() => {
     document.title = 'Consola · Vista previa | Agenda de la Comunidad';
@@ -288,7 +288,7 @@ export function AgendaConsolePreviewPage() {
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
     setExpanded([1]);
     setMobileView('form');
-    setShowDetail(false);
+    setDetailPreview(null);
   };
 
   return (
@@ -381,12 +381,6 @@ export function AgendaConsolePreviewPage() {
                       onChange={event => updateDraft({ inclusive: event.target.checked })}
                       className="h-5 w-5 accent-[#236999]" />
                     Disciplina inclusiva
-                  </label>
-                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-                    <input type="checkbox" checked={draft.rain}
-                      onChange={event => updateDraft({ rain: event.target.checked })}
-                      className="h-5 w-5 accent-[#236999]" />
-                    Se suspende por lluvia
                   </label>
                 </div>
               </div>
@@ -511,6 +505,12 @@ export function AgendaConsolePreviewPage() {
                               </a></dd>
                             </dl>
                           </div>
+                          <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-[4px] text-[16px] font-bold text-primary-600">
+                            <input type="checkbox" checked={schedule.suspendedByRain}
+                              onChange={event => updateSchedule(schedule.id, { suspendedByRain: event.target.checked })}
+                              className="h-5 w-5 accent-[#236999]" />
+                            Se suspende por lluvia
+                          </label>
                           <FormField label="Detalle de esta programación (opcional)" htmlFor={'schedule-detail-' + schedule.id}>
                             <textarea id={'schedule-detail-' + schedule.id} rows={3}
                               className={inputClass + ' min-h-[108px] resize-y'}
@@ -670,7 +670,7 @@ export function AgendaConsolePreviewPage() {
 
           <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
             <div className="lg:sticky lg:top-6">
-              <CardPreview draft={draft} schedules={schedules} onViewDetail={() => setShowDetail(true)} />
+              <CardPreview draft={draft} schedules={schedules} onViewDetail={setDetailPreview} />
               <button type="button" onClick={() => setMobileView('form')}
                 className="mt-6 min-h-12 w-full rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 lg:hidden">
                 Volver al formulario
@@ -679,11 +679,11 @@ export function AgendaConsolePreviewPage() {
           </aside>
         </div>
       </main>
-      {showDetail && (
+      {detailPreview && (
         <ConsoleDetailDialog
-          activity={makePreviewActivity(draft, schedules)}
+          activity={detailPreview}
           galleryImages={draft.galleryDataUrls.filter(Boolean)}
-          onClose={() => setShowDetail(false)}
+          onClose={() => setDetailPreview(null)}
         />
       )}
     </div>
