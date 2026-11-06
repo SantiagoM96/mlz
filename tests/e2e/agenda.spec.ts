@@ -242,7 +242,7 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await expect(page.getByRole('heading', { level: 1, name: 'Yoga en Comunidad' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(35, 105, 153)');
-  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Agenda de la Comunidad' }).click();
+  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
   await expect(page).toHaveURL(new RegExp(activities + '/?$'));
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
 });
@@ -505,7 +505,8 @@ test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page
   await expect(page.getByText('Contenido de demostración basado en Figma')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Volver a las actividades' })).toHaveCount(0);
   const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' });
-  await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+  await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/?$/);
+  await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
 });
 
 test('buscador y dropdowns replican el foco y el margen inferior de 50px del prototipo', async ({ page }, info) => {
@@ -805,6 +806,7 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
   expect(overflow).toBe(false);
   if ((info.project.use.viewport?.width ?? 0) < 640) {
     await expect(nav.getByRole('link', { name: 'Agenda de la Comunidad' })).toBeVisible();
+    await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
   }
 });

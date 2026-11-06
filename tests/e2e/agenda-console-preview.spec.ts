@@ -29,20 +29,53 @@ test('consola demostrativa: muestra formulario y actualiza la tarjeta en vivo', 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
-test('consola demostrativa: programaciones e inscripción son editables sin guardar', async ({ page }, info) => {
+test('Consola Agenda V2: tabla compacta, modal y guardado independiente por programación', async ({ page }, info) => {
   await page.goto(route);
+  await expect(page.getByTestId('console-schedules-table')).toBeVisible();
+  const rows = page.getByTestId('console-schedule-row');
+  await expect(rows).toHaveCount(1);
+  await expect(page.getByRole('checkbox', { name: 'Se suspende por lluvia' })).toHaveCount(0);
+
   await page.getByRole('combobox', { name: 'Modalidad', exact: true }).selectOption('in-person');
   await expect(page.getByLabel('Enlace de inscripción')).toHaveCount(0);
   await expect(page.getByLabel('Información de inscripción', { exact: true })).toBeVisible();
-  await page.getByRole('combobox', { name: 'Tipo de fecha', exact: true }).selectOption('exact');
-  await expect(page.getByLabel('Hasta')).toHaveCount(0);
-  await page.getByRole('button', { name: /Agregar otra programación/ }).click();
-  await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const modal = page.getByTestId('console-schedule-editor');
+  await expect(modal.getByRole('heading', { name: 'Editar programación' })).toBeVisible();
+  await expect(modal.getByRole('checkbox', { name: 'Se suspende por lluvia' })).not.toBeChecked();
+  await modal.getByRole('combobox', { name: 'Tipo de fecha' }).selectOption('exact');
+  await expect(modal.getByLabel('Hasta')).toHaveCount(0);
+  await modal.getByLabel('Fecha', { exact: true }).fill('2026-11-22');
+  await modal.getByRole('combobox', { name: 'Participantes (tipo)' }).selectOption('speakers');
+  await modal.getByLabel('Artistas, oradores o participantes (opcional)').fill('María Gómez y Juan Pérez');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal).toHaveCount(0);
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Domingo 22 de noviembre');
+
+  await page.getByRole('button', { name: 'Duplicar programación 1' }).click();
+  await expect(rows).toHaveCount(2);
+  await page.getByRole('button', { name: 'Eliminar programación 2' }).click();
+  await expect(rows).toHaveCount(1);
+  await page.getByRole('button', { name: 'Agregar', exact: true }).click();
+  const addModal = page.getByTestId('console-schedule-editor');
+  await expect(addModal.getByRole('heading', { name: 'Agregar programación' })).toBeVisible();
+  await addModal.getByLabel('Fecha', { exact: true }).fill('2026-11-29');
+  await addModal.getByLabel('Horario de inicio').fill('13:00');
+  await addModal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(rows).toHaveCount(2);
+
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
-  await expect(page.getByTestId('console-preview-card')).toContainText('Todos los sábados');
-  await expect(page.getByTestId('console-preview-card')).not.toContainText('+ 1 programación');
+  const cards = page.getByTestId('console-preview-card');
+  await expect(cards.first()).toContainText('María Gómez y Juan Pérez');
+  await cards.first().getByRole('button', { name: 'Ver más' }).click();
+  const detail = page.getByTestId('console-detail-preview');
+  await expect(detail).toContainText('María Gómez y Juan Pérez');
+  await expect(detail.locator('[data-material-symbol="record_voice_over"]')).toHaveCount(1);
+  await detail.getByRole('button', { name: 'Cerrar vista previa del detalle' }).click();
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Formulario', exact: true }).click();
   }

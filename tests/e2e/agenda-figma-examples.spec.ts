@@ -133,8 +133,9 @@ test('Consola V2: desde cada ficha de ejemplo se cargan fechas y campos editable
   await page.goto(consoleRoute + '?caso=preview-v2-futbol');
   await expect(page).toHaveURL(/caso=preview-v2-futbol/);
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Fútbol en Comunidad');
-  await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
-  await expect(page.getByText('Todos los jueves · Del 12 al 30 de noviembre · 16:00 a 18:00 h · Parque de Lomas')).toBeVisible();
+  await expect(page.getByTestId('console-schedule-row')).toHaveCount(2);
+  await expect(page.getByTestId('console-schedules-table')).toContainText('Todos los jueves');
+  await expect(page.getByTestId('console-schedules-table')).toContainText('Parque de Lomas');
 
   await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-huerta');
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Taller de huerta comunitaria');
@@ -216,7 +217,7 @@ test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede'
 test('La consola agrupa fechas por sede y permite la vista previa de cada ubicación', async ({ page }, info) => {
   await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Yoga en Comunidad');
-  await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
+  await expect(page.getByTestId('console-schedule-row')).toHaveCount(2);
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
@@ -629,15 +630,12 @@ test('Agenda V2: la lluvia corresponde a cada programación y queda fuera de su 
   await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' }).locator('[data-agenda-chip-kind="rain"]')).toHaveCount(0);
 
   await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
-  const rainControls = page.getByRole('checkbox', { name: 'Se suspende por lluvia' });
-  await expect(rainControls).toHaveCount(1);
-  await expect(rainControls.first()).toBeChecked();
-  const programming2 = page.getByRole('heading', { name: 'Programación 2' }).locator('..').locator('..');
-  await programming2.getByRole('button', { name: 'Editar' }).click();
-  await expect(rainControls).toHaveCount(2);
-  await expect(rainControls.nth(1)).not.toBeChecked();
-
-  await rainControls.nth(1).check();
+  await expect(page.getByRole('checkbox', { name: 'Se suspende por lluvia' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Editar programación 2' }).click();
+  const rainControl = page.getByTestId('console-schedule-editor').getByRole('checkbox', { name: 'Se suspende por lluvia' });
+  await expect(rainControl).not.toBeChecked();
+  await rainControl.check();
+  await page.getByTestId('console-schedule-editor').getByRole('button', { name: 'Guardar programación' }).click();
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
