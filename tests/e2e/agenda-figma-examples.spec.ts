@@ -206,7 +206,7 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
   const card = page.getByTestId('agenda-card');
   await expect(card).toHaveCount(1);
   const schedules = card.getByTestId('agenda-card-schedules');
-  await expect(schedules.locator('[data-agenda-characteristic="con-label"]')).toHaveCount(1);
+  await expect(schedules.locator('[data-agenda-characteristic="con-label"]')).toHaveCount(2);
   await expect(schedules.locator('[data-agenda-characteristic="sin-label"]')).toHaveCount(1);
   await expect(schedules).toContainText('Todos los sábados');
   await expect(schedules).toContainText('Del 07/11/2026 al 28/11/2026');
@@ -217,6 +217,13 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
     iconText: getComputedStyle(element.querySelector('[data-agenda-characteristic]') as Element).gap,
   }));
   expect(gaps).toEqual({ groups: '16px', inside: '8px', iconText: '8px' });
+  const textSizes = await schedules.locator('[data-agenda-characteristic] p').evaluateAll(
+    elements => elements.map(element => getComputedStyle(element).fontSize),
+  );
+  expect(textSizes.length).toBeGreaterThanOrEqual(5);
+  expect(textSizes.every(size => size === '18px')).toBe(true);
+  await expect(schedules).toContainText('Parque de Lomas');
+  await expect(schedules).toContainText('Frías y Portela');
 
   await search.fill('Folklore en Comunidad');
   const folkloreCard = page.getByTestId('agenda-card');
