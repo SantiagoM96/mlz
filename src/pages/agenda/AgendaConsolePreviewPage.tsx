@@ -8,6 +8,7 @@ import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/Co
 import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
+import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft, ConsoleSchedule, ConsoleVenue } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
@@ -40,47 +41,6 @@ function SectionTitle({ number, title, subtitle }: { number: number; title: stri
   );
 }
 
-function getFigmaExamplePreset(id: string | null): {
-  draft: ConsoleDraft; schedules: ConsoleSchedule[];
-} | null {
-  const activity = agendaV2PreviewActivities.find(value => value.id === id);
-  if (!activity) return null;
-  const badges = activity.badges;
-  return {
-    draft: {
-      ...INITIAL_DRAFT,
-      title: activity.title,
-      category: activity.category,
-      type: activity.type,
-      description: activity.description ?? '',
-      inclusive: badges.some(item => item.kind === 'accessible'),
-      registrationMode: activity.registrationMode ?? 'none',
-      registrationInformation: activity.registrationInformation ?? '',
-      registrationUrl: activity.registrationMode === 'online'
-        ? 'https://example.org/inscripcion-de-prueba' : '',
-      featured: badges.some(item => item.kind === 'featured'),
-      coverDataUrl: activity.image,
-      galleryDataUrls: [],
-    },
-    schedules: (activity.schedules ?? []).map((schedule, index) => ({
-      ...createDemoSchedule(index + 1),
-      id: index + 1,
-      scheduleType: schedule.scheduleType,
-      startDate: schedule.startDate,
-      endDate: schedule.endDate ?? '',
-      weekdays: [...(schedule.weekdays ?? [])],
-      startTime: schedule.startTime,
-      endTime: schedule.endTime ?? '',
-      venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
-      suspendedByRain: schedule.suspendedByRain === true,
-      detail: schedule.detailType === 'artists' ? '' : (schedule.detail ?? ''),
-      detailType: schedule.detailType,
-      participants: schedule.detailType === 'artists' ? (schedule.detail ?? '') : '',
-      participantsType: schedule.detailType === 'artists' ? 'artists' : 'participants',
-    })),
-  };
-}
-
 function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
   if (!file || !file.type.startsWith('image/')) return;
   const reader = new FileReader();
@@ -93,10 +53,10 @@ function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => vo
 export function AgendaConsolePreviewPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [draft, setDraft] = useState<ConsoleDraft>(
-    () => getFigmaExamplePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
+    () => getDemoCasePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
   );
   const [schedules, setSchedules] = useState<ConsoleSchedule[]>(
-    () => getFigmaExamplePreset(searchParams.get('caso'))?.schedules
+    () => getDemoCasePreset(searchParams.get('caso'))?.schedules
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
   );
   const [scheduleEditor, setScheduleEditor] = useState<{
@@ -159,8 +119,8 @@ export function AgendaConsolePreviewPage() {
   const changeCategory = (category: string) => {
     updateDraft({ category, type: typesByCategory[category]?.[0] ?? 'Taller' });
   };
-  const loadFigmaCase = (id: string) => {
-    const preset = getFigmaExamplePreset(id);
+  const loadDemoCase = (id: string) => {
+    const preset = getDemoCasePreset(id);
     setSearchParams(id ? { caso: id } : {});
     setDraft(preset?.draft ?? { ...INITIAL_DRAFT });
     setSchedules(preset?.schedules
@@ -194,7 +154,7 @@ export function AgendaConsolePreviewPage() {
               Elegí un ejemplo para probar la consola. No se guardan ni publican actividades.
             </p>
             <select id="figma-preset" className={inputClass} value={searchParams.get('caso') ?? ''}
-              onChange={event => loadFigmaCase(event.target.value)}>
+              onChange={event => loadDemoCase(event.target.value)}>
               <option value="">Taller de compostaje · Inicial</option>
               {agendaV2ExampleCases.map(example => {
                 const activity = agendaV2PreviewActivities.find(item => item.id === example.id);
