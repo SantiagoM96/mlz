@@ -30,7 +30,7 @@ export function ActivitySummary({
       )}
       <div className="space-y-4">
         {schedules.map(schedule => (
-          <section key={schedule.id} className="min-w-0 rounded-[4px] border border-[#d1d1d1] bg-white p-4">
+          <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
             <div className="space-y-2 text-[18px] leading-[26px] text-grey-900">
               <p className="font-bold">{schedule.dateLabel}</p>
               {schedule.periodLabel && <p>{schedule.periodLabel}</p>}

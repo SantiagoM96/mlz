@@ -120,13 +120,13 @@ export function ConsoleDetailDialog({
                 <h3 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Cuándo y dónde</h3>
                 {badges.length > 0 && <div className="mb-4"><ActivityBadges badges={badges} /></div>}
                 {presentations.length === 0 && missing.length === 0 && (
-                  <p className="rounded-[4px] border border-[#d1d1d1] p-4 text-[16px] text-grey-900">
+                  <p className="rounded-lg border border-[#d1d1d1] p-4 text-[16px] text-grey-900">
                     Agregá una programación para ver las fechas.
                   </p>
                 )}
                 <div className="space-y-4">
                   {presentations.map(schedule => (
-                    <section key={schedule.id} className="min-w-0 rounded-[4px] border border-[#d1d1d1] bg-white p-4">
+                    <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
                       <div className="space-y-2 text-[18px] leading-[26px] text-grey-900">
                         <p className="font-bold">{schedule.dateLabel}</p>
                         {schedule.periodLabel && <p>{schedule.periodLabel}</p>}
@@ -165,7 +165,7 @@ export function ConsoleDetailDialog({
                     </section>
                   ))}
                   {missing.map(schedule => (
-                    <section key={schedule.id} className="rounded-[4px] border border-[#d1d1d1] bg-white p-4 text-[18px] leading-[26px]">
+                    <section key={schedule.id} className="rounded-lg border border-[#d1d1d1] bg-white p-4 text-[18px] leading-[26px]">
                       <p className="font-bold">Fecha a confirmar</p>
                       <p>{schedule.startTime
                         ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'

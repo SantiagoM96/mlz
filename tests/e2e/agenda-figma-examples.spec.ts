@@ -327,3 +327,48 @@ test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según
   expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBe(18);
   expect(await rainyChip.locator('[data-agenda-chip-label]').evaluate(element => getComputedStyle(element).fontSize)).toBe('16px');
 });
+
+
+test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa (8 px)', async ({ page }, info) => {
+  await page.goto(list);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Folklore en Comunidad');
+  const cards = page.getByTestId('agenda-card');
+  await expect(cards).toHaveCount(2);
+  for (const card of await cards.all()) {
+    const chevron = card.locator('[data-material-symbol="chevron_right"]');
+    await expect(chevron).toHaveCount(1);
+    const size = await chevron.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      return { width: rect.width, height: rect.height };
+    });
+    expect(size).toEqual({ width: 24, height: 24 });
+  }
+
+  await page.goto(list + '/preview-v2-folklore--sede-plaza-grigera--fecha-2026-11-14');
+  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' }).locator('section');
+  await expect(summary).toHaveCount(1);
+  const summaryRadius = await summary.evaluate(element => getComputedStyle(element).borderTopLeftRadius);
+  const locationRadius = await page.getByRole('region', { name: 'Mapa de ubicación' })
+    .locator('div.grid').first().evaluate(element => getComputedStyle(element).borderTopLeftRadius);
+  expect(summaryRadius).toBe('8px');
+  expect(summaryRadius).toBe(locationRadius);
+
+  await page.goto(consoleRoute + '?caso=preview-v2-folklore');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  const card = page.getByTestId('console-preview-card').first();
+  const previewChevron = card.locator('[data-material-symbol="chevron_right"]');
+  const previewSize = await previewChevron.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  });
+  expect(previewSize).toEqual({ width: 24, height: 24 });
+
+  await card.getByRole('button', { name: 'Ver más' }).click();
+  const preview = page.getByTestId('console-detail-preview');
+  const previewRadius = await preview.getByRole('complementary', { name: 'Cuándo y dónde' })
+    .locator('section').first().evaluate(element => getComputedStyle(element).borderTopLeftRadius);
+  expect(previewRadius).toBe('8px');
+});
