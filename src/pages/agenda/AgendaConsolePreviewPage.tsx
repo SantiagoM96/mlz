@@ -8,7 +8,7 @@ import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePrevie
 import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/ConsoleTypeEditorDialog';
 import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
-import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
+import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft, ConsoleSchedule, ConsoleVenue } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
@@ -380,76 +380,13 @@ export function AgendaConsolePreviewPage() {
                   <MaterialIcon name="add" size={20} /> Agregar
                 </button>
               </div>
-              <div className="overflow-x-auto rounded-[8px] border border-[#d4e2eb]" data-testid="console-schedules-table">
-                <table className="w-full min-w-[680px] border-collapse text-left text-[15px]">
-                  <thead className="bg-[#eaf3f9] text-primary-600">
-                    <tr>
-                      <th scope="col" className="px-3 py-3 font-bold">Fecha / frecuencia</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Horario</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Lugar</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Lluvia</th>
-                      <th scope="col" className="px-3 py-3 text-right font-bold">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#d4e2eb]">
-                    {schedules.map((schedule, index) => {
-                      const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
-                      const venue = venueById(schedule.venueId, venues);
-                      return (
-                        <tr key={schedule.id} data-testid="console-schedule-row" className="align-middle">
-                          <td className="px-3 py-3">
-                            <span className="font-bold text-grey-900">{dateLabel}</span>
-                            {periodLabel && <span className="mt-1 block text-[13px] leading-5 text-[#657b8d]">{periodLabel}</span>}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-3">
-                            {schedule.startTime || 'A confirmar'}
-                            {schedule.endTime ? ' a ' + schedule.endTime : ''}{schedule.startTime ? ' h' : ''}
-                          </td>
-                          <td className="max-w-[220px] px-3 py-3">
-                            <span className="font-medium">{venue.name}</span>
-                            {schedule.participants.trim() && (
-                              <span className="mt-1 flex items-start gap-1.5 text-[13px] leading-5 text-[#61788b]">
-                                <MaterialIcon name={schedule.participantsType === 'artists' ? 'comedy_mask'
-                                  : schedule.participantsType === 'speakers' ? 'record_voice_over' : 'groups'} size={16}/>
-                                <span className="min-w-0 break-words">{schedule.participants}</span>
-                              </span>
-                            )}
-                            {schedule.detail.trim() && (
-                              <span className="mt-1 block max-w-[210px] truncate text-[13px] leading-5 text-[#61788b]"
-                                title={schedule.detail}>{schedule.detail}</span>
-                            )}
-                          </td>
-                          <td className="px-3 py-3">{schedule.suspendedByRain ? 'Sí' : 'No'}</td>
-                          <td className="px-3 py-3">
-                            <div className="flex items-center justify-end gap-1">
-                              <button type="button" onClick={() => editSchedule(schedule)}
-                                aria-label={'Editar programación ' + (index + 1)} title="Editar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                                <MaterialIcon name="edit" size={22} />
-                              </button>
-                              <button type="button" onClick={() => duplicateSchedule(schedule)}
-                                aria-label={'Duplicar programación ' + (index + 1)} title="Duplicar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                                <MaterialIcon name="content_copy" size={22} />
-                              </button>
-                              <button type="button" onClick={() => removeSchedule(schedule.id)}
-                                aria-label={'Eliminar programación ' + (index + 1)} title="Eliminar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-[#b5444b] hover:bg-[#ffedef] focus-visible:outline-2 focus-visible:outline-[#b5444b]">
-                                <MaterialIcon name="delete" size={22} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    {schedules.length === 0 && (
-                      <tr><td colSpan={5} className="px-4 py-6 text-center text-[#607487]">
-                        Todavía no hay programaciones. Agregá una para comenzar.
-                      </td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <ScheduleTable
+                schedules={schedules}
+                venues={venues}
+                onEdit={editSchedule}
+                onDuplicate={duplicateSchedule}
+                onRemove={removeSchedule}
+              />
               <p className={noteClass}>Podés editar, duplicar o eliminar programaciones sin repetir los datos de la actividad.</p>
             </section>
 
