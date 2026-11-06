@@ -159,7 +159,7 @@ test('Agenda mobile: breadcrumb sin título truncado y vínculo al listado', asy
   if ((info.project.use.viewport?.width ?? 0) < 640) {
     await expect(back).toBeVisible();
     await expect(back).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
-    await expect(back.getByText('Agenda de la Comunidad')).toBeVisible();
+    await expect(back.getByText('Volver')).toBeVisible();
     await expect(back.locator('[data-material-symbol="arrow_back"]')).toHaveCount(1);
     await expect(nav.getByTestId('breadcrumb-current')).toBeHidden();
     await back.click();

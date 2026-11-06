@@ -786,7 +786,7 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
     const back = nav.getByTestId('breadcrumb-mobile-back');
     await expect(back).toBeVisible();
     await expect(back).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
-    await expect(back.getByText('Agenda de la Comunidad')).toBeVisible();
+    await expect(back.getByText('Volver')).toBeVisible();
     await expect(back.locator('[data-material-symbol="arrow_back"]')).toHaveCount(1);
     await expect(nav.locator('ol')).toBeHidden();
   } else {

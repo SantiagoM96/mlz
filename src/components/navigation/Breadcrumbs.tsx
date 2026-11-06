@@ -16,7 +16,7 @@ export interface BreadcrumbsProps {
 
 /**
  * Breadcrumb institucional: una sola línea, con el elemento actual truncado
- * cuando no entra. En mobile se mantienen visibles el padre y la página actual.
+ * cuando no entra. En fichas, mobile usa «Volver» hacia el nivel anterior.
  */
 export function Breadcrumbs({ items, className = '', mobileParentOnly = false }: BreadcrumbsProps) {
   // El breadcrumb institucional siempre utiliza el azul primario.
@@ -38,7 +38,7 @@ export function Breadcrumbs({ items, className = '', mobileParentOnly = false }:
             data-testid="breadcrumb-mobile-back"
           >
             <MaterialIcon name="arrow_back" size={20} />
-            <span className="truncate">{items[items.length - 2]?.label}</span>
+            <span className="truncate">Volver</span>
           </Link>
         </div>
       )}

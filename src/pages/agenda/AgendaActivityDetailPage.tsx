@@ -59,7 +59,8 @@ export function AgendaActivityDetailPage() {
     <PageContainer className="pb-10 pt-6">
       <Breadcrumbs mobileParentOnly items={[
         { label: 'Inicio', to: '/' },
-        { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad/actividades' },
+        { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad' },
+        { label: 'Actividades', to: '/agenda-de-la-comunidad/actividades' },
         { label: activity.title },
       ]} />
 
