@@ -8,6 +8,7 @@ import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/Co
 import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
+import { ConsoleGeneralInfoSection } from '../../features/agenda/consolePreview/ConsoleGeneralInfoSection';
 import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
 import { FormField, SectionTitle, inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
@@ -132,53 +133,13 @@ export function AgendaConsolePreviewPage() {
           <form onSubmit={event => event.preventDefault()}
             className={'min-w-0 space-y-8 ' + (mobileView === 'preview' ? 'hidden lg:block' : '')}
             aria-label="Formulario de nueva actividad">
-            <section aria-labelledby="console-information">
-              <div id="console-information"><SectionTitle number={1} title="Información general" /></div>
-              <div className="space-y-4">
-                <FormField label="Título" htmlFor="console-title">
-                  <input id="console-title" className={inputClass} value={draft.title}
-                    onChange={event => updateDraft({ title: event.target.value })} placeholder="Nombre de la actividad" />
-                </FormField>
-                <div className="grid min-w-0 gap-4 sm:grid-cols-2">
-                  <FormField label="Categoría" htmlFor="console-category">
-                    <select id="console-category" className={inputClass} value={draft.category}
-                      onChange={event => changeCategory(event.target.value)}>
-                      {Object.keys(CATEGORY_TYPES).map(category => (
-                        <option key={category} value={category}>{category}</option>
-                      ))}
-                    </select>
-                  </FormField>
-                  <FormField label="Tipo de actividad" htmlFor="console-type">
-                    <select id="console-type" className={inputClass} value={draft.type}
-                      onChange={event => updateDraft({ type: event.target.value })}>
-                      {[...new Set([...(typesByCategory[draft.category] ?? []), draft.type])].map(type =>
-                        <option key={type} value={type}>{type}</option>)}
-                    </select>
-                    <button type="button" onClick={() => setAddingType(true)}
-                      className="mt-2 inline-flex min-h-10 items-center gap-1.5 rounded-[6px] text-[15px] font-bold text-primary-600 hover:underline">
-                      <MaterialIcon name="add" size={19}/> Agregar tipo de actividad
-                    </button>
-                  </FormField>
-                </div>
-                <p className="text-[14px] leading-5 text-[#61788b]">
-                  Las categorías son fijas; los tipos se pueden agregar desde la consola.
-                </p>
-                <FormField label="Descripción general" htmlFor="console-description">
-                  <textarea id="console-description" rows={4} className={inputClass + ' min-h-[120px] resize-y'}
-                    value={draft.description} onChange={event => updateDraft({ description: event.target.value })}
-                    placeholder="Contá de qué se trata la actividad" />
-                </FormField>
-                <div className="space-y-3 pt-1">
-                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-                    <input type="checkbox" checked={draft.inclusive}
-                      onChange={event => updateDraft({ inclusive: event.target.checked })}
-                      className="h-5 w-5 accent-[#236999]" />
-                    Disciplina inclusiva
-                  </label>
-                </div>
-              </div>
-            </section>
-
+            <ConsoleGeneralInfoSection
+              draft={draft}
+              typesByCategory={typesByCategory}
+              onDraftChange={updateDraft}
+              onCategoryChange={changeCategory}
+              onAddType={() => setAddingType(true)}
+            />
 
             <section aria-labelledby="console-schedules">
               <div id="console-schedules" className="mb-4 flex flex-wrap items-center justify-between gap-3">
