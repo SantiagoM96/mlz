@@ -178,3 +178,35 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 5. Revisar integración con `main` antes de merge: el archivo `public/cronica/index.html` cambió externamente y no forma parte de esta refactorización.
 
 **Proteger `main`:** no fusionar ni desplegar la refactorización desde este PR en borrador.
+
+## Avance P5 — accesibilidad de los diálogos y resumen de la ficha demo (06/11/2026)
+
+### Gestión de teclado y foco
+
+- Nuevo `useConsoleDialogFocus.ts` compartido por `ConsoleScheduleEditorDialog`, `ConsoleTypeEditorDialog` y `ConsoleDetailDialog`.
+- Al abrir, mueve el foco al campo principal o al botón de cerrar; el tabulado queda contenido en el modal con Tab y Shift+Tab.
+- Escape cierra el diálogo, los listeners se limpian al desmontar, el scroll del cuerpo se restaura y el foco regresa al control que abrió el diálogo (si permanece conectado).
+- El callback `onClose` se mantiene actualizado en un ref para evitar reenfocar al cambiar la identidad de la función en un render del padre.
+- Esto incorpora bloqueo de scroll y trampa de foco también al diálogo de tipos, que antes no implementaba ambas protecciones.
+
+### Ficha pública simulada
+
+- `ConsoleDetailScheduleSummary.tsx`: extracción del resumen «Cuándo y dónde» de la ficha demo, conservando JSX, clases, badges, estados sin programación, fechas, participantes y enlaces de mapa. La ficha sigue reutilizando `ActivityDescription`, `ActivityScheduleDateTime`, `ActivityScheduleParticipants`, `ActivityBadges`, `ActivityRegistrationLink` y `ActivityLocationMap`.
+- **No se fuerza la sustitución por `ActivitySummary` de la Agenda pública:** sus contratos actuales difieren (placeholder de programación incompleta, encabezado h3 frente a h2 y algunas clases/estados). Unificarlo ahora sería un cambio visual/funcional, no un traslado neutro.
+- No se tocaron rutas públicas, datos de agenda, componentes públicos, CSS global ni mecanismos de publicación.
+
+### Regresiones específicas incorporadas
+
+- Trampa de foco del diálogo de tipos, Escape, retorno del foco, bloqueo y restauración del scroll al cancelar y guardar.
+- Retorno del foco al botón «Editar programación» tras Cancelar y Escape.
+- Trampa de foco en la ficha demo, Escape/cierre por botón, retorno a «Ver más» y restauración del scroll.
+- Ficha demo sin programaciones: estado vacío, sin filas ni mapa.
+- Comprobación pendiente hasta su resultado real: `npm run typecheck`, `npm run lint`, `npm run build` y matriz Playwright de 390, 432, 768 y 1415 px sobre el SHA final.
+
+### Pendientes fuera de este lote
+
+- Comparación automática de capturas contra un baseline visual aprobado; no se equiparan E2E y paridad pixel a pixel.
+- Evaluación de criterios de `aria-describedby`, anuncios de errores e interacciones de lectores de pantalla; las pruebas de teclado no reemplazan auditoría WCAG.
+- Revisión de diferencias intencionales de `ActivitySummary` entre sitio y consola antes de plantear una variante compartida, sin modificar la página pública sin autorización.
+
+**Estado de integración:** PR de refactor en borrador; sin merge ni despliegue.
