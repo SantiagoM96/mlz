@@ -20,6 +20,10 @@ test('Deportes: seleccionar horario, inscribirse y usar el formulario sin bloque
   await go.click();
 
   await expect.poll(() => new URL(page.url()).hash).toContain('03_formulario_inscripcion.html');
+  // El circuito actual introduce el trámite antes de mostrar el formulario.
+  await expect(page.locator('.enrollment-guide')).toBeVisible();
+  await page.getByRole('link', { name: /Iniciar inscripción/ }).click();
+  await expect(page).toHaveURL(/paso=form/);
   const form = page.locator('#signup');
   await expect(form).toBeVisible();
   await expect(page.locator('#personalTitle')).toBeVisible();
@@ -59,6 +63,8 @@ test('Deportes: la URL pública directa del formulario no queda en blanco', asyn
     prototype + '?utm_source=chatgpt.com#03_formulario_inscripcion.html?ficha=act-003-gimnasio-de-deportes-de-combate&comision=1',
     { waitUntil: 'domcontentloaded' },
   );
+  await expect(page.locator('.enrollment-guide')).toBeVisible();
+  await page.getByRole('link', { name: /Iniciar inscripción/ }).click();
   await expect(page.locator('#signup')).toBeVisible();
   await expect(page.locator('#personalTitle')).toBeVisible();
   await expect(page.locator('.form-title')).toHaveText('Boxeo femenino');

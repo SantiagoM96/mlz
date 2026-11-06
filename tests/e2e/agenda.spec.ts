@@ -24,18 +24,18 @@ test('Geometria real se carga en las vistas institucionales, sin fuentes de reem
   }
 });
 
+
 test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page }) => {
   await page.goto(activities);
   const card = page.getByTestId('agenda-card').first();
   const image = card.locator('img').first();
   await expect(image).toHaveCSS('height', '154px');
   await expect(card.getByRole('heading', { level: 2 })).toHaveCSS('font-size', '22px');
-  await expect(card.locator('[data-material-symbol="calendar_month"]')).toHaveCSS('font-size', '20px');
-  await expect(card.locator('[data-material-symbol="schedule"]')).toHaveCSS('font-size', '20px');
+  await expect(card.locator('[data-material-symbol="event_available"]').first()).toHaveCSS('font-size', '20px');
+  await expect(card.locator('[data-material-symbol="schedule"]').first()).toHaveCSS('font-size', '20px');
   await expect(card.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
   await expect(card.getByText('Actividad pasada')).toHaveCount(0);
 });
-
 
 test('barra de búsqueda replica cuatro columnas de la captura en desktop', async ({ page }, info) => {
   if ((info.project.use.viewport?.width ?? 0) < 1280) return;
@@ -276,17 +276,18 @@ test('fichas: el mapa conserva dirección normalizada y un enlace por sede', asy
   }
 });
 
-test('listado responsive, búsqueda, filtros y controles', async ({ page }, info) => {
+
+test('listado responsive, búsqueda, filtros y controles', async ({ page }) => {
   await page.goto(activities);
-  const count = info.project.name.startsWith('mobile') ? 6 : 9;
-  await expect(page.getByTestId('agenda-card')).toHaveCount(count);
+  // Listado de revisión V2 aprobado: 10 tarjetas, en todos los breakpoints.
+  await expect(page.getByTestId('agenda-card')).toHaveCount(10);
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
   const firstImage = page.getByTestId('agenda-card').first().locator('img');
   await expect.poll(() => firstImage.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
     { message: 'La primera ilustración debe cargar correctamente' }).toBe(true);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
-  await search.fill('La Chamameceada');
-  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
+  await search.fill('Yoga en Comunidad');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(2);
   await search.fill('término inexistente');
   await expect(page.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await page.getByRole('button', { name: 'Limpiar filtros' }).click();
@@ -295,9 +296,9 @@ test('listado responsive, búsqueda, filtros y controles', async ({ page }, info
   await filter.getByRole('button', { name: 'Categoría' }).click();
   await filter.getByRole('checkbox', { name: 'Ambiental', exact: true }).check();
   await filter.getByRole('button', { name: 'Ver resultados' }).click();
-  await expect(page.getByTestId('agenda-card').first()).toContainText('Salida de observación de hongos');
+  await expect(page.getByTestId('agenda-grid')).toContainText('Taller de compostaje');
   await page.getByRole('button', { name: 'Ambiental' }).click();
-  await expect(page.getByTestId('agenda-card')).not.toHaveCount(0);
+  await expect(page.getByTestId('agenda-card')).toHaveCount(10);
   await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
   await expect(page.getByTestId('agenda-grid')).toBeVisible();
 });
@@ -504,14 +505,22 @@ test('dropdowns de localidad, fecha y ordenar respetan el diseño y funcionan', 
   await expect(page.getByRole('button', { name: 'Ver mapa' })).toHaveCount(0);
 });
 
-test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page }) => {
-  await page.goto(activities + '/actividad-1');
-  await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
+
+test('ficha sin texto provisional ni enlace de regreso duplicado', async ({ page }, info) => {
+  await page.goto(activities + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  await expect(page.getByRole('heading', { level: 1, name: 'Yoga en Comunidad' })).toBeVisible();
   await expect(page.getByText('Contenido de demostración basado en Figma')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Volver a las actividades' })).toHaveCount(0);
   const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' });
-  await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/?$/);
-  await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+  if ((info.project.use.viewport?.width ?? 0) < 640) {
+    await expect(breadcrumb.getByTestId('breadcrumb-mobile-back')).toBeVisible();
+    await expect(breadcrumb.getByTestId('breadcrumb-mobile-back')).toContainText('Volver');
+    await expect(breadcrumb.getByTestId('breadcrumb-mobile-back')).toHaveAttribute('href', /\/actividades\/?$/);
+    await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toBeHidden();
+  } else {
+    await expect(breadcrumb.getByRole('link', { name: 'Agenda de la Comunidad' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/?$/);
+    await expect(breadcrumb.getByRole('link', { name: 'Actividades' })).toHaveAttribute('href', /\/agenda-de-la-comunidad\/actividades\/?$/);
+  }
 });
 
 test('buscador y dropdowns replican el foco y el margen inferior de 50px del prototipo', async ({ page }, info) => {
@@ -615,53 +624,61 @@ test('el estado sin resultados reproduce la ilustración de Figma', async ({ pag
   await expect(empty).toHaveCount(0);
 });
 
+
 test('tarjeta completa clickeable, cursor pointer, Ver más sin subrayado', async ({ page }) => {
   await page.goto(activities);
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
-  const first = page.getByTestId('agenda-card').first();
-  const link = first.getByRole('link', { name: 'Ver más sobre La Chamameceada' });
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Taller de compostaje');
+  const card = page.getByTestId('agenda-card').first();
+  const link = card.getByRole('link', { name: 'Ver más sobre Taller de compostaje' });
   await expect(link).toHaveCSS('cursor', 'pointer');
   await expect(link).toHaveCSS('text-decoration-line', 'none');
-  await expect(first.getByText('Ver más')).toHaveCSS('text-decoration-line', 'none');
-  await first.getByRole('heading', { name: 'La Chamameceada' }).click();
-  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/actividad-1\/?$/);
+  await expect(card.getByText('Ver más')).toHaveCSS('text-decoration-line', 'none');
+  await card.getByRole('heading', { name: 'Taller de compostaje' }).click();
+  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/preview-v2-compostaje\/?$/);
 });
 
-test('planilla 2026: nuevas localidades y tipos funcionan en los filtros', async ({ page }) => {
+
+test('listado V2: búsqueda por nombre y tipo, sin incluir actividades excluidas', async ({ page }) => {
   await page.goto(activities);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
-  await search.fill('Salida de observación de hongos');
+  await search.fill('Taller de compostaje');
   await expect(page.getByTestId('agenda-card')).toHaveCount(1);
-  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Visita guiada');
+  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Taller');
   await search.fill('Palabras desde el barrio');
   await expect(page.getByTestId('agenda-card')).toHaveCount(0);
   await search.fill('nombre inhallable 2026');
   await expect(page.getByTestId('agenda-empty-state')).toBeVisible();
 });
 
+
 test('todas las fechas y horarios mantienen el estilo editorial de Figma', async ({ page }) => {
   await page.goto(activities);
-  await expect(page.getByTestId('agenda-card').first()).toContainText('Jueves 5 de noviembre');
-  await expect(page.getByTestId('agenda-card').first()).toContainText('21:00 h');
-  await page.getByTestId('agenda-card').first().click();
-  await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
-  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Jueves 5 de noviembre');
-  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('21:00 h');
+  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Taller de compostaje');
+  const card = page.getByTestId('agenda-card').first();
+  await expect(card).toContainText('Todos los sábados');
+  await expect(card).toContainText('Del 7 al 28 de noviembre');
+  await expect(card).toContainText('10:00 a 12:00 h');
+  await card.click();
+  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(summary).toBeVisible();
+  await expect(summary).toContainText('Todos los sábados');
+  await expect(summary).toContainText('Del 7 al 28 de noviembre');
+  await expect(summary).toContainText('10:00 a 12:00 h');
 });
 
-test('excluye registros importados con datos incompletos o fecha aproximada', async ({ page }) => {
+
+test('listado V2 excluye importados antiguos pero conserva sus URL directas', async ({ page }) => {
   await page.goto(activities);
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Palabras desde el barrio');
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Palabras desde el barrio');
   await expect(page.getByTestId('agenda-card')).toHaveCount(0);
-
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Festival Internacional del Jazz');
+  await search.fill('Festival Internacional del Jazz');
   await expect(page.getByTestId('agenda-card')).toHaveCount(0);
-
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('La Chamameceada');
-  await expect(page.getByTestId('agenda-card')).toHaveCount(1);
-  await page.getByTestId('agenda-card').first().click();
-  await expect(page).toHaveURL(/actividad-1\/?$/);
-  await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toBeVisible();
+  await search.fill('La Chamameceada');
+  await expect(page.getByTestId('agenda-card')).toHaveCount(0);
+  // El listado se limita a 10 casos, pero las fichas históricas mantienen su URL.
+  await page.goto(activities + '/actividad-1');
+  await expect(page.getByRole('heading', { level: 1, name: 'La Chamameceada' })).toBeVisible();
   await expect(page.getByText('Dirección a confirmar')).toHaveCount(0);
 });
 
@@ -687,16 +704,16 @@ test('descripciones de la ficha aparecen sin marcas ni comentarios de prototipo'
 });
 
 
+
 test('las tarjetas usan ilustraciones de Figma según el tipo de actividad', async ({ page }) => {
   await page.goto(activities);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   const examples = [
-    { title: 'La Chamameceada', filename: 'musica.png' },
-    { title: 'Zumba', filename: 'aerobica.png' },
-    { title: 'Salida de observación de hongos', filename: 'visita-guiada.png' },
-    { title: 'Truco en Comunidad', filename: 'torneo.png' },
+    { title: 'Folklore en Comunidad', filename: 'musica.png' },
+    { title: 'Yoga en Comunidad', filename: 'cuerpo-mente.png' },
+    { title: 'Taller de compostaje', filename: 'taller-ambiental.png' },
+    { title: 'Fútbol en Comunidad', filename: 'entrenamiento.png' },
   ] as const;
-
   for (const example of examples) {
     await search.fill(example.title);
     const img = page.getByTestId('agenda-card').first().locator('img');
@@ -706,23 +723,23 @@ test('las tarjetas usan ilustraciones de Figma según el tipo de actividad', asy
   }
 });
 
+
 test('tarjetas y fichas muestran el tipo específico en vez de la categoría general', async ({ page }) => {
   await page.goto(activities);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
-  await search.fill('La Chamameceada');
+  await search.fill('Folklore en Comunidad');
   const card = page.getByTestId('agenda-card').first();
   await expect(card.locator('p').first()).toHaveText('Música');
   await expect(card.locator('img')).toHaveAttribute('src', /\/types\/musica\.png/);
   await card.getByRole('link', { name: /Ver más/ }).click();
-  await expect(page.getByRole('heading', { name: 'La Chamameceada' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Folklore en Comunidad' })).toBeVisible();
   await expect(page.locator('h1').locator('..').locator('p').first()).toHaveText('Música');
 
   await page.goto(activities);
-  await search.fill('Ballet Yago');
-  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Danza');
-  await expect(page.getByTestId('agenda-card').first().locator('img')).toHaveAttribute('src', /\/types\/danza\.png/);
+  await search.fill('Yoga en Comunidad');
+  await expect(page.getByTestId('agenda-card').first().locator('p').first()).toHaveText('Cuerpo–mente');
+  await expect(page.getByTestId('agenda-card').first().locator('img')).toHaveAttribute('src', /\/types\/cuerpo-mente\.png/);
 });
-
 
 test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas', async ({ page }, info) => {
   await page.goto(activities);
@@ -765,19 +782,21 @@ test('dropdown: fondo Info 500, check blanco sin relleno y opciones alfabéticas
   assertSorted(categories.map(label => label.trim()));
 });
 
+
 test('navegar desde una tarjeta inferior abre la ficha arriba y volver restaura el scroll', async ({ page }) => {
   await page.goto(activities);
   const lastCard = page.getByTestId('agenda-card').last();
   await lastCard.scrollIntoViewIfNeeded();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
   await lastCard.getByRole('link', { name: /Ver más sobre/ }).click();
-  await expect(page).toHaveURL(new RegExp('/agenda-de-la-comunidad/actividades/actividad-[0-9]+/?$'));
+  await expect(page).toHaveURL(/\/agenda-de-la-comunidad\/actividades\/preview-v2-/);
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toBeInViewport();
   await page.goBack();
   await expect(page).toHaveURL(new RegExp('/agenda-de-la-comunidad/actividades/?$'));
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(50);
 });
+
 
 test('breadcrumb de título largo permanece en una línea sin separar la flecha', async ({ page }, info) => {
   await page.goto(activities + '/actividad-10');
@@ -806,14 +825,10 @@ test('breadcrumb de título largo permanece en una línea sin separar la flecha'
       return Math.abs(a.top + a.height / 2 - (t.top + t.height / 2)) < 4;
     });
     expect(arrowAlignment).toBe(true);
-  }
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
-  expect(overflow).toBe(false);
-  if ((info.project.use.viewport?.width ?? 0) < 640) {
     await expect(nav.getByRole('link', { name: 'Agenda de la Comunidad' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Actividades' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'Inicio' })).toBeHidden();
   }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false);
 });
 
 test('ficha V2: mapa compacto, descripción completa y sección Cuándo y dónde', async ({ page }, info) => {
