@@ -1,4 +1,4 @@
-import { MaterialIcon } from '../../../components/ui/MaterialIcon';
+import { MaterialIcon, type MaterialIconName } from '../../../components/ui/MaterialIcon';
 import { formatAgendaScheduleDate } from '../utils/activitySchedules';
 import { venueById } from './scheduleRules';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
@@ -9,6 +9,29 @@ interface Props {
   onEdit: (schedule: ConsoleSchedule) => void;
   onDuplicate: (schedule: ConsoleSchedule) => void;
   onRemove: (id: number) => void;
+}
+
+type ActionTone = 'primary' | 'danger';
+
+const actionClassNames: Record<ActionTone, string> = {
+  primary: 'inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600',
+  danger: 'inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-[#b5444b] hover:bg-[#ffedef] focus-visible:outline-2 focus-visible:outline-[#b5444b]',
+};
+
+function ScheduleActionButton({
+  label, title, icon, onClick, tone = 'primary',
+}: {
+  label: string;
+  title: string;
+  icon: MaterialIconName;
+  onClick: () => void;
+  tone?: ActionTone;
+}) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} title={title} className={actionClassNames[tone]}>
+      <MaterialIcon name={icon} size={22} />
+    </button>
+  );
 }
 
 /** Tabla de programaciones: render puro; el estado y los handlers pertenecen a la página. */
@@ -56,21 +79,18 @@ export function ScheduleTable({ schedules, venues, onEdit, onDuplicate, onRemove
                 <td className="px-3 py-3">{schedule.suspendedByRain ? 'Sí' : 'No'}</td>
                 <td className="px-3 py-3">
                   <div className="flex items-center justify-end gap-1">
-                    <button type="button" onClick={() => onEdit(schedule)}
-                      aria-label={'Editar programación ' + (index + 1)} title="Editar"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                      <MaterialIcon name="edit" size={22} />
-                    </button>
-                    <button type="button" onClick={() => onDuplicate(schedule)}
-                      aria-label={'Duplicar programación ' + (index + 1)} title="Duplicar"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                      <MaterialIcon name="content_copy" size={22} />
-                    </button>
-                    <button type="button" onClick={() => onRemove(schedule.id)}
-                      aria-label={'Eliminar programación ' + (index + 1)} title="Eliminar"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-[#b5444b] hover:bg-[#ffedef] focus-visible:outline-2 focus-visible:outline-[#b5444b]">
-                      <MaterialIcon name="delete" size={22} />
-                    </button>
+                    <ScheduleActionButton
+                      icon="edit" title="Editar" label={'Editar programación ' + (index + 1)}
+                      onClick={() => onEdit(schedule)}
+                    />
+                    <ScheduleActionButton
+                      icon="content_copy" title="Duplicar" label={'Duplicar programación ' + (index + 1)}
+                      onClick={() => onDuplicate(schedule)}
+                    />
+                    <ScheduleActionButton
+                      icon="delete" tone="danger" title="Eliminar" label={'Eliminar programación ' + (index + 1)}
+                      onClick={() => onRemove(schedule.id)}
+                    />
                   </div>
                 </td>
               </tr>
