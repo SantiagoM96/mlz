@@ -233,3 +233,29 @@ test('Consola: al cambiar de caso reinicia las programaciones y el editor no arr
   await editor.getByRole('button', { name: 'Cancelar', exact: true }).click();
   await expect(rows).toHaveCount(1);
 });
+
+test('Consola: normalización y duplicados al crear un lugar se validan dentro del modal', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  await editor.getByRole('button', { name: 'Agregar nuevo lugar' }).click();
+  const venuePanel = editor.getByTestId('console-new-venue');
+
+  await venuePanel.getByRole('button', { name: 'Guardar lugar' }).click();
+  await expect(venuePanel.getByRole('alert')).toHaveText('Completá nombre, localidad y dirección para guardar la sede.');
+
+  await venuePanel.getByLabel('Nombre del lugar').fill('  plaza grigera  ');
+  await venuePanel.getByLabel('Localidad').fill('lomas de zamora');
+  await venuePanel.getByLabel('Dirección').fill('Calle de prueba');
+  await venuePanel.getByRole('button', { name: 'Guardar lugar' }).click();
+  await expect(venuePanel.getByRole('alert')).toHaveText('Esta sede ya está registrada. Seleccionala en la lista.');
+
+  await venuePanel.getByLabel('Nombre del lugar').fill('  Centro   Cultural   de Prueba ');
+  await venuePanel.getByRole('button', { name: 'Guardar lugar' }).click();
+  await expect(venuePanel).toHaveCount(0);
+  await expect(editor.getByLabel('Lugar')).toHaveValue(/nueva-sede-/);
+  await expect(editor.getByLabel('Lugar')).toContainText('Centro Cultural de Prueba');
+  await expect(editor).toContainText('Calle de prueba');
+  await editor.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(page.getByTestId('console-schedules-table')).toContainText('Centro Cultural de Prueba');
+});
