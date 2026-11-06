@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
-import { Field, inputClass } from './ConsoleScheduleFormPrimitives';
 import { ConsoleVenueSelector } from './ConsoleVenueSelector';
 import { ConsoleScheduleDateFields } from './ConsoleScheduleDateFields';
+import { ConsoleScheduleAdditionalFields } from './ConsoleScheduleAdditionalFields';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 
 import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
@@ -107,32 +107,10 @@ export function ConsoleScheduleEditorDialog({
             onVenueChange={venueId => update({ venueId })}
             onCreateVenue={onCreateVenue}
           />
-          <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-            <input type="checkbox" checked={value.suspendedByRain}
-              onChange={event => update({ suspendedByRain: event.target.checked })}
-              className="h-5 w-5 accent-[#236999]"/> Se suspende por lluvia
-          </label>
-          <div className="grid gap-4 sm:grid-cols-[220px_minmax(0,1fr)]">
-            <Field id="console-schedule-participants-type" label="Participantes (tipo)">
-              <select id="console-schedule-participants-type" className={inputClass}
-                value={value.participantsType} onChange={event =>
-                  update({ participantsType: event.target.value as ConsoleSchedule['participantsType'] })}>
-                <option value="artists">Artistas</option>
-                <option value="speakers">Oradores</option>
-                <option value="participants">Otros participantes</option>
-              </select>
-            </Field>
-            <Field id="console-schedule-participants" label="Artistas, oradores o participantes (opcional)">
-              <textarea id="console-schedule-participants" rows={2} className={inputClass + ' resize-y'}
-                placeholder="Ej.: Andrea Gauna, Lautaro Rotela"
-                value={value.participants} onChange={event => update({ participants: event.target.value })}/>
-            </Field>
-          </div>
-          <Field id="console-schedule-detail" label="Detalle de esta programación (opcional)">
-            <textarea id="console-schedule-detail" rows={3} className={inputClass + ' resize-y'}
-              placeholder="Información específica de esta fecha, si corresponde"
-              value={value.detail} onChange={event => update({ detail: event.target.value })}/>
-          </Field>
+          <ConsoleScheduleAdditionalFields
+            value={value}
+            onScheduleChange={update}
+          />
           {error && <p role="alert" data-testid="console-schedule-error" className="rounded-[6px] bg-[#fff1f2] p-3 text-[14px] font-medium text-[#9d2936]">{error}</p>}
         </form>
         <footer className="z-10 flex shrink-0 flex-wrap justify-end gap-3 border-t border-[#d4e2eb] bg-white px-4 py-4 sm:px-6">
