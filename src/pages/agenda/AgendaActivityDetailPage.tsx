@@ -22,7 +22,11 @@ const publicActivities = getPublicActivityList(editorialActivities);
 
 export function AgendaActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [mobileTab, setMobileTab] = useState<AgendaDetailTab>('information');
+  const [tabState, setTabState] = useState<{ id: string | undefined; tab: AgendaDetailTab }>({
+    id, tab: 'information',
+  });
+  const mobileTab = tabState.id === id ? tabState.tab : 'information';
+  const setMobileTab = (tab: AgendaDetailTab) => setTabState({ id, tab });
   const directActivity = publicActivities.find(activity => activity.id === id);
   // Los enlaces previos con el ID editorial siguen funcionando:
   // al separar sedes redirigen a la primera ficha pública.
@@ -34,8 +38,6 @@ export function AgendaActivityDetailPage() {
   const isPreview = Boolean(activity?.id.startsWith('preview-v2-'));
   const previewDateISO = isPreview ? '2026-11-05' : undefined;
   const isVisible = activity ? isAgendaActivityVisible(activity, previewDateISO) : false;
-
-  useEffect(() => setMobileTab('information'), [id]);
 
   useEffect(() => {
     document.title = activity && isVisible

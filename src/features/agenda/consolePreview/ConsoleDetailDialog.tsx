@@ -24,8 +24,11 @@ export function ConsoleDetailDialog({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [mobileTab, setMobileTab] = useState<AgendaDetailTab>('information');
-  useEffect(() => setMobileTab('information'), [activity.id]);
+  const [tabState, setTabState] = useState<{ id: string; tab: AgendaDetailTab }>({
+    id: activity.id, tab: 'information',
+  });
+  const mobileTab = tabState.id === activity.id ? tabState.tab : 'information';
+  const setMobileTab = (tab: AgendaDetailTab) => setTabState({ id: activity.id, tab });
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
