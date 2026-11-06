@@ -2,18 +2,16 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
-import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePreview/ConsoleScheduleEditorDialog';
 import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/ConsoleTypeEditorDialog';
 import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
-import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
+import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft, ConsoleSchedule, ConsoleVenue } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
 import { createDemoSchedule } from '../../features/agenda/consolePreview/scheduleRules';
-import { makePreviewActivity } from '../../features/agenda/consolePreview/previewActivity';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
 const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
@@ -38,38 +36,6 @@ function SectionTitle({ number, title, subtitle }: { number: number; title: stri
         {number}. {title}
       </h2>
       {subtitle && <p className="mt-1 text-[16px] leading-6 text-grey-900">{subtitle}</p>}
-    </div>
-  );
-}
-
-function CardPreview({ draft, schedules, venues, onViewDetail }: {
-  draft: ConsoleDraft;
-  schedules: ConsoleSchedule[];
-  venues: readonly ConsoleVenue[];
-  onViewDetail: (activity: AgendaActivity) => void;
-}) {
-  const editorialActivity = makePreviewActivity(draft, schedules, venues);
-  const publicViews = getPublicActivityViews(editorialActivity);
-
-  return (
-    <div>
-      <h2 className="mb-2 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
-      <p className="mb-5 text-[14px] leading-5 text-[#687f91]">
-        {publicViews.length === 1
-          ? 'Una ficha pública para esta actividad'
-          : publicViews.length + ' fichas públicas, separadas por sede o encuentro'}
-      </p>
-      <div className="flex min-w-0 flex-col gap-4">
-        {publicViews.map(activity => (
-          <div key={activity.id} data-testid="console-preview-card" className="min-w-0">
-            <ActivityCard
-              activity={activity}
-              previewDateISO="1900-01-01"
-              onViewDetail={() => onViewDetail(activity)}
-            />
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
