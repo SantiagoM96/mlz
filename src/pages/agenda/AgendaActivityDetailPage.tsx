@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
+import { AgendaDetailMobileTabs, type AgendaDetailTab } from '../../components/agenda/AgendaDetailMobileTabs';
 import { ActivityDescription } from '../../components/agenda/ActivityDescription';
 import { ActivitySummary } from '../../features/agenda/components/detail/ActivitySummary';
 import { ActivityRegistrationLink } from '../../features/agenda/components/detail/ActivityRegistrationLink';
@@ -21,6 +22,7 @@ const publicActivities = getPublicActivityList(editorialActivities);
 
 export function AgendaActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [mobileTab, setMobileTab] = useState<AgendaDetailTab>('information');
   const directActivity = publicActivities.find(activity => activity.id === id);
   // Los enlaces previos con el ID editorial siguen funcionando:
   // al separar sedes redirigen a la primera ficha pública.
@@ -32,6 +34,8 @@ export function AgendaActivityDetailPage() {
   const isPreview = Boolean(activity?.id.startsWith('preview-v2-'));
   const previewDateISO = isPreview ? '2026-11-05' : undefined;
   const isVisible = activity ? isAgendaActivityVisible(activity, previewDateISO) : false;
+
+  useEffect(() => setMobileTab('information'), [id]);
 
   useEffect(() => {
     document.title = activity && isVisible
@@ -62,33 +66,55 @@ export function AgendaActivityDetailPage() {
         { label: 'Agenda de la Comunidad', to: '/agenda-de-la-comunidad' },
         { label: activity.title },
       ]} />
-      <div className="agenda-motion-detail mt-6 grid min-w-0 items-start gap-6 lg:items-stretch lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
-        <div className="min-w-0 space-y-6">
+
+      <div className="agenda-motion-detail mt-6 grid min-w-0 items-start gap-4 lg:items-stretch lg:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
           <div className="space-y-4">
             <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
-            <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-            <ActivityDescription key={activity.id} activity={activity} />
+            <h1 className="break-words text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
+            <div className="lg:hidden">
+              <AgendaDetailMobileTabs idPrefix="agenda-public"
+                active={mobileTab} onChange={setMobileTab} />
+            </div>
           </div>
-          <img
-            data-testid="agenda-detail-image"
-            src={activity.image}
-            alt={isTypeIllustration ? 'Ilustración correspondiente a ' + activity.type : 'Imagen de ' + activity.title}
-            className={isTypeIllustration
-              ? 'aspect-[5/2] w-full rounded-xl object-cover'
-              : 'aspect-[2/1] w-full rounded-xl object-cover'}
-            width={isTypeIllustration ? 1000 : 924}
-            height={isTypeIllustration ? 400 : 462}
-            fetchPriority="high"
-          />
-          {onlySchedule && <ActivityLocationMap activity={locationActivity} />}
+          <div id="agenda-public-panel-information" role="tabpanel"
+            aria-labelledby="agenda-public-tab-information"
+            data-testid="agenda-detail-information"
+            className={(mobileTab === 'information' ? 'block' : 'hidden') +
+              ' mt-4 min-w-0 space-y-8 lg:block lg:space-y-6'}>
+            <ActivityDescription key={activity.id} activity={activity} />
+            <img
+              data-testid="agenda-detail-image"
+              src={activity.image}
+              alt={isTypeIllustration ? 'Ilustración correspondiente a ' + activity.type : 'Imagen de ' + activity.title}
+              className={isTypeIllustration
+                ? 'aspect-[400/224] w-full rounded-lg object-cover lg:aspect-[5/2] lg:rounded-xl'
+                : 'aspect-[400/224] w-full rounded-lg object-cover lg:aspect-[2/1] lg:rounded-xl'}
+              width={isTypeIllustration ? 1000 : 924}
+              height={isTypeIllustration ? 400 : 462}
+              fetchPriority="high"
+            />
+          </div>
         </div>
-        <div data-testid="agenda-detail-sidebar" className="min-w-0 space-y-4 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0">
+        <div id="agenda-public-panel-when-where" role="tabpanel"
+          aria-labelledby="agenda-public-tab-when-where"
+          data-testid="agenda-detail-sidebar"
+          className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
+            ' min-w-0 space-y-4 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0'}>
           <ActivityShare key={activity.id} title={activity.title} />
-          <div data-testid="agenda-detail-sticky" className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto lg:overscroll-contain">
+          <div data-testid="agenda-detail-sticky"
+            className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto lg:overscroll-contain">
             <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
             <ActivityRegistrationLink activity={activity} preview={isPreview} />
           </div>
         </div>
+        {onlySchedule && (
+          <div data-testid="agenda-detail-map-panel"
+            className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
+              ' min-w-0 lg:col-start-1 lg:row-start-2 lg:block'}>
+            <ActivityLocationMap activity={locationActivity} />
+          </div>
+        )}
       </div>
     </PageContainer>
   );

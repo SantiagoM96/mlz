@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
 import { ActivityCharacteristic } from '../../../components/agenda/ActivityCharacteristic';
 import { ActivityScheduleDateTime } from '../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
+import { AgendaDetailMobileTabs, type AgendaDetailTab } from '../../../components/agenda/AgendaDetailMobileTabs';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrationLink';
 import { ActivityLocationMap } from '../components/detail/ActivityLocationMap';
@@ -23,6 +24,8 @@ export function ConsoleDetailDialog({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const [mobileTab, setMobileTab] = useState<AgendaDetailTab>('information');
+  useEffect(() => setMobileTab('information'), [activity.id]);
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -82,17 +85,26 @@ export function ConsoleDetailDialog({
             Inicio <span className="px-2">›</span> Agenda de la Comunidad
             <span className="px-2">›</span> <strong>{activity.title}</strong>
           </p>
-          <div className="grid min-w-0 items-start gap-6 lg:items-stretch lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
-            <div className="min-w-0 space-y-6">
+          <div className="grid min-w-0 items-start gap-4 lg:items-stretch lg:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,430px)]">
+            <div className="min-w-0 lg:col-start-1 lg:row-start-1">
               <div className="space-y-4">
                 <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
                 <h2 id="console-detail-heading" className="break-words text-[32px] font-bold leading-10 text-primary-600">
                   {activity.title}
                 </h2>
-                <ActivityDescription activity={activity} />
+                <div className="lg:hidden">
+                  <AgendaDetailMobileTabs idPrefix="agenda-console"
+                    active={mobileTab} onChange={setMobileTab} />
+                </div>
               </div>
+              <div id="agenda-console-panel-information" role="tabpanel"
+                aria-labelledby="agenda-console-tab-information"
+                data-testid="agenda-console-detail-information"
+                className={(mobileTab === 'information' ? 'block' : 'hidden') +
+                  ' mt-4 min-w-0 space-y-8 lg:block lg:space-y-6'}>
+                <ActivityDescription activity={activity} />
               <img
-                className="aspect-[2/1] w-full rounded-[10px] object-cover"
+                className="aspect-[400/224] w-full rounded-lg object-cover lg:aspect-[2/1] lg:rounded-[10px]"
                 src={activity.image}
                 alt=""
               />
@@ -107,17 +119,14 @@ export function ConsoleDetailDialog({
                   </div>
                 </section>
               )}
-              {first && (
-                <ActivityLocationMap activity={{
-                  ...activity,
-                  locality: first.locality,
-                  venue: first.venue,
-                  address: first.address,
-                }} />
-              )}
+              </div>
             </div>
 
-            <div data-testid="agenda-console-detail-sidebar" className="min-w-0 space-y-4 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0">
+            <div id="agenda-console-panel-when-where" role="tabpanel"
+              aria-labelledby="agenda-console-tab-when-where"
+              data-testid="agenda-console-detail-sidebar"
+              className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
+                ' min-w-0 space-y-4 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0'}>
               <p className="flex items-center gap-2 text-[18px] font-bold text-primary-600">
                 <MaterialIcon name="link" size={20} /> Compartir
               </p>
@@ -190,6 +199,18 @@ export function ConsoleDetailDialog({
               />
               </div>
             </div>
+            {first && (
+              <div data-testid="agenda-console-detail-map-panel"
+                className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
+                  ' min-w-0 lg:col-start-1 lg:row-start-2 lg:block'}>
+                <ActivityLocationMap activity={{
+                  ...activity,
+                  locality: first.locality,
+                  venue: first.venue,
+                  address: first.address,
+                }} />
+              </div>
+            )}
           </div>
         </div>
       </section>
