@@ -33,7 +33,7 @@ export function ActivitySummary({
       )}
       <div className="space-y-4">
         {schedules.map(schedule => (
-          <div key={schedule.id} data-testid="agenda-detail-programming" className="space-y-2">
+          <div key={schedule.id} data-testid="agenda-detail-programming" className="space-y-4">
             {schedule.suspendedByRain === true && (
               <div data-testid="agenda-schedule-rain" className="w-fit max-w-full">
                 <ActivityBadges badges={[rainBadge]} />

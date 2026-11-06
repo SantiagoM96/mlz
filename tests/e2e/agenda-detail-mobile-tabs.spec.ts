@@ -101,7 +101,7 @@ test('Agenda V2: lluvia arriba y afuera de la caja en public y consola, incluida
     const inner = box.getBoundingClientRect();
     return { outside: !box.contains(badge), distance: Math.round(inner.top - outer.bottom), alignment: Math.abs(outer.left - inner.left) };
   });
-  expect(geometry).toEqual({ outside: true, distance: 8, alignment: 0 });
+  expect(geometry).toEqual({ outside: true, distance: 16, alignment: 0 });
 
   await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
@@ -121,5 +121,5 @@ test('Agenda V2: lluvia arriba y afuera de la caja en public y consola, incluida
     const box = element.querySelector(':scope > section')!;
     return Math.round(box.getBoundingClientRect().top - badge.getBoundingClientRect().bottom);
   });
-  expect(previewGap).toBe(8);
+  expect(previewGap).toBe(16);
 });
