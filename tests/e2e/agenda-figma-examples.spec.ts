@@ -188,7 +188,8 @@ test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede'
   await expect(plaza.locator('section')).toHaveCount(1);
   await expect(plaza).toContainText('Todos los martes');
   await expect(plaza).toContainText('Del 10 de noviembre al 15 de diciembre');
-  await expect(plaza).toContainText('Se suspende por lluvia');
+  await expect(plaza.locator('[data-agenda-chip-kind="rain"]')).toHaveCount(1);
+  await expect(plaza.locator('section [data-agenda-chip-kind="rain"]')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Polideportivo Evita');
 
@@ -198,7 +199,7 @@ test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede'
   await expect(polideportivo.locator('section')).toHaveCount(1);
   await expect(polideportivo).toContainText('Todos los jueves');
   await expect(polideportivo).toContainText('Del 12 de noviembre al 17 de diciembre');
-  await expect(polideportivo).not.toContainText('suspende por lluvia');
+  await expect(polideportivo.locator('[data-agenda-chip-kind="rain"]')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Polideportivo Evita');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Plaza Grigera');
 
@@ -606,4 +607,40 @@ test('Agenda V2: consola mantiene Compartir afuera del sticky y respeta su encab
     await expect(sticky).toHaveCSS('position', 'static');
   }
   expect(await sticky.evaluate(el => el.contains(el.previousElementSibling))).toBe(false);
+});
+
+test('Agenda V2: la lluvia corresponde a cada programación y queda fuera de su caja', async ({ page }, info) => {
+  await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  const rainy = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  const chip = rainy.locator('[data-agenda-chip-kind="rain"]');
+  await expect(chip).toHaveCount(1);
+  await expect(rainy.locator('section [data-agenda-chip-kind="rain"]')).toHaveCount(0);
+  const badgeBottom = await chip.evaluate(element => element.getBoundingClientRect().bottom);
+  const cardTop = await rainy.locator('section').first().evaluate(element => element.getBoundingClientRect().top);
+  expect(badgeBottom).toBeLessThan(cardTop);
+
+  await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-polideportivo-evita');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' }).locator('[data-agenda-chip-kind="rain"]')).toHaveCount(0);
+
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  const rainControls = page.getByRole('checkbox', { name: 'Se suspende por lluvia' });
+  await expect(rainControls).toHaveCount(1);
+  await expect(rainControls.first()).toBeChecked();
+  const programming2 = page.getByRole('heading', { name: 'Programación 2' }).locator('..').locator('..');
+  await programming2.getByRole('button', { name: 'Editar' }).click();
+  await expect(rainControls).toHaveCount(2);
+  await expect(rainControls.nth(1)).not.toBeChecked();
+
+  await rainControls.nth(1).check();
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  const cards = page.getByTestId('console-preview-card');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.nth(0).locator('[data-agenda-chip-kind="rain"]')).toHaveCount(1);
+  await expect(cards.nth(1).locator('[data-agenda-chip-kind="rain"]')).toHaveCount(1);
+  await cards.nth(1).getByRole('button', { name: 'Ver más' }).click();
+  const detail = page.getByTestId('console-detail-preview');
+  await expect(detail.locator('[data-agenda-chip-kind="rain"]')).toHaveCount(1);
+  await expect(detail.locator('section [data-agenda-chip-kind="rain"]')).toHaveCount(0);
 });

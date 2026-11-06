@@ -15,6 +15,19 @@ const venueSlug = (name: string): string =>
     .toLocaleLowerCase('es-AR')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sede';
 
+function badgesForVenue(
+  activity: AgendaActivity,
+  schedules: readonly AgendaSchedule[],
+): AgendaActivity['badges'] {
+  const other = activity.badges.filter(badge => badge.kind !== 'rain');
+  // La lluvia no se hereda desde la actividad: la define cada programación.
+  // Cuando todas las programaciones de una tarjeta coinciden, mostrar una chip arriba.
+  const allSuspend = schedules.length > 0 && schedules.every(schedule => schedule.suspendedByRain === true);
+  return allSuspend
+    ? [...other, { kind: 'rain', label: 'Se suspende por lluvia' }]
+    : other;
+}
+
 /**
  * Misma sede + distintas fechas/horarios => una ficha.
  * Excepción: encuentros puntuales con detalle editorial propio => una ficha
@@ -53,7 +66,7 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
       venue: first.venue,
       address: first.address,
       schedules: [...schedules],
-      badges: [...activity.badges],
+      badges: badgesForVenue(activity, schedules),
     };
   });
 }

@@ -22,6 +22,8 @@ export interface AgendaSchedule {
   detail?: string;
   /** El detalle contiene nombres de artistas, no una nota genérica. */
   detailType?: 'artists';
+  /** Condición de lluvia de esta programación; puede diferir entre sedes. */
+  suspendedByRain?: boolean;
 }
 
 export type AgendaRegistrationMode = 'none' | 'online' | 'in-person';

@@ -29,6 +29,7 @@ function CardContents({
 }: Omit<Props, 'onViewDetail'> & { action: ReactNode }) {
   const schedules = getActivitySchedulePresentations(activity, previewDateISO);
   const firstSchedule = schedules[0];
+  const rainAlreadyInHeader = activity.badges.some(badge => badge.kind === 'rain');
   const venue = firstSchedule?.venue?.trim() || activity.venue?.trim() || 'Lugar a confirmar';
   const address = firstSchedule?.address || activity.address;
   const locality = firstSchedule?.locality || activity.locality;
@@ -55,6 +56,9 @@ function CardContents({
                 {index > 0 && (
                   <div aria-hidden="true" data-agenda-programming-divider
                     className="h-px w-full bg-[#e7e7e7]" />
+                )}
+                {schedule.suspendedByRain === true && !rainAlreadyInHeader && (
+                  <ActivityBadges badges={[{ kind: 'rain', label: 'Se suspende por lluvia' }]} />
                 )}
                 <ActivityScheduleDateTime schedule={schedule} />
               </Fragment>
