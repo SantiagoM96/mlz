@@ -128,7 +128,7 @@ function renderCarouselNavigation(){
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
  el('pageIndicator').textContent='Página '+(activePage+1)+' de '+carouselPages.length+' · '+(activePage===0?'Portada':'Interna');
- el('removePage').disabled=carouselPages.length===1;
+ el('removePage').disabled=activePage===0;
 }
 function selectPage(index){
  if(index===activePage||index<0||index>=carouselPages.length)return;
@@ -141,7 +141,7 @@ function initializeCarousel(){
   activePage=index;loadPage(carouselPages[index]);renderCarouselNavigation();
  });
  el('removePage').addEventListener('click',()=>{
-  if(carouselPages.length<=1)return;
+  if(activePage===0)return;
   carouselPages.splice(activePage,1);activePage=Math.min(activePage,carouselPages.length-1);
   loadPage(carouselPages[activePage]);renderCarouselNavigation();
  });
