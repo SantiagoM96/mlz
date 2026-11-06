@@ -361,7 +361,10 @@ test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa 
       const rect = element.getBoundingClientRect();
       return { width: rect.width, height: rect.height };
     });
-    expect(size).toEqual({ width: 24, height: 24 });
+    // Chromium puede devolver fracciones de subpíxel (ej.: 23.99993896484375).
+    // Tolerar centésimas de píxel conserva la exigencia de geometría 24 × 24.
+    expect(size.width).toBeCloseTo(24, 2);
+    expect(size.height).toBeCloseTo(24, 2);
   }
 
   await page.goto(list + '/preview-v2-folklore--sede-plaza-grigera--fecha-2026-11-14');
@@ -383,7 +386,8 @@ test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa 
     const rect = element.getBoundingClientRect();
     return { width: rect.width, height: rect.height };
   });
-  expect(previewSize).toEqual({ width: 24, height: 24 });
+  expect(previewSize.width).toBeCloseTo(24, 2);
+  expect(previewSize.height).toBeCloseTo(24, 2);
 
   await card.getByRole('button', { name: 'Ver más' }).click();
   const preview = page.getByTestId('console-detail-preview');
