@@ -139,7 +139,7 @@ function CardPreview({ draft, schedules, onViewDetail }: {
       <p className="mb-5 text-[14px] leading-5 text-[#687f91]">
         {publicViews.length === 1
           ? 'Una ficha pública para esta actividad'
-          : publicViews.length + ' fichas públicas, una por sede'}
+          : publicViews.length + ' fichas públicas, separadas por sede o encuentro'}
       </p>
       <div className="flex min-w-0 flex-col gap-4">
         {publicViews.map(activity => (

@@ -2,7 +2,8 @@ import type { AgendaActivity, AgendaSchedule } from '../../../data/agenda';
 
 /**
  * La consola conserva una única actividad con N programaciones.
- * La web pública representa una tarjeta/detalle por sede (no por día u horario).
+ * La web pública representa una ficha por sede, excepto encuentros puntuales
+ * con detalle propio, que tienen una ficha individual por programación.
  * El resultado es derivado: nunca se modifican los registros originales.
  */
 const venueKey = (schedule: AgendaSchedule): string =>
@@ -30,14 +31,18 @@ function badgesForVenue(
 
 /**
  * Misma sede + distintas fechas/horarios => una ficha.
- * Sede diferente => ficha pública y mapa independientes.
+ * Excepción: encuentros puntuales con detalle editorial propio => una ficha
+ * por encuentro, aunque compartan sede, con detalle y mapa independientes.
+ * Las programaciones recurrentes siguen agrupadas.
  */
 export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity[] {
   if (!activity.schedules?.length) return [activity];
 
   const groups = new Map<string, AgendaSchedule[]>();
   for (const schedule of activity.schedules) {
-    const key = venueKey(schedule);
+    // Un encuentro con artistas/contenido propio no comparte detalle con otra fecha.
+    const uniqueEncounter = schedule.scheduleType === 'exact' && Boolean(schedule.detail?.trim());
+    const key = venueKey(schedule) + (uniqueEncounter ? '|encuentro:' + schedule.id : '');
     const existing = groups.get(key);
     if (existing) existing.push(schedule);
     else groups.set(key, [schedule]);
@@ -47,7 +52,10 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
   return [...groups.values()].map(schedules => {
     const first = schedules[0];
     if (!first) return activity;
-    const slug = venueSlug(first.venue || first.locality);
+    const venue = venueSlug(first.venue || first.locality);
+    // Las URLs por fecha distinguen dos encuentros realizados en una misma sede.
+    const encounter = schedules.length === 1 && first.scheduleType === 'exact' && Boolean(first.detail?.trim());
+    const slug = encounter ? venue + '--fecha-' + first.startDate : venue;
     const occurrence = (usedSlugs.get(slug) ?? 0) + 1;
     usedSlugs.set(slug, occurrence);
     const suffix = occurrence === 1 ? slug : slug + '-' + occurrence;

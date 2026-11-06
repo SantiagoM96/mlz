@@ -25,7 +25,7 @@ test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ pag
     ['Muestra fotográfica barrial', 1],
     ['Taller de compostaje', 1],
     ['Fútbol en Comunidad', 2],
-    ['Folklore en Comunidad', 1],
+    ['Folklore en Comunidad', 2],
     ['Taller de huerta comunitaria', 1],
     ['Jornada ambiental itinerante', 2],
     ['Yoga en Comunidad', 2],
@@ -77,11 +77,23 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).not.toContainText('Todos los martes');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
 
+  // El enlace editorial anterior sigue vigente y redirige al primer encuentro.
   await page.goto(list + '/preview-v2-folklore');
-  const folklore = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-  await expect(folklore.locator('section')).toHaveCount(2);
-  await expect(folklore).toContainText('Participan Andrea Gauna y Lautaro Rotela.');
-  await expect(folklore).toContainText('Participan Brian Albornoz y Luz Pedrosa.');
+  await expect(page).toHaveURL(/preview-v2-folklore--sede-plaza-grigera--fecha-2026-11-14$/);
+  const folklore14 = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(folklore14.locator('section')).toHaveCount(1);
+  await expect(folklore14).toContainText('Sábado 14 de noviembre');
+  await expect(folklore14).toContainText('Participan Andrea Gauna y Lautaro Rotela.');
+  await expect(folklore14).not.toContainText('Brian Albornoz');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
+
+  await page.goto(list + '/preview-v2-folklore--sede-plaza-grigera--fecha-2026-11-21');
+  const folklore21 = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(folklore21.locator('section')).toHaveCount(1);
+  await expect(folklore21).toContainText('Sábado 21 de noviembre');
+  await expect(folklore21).toContainText('Participan Brian Albornoz y Luz Pedrosa.');
+  await expect(folklore21).not.toContainText('Andrea Gauna');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
 
   await page.goto(list + '/preview-v2-huerta');
   await expect(page.getByRole('heading', { name: 'Inscripción', exact: true })).toBeVisible();
@@ -126,16 +138,24 @@ test('Consola V2: portada, detalle y texto de programación se visualizan sin pu
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
-  const folkloreCard = page.getByTestId('console-preview-card');
-  await expect(folkloreCard).toContainText('Sábado 14 de noviembre');
-  await expect(folkloreCard).toContainText('Sábado 21 de noviembre');
-  await expect(folkloreCard).not.toContainText('+ 1 programación');
-  await expect(folkloreCard.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(5);
-  await expect(folkloreCard.locator('[data-agenda-programming-divider]')).toHaveCount(1);
-  await page.getByTestId('console-preview-card').getByRole('button', { name: 'Ver más' }).click();
+  const folkloreCards = page.getByTestId('console-preview-card');
+  await expect(folkloreCards).toHaveCount(2);
+  await expect(folkloreCards.nth(0)).toContainText('Sábado 14 de noviembre');
+  await expect(folkloreCards.nth(0)).not.toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(1)).toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(1)).not.toContainText('Sábado 14 de noviembre');
+  for (const card of await folkloreCards.all()) {
+    await expect(card.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
+    await expect(card.locator('[data-agenda-programming-divider]')).toHaveCount(0);
+  }
+  await folkloreCards.nth(0).getByRole('button', { name: 'Ver más' }).click();
   const dialog = page.getByTestId('console-detail-preview');
   await expect(dialog).toContainText('Participan Andrea Gauna y Lautaro Rotela.');
+  await expect(dialog).not.toContainText('Brian Albornoz');
+  await page.keyboard.press('Escape');
+  await folkloreCards.nth(1).getByRole('button', { name: 'Ver más' }).click();
   await expect(dialog).toContainText('Participan Brian Albornoz y Luz Pedrosa.');
+  await expect(dialog).not.toContainText('Andrea Gauna');
   await page.keyboard.press('Escape');
   await expect(dialog).toHaveCount(0);
 });
@@ -192,13 +212,12 @@ test('La consola agrupa fechas por sede y permite la vista previa de cada ubicac
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
-  await expect(page.getByTestId('console-preview-card')).toHaveCount(1);
-  const folkloreCard = page.getByTestId('console-preview-card');
-  await expect(folkloreCard).toContainText('Sábado 14 de noviembre');
-  await expect(folkloreCard).toContainText('Sábado 21 de noviembre');
-  await expect(folkloreCard).not.toContainText('+ 1 programación');
-  await expect(folkloreCard.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(5);
-  await expect(folkloreCard.locator('[data-agenda-programming-divider]')).toHaveCount(1);
+  const folkloreCards = page.getByTestId('console-preview-card');
+  await expect(folkloreCards).toHaveCount(2);
+  await expect(folkloreCards.nth(0)).toContainText('Sábado 14 de noviembre');
+  await expect(folkloreCards.nth(1)).toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(0)).not.toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(1)).not.toContainText('Sábado 14 de noviembre');
 });
 
 test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', async ({ page }, info) => {
@@ -237,13 +256,15 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
   expect(await chip.evaluate(element => getComputedStyle(element).fontSize)).toBe('16px');
 
   await search.fill('Folklore en Comunidad');
-  const folkloreCard = page.getByTestId('agenda-card');
-  await expect(folkloreCard).toHaveCount(1);
-  await expect(folkloreCard.getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(5);
-  await expect(folkloreCard.locator('[data-agenda-programming-divider]')).toHaveCount(1);
-  await expect(folkloreCard).toContainText('Sábado 14 de noviembre');
-  await expect(folkloreCard).toContainText('Sábado 21 de noviembre');
-  await expect(folkloreCard).not.toContainText('programación');
+  const folkloreCards = page.getByTestId('agenda-card');
+  await expect(folkloreCards).toHaveCount(2);
+  await expect(folkloreCards.nth(0).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
+  await expect(folkloreCards.nth(1).getByTestId('agenda-card-schedules').locator(':scope > [data-agenda-characteristic]')).toHaveCount(3);
+  await expect(page.locator('[data-agenda-programming-divider]')).toHaveCount(0);
+  await expect(folkloreCards.nth(0)).toContainText('Sábado 14 de noviembre');
+  await expect(folkloreCards.nth(1)).toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(0)).not.toContainText('Sábado 21 de noviembre');
+  await expect(folkloreCards.nth(1)).not.toContainText('Sábado 14 de noviembre');
 
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
