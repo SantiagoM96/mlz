@@ -123,3 +123,46 @@ test('Agenda V2: lluvia arriba y afuera de la caja en public y consola, incluida
   });
   expect(previewGap).toBe(16);
 });
+
+
+test('Agenda V2: el tabpanel móvil mide su contenido, sin 16px fantasma debajo de las fechas', async ({ page }, info) => {
+  const width = info.project.use.viewport?.width ?? 0;
+  await page.goto(base + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  const publicPanel = page.locator('#agenda-public-panel-when-where');
+  if (width < 1024) {
+    await page.getByRole('tab', { name: 'Cuándo y dónde' }).click();
+    await expect(publicPanel).toHaveCSS('display', 'flow-root');
+    const measure = await publicPanel.evaluate(element => {
+      const last = element.lastElementChild as HTMLElement;
+      return Math.round(element.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom);
+    });
+    expect(measure).toBeLessThanOrEqual(1);
+    const cardBottom = await page.getByTestId('agenda-detail-programming').first()
+      .locator(':scope > section').evaluate(el => el.getBoundingClientRect().bottom);
+    const mapTop = await page.getByTestId('agenda-detail-map-panel')
+      .evaluate(el => el.getBoundingClientRect().top);
+    expect(mapTop - cardBottom).toBeGreaterThanOrEqual(15);
+    expect(mapTop - cardBottom).toBeLessThanOrEqual(17);
+  } else {
+    await expect(publicPanel).toHaveCSS('display', 'contents');
+    await expect(page.getByTestId('agenda-detail-sidebar')).toHaveCSS('display', 'flex');
+    await expect(page.getByTestId('agenda-detail-sticky')).toHaveCSS('position', 'sticky');
+  }
+
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  if (width < 1024) await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
+  const consolePanel = page.locator('#agenda-console-panel-when-where');
+  if (width < 1024) {
+    await page.getByTestId('console-detail-preview').getByRole('tab', { name: 'Cuándo y dónde' }).click();
+    await expect(consolePanel).toHaveCSS('display', 'flow-root');
+    const emptySpace = await consolePanel.evaluate(element => {
+      const last = element.lastElementChild as HTMLElement;
+      return Math.round(element.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom);
+    });
+    expect(emptySpace).toBeLessThanOrEqual(1);
+  } else {
+    await expect(consolePanel).toHaveCSS('display', 'contents');
+    await expect(page.getByTestId('agenda-console-detail-sticky')).toHaveCSS('position', 'sticky');
+  }
+});

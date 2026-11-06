@@ -123,11 +123,13 @@ export function ConsoleDetailDialog({
               </div>
             </div>
 
-            <div id="agenda-console-panel-when-where" role="tabpanel"
-              aria-labelledby="agenda-console-tab-when-where"
-              data-testid="agenda-console-detail-sidebar"
+            {/* El tabpanel es una superficie de contenido; su pista de sticky es independiente. */}
+            <div data-testid="agenda-console-detail-sidebar"
               className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-                ' min-w-0 space-y-4 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0'}>
+                ' min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4'}>
+              <div id="agenda-console-panel-when-where" role="tabpanel"
+                aria-labelledby="agenda-console-tab-when-where"
+                className="flow-root min-w-0 space-y-4 lg:contents lg:space-y-0">
               <p className="flex items-center gap-2 text-[18px] font-bold text-primary-600">
                 <MaterialIcon name="link" size={20} /> Compartir
               </p>
@@ -200,6 +202,7 @@ export function ConsoleDetailDialog({
                 activity={{ ...activity, registrationUrl: undefined }}
                 preview
               />
+              </div>
               </div>
             </div>
             {first && (

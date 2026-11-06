@@ -98,16 +98,20 @@ export function AgendaActivityDetailPage() {
             />
           </div>
         </div>
-        <div id="agenda-public-panel-when-where" role="tabpanel"
-          aria-labelledby="agenda-public-tab-when-where"
-          data-testid="agenda-detail-sidebar"
+        {/* La pista alta sirve únicamente como límite para sticky.
+            El tabpanel no debe heredar su altura ni generar un espacio fantasma. */}
+        <div data-testid="agenda-detail-sidebar"
           className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-            ' min-w-0 space-y-4 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4 lg:space-y-0'}>
+            ' min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4'}>
+          <div id="agenda-public-panel-when-where" role="tabpanel"
+            aria-labelledby="agenda-public-tab-when-where"
+            className="flow-root min-w-0 space-y-4 lg:contents lg:space-y-0">
           <ActivityShare key={activity.id} title={activity.title} />
           <div data-testid="agenda-detail-sticky"
             className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto lg:overscroll-contain">
             <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
             <ActivityRegistrationLink activity={activity} preview={isPreview} />
+          </div>
           </div>
         </div>
         {onlySchedule && (
