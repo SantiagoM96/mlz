@@ -210,3 +210,26 @@ test('Consola desktop: la vista previa acompaña el scroll sin superar el formul
   const asideBottom = await sticky.evaluate(el => el.getBoundingClientRect().bottom);
   expect(asideBottom).toBeLessThanOrEqual(Math.max(formBottom, 620));
 });
+
+test('Consola: al cambiar de caso reinicia las programaciones y el editor no arrastra valores', async ({ page }) => {
+  await page.goto(route + '?caso=preview-v2-folklore');
+  const rows = page.getByTestId('console-schedule-row');
+  await expect(rows).toHaveCount(2);
+
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  await expect(editor).toBeVisible();
+  await editor.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await expect(editor).toHaveCount(0);
+
+  await page.getByLabel('Casos de demostración').selectOption('preview-v2-reciclaje');
+  await expect(page.getByLabel('Título')).toHaveValue('Jornada de reciclaje');
+  await expect(rows).toHaveCount(1);
+  await expect(page).toHaveURL(/caso=preview-v2-reciclaje/);
+
+  await page.getByRole('button', { name: 'Agregar', exact: true }).click();
+  await expect(editor.getByRole('heading', { name: 'Agregar programación' })).toBeVisible();
+  await expect(editor.getByLabel('Fecha', { exact: true })).toHaveValue('');
+  await editor.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await expect(rows).toHaveCount(1);
+});
