@@ -28,7 +28,7 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
     dayLabel: 'Todos los martes y jueves',
     timeLabel: 'Martes 09:00 h · Jueves 18:00 h',
     image: asset('cuerpo-mente'),
-    badges: [],
+    badges: [{ kind: 'rain', label: 'Se suspende por lluvia' }],
     description: 'Clases de yoga abiertas a la comunidad para trabajar la movilidad, la respiración y la relajación. La propuesta es la misma en ambas sedes y está pensada para personas con distintos niveles de experiencia.\nElegí el día y lugar que te resulte más cómodo.',
     descriptionIsIllustrative: true,
     schedules: [
@@ -43,7 +43,6 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
         locality: 'Lomas de Zamora',
         venue: 'Plaza Grigera',
         address: 'Av. Hipólito Yrigoyen 8700 - Lomas de Zamora',
-        suspendedByRain: true,
       },
       {
         id: 'yoga-polideportivo-evita',
@@ -56,7 +55,6 @@ export const agendaV2PreviewActivities: readonly AgendaActivity[] = [
         locality: 'Albertina',
         venue: 'Polideportivo Evita',
         address: 'Atenas 2002 - Albertina',
-        suspendedByRain: false,
       },
     ],
   },

@@ -15,20 +15,6 @@ const venueSlug = (name: string): string =>
     .toLocaleLowerCase('es-AR')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sede';
 
-function badgesForVenue(
-  activity: AgendaActivity,
-  schedules: readonly AgendaSchedule[],
-): AgendaActivity['badges'] {
-  const other = activity.badges.filter(badge => badge.kind !== 'rain');
-  const explicitRain = schedules.some(schedule => schedule.suspendedByRain !== undefined);
-  const allSuspend = schedules.length > 0 && schedules.every(schedule => schedule.suspendedByRain === true);
-  const generalRain = activity.badges.find(badge => badge.kind === 'rain');
-  const showRain = explicitRain ? allSuspend : Boolean(generalRain);
-  return showRain
-    ? [...other, generalRain ?? { kind: 'rain', label: 'Se suspende por lluvia' }]
-    : other;
-}
-
 /**
  * Misma sede + distintas fechas/horarios => una ficha.
  * Excepción: encuentros puntuales con detalle editorial propio => una ficha
@@ -67,7 +53,7 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
       venue: first.venue,
       address: first.address,
       schedules: [...schedules],
-      badges: badgesForVenue(activity, schedules),
+      badges: [...activity.badges],
     };
   });
 }

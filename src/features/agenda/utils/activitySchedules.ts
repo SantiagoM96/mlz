@@ -11,7 +11,6 @@ export interface AgendaSchedulePresentation {
   address?: string;
   detail?: string;
   detailType?: 'artists';
-  suspendedByRain?: boolean;
 }
 
 const weekdays: Record<number, string> = {
@@ -113,7 +112,6 @@ function toPresentation(schedule: AgendaSchedule): AgendaSchedulePresentation {
     address: schedule.address,
     detail: schedule.detail,
     detailType: schedule.detailType,
-    suspendedByRain: schedule.suspendedByRain,
   };
 }
 
