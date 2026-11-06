@@ -76,6 +76,7 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
   const venue = venueById(first?.venueId ?? '');
   const badges: AgendaActivity['badges'] = [];
   if (draft.inclusive) badges.push({ kind: 'accessible', label: 'Disciplina inclusiva' });
+  if (draft.suspendedByRain) badges.push({ kind: 'rain', label: 'Se suspende por lluvia' });
   if (draft.registrationMode !== 'none') badges.push({ kind: 'registration', label: 'Requiere inscripción' });
   if (draft.featured) badges.push({ kind: 'featured', label: 'Destacado' });
   return {
@@ -108,7 +109,6 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
         address: selectedVenue.address + ' - ' + selectedVenue.locality,
         detail: schedule.detail,
         detailType: schedule.detailType,
-        suspendedByRain: schedule.suspendedByRain,
       };
     }),
   };
@@ -159,6 +159,7 @@ function getFigmaExamplePreset(id: string | null): {
       type: activity.type,
       description: activity.description ?? '',
       inclusive: badges.some(item => item.kind === 'accessible'),
+      suspendedByRain: badges.some(item => item.kind === 'rain'),
       registrationMode: activity.registrationMode ?? 'none',
       registrationInformation: activity.registrationInformation ?? '',
       registrationUrl: activity.registrationMode === 'online'
@@ -177,7 +178,6 @@ function getFigmaExamplePreset(id: string | null): {
       startTime: schedule.startTime,
       endTime: schedule.endTime ?? '',
       venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
-      suspendedByRain: schedule.suspendedByRain ?? badges.some(item => item.kind === 'rain'),
       detail: schedule.detail ?? '',
       detailType: schedule.detailType,
     })),
@@ -331,6 +331,12 @@ export function AgendaConsolePreviewPage() {
                       className="h-5 w-5 accent-[#236999]" />
                     Disciplina inclusiva
                   </label>
+                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
+                    <input type="checkbox" checked={draft.suspendedByRain}
+                      onChange={event => updateDraft({ suspendedByRain: event.target.checked })}
+                      className="h-5 w-5 accent-[#236999]" />
+                    Se suspende por lluvia
+                  </label>
                 </div>
               </div>
             </section>
@@ -454,12 +460,7 @@ export function AgendaConsolePreviewPage() {
                               </a></dd>
                             </dl>
                           </div>
-                          <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-[4px] text-[16px] font-bold text-primary-600">
-                            <input type="checkbox" checked={schedule.suspendedByRain}
-                              onChange={event => updateSchedule(schedule.id, { suspendedByRain: event.target.checked })}
-                              className="h-5 w-5 accent-[#236999]" />
-                            Se suspende por lluvia
-                          </label>
+                          
                           <FormField label={schedule.detailType === 'artists' ? 'Artistas' : 'Detalle de esta programación (opcional)'} htmlFor={'schedule-detail-' + schedule.id}>
                             <textarea id={'schedule-detail-' + schedule.id} rows={3}
                               className={inputClass + ' min-h-[108px] resize-y'}

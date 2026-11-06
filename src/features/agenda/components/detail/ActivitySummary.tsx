@@ -15,18 +15,15 @@ export function ActivitySummary({
 }: { activity: AgendaActivity; previewDateISO?: string }) {
   const schedules = getActivitySchedulePresentations(activity, previewDateISO);
   const multiple = getUniqueActivityLocations(schedules).length > 1;
-  const badges = activity.badges.filter(badge =>
-    badge.kind !== 'rain' || !schedules.some(schedule => schedule.suspendedByRain !== undefined),
-  );
 
   return (
     <aside aria-label="Cuándo y dónde" className="min-w-0">
       <h2 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">
         Cuándo y dónde
       </h2>
-      {badges.length > 0 && (
+      {activity.badges.length > 0 && (
         <div className="mb-4">
-          <ActivityBadges badges={badges} />
+          <ActivityBadges badges={activity.badges} />
         </div>
       )}
       <div className="space-y-4">
@@ -56,14 +53,7 @@ export function ActivitySummary({
                   )}
                 </div>
               )}
-              {schedule.suspendedByRain && (
-                <div className="pt-2">
-                  <span className="inline-flex max-w-full items-center gap-2 rounded-[6px] bg-[#e5f0ff] px-3 py-2 text-[15px] font-medium leading-5 text-[#006eff]">
-                    <MaterialIcon name="rainy" size={19} />
-                    Se suspende por lluvia
-                  </span>
-                </div>
-              )}
+              
               {schedule.detail?.trim() && (schedule.detailType === 'artists'
                 ? <ActivityCharacteristic variant="sin-label" icon="comedy_mask" field="artists" value={schedule.detail.trim()} />
                 : <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
