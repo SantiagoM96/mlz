@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import type { ConsoleVenue } from './model';
 import { venueById } from './scheduleRules';
@@ -15,6 +15,8 @@ interface Props {
 /** Selector y alta de sedes reutilizables, sin conocer el resto del formulario. */
 export function ConsoleVenueSelector({ venueId, venues, onVenueChange, onCreateVenue }: Props) {
   const [addingVenue, setAddingVenue] = useState(false);
+  const venueSelectRef = useRef<HTMLSelectElement>(null);
+  const addVenueButtonRef = useRef<HTMLButtonElement>(null);
   const [venueFields, setVenueFields] = useState({ name: '', locality: '', address: '' });
   const [venueError, setVenueError] = useState('');
   const venue = venueById(venueId, venues);
@@ -30,17 +32,19 @@ export function ConsoleVenueSelector({ venueId, venues, onVenueChange, onCreateV
     onVenueChange(id);
     setVenueError('');
     setAddingVenue(false);
+    // El botón Guardar desaparece: mover el foco al lugar recién seleccionado.
+    venueSelectRef.current?.focus();
   };
   return (
     <>
           <div className="space-y-2">
             <Field id="console-schedule-venue" label="Lugar">
-              <select id="console-schedule-venue" value={venueId} className={inputClass}
+              <select ref={venueSelectRef} id="console-schedule-venue" value={venueId} className={inputClass}
                 onChange={event => onVenueChange(event.target.value)}>
                 {venues.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}
               </select>
             </Field>
-            <button type="button" onClick={() => { setAddingVenue(current => !current); setVenueError(''); }}
+            <button ref={addVenueButtonRef} type="button" onClick={() => { setAddingVenue(current => !current); setVenueError(''); }}
               className="inline-flex min-h-10 items-center gap-2 rounded-[6px] text-[15px] font-bold text-primary-600 hover:underline"
               aria-expanded={addingVenue}>
               <MaterialIcon name="add" size={20}/> Agregar nuevo lugar
@@ -69,7 +73,7 @@ export function ConsoleVenueSelector({ venueId, venues, onVenueChange, onCreateV
               </div>
               {venueError && <p role="alert" className="text-[14px] font-medium text-[#ac343e]">{venueError}</p>}
               <div className="flex flex-wrap justify-end gap-2">
-                <button type="button" onClick={() => setAddingVenue(false)}
+                <button type="button" onClick={() => { setAddingVenue(false); addVenueButtonRef.current?.focus(); }}
                   className="min-h-11 rounded-[6px] border border-primary-600 px-4 font-bold text-primary-600">Cancelar lugar</button>
                 <button type="button" onClick={addVenue}
                   className="min-h-11 rounded-[6px] bg-primary-600 px-4 font-bold text-white">Guardar lugar</button>
