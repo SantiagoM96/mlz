@@ -582,9 +582,12 @@ test('Agenda V2: sidebar fija Cuándo y dónde a 24 px con el contenido REAL; Co
   const scrollTarget = Math.max(0, Math.floor(initial.gridTop + 140));
   await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), scrollTarget);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
-  const stickyTop = await sticky.evaluate(element => element.getBoundingClientRect().top);
-  expect(stickyTop).toBeGreaterThanOrEqual(23);
-  expect(stickyTop).toBeLessThanOrEqual(25);
+  // Esperar a que termine el reposicionamiento antes de medir el sticky.
+  // Se conserva exactamente el rango exigido (24 ± 1 px), sin modificar el CSS.
+  await expect.poll(async () => {
+    const top = await sticky.evaluate(element => element.getBoundingClientRect().top);
+    return Math.abs(top - 24);
+  }).toBeLessThanOrEqual(1);
 
   // Compartir queda arriba y se aleja de la pantalla al desplazar la página.
   expect(await share.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(24);
