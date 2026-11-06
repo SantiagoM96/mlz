@@ -5,6 +5,7 @@ import { agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
 import { isAgendaActivityVisible } from '../../features/agenda/utils/activitySchedules';
+import { getPublicActivityList } from '../../features/agenda/utils/publicActivityViews';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
@@ -12,6 +13,8 @@ import { AgendaSortDropdown } from '../../features/agenda/components/filters/Age
 import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
 import { emptyFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
+
+const publicActivities = getPublicActivityList([...agendaV2PreviewActivities, ...agendaActivities]);
 
 /** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
@@ -31,7 +34,7 @@ export function AgendaPage() {
       filters,
       sort,
       argentinaTodayISO(),
-      [...agendaV2PreviewActivities, ...agendaActivities],
+      publicActivities,
     ).filter(activity =>
       activity.id.startsWith('preview-v2-') || isAgendaActivityVisible(activity),
     );
