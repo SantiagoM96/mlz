@@ -16,13 +16,17 @@ export function validRegistrationUrl(raw?: string): string | null {
 
 /** La modalidad y su enlace son generales a la actividad, nunca a cada programación. */
 export function ActivityRegistrationLink({ activity, preview = false }: { activity: AgendaActivity; preview?: boolean }) {
-  if (activity.registrationMode === 'none') return null;
+  // Si la actividad no tiene inscripción no crear un <div> vacío con mt-4:
+  // ese margen agregaba 16px ficticios al final de «Cuándo y dónde».
+  const registrationMode = activity.registrationMode ?? 'none';
+  if (registrationMode === 'none') return null;
 
-  const href = activity.registrationMode === 'in-person'
+  const href = registrationMode === 'in-person'
     ? null : validRegistrationUrl(activity.registrationUrl);
   const information = activity.registrationInformation?.trim();
+  const showPreviewButton = preview && registrationMode === 'online' && !href;
 
-  if (!href && !information && !preview) return null;
+  if (!href && !information && !showPreviewButton) return null;
 
   return (
     <div className="mt-4 space-y-4">
@@ -32,7 +36,7 @@ export function ActivityRegistrationLink({ activity, preview = false }: { activi
           <p className="mt-2 whitespace-pre-line">{information}</p>
         </section>
       )}
-      {!href && preview && activity.registrationMode === 'online' && (
+      {showPreviewButton && (
         <button type="button" disabled
           className="flex min-h-12 w-full cursor-not-allowed items-center justify-center rounded-[4px] bg-primary-600 px-5 py-3 text-center text-[18px] font-bold text-white opacity-75">
           Inscribirse

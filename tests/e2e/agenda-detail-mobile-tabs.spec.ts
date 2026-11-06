@@ -106,3 +106,48 @@ test('Lluvia por programación: chip afuera de la caja con 16px', async ({ page 
   });
   expect(previewGap).toBe(16);
 });
+
+
+// Regresión: sin inscripción no debe existir un contenedor vacío que agregue 16px
+// tras la última caja de horarios. El texto e imagen tienen separación de 16px.
+test('Ficha mobile: sin margen fantasma tras horarios y descripción a imagen a 16px', async ({ page }, info) => {
+  await page.goto(base + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  const width = info.project.use.viewport?.width ?? 0;
+  const infoPanel = page.getByTestId('agenda-detail-information');
+  const description = infoPanel.getByRole('region', { name: 'Descripción de la actividad' });
+  const image = page.getByTestId('agenda-detail-image');
+  const distance = await Promise.all([description, image].map(locator =>
+    locator.evaluate(el => el.getBoundingClientRect().toJSON())));
+  expect(Math.round(distance[1].top - distance[0].bottom)).toBe(width < 1024 ? 16 : 24);
+
+  // Yoga no requiere inscripción. El único hijo del sticky debe ser el resumen.
+  const sticky = page.getByTestId('agenda-detail-sticky');
+  await expect(sticky.locator(':scope > *')).toHaveCount(1);
+  if (width < 1024) {
+    const panelBottom = await sticky.evaluate(el => {
+      const summary = el.firstElementChild!;
+      return Math.round(el.getBoundingClientRect().bottom - summary.getBoundingClientRect().bottom);
+    });
+    expect(panelBottom).toBe(0);
+  }
+
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  if (width < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
+  const modal = page.getByTestId('console-detail-preview');
+  const modalDescription = modal.getByRole('region', { name: 'Descripción de la actividad' });
+  const modalImage = modal.getByTestId('agenda-console-detail-image');
+  const modalCoords = await Promise.all([modalDescription, modalImage].map(locator =>
+    locator.evaluate(el => el.getBoundingClientRect().toJSON())));
+  expect(Math.round(modalCoords[1].top - modalCoords[0].bottom)).toBe(width < 1024 ? 16 : 24);
+  const modalSticky = modal.getByTestId('agenda-console-detail-sticky');
+  await expect(modalSticky.locator(':scope > *')).toHaveCount(1);
+  if (width < 1024) {
+    const extra = await modalSticky.evaluate(el => Math.round(
+      el.getBoundingClientRect().bottom - el.firstElementChild!.getBoundingClientRect().bottom,
+    ));
+    expect(extra).toBe(0);
+  }
+});

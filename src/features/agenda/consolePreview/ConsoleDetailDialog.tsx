@@ -90,9 +90,10 @@ export function ConsoleDetailDialog({
               </div>
               <div id="agenda-console-panel-information"
                 data-testid="agenda-console-detail-information"
-                className="mt-4 min-w-0 space-y-8 lg:space-y-6">
+                className="mt-4 min-w-0 space-y-4 lg:space-y-6">
                 <ActivityDescription activity={activity} />
               <img
+                data-testid="agenda-console-detail-image"
                 className="aspect-[400/224] w-full rounded-lg object-cover lg:aspect-[2/1] lg:rounded-[10px]"
                 src={activity.image}
                 alt=""

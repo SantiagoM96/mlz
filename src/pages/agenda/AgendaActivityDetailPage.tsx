@@ -70,7 +70,7 @@ export function AgendaActivityDetailPage() {
             <h1 className="break-words text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
           </div>
           <div id="agenda-public-panel-information" data-testid="agenda-detail-information"
-            className="mt-4 min-w-0 space-y-8 lg:space-y-6">
+            className="mt-4 min-w-0 space-y-4 lg:space-y-6">
             <ActivityDescription key={activity.id} activity={activity} />
             <img
               data-testid="agenda-detail-image"
