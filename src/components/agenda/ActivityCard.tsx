@@ -59,6 +59,7 @@ function CardContents({
                   <ActivityCharacteristic
                     variant="con-label"
                     icon="event_available"
+                    field="date"
                     label={schedule.dateLabel}
                     value={schedule.periodLabel}
                   />
@@ -66,25 +67,28 @@ function CardContents({
                   <ActivityCharacteristic
                     variant="sin-label"
                     icon="event_available"
+                    field="date"
                     value={schedule.dateLabel}
                   />
                 )}
                 <ActivityCharacteristic
                   variant="sin-label"
                   icon="schedule"
+                  field="time"
                   value={schedule.timeLabel}
                 />
               </Fragment>
             ))}
             {schedules.length === 0 && (
               <>
-                <ActivityCharacteristic variant="sin-label" icon="event_available" value={activity.dayLabel} />
-                <ActivityCharacteristic variant="sin-label" icon="schedule" value={activity.timeLabel} />
+                <ActivityCharacteristic variant="sin-label" icon="event_available" field="date" value={activity.dayLabel} />
+                <ActivityCharacteristic variant="sin-label" icon="schedule" field="time" value={activity.timeLabel} />
               </>
             )}
             <ActivityCharacteristic
               variant="con-label"
               icon="location_on"
+              field="place"
               label={venue}
               value={formatActivityCardAddress(address, locality)}
             />
