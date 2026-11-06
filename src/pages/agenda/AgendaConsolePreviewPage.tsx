@@ -5,12 +5,14 @@ import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agen
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePreview/ConsoleScheduleEditorDialog';
+import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/ConsoleTypeEditorDialog';
+import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
   CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES,
-  createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule,
+  createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule, type ConsoleVenue,
 } from '../../features/agenda/consolePreview/model';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
@@ -54,9 +56,9 @@ function imageForDraft(draft: ConsoleDraft): string {
     (byType[draft.type] ?? 'jornada') + '.png';
 }
 
-function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSchedule[]): AgendaActivity {
+function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSchedule[], venues: readonly ConsoleVenue[]): AgendaActivity {
   const first = schedules[0];
-  const venue = venueById(first?.venueId ?? '');
+  const venue = venueById(first?.venueId ?? '', venues);
   const badges: AgendaActivity['badges'] = [];
   if (draft.inclusive) badges.push({ kind: 'accessible', label: 'Disciplina inclusiva' });
   if (draft.registrationMode !== 'none') badges.push({ kind: 'registration', label: 'Requiere inscripción' });
@@ -77,7 +79,7 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
     // Los enlaces ingresados nunca se activan desde la vista previa.
     registrationUrl: undefined,
     schedules: schedules.map(schedule => {
-      const selectedVenue = venueById(schedule.venueId);
+      const selectedVenue = venueById(schedule.venueId, venues);
       return {
         id: String(schedule.id),
         scheduleType: schedule.scheduleType,
@@ -99,12 +101,13 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
   };
 }
 
-function CardPreview({ draft, schedules, onViewDetail }: {
+function CardPreview({ draft, schedules, venues, onViewDetail }: {
   draft: ConsoleDraft;
   schedules: ConsoleSchedule[];
+  venues: readonly ConsoleVenue[];
   onViewDetail: (activity: AgendaActivity) => void;
 }) {
-  const editorialActivity = makePreviewActivity(draft, schedules);
+  const editorialActivity = makePreviewActivity(draft, schedules, venues);
   const publicViews = getPublicActivityViews(editorialActivity);
 
   return (
@@ -189,7 +192,14 @@ export function AgendaConsolePreviewPage() {
     () => getFigmaExamplePreset(searchParams.get('caso'))?.schedules
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
   );
-  const [scheduleEditor, setScheduleEditor] = useState<{ mode: 'create' | 'edit'; schedule: ConsoleSchedule } | null>(null);
+  const [scheduleEditor, setScheduleEditor] = useState<{
+    mode: 'create' | 'edit' | 'duplicate'; schedule: ConsoleSchedule;
+  } | null>(null);
+  const [venues, setVenues] = useState<ConsoleVenue[]>(() => DEMO_VENUES.map(item => ({ ...item })));
+  const [typesByCategory, setTypesByCategory] = useState<Record<string, string[]>>(
+    () => Object.fromEntries(Object.entries(CATEGORY_TYPES).map(([key, values]) => [key, [...values]])),
+  );
+  const [addingType, setAddingType] = useState(false);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [detailPreview, setDetailPreview] = useState<AgendaActivity | null>(null);
 
@@ -209,20 +219,38 @@ export function AgendaConsolePreviewPage() {
     setScheduleEditor({ mode: 'edit', schedule: { ...schedule, weekdays: [...schedule.weekdays] } });
   };
   const saveSchedule = (schedule: ConsoleSchedule) => {
-    setSchedules(current => scheduleEditor?.mode === 'create'
-      ? [...current, schedule]
-      : current.map(item => item.id === schedule.id ? schedule : item));
+    setSchedules(current => scheduleEditor?.mode === 'edit'
+      ? current.map(item => item.id === schedule.id ? schedule : item)
+      : [...current, schedule]);
     setScheduleEditor(null);
   };
   const duplicateSchedule = (schedule: ConsoleSchedule) => {
     const nextId = Math.max(0, ...schedules.map(item => item.id)) + 1;
-    setSchedules(current => [...current, { ...schedule, id: nextId, weekdays: [...schedule.weekdays] }]);
+    setScheduleEditor({
+      mode: 'duplicate',
+      schedule: { ...schedule, id: nextId, weekdays: [...schedule.weekdays] },
+    });
+  };
+  const createVenue = (venue: Omit<ConsoleVenue, 'id'>): string => {
+    const nextId = 'nueva-sede-' + (Math.max(0, ...venues
+      .map(item => Number(item.id.replace('nueva-sede-', '')))
+      .filter(Number.isFinite)) + 1);
+    setVenues(current => [...current, { id: nextId, ...venue }]);
+    return nextId;
+  };
+  const createType = (name: string) => {
+    setTypesByCategory(current => ({
+      ...current,
+      [draft.category]: [...(current[draft.category] ?? []), name],
+    }));
+    updateDraft({ type: name });
+    setAddingType(false);
   };
   const removeSchedule = (id: number) => {
     setSchedules(current => current.filter(schedule => schedule.id !== id));
   };
   const changeCategory = (category: string) => {
-    updateDraft({ category, type: CATEGORY_TYPES[category]?.[0] ?? 'Taller' });
+    updateDraft({ category, type: typesByCategory[category]?.[0] ?? 'Taller' });
   };
   const loadFigmaCase = (id: string) => {
     const preset = getFigmaExamplePreset(id);
@@ -254,7 +282,10 @@ export function AgendaConsolePreviewPage() {
 
         <section aria-label="Actividades para cargar" className="mb-7 flex flex-col gap-3 rounded-[8px] border border-[#d4e1ea] bg-[#f5f9fc] p-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1">
-            <label htmlFor="figma-preset" className={labelClass}>Cargar actividad</label>
+            <label htmlFor="figma-preset" className={labelClass}>Casos de demostración</label>
+            <p className="mb-2 text-[14px] leading-5 text-[#61788b]">
+              Elegí un ejemplo para probar la consola. No se guardan ni publican actividades.
+            </p>
             <select id="figma-preset" className={inputClass} value={searchParams.get('caso') ?? ''}
               onChange={event => loadFigmaCase(event.target.value)}>
               <option value="">Taller de compostaje · Inicial</option>
@@ -265,7 +296,7 @@ export function AgendaConsolePreviewPage() {
                 </option>;
               })}
             </select>
-                      </div>
+          </div>
           <Link to="/agenda-de-la-comunidad/actividades"
             className="inline-flex min-h-11 shrink-0 items-center rounded-[4px] px-2 text-[15px] font-bold text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
             Ver en la Agenda
@@ -287,7 +318,7 @@ export function AgendaConsolePreviewPage() {
           </button>
         </div>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,860px)_minmax(0,316px)]">
+        <div className="grid items-start gap-6 lg:items-stretch lg:grid-cols-[minmax(0,860px)_minmax(0,316px)]">
           <form onSubmit={event => event.preventDefault()}
             className={'min-w-0 space-y-8 ' + (mobileView === 'preview' ? 'hidden lg:block' : '')}
             aria-label="Formulario de nueva actividad">
@@ -310,10 +341,18 @@ export function AgendaConsolePreviewPage() {
                   <FormField label="Tipo de actividad" htmlFor="console-type">
                     <select id="console-type" className={inputClass} value={draft.type}
                       onChange={event => updateDraft({ type: event.target.value })}>
-                      {(CATEGORY_TYPES[draft.category] ?? []).map(type => <option key={type} value={type}>{type}</option>)}
+                      {[...new Set([...(typesByCategory[draft.category] ?? []), draft.type])].map(type =>
+                        <option key={type} value={type}>{type}</option>)}
                     </select>
+                    <button type="button" onClick={() => setAddingType(true)}
+                      className="mt-2 inline-flex min-h-10 items-center gap-1.5 rounded-[6px] text-[15px] font-bold text-primary-600 hover:underline">
+                      <MaterialIcon name="add" size={19}/> Agregar tipo de actividad
+                    </button>
                   </FormField>
                 </div>
+                <p className="text-[14px] leading-5 text-[#61788b]">
+                  Las categorías son fijas; los tipos se pueden agregar desde la consola.
+                </p>
                 <FormField label="Descripción general" htmlFor="console-description">
                   <textarea id="console-description" rows={4} className={inputClass + ' min-h-[120px] resize-y'}
                     value={draft.description} onChange={event => updateDraft({ description: event.target.value })}
@@ -356,7 +395,7 @@ export function AgendaConsolePreviewPage() {
                   <tbody className="divide-y divide-[#d4e2eb]">
                     {schedules.map((schedule, index) => {
                       const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
-                      const venue = venueById(schedule.venueId);
+                      const venue = venueById(schedule.venueId, venues);
                       return (
                         <tr key={schedule.id} data-testid="console-schedule-row" className="align-middle">
                           <td className="px-3 py-3">
@@ -367,7 +406,20 @@ export function AgendaConsolePreviewPage() {
                             {schedule.startTime || 'A confirmar'}
                             {schedule.endTime ? ' a ' + schedule.endTime : ''}{schedule.startTime ? ' h' : ''}
                           </td>
-                          <td className="px-3 py-3">{venue.name}</td>
+                          <td className="max-w-[220px] px-3 py-3">
+                            <span className="font-medium">{venue.name}</span>
+                            {schedule.participants.trim() && (
+                              <span className="mt-1 flex items-start gap-1.5 text-[13px] leading-5 text-[#61788b]">
+                                <MaterialIcon name={schedule.participantsType === 'artists' ? 'comedy_mask'
+                                  : schedule.participantsType === 'speakers' ? 'record_voice_over' : 'groups'} size={16}/>
+                                <span className="min-w-0 break-words">{schedule.participants}</span>
+                              </span>
+                            )}
+                            {schedule.detail.trim() && (
+                              <span className="mt-1 block max-w-[210px] truncate text-[13px] leading-5 text-[#61788b]"
+                                title={schedule.detail}>{schedule.detail}</span>
+                            )}
+                          </td>
                           <td className="px-3 py-3">{schedule.suspendedByRain ? 'Sí' : 'No'}</td>
                           <td className="px-3 py-3">
                             <div className="flex items-center justify-end gap-1">
@@ -454,38 +506,26 @@ export function AgendaConsolePreviewPage() {
                 <SectionTitle number={4} title="Imágenes y portada"
                   subtitle="Agregá una portada opcional y fotos adicionales para la galería." />
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                <label htmlFor="cover-image" className="flex min-h-[122px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-[6px] bg-[#f0f0f0] text-center text-[15px] font-medium text-primary-600 hover:bg-[#e8eef2]">
-                  {draft.coverDataUrl ? <img className="h-[122px] w-full object-cover" src={draft.coverDataUrl} alt="Portada seleccionada" /> : (
-                    <><span className="text-[24px] leading-none">⊕</span>Agregar portada</>
-                  )}
-                  <input id="cover-image" type="file" accept="image/*" className="sr-only"
-                    onChange={event => readLocalImage(event.target.files?.[0],
-                      dataUrl => updateDraft({ coverDataUrl: dataUrl }))} />
-                </label>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                <ConsoleImageUpload id="cover-image" label="Portada" source={draft.coverDataUrl}
+                  onFile={file => readLocalImage(file, url => updateDraft({ coverDataUrl: url }))}
+                  onRemove={() => updateDraft({ coverDataUrl: '' })}/>
                 {[0, 1].map(index => (
-                  <label key={index} htmlFor={'gallery-' + index}
-                    className="flex min-h-[122px] cursor-pointer items-center justify-center overflow-hidden rounded-[6px] border border-[#d6e2eb] bg-[#f6f9fc] text-center text-[15px] text-[#748395] hover:border-[#93bfe0]">
-                    {draft.galleryDataUrls[index]
-                      ? <img className="h-[122px] w-full object-cover" src={draft.galleryDataUrls[index]} alt={'Foto adicional ' + (index + 1)} />
-                      : 'Foto adicional'}
-                    <input id={'gallery-' + index} type="file" accept="image/*" className="sr-only"
-                      onChange={event => readLocalImage(event.target.files?.[0], dataUrl => {
-                        setDraft(current => {
-                          const next = [...current.galleryDataUrls];
-                          next[index] = dataUrl;
-                          return { ...current, galleryDataUrls: next };
-                        });
-                      })} />
-                  </label>
+                  <ConsoleImageUpload key={index} id={'gallery-' + index}
+                    label={'Foto adicional ' + (index + 1)} source={draft.galleryDataUrls[index] ?? ''}
+                    onFile={file => readLocalImage(file, url => {
+                      setDraft(current => {
+                        const next = [...current.galleryDataUrls];
+                        next[index] = url;
+                        return { ...current, galleryDataUrls: next };
+                      });
+                    })}
+                    onRemove={() => setDraft(current => ({
+                      ...current,
+                      galleryDataUrls: current.galleryDataUrls.map((url, i) => i === index ? '' : url),
+                    }))}/>
                 ))}
               </div>
-              {draft.coverDataUrl && (
-                <button type="button" onClick={() => updateDraft({ coverDataUrl: '' })}
-                  className="mt-2 text-[14px] font-medium text-primary-600 hover:underline">
-                  Quitar portada
-                </button>
-              )}
               <label className="mt-4 flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
                 <input type="checkbox" className="h-5 w-5 accent-[#236999]" checked={draft.featured}
                   onChange={event => updateDraft({ featured: event.target.checked })} />
@@ -505,9 +545,10 @@ export function AgendaConsolePreviewPage() {
             </div>
           </form>
 
-          <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
-            <div className="lg:sticky lg:top-6">
-              <CardPreview draft={draft} schedules={schedules} onViewDetail={setDetailPreview} />
+          <aside aria-label="Vista previa de la tarjeta" className={'min-w-0 lg:h-full lg:min-h-0 ' + (mobileView === 'form' ? 'hidden lg:block' : '')}>
+            <div data-testid="console-preview-sticky"
+              className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-48px)] lg:overflow-y-auto lg:overscroll-contain">
+              <CardPreview draft={draft} schedules={schedules} venues={venues} onViewDetail={setDetailPreview} />
               <button type="button" onClick={() => setMobileView('form')}
                 className="mt-6 min-h-12 w-full rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 lg:hidden">
                 Volver al formulario
@@ -516,11 +557,22 @@ export function AgendaConsolePreviewPage() {
           </aside>
         </div>
       </main>
+      {addingType && (
+        <ConsoleTypeEditorDialog
+          category={draft.category}
+          existingTypes={typesByCategory[draft.category] ?? []}
+          onAdd={createType}
+          onClose={() => setAddingType(false)}
+        />
+      )}
       {scheduleEditor && (
         <ConsoleScheduleEditorDialog
           key={scheduleEditor.mode + '-' + scheduleEditor.schedule.id}
           schedule={scheduleEditor.schedule}
           mode={scheduleEditor.mode}
+          schedules={schedules}
+          venues={venues}
+          onCreateVenue={createVenue}
           onSave={saveSchedule}
           onClose={() => setScheduleEditor(null)}
         />
