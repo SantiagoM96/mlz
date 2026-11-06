@@ -1,6 +1,5 @@
 import type { AgendaActivity } from '../../../../data/agenda';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
-import { ActivityCharacteristic } from '../../../../components/agenda/ActivityCharacteristic';
 import { ActivityScheduleDateTime } from '../../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityScheduleParticipants } from '../../../../components/agenda/ActivityScheduleParticipants';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
-import { ActivityCharacteristic } from '../../../components/agenda/ActivityCharacteristic';
 import { ActivityScheduleParticipants } from '../../../components/agenda/ActivityScheduleParticipants';
 import { ActivityScheduleDateTime } from '../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
