@@ -138,3 +138,43 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 5. Revisión de accesibilidad de foco en diálogo de detalle y restauración del foco tras cierre; fuera del refactor visualmente neutro.
 
 **Verificación de la tanda:** consultar los checks del SHA final del PR #8. No inferir éxito desde el código o ejecuciones anteriores.
+
+## Avance P3/P4 — editor y secciones de formulario (06/11/2026)
+
+### Refactor P3: estado final de módulos
+
+- `ConsoleScheduleEditorDialog.tsx`: ~131 líneas (original ~302). Conserva modo, estado editado, errores, manejo modal, foco, guardado y coordinación.
+- `scheduleEditorRules.ts`: funciones puras `normalizeConsoleSchedule` y `validateConsoleSchedule` con **mismo orden y textos** de validación, sin mutar valores.
+- `ConsoleScheduleDateFields.tsx`: fecha puntual/período/recurrencia, días de semana y horarios; el estado permanece en el editor.
+- `ConsoleScheduleAdditionalFields.tsx`: suspensión por lluvia, participantes y detalle independiente de programación.
+- `ConsoleVenueSelector.tsx`: selector, alta manual de sede, dirección y enlace a mapa; mantiene `data-testid`, estructura original y estado local del formulario de lugar.
+- `venueRules.ts`: normalización de espacios y validaciones de obligatorios y duplicados por nombre/localidad. No se amplían las reglas.
+- `ConsoleScheduleFormPrimitives.tsx`: campos y clase original de input con radio de 6 px.
+- `ConsoleGeneralInfoSection.tsx`: título, categoría fija, tipos administrables, descripción, disciplina inclusiva.
+- `ConsoleRegistrationSection.tsx`: modalidad online/presencial/sin inscripción, información y el enlace no activado desde preview.
+- `ConsoleImagesSection.tsx`: portada, galería, imagen local mediante FileReader y opción de destacada, sin persistencia.
+- `AgendaConsolePreviewPage.tsx`: ~232 líneas tras extraer secciones; coordinación de casos, estado, navegación y preview. Los callbacks de galería mantienen las operaciones previas con `setDraft(current => ...)`.
+
+### P4 inicial — estilos controlados
+
+- Se mantienen los tokens institucionales existentes (principal `#236999`) y Tailwind del proyecto.
+- El estilo del formulario (radio 4 px) y el del editor de programaciones (radio 6 px) siguen diferenciados.
+- Las clases de días de recurrencia y de tabs mobile se extrajeron a funciones semánticas sin alterar las cadenas resultantes en DOM.
+- No se trasladaron estilos indiscriminadamente a `@apply`, no se agregaron dependencias y no se creó CSS global adicional.
+
+### Caracterización ampliada
+
+- `tests/e2e/agenda-console-rules.spec.ts`: normalización, validación y comparación de programaciones; normalización y validación de sedes.
+- `tests/e2e/agenda-console-preview.spec.ts`: validación de sedes obligatorias/duplicadas, selección posterior, trampa de foco y Escape, además de los flujos CRUD, preview y responsive existentes.
+- Los resultados E2E deben tomarse del **SHA final** del PR; las ejecuciones previas de Actions se pueden cancelar por concurrencia.
+- Aún falta una comparación real screenshot-vs-baseline aprobado: las capturas y aserciones geométricas E2E no constituyen por sí solas regresión visual pixel a pixel.
+
+### Pendientes siguientes, sin intervención automática
+
+1. Auditar accesibilidad y restauración del foco de `ConsoleTypeEditorDialog` y `ConsoleDetailDialog` antes de cualquier cambio de comportamiento.
+2. Evitar duplicación del contenido de ficha entre `ConsoleDetailDialog` y presentación pública solo donde coincidan contratos de props y estilos.
+3. Evaluar si nuevas primitivas tipadas aportan reutilización concreta; no crear un componente universal para cada control.
+4. Baseline visual aprobado y workflow de comparación por viewport, incluyendo los diez casos públicos.
+5. Revisar integración con `main` antes de merge: el archivo `public/cronica/index.html` cambió externamente y no forma parte de esta refactorización.
+
+**Proteger `main`:** no fusionar ni desplegar la refactorización desde este PR en borrador.
