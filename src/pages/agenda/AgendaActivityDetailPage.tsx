@@ -82,9 +82,9 @@ export function AgendaActivityDetailPage() {
           />
           {onlySchedule && <ActivityLocationMap activity={locationActivity} />}
         </div>
-        <div className="min-w-0 space-y-4">
+        <div data-testid="agenda-detail-sidebar" className="min-w-0 space-y-4 lg:self-stretch">
           <ActivityShare key={activity.id} title={activity.title} />
-          <div className="lg:sticky lg:top-6">
+          <div data-testid="agenda-detail-sticky" className="lg:sticky lg:top-6">
             <ActivitySummary activity={activity} previewDateISO={previewDateISO} />
             <ActivityRegistrationLink activity={activity} preview={isPreview} />
           </div>

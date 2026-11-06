@@ -522,3 +522,45 @@ test('Agenda V2: Ver más alineado con texto de fecha y chevron centrado', async
   ].map(locator => locator.evaluate(el => el.getBoundingClientRect().x)));
   expect(Math.abs(aligned[0] - aligned[1])).toBeLessThanOrEqual(1);
 });
+
+
+test('Agenda V2: Cuándo y dónde se fija a 24 px; Compartir se desplaza normalmente', async ({ page }, info) => {
+  const viewportWidth = info.project.use.viewport?.width ?? 0;
+  await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+
+  const sidebar = page.getByTestId('agenda-detail-sidebar');
+  const sticky = page.getByTestId('agenda-detail-sticky');
+  const share = sidebar.getByLabel('Compartir actividad');
+  await expect(share).toBeVisible();
+
+  if (viewportWidth < 1024) {
+    await expect(sticky).toHaveCSS('position', 'static');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+    return;
+  }
+
+  await expect(sidebar).toHaveCSS('align-self', 'stretch');
+  await expect(sticky).toHaveCSS('position', 'sticky');
+  await expect(sticky).toHaveCSS('top', '24px');
+  expect(await sticky.evaluate(element => element.contains(document.querySelector('[aria-label="Compartir actividad"]')))).toBe(false);
+
+  // Simulamos contenido principal largo para comprobar el desplazamiento y no solo la clase CSS.
+  await page.setViewportSize({ width: viewportWidth, height: 600 });
+  await sidebar.evaluate(element => {
+    const mainColumn = element.previousElementSibling as HTMLElement | null;
+    if (mainColumn) mainColumn.style.minHeight = '1400px';
+  });
+  await page.evaluate(() => window.scrollTo({ top: 400, behavior: 'instant' }));
+  await expect.poll(() => sticky.evaluate(el => Math.round(el.getBoundingClientRect().top))).toBe(24);
+  await expect.poll(() => share.evaluate(el => el.getBoundingClientRect().bottom)).toBeLessThan(24);
+
+  // La vista previa de consola conserva la fila Compartir fuera de su contenedor sticky.
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  const preview = page.getByTestId('agenda-console-detail-sidebar');
+  await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
+  await expect(preview).toHaveCSS('align-self', 'stretch');
+  const consoleSticky = page.getByTestId('agenda-console-detail-sticky');
+  await expect(consoleSticky).toHaveCSS('position', 'sticky');
+  await expect(consoleSticky).toHaveCSS('top', '88px');
+  expect(await consoleSticky.evaluate(el => el.contains(el.previousElementSibling))).toBe(false);
+});

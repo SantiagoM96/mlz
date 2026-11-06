@@ -113,10 +113,11 @@ export function ConsoleDetailDialog({
               )}
             </div>
 
-            <div className="min-w-0 space-y-4">
+            <div data-testid="agenda-console-detail-sidebar" className="min-w-0 space-y-4 lg:self-stretch">
               <p className="flex items-center gap-2 text-[18px] font-bold text-primary-600">
                 <MaterialIcon name="link" size={20} /> Compartir
               </p>
+              <div data-testid="agenda-console-detail-sticky" className="lg:sticky lg:top-[88px]">
               <aside aria-label="Cuándo y dónde" className="min-w-0">
                 <h3 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Cuándo y dónde</h3>
                 {badges.length > 0 && <div className="mb-4"><ActivityBadges badges={badges} /></div>}
@@ -184,6 +185,7 @@ export function ConsoleDetailDialog({
                 activity={{ ...activity, registrationUrl: undefined }}
                 preview
               />
+              </div>
             </div>
           </div>
         </div>
