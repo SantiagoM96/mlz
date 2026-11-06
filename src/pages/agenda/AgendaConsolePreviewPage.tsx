@@ -44,7 +44,7 @@ function scheduleKindLabel(kind: ConsoleSchedule['scheduleType']) {
 }
 
 function dateForDisplay(iso: string): string {
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)) return 'Fecha a confirmar';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return 'Fecha a confirmar';
   const [year, month, day] = iso.split('-');
   return day + '/' + month + '/' + year;
 }
