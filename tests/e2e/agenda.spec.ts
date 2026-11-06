@@ -242,7 +242,12 @@ test('vínculo de portada a listado, luego a ficha y navegación de regreso', as
   await expect(page.getByRole('heading', { level: 1, name: 'Yoga en Comunidad' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toHaveCSS('color', 'rgb(35, 105, 153)');
-  await page.getByRole('navigation', { name: 'Ruta de navegación' }).getByRole('link', { name: 'Actividades' }).click();
+  const crumbs = page.getByRole('navigation', { name: 'Ruta de navegación' });
+  if ((page.viewportSize()?.width ?? 0) < 640) {
+    await crumbs.getByTestId('breadcrumb-mobile-back').click();
+  } else {
+    await crumbs.getByRole('link', { name: 'Actividades' }).click();
+  }
   await expect(page).toHaveURL(new RegExp(activities + '/?$'));
   await expect(page.getByTestId('agenda-toolbar')).toBeVisible();
 });
