@@ -27,32 +27,41 @@ function parseDate(iso: string): Date | null {
     ? date : null;
 }
 
+/** El año se explicita cuando la fecha pertenece a otro año calendario. */
+function displayYear(year: number): boolean {
+  return year !== Number(argentinaTodayISO().slice(0, 4));
+}
+
 function dayInWords(iso: string): string {
   const date = parseDate(iso);
   if (!date) return 'Fecha a confirmar';
   const label = new Intl.DateTimeFormat('es-AR', {
     timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long',
   }).format(date).replace(',', '');
-  return label.charAt(0).toLocaleUpperCase('es-AR') + label.slice(1);
+  const readable = label.charAt(0).toLocaleUpperCase('es-AR') + label.slice(1);
+  return readable + (displayYear(date.getUTCFullYear()) ? ' de ' + date.getUTCFullYear() : '');
 }
 
-function shortDate(iso: string): string {
-  if (!parseDate(iso)) return 'Fecha a confirmar';
-  const [year, month, day] = iso.split('-');
-  return day + '/' + month + '/' + year;
-}
-
+/** Evita fechas numéricas y omite meses/años redundantes. */
 function periodInWords(startISO: string, endISO: string): string {
   const start = parseDate(startISO);
   const end = parseDate(endISO);
   if (!start || !end) return 'Fechas a confirmar';
   const day = new Intl.DateTimeFormat('es-AR', { timeZone: 'UTC', day: 'numeric' });
   const month = new Intl.DateTimeFormat('es-AR', { timeZone: 'UTC', month: 'long' });
-  if (start.getUTCFullYear() === end.getUTCFullYear() &&
-      start.getUTCMonth() === end.getUTCMonth()) {
-    return 'Del ' + day.format(start) + ' al ' + day.format(end) + ' de ' + month.format(end);
+  const startYear = start.getUTCFullYear();
+  const endYear = end.getUTCFullYear();
+  if (startYear !== endYear) {
+    return 'Del ' + day.format(start) + ' de ' + month.format(start) + ' de ' + startYear
+      + ' al ' + day.format(end) + ' de ' + month.format(end) + ' de ' + endYear;
   }
-  return 'Del ' + shortDate(startISO) + ' al ' + shortDate(endISO);
+  if (start.getUTCMonth() === end.getUTCMonth()) {
+    return 'Del ' + day.format(start) + ' al ' + day.format(end) + ' de ' + month.format(end)
+      + (displayYear(endYear) ? ' de ' + endYear : '');
+  }
+  return 'Del ' + day.format(start) + ' de ' + month.format(start)
+    + ' al ' + day.format(end) + ' de ' + month.format(end)
+    + (displayYear(endYear) ? ' de ' + endYear : '');
 }
 
 function recurringLabel(days: readonly number[] | null | undefined): string {
@@ -75,18 +84,29 @@ function scheduleTime(schedule: AgendaSchedule): string {
   return end ? start + ' a ' + end + ' h' : start + ' h';
 }
 
+/** Una jerarquía compartida: frecuencia o día, período y finalmente horario. */
+export function formatAgendaScheduleDate(
+  schedule: Pick<AgendaSchedule, 'scheduleType' | 'startDate' | 'endDate' | 'weekdays'>,
+): Pick<AgendaSchedulePresentation, 'dateLabel' | 'periodLabel'> {
+  if (schedule.scheduleType === 'recurring') {
+    return {
+      dateLabel: recurringLabel(schedule.weekdays),
+      periodLabel: schedule.endDate ? periodInWords(schedule.startDate, schedule.endDate) : undefined,
+    };
+  }
+  if (schedule.scheduleType === 'range') {
+    return {
+      dateLabel: 'Todos los días',
+      periodLabel: schedule.endDate ? periodInWords(schedule.startDate, schedule.endDate) : 'Fechas a confirmar',
+    };
+  }
+  return { dateLabel: dayInWords(schedule.startDate) };
+}
+
 function toPresentation(schedule: AgendaSchedule): AgendaSchedulePresentation {
-  const { scheduleType, startDate, endDate } = schedule;
   return {
     id: schedule.id,
-    dateLabel: scheduleType === 'recurring'
-      ? recurringLabel(schedule.weekdays)
-      : scheduleType === 'range' && endDate
-        ? periodInWords(startDate, endDate)
-        : dayInWords(startDate),
-    periodLabel: scheduleType === 'recurring' && endDate
-      ? 'Del ' + shortDate(startDate) + ' al ' + shortDate(endDate)
-      : scheduleType === 'range' ? 'Todos los días' : undefined,
+    ...formatAgendaScheduleDate(schedule),
     timeLabel: scheduleTime(schedule),
     locality: schedule.locality,
     venue: schedule.venue,

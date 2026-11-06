@@ -18,7 +18,7 @@ test('consola demostrativa: muestra formulario y actualiza la tarjeta en vivo', 
   await expect(card).toBeVisible();
   await expect(card).toContainText('Jornada de reciclaje');
   await expect(card).toContainText('Todos los sábados');
-  await expect(card).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(card).toContainText('Del 7 al 28 de noviembre');
   await expect(card).toContainText('10:00 a 12:00 h');
 
   if (isMobile) {

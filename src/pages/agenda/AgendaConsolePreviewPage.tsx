@@ -4,6 +4,7 @@ import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
+import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
   CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES, WEEKDAYS,
@@ -48,25 +49,12 @@ function dateForDisplay(iso: string): string {
 }
 
 function scheduleSummary(schedule: ConsoleSchedule): string {
-  const days: Record<number, string> = {
-    1: 'lunes', 2: 'martes', 3: 'miércoles', 4: 'jueves',
-    5: 'viernes', 6: 'sábados', 7: 'domingos',
-  };
-  const selected = [...schedule.weekdays].sort((a, b) => a - b).map(day => days[day]).filter(Boolean);
-  const recurrence = selected.length === 1
-    ? 'Todos los ' + selected[0]
-    : selected.length > 1
-      ? 'Todos los ' + selected.slice(0, -1).join(', ') + ' y ' + selected[selected.length - 1]
-      : 'Días a confirmar';
-  const dates = schedule.scheduleType === 'exact'
-    ? dateForDisplay(schedule.startDate)
-    : schedule.scheduleType === 'recurring'
-      ? recurrence + ' · Del ' + dateForDisplay(schedule.startDate) + ' al ' + dateForDisplay(schedule.endDate)
-      : 'Del ' + dateForDisplay(schedule.startDate) + ' al ' + dateForDisplay(schedule.endDate);
+  const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
   const time = schedule.startTime
     ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
     : 'Horario a confirmar';
-  return dates + ' · ' + time + ' · ' + venueById(schedule.venueId).name;
+  return [dateLabel, periodLabel, time, venueById(schedule.venueId).name]
+    .filter(Boolean).join(' · ');
 }
 
 function imageForDraft(draft: ConsoleDraft): string {

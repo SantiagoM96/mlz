@@ -945,7 +945,7 @@ test('vistas de Agenda V2: recurrencia, dos sedes y período', async ({ page }) 
   await expect(page.getByRole('note')).toHaveCount(0);
   const compostaje = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(compostaje).toContainText('Todos los sábados');
-  await expect(compostaje).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(compostaje).toContainText('Del 7 al 28 de noviembre');
   await expect(compostaje).toContainText('10:00 a 12:00 h');
   await expect(page.getByRole('button', { name: 'Inscribirse', exact: true })).toBeDisabled();
 

@@ -42,7 +42,7 @@ test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ pag
 
   await search.fill('Taller de compostaje');
   await expect(grid).toContainText('Todos los sábados');
-  await expect(grid).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(grid).toContainText('Del 7 al 28 de noviembre');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -59,10 +59,16 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
 
   await page.goto(list + '/preview-v2-muestra');
-  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Todos los días');
+  const muestra = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(muestra.locator('section').first().locator('p').first()).toHaveText('Todos los días');
+  await expect(muestra.locator('section').first().locator('p').nth(1)).toHaveText('Del 10 al 17 de noviembre');
+  await expect(muestra.locator('section').first().locator('p').nth(2)).toHaveText('11:00 a 19:00 h');
 
   await page.goto(list + '/preview-v2-compostaje');
-  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Del 07/11/2026 al 28/11/2026');
+  const compostaje = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(compostaje.locator('section').first().locator('p').first()).toHaveText('Todos los sábados');
+  await expect(compostaje.locator('section').first().locator('p').nth(1)).toHaveText('Del 7 al 28 de noviembre');
+  await expect(compostaje.locator('section').first().locator('p').nth(2)).toHaveText('10:00 a 12:00 h');
   await expect(page.getByRole('button', { name: 'Inscribirse' })).toBeDisabled();
 
   await page.goto(list + '/preview-v2-futbol--sede-plaza-grigera');
@@ -121,7 +127,7 @@ test('Consola V2: desde cada ficha de ejemplo se cargan fechas y campos editable
   await expect(page).toHaveURL(/caso=preview-v2-futbol/);
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Fútbol en Comunidad');
   await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
-  await expect(page.getByText('Todos los jueves · Del 12/11/2026 al 30/11/2026 · 16:00 a 18:00 h · Parque de Lomas')).toBeVisible();
+  await expect(page.getByText('Todos los jueves · Del 12 al 30 de noviembre · 16:00 a 18:00 h · Parque de Lomas')).toBeVisible();
 
   await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-huerta');
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Taller de huerta comunitaria');
@@ -179,6 +185,7 @@ test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede'
   const plaza = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(plaza.locator('section')).toHaveCount(1);
   await expect(plaza).toContainText('Todos los martes');
+  await expect(plaza).toContainText('Del 10 de noviembre al 15 de diciembre');
   await expect(plaza).toContainText('Se suspende por lluvia');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Polideportivo Evita');
@@ -188,6 +195,7 @@ test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede'
   const polideportivo = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   await expect(polideportivo.locator('section')).toHaveCount(1);
   await expect(polideportivo).toContainText('Todos los jueves');
+  await expect(polideportivo).toContainText('Del 12 de noviembre al 17 de diciembre');
   await expect(polideportivo).not.toContainText('suspende por lluvia');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Polideportivo Evita');
   await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Plaza Grigera');
@@ -242,7 +250,9 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
   await expect(schedules.locator('[data-agenda-characteristic="con-label"]')).toHaveCount(2);
   await expect(schedules.locator('[data-agenda-characteristic="sin-label"]')).toHaveCount(1);
   await expect(schedules).toContainText('Todos los sábados');
-  await expect(schedules).toContainText('Del 07/11/2026 al 28/11/2026');
+  await expect(schedules).toContainText('Del 7 al 28 de noviembre');
+  await expect(schedules.locator('[data-agenda-field="date"] p').first()).toHaveText('Todos los sábados');
+  await expect(schedules.locator('[data-agenda-field="date"] p').nth(1)).toHaveText('Del 7 al 28 de noviembre');
   await expect(schedules).toContainText('10:00 a 12:00 h');
   const gaps = await schedules.evaluate(element => ({
     groups: getComputedStyle(element).gap,
