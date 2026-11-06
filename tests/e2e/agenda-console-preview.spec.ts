@@ -280,3 +280,88 @@ test('Consola: el teclado conserva el foco dentro del editor y Escape permite ce
   await expect(editor).toHaveCount(0);
   await expect(page.getByTestId('console-schedule-row')).toHaveCount(1);
 });
+
+test('Consola: el modal de tipo conserva foco, contiene Tab y restaura scroll al cerrar', async ({ page }) => {
+  await page.goto(route);
+  const opener = page.getByRole('button', { name: 'Agregar tipo de actividad' });
+  const originalOverflow = await page.evaluate(() => document.body.style.overflow);
+  await opener.click();
+  const dialog = page.getByTestId('console-type-editor');
+  await expect(dialog.getByLabel('Nombre del nuevo tipo')).toBeFocused();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+  const firstButton = dialog.getByRole('button', { name: 'Cerrar nuevo tipo' });
+  const lastButton = dialog.getByRole('button', { name: 'Guardar tipo' });
+  await lastButton.focus();
+  await page.keyboard.press('Tab');
+  await expect(firstButton).toBeFocused();
+  await firstButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(lastButton).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe(originalOverflow);
+
+  await opener.click();
+  await dialog.getByLabel('Nombre del nuevo tipo').fill('Seminario de prueba');
+  await dialog.getByRole('button', { name: 'Guardar tipo' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test('Consola: modal de programación devuelve el foco al botón de edición', async ({ page }) => {
+  await page.goto(route);
+  const opener = page.getByRole('button', { name: 'Editar programación 1' });
+  await opener.click();
+  const editor = page.getByTestId('console-schedule-editor');
+  await expect(editor.getByRole('combobox', { name: 'Tipo de fecha' })).toBeFocused();
+  await editor.getByRole('button', { name: 'Cancelar', exact: true }).click();
+  await expect(editor).toHaveCount(0);
+  await expect(opener).toBeFocused();
+
+  await opener.click();
+  await page.keyboard.press('Escape');
+  await expect(editor).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
+
+test('Consola: la ficha de vista previa contiene el foco y lo devuelve al botón Ver más', async ({ page }, info) => {
+  await page.goto(route + '?caso=preview-v2-yoga-dos-sedes');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  const opener = page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' });
+  const originalOverflow = await page.evaluate(() => document.body.style.overflow);
+  await opener.click();
+  const dialog = page.getByTestId('console-detail-preview');
+  const closeButton = dialog.getByRole('button', { name: 'Cerrar vista previa del detalle' });
+  await expect(closeButton).toBeFocused();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+
+  // El último enlace visible de la ficha debe volver al botón de cerrar con Tab.
+  const hasLastLink = await dialog.evaluate(panel => {
+    const controls = Array.from(panel.querySelectorAll<HTMLElement>('button:not([disabled]),a[href]'))
+      .filter(el => el.tabIndex >= 0 && el.getClientRects().length > 0);
+    if (controls.length <= 1) return false;
+    controls[controls.length - 1]?.focus();
+    return true;
+  });
+  expect(hasLastLink).toBe(true);
+  await page.keyboard.press('Tab');
+  await expect(closeButton).toBeFocused();
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(closeButton).not.toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe(originalOverflow);
+
+  await opener.click();
+  await closeButton.click();
+  await expect(dialog).toHaveCount(0);
+  await expect(opener).toBeFocused();
+});
