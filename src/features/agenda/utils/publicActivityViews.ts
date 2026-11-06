@@ -46,6 +46,7 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
   const usedSlugs = new Map<string, number>();
   return [...groups.values()].map(schedules => {
     const first = schedules[0];
+    if (!first) return activity;
     const slug = venueSlug(first.venue || first.locality);
     const occurrence = (usedSlugs.get(slug) ?? 0) + 1;
     usedSlugs.set(slug, occurrence);
