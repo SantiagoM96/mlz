@@ -259,3 +259,24 @@ test('Consola: normalización y duplicados al crear un lugar se validan dentro d
   await editor.getByRole('button', { name: 'Guardar programación' }).click();
   await expect(page.getByTestId('console-schedules-table')).toContainText('Centro Cultural de Prueba');
 });
+
+test('Consola: el teclado conserva el foco dentro del editor y Escape permite cerrar', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  const firstField = editor.getByRole('combobox', { name: 'Tipo de fecha' });
+  const closeButton = editor.getByRole('button', { name: 'Cerrar edición de programación' });
+  const submitButton = editor.getByRole('button', { name: 'Guardar programación' });
+
+  await expect(firstField).toBeFocused();
+  await submitButton.focus();
+  await page.keyboard.press('Tab');
+  await expect(closeButton).toBeFocused();
+  await closeButton.focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(submitButton).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(editor).toHaveCount(0);
+  await expect(page.getByTestId('console-schedule-row')).toHaveCount(1);
+});
