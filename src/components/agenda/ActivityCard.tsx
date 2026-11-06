@@ -58,14 +58,14 @@ function CardContents({
                 {schedule.periodLabel ? (
                   <ActivityCharacteristic
                     variant="con-label"
-                    icon="calendar_month"
+                    icon="event_available"
                     label={schedule.dateLabel}
                     value={schedule.periodLabel}
                   />
                 ) : (
                   <ActivityCharacteristic
                     variant="sin-label"
-                    icon="calendar_month"
+                    icon="event_available"
                     value={schedule.dateLabel}
                   />
                 )}
@@ -78,7 +78,7 @@ function CardContents({
             ))}
             {schedules.length === 0 && (
               <>
-                <ActivityCharacteristic variant="sin-label" icon="calendar_month" value={activity.dayLabel} />
+                <ActivityCharacteristic variant="sin-label" icon="event_available" value={activity.dayLabel} />
                 <ActivityCharacteristic variant="sin-label" icon="schedule" value={activity.timeLabel} />
               </>
             )}
