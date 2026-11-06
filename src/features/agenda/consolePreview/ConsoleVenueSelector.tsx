@@ -3,6 +3,7 @@ import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import type { ConsoleVenue } from './model';
 import { venueById } from './scheduleRules';
 import { Field, inputClass } from './ConsoleScheduleFormPrimitives';
+import { normalizeVenueInput, validateVenueInput } from './venueRules';
 
 interface Props {
   venueId: string;
@@ -19,18 +20,10 @@ export function ConsoleVenueSelector({ venueId, venues, onVenueChange, onCreateV
   const venue = venueById(venueId, venues);
 
   const addVenue = () => {
-    const next = {
-      name: venueFields.name.trim().replace(/\s+/g, ' '),
-      locality: venueFields.locality.trim().replace(/\s+/g, ' '),
-      address: venueFields.address.trim().replace(/\s+/g, ' '),
-    };
-    if (!next.name || !next.locality || !next.address) {
-      setVenueError('Completá nombre, localidad y dirección para guardar la sede.');
-      return;
-    }
-    if (venues.some(item => item.name.toLocaleLowerCase('es-AR') === next.name.toLocaleLowerCase('es-AR')
-      && item.locality.toLocaleLowerCase('es-AR') === next.locality.toLocaleLowerCase('es-AR'))) {
-      setVenueError('Esta sede ya está registrada. Seleccionala en la lista.');
+    const next = normalizeVenueInput(venueFields);
+    const validationError = validateVenueInput(next, venues);
+    if (validationError) {
+      setVenueError(validationError);
       return;
     }
     const id = onCreateVenue(next);

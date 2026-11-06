@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { DEMO_VENUES } from '../../src/features/agenda/consolePreview/demoData';
 import { createDemoSchedule, sameScheduleContent, venueById } from '../../src/features/agenda/consolePreview/scheduleRules';
 import { normalizeConsoleSchedule, validateConsoleSchedule } from '../../src/features/agenda/consolePreview/scheduleEditorRules';
+import { normalizeVenueInput, validateVenueInput } from '../../src/features/agenda/consolePreview/venueRules';
 
 test.describe('Agenda V2 — contratos puros de programaciones', () => {
   test('una programación nueva conserva valores iniciales de demostración', () => {
@@ -122,5 +123,24 @@ test.describe('Agenda V2 — reglas de guardado del editor', () => {
     expect(validateConsoleSchedule(value, [value])).toBeNull();
     expect(validateConsoleSchedule({ ...value, id: 2 }, [value])).toContain('Ya existe una programación idéntica.');
     expect(validateConsoleSchedule({ ...value, id: 2, startTime: '12:00' }, [value])).toBeNull();
+  });
+});
+
+test.describe('Agenda V2 — reglas puras de sedes', () => {
+  test('normaliza espacios sin alterar la sede ingresada', () => {
+    const input = { name: ' Centro   Cultural ', locality: '  Banfield ', address: 'Maipú   123 ' };
+    expect(normalizeVenueInput(input)).toEqual({ name: 'Centro Cultural', locality: 'Banfield', address: 'Maipú 123' });
+    expect(input.name).toBe(' Centro   Cultural ');
+  });
+
+  test('primero valida campos y luego duplicados por nombre y localidad', () => {
+    expect(validateVenueInput({ name: '', locality: '', address: '' }, DEMO_VENUES))
+      .toBe('Completá nombre, localidad y dirección para guardar la sede.');
+    expect(validateVenueInput({
+      name: 'PLAZA GRIGERA', locality: 'lomas de zamora', address: 'Una dirección nueva',
+    }, DEMO_VENUES)).toBe('Esta sede ya está registrada. Seleccionala en la lista.');
+    expect(validateVenueInput({
+      name: 'Plaza Grigera', locality: 'Banfield', address: 'Maipú 123',
+    }, DEMO_VENUES)).toBeNull();
   });
 });
