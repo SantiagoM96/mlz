@@ -3,11 +3,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
+import { MaterialIcon } from '../../components/ui/MaterialIcon';
+import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePreview/ConsoleScheduleEditorDialog';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
-  CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES, WEEKDAYS,
+  CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES,
   createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule,
 } from '../../features/agenda/consolePreview/model';
 
@@ -36,25 +38,6 @@ function SectionTitle({ number, title, subtitle }: { number: number; title: stri
       {subtitle && <p className="mt-1 text-[16px] leading-6 text-grey-900">{subtitle}</p>}
     </div>
   );
-}
-
-function scheduleKindLabel(kind: ConsoleSchedule['scheduleType']) {
-  return kind === 'exact' ? 'Fecha puntual' : kind === 'range' ? 'Período' : 'Recurrente';
-}
-
-function dateForDisplay(iso: string): string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return 'Fecha a confirmar';
-  const [year, month, day] = iso.split('-');
-  return day + '/' + month + '/' + year;
-}
-
-function scheduleSummary(schedule: ConsoleSchedule): string {
-  const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
-  const time = schedule.startTime
-    ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
-    : 'Horario a confirmar';
-  return [dateLabel, periodLabel, time, venueById(schedule.venueId).name]
-    .filter(Boolean).join(' · ');
 }
 
 function imageForDraft(draft: ConsoleDraft): string {
@@ -108,6 +91,8 @@ function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSch
         address: selectedVenue.address + ' - ' + selectedVenue.locality,
         detail: schedule.detail,
         detailType: schedule.detailType,
+        participants: schedule.participants,
+        participantsType: schedule.participantsType,
         suspendedByRain: schedule.suspendedByRain,
       };
     }),
@@ -178,8 +163,10 @@ function getFigmaExamplePreset(id: string | null): {
       endTime: schedule.endTime ?? '',
       venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
       suspendedByRain: schedule.suspendedByRain === true,
-      detail: schedule.detail ?? '',
+      detail: schedule.detailType === 'artists' ? '' : (schedule.detail ?? ''),
       detailType: schedule.detailType,
+      participants: schedule.detailType === 'artists' ? (schedule.detail ?? '') : '',
+      participantsType: schedule.detailType === 'artists' ? 'artists' : 'participants',
     })),
   };
 }
@@ -202,7 +189,7 @@ export function AgendaConsolePreviewPage() {
     () => getFigmaExamplePreset(searchParams.get('caso'))?.schedules
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
   );
-  const [expanded, setExpanded] = useState<number[]>([1]);
+  const [scheduleEditor, setScheduleEditor] = useState<{ mode: 'create' | 'edit'; schedule: ConsoleSchedule } | null>(null);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [detailPreview, setDetailPreview] = useState<AgendaActivity | null>(null);
 
@@ -213,18 +200,26 @@ export function AgendaConsolePreviewPage() {
   const updateDraft = (changes: Partial<ConsoleDraft>) => {
     setDraft(current => ({ ...current, ...changes }));
   };
-  const updateSchedule = (id: number, changes: Partial<ConsoleSchedule>) => {
-    setSchedules(current => current.map(s => s.id === id ? { ...s, ...changes } : s));
-  };
-  const addSchedule = () => {
-    const nextId = Math.max(0, ...schedules.map(s => s.id)) + 1;
-    setSchedules(current => [...current, createDemoSchedule(nextId)]);
-    setExpanded(current => [...current, nextId]);
+  const openNewSchedule = () => {
+    const nextId = Math.max(0, ...schedules.map(schedule => schedule.id)) + 1;
+    setScheduleEditor({ mode: 'create', schedule: createDemoSchedule(nextId) });
     setMobileView('form');
   };
+  const editSchedule = (schedule: ConsoleSchedule) => {
+    setScheduleEditor({ mode: 'edit', schedule: { ...schedule, weekdays: [...schedule.weekdays] } });
+  };
+  const saveSchedule = (schedule: ConsoleSchedule) => {
+    setSchedules(current => scheduleEditor?.mode === 'create'
+      ? [...current, schedule]
+      : current.map(item => item.id === schedule.id ? schedule : item));
+    setScheduleEditor(null);
+  };
+  const duplicateSchedule = (schedule: ConsoleSchedule) => {
+    const nextId = Math.max(0, ...schedules.map(item => item.id)) + 1;
+    setSchedules(current => [...current, { ...schedule, id: nextId, weekdays: [...schedule.weekdays] }]);
+  };
   const removeSchedule = (id: number) => {
-    setSchedules(current => current.filter(s => s.id !== id));
-    setExpanded(current => current.filter(value => value !== id));
+    setSchedules(current => current.filter(schedule => schedule.id !== id));
   };
   const changeCategory = (category: string) => {
     updateDraft({ category, type: CATEGORY_TYPES[category]?.[0] ?? 'Taller' });
@@ -235,7 +230,7 @@ export function AgendaConsolePreviewPage() {
     setDraft(preset?.draft ?? { ...INITIAL_DRAFT });
     setSchedules(preset?.schedules
       ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
-    setExpanded([1]);
+    setScheduleEditor(null);
     setMobileView('form');
     setDetailPreview(null);
   };
@@ -335,160 +330,76 @@ export function AgendaConsolePreviewPage() {
               </div>
             </section>
 
+
             <section aria-labelledby="console-schedules">
-              <div id="console-schedules">
-                <SectionTitle number={2} title="Programaciones"
-                  subtitle="Cada programación puede tener fecha, horario y lugar diferentes." />
-              </div>
-              <div className="space-y-4">
-                {schedules.map((schedule, index) => {
-                  const isExpanded = expanded.includes(schedule.id);
-                  const venue = venueById(schedule.venueId);
-                  return (
-                    <div key={schedule.id} className="min-w-0 rounded-[8px] border border-[#d9e5ed] bg-[#f6f9fc] p-4 sm:p-5">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <h3 className="text-[18px] font-bold leading-6 text-grey-900">Programación {index + 1}</h3>
-                        <div className="flex items-center gap-3">
-                          <span className="rounded bg-[#e9f2f9] px-2 py-1 text-[13px] text-[#678299]">
-                            {scheduleKindLabel(schedule.scheduleType)}
-                          </span>
-                          {!isExpanded && (
-                            <button type="button" onClick={() => setExpanded(current => [...current, schedule.id])}
-                              className="text-[15px] font-bold text-primary-600 hover:underline">Editar</button>
-                          )}
-                        </div>
-                      </div>
-                      {!isExpanded ? (
-                        <p className="mt-3 text-[15px] leading-6 text-[#5e6f7b]">
-                          {scheduleSummary(schedule)}
-                        </p>
-                      ) : (
-                        <div className="mt-5 space-y-4">
-                          <FormField label="Tipo de fecha" htmlFor={'date-type-' + schedule.id}>
-                            <select id={'date-type-' + schedule.id} value={schedule.scheduleType}
-                              className={inputClass}
-                              onChange={event => {
-                                const kind = event.target.value as ConsoleSchedule['scheduleType'];
-                                updateSchedule(schedule.id, {
-                                  scheduleType: kind,
-                                  endDate: kind === 'exact' ? '' : schedule.endDate,
-                                  weekdays: kind === 'recurring' ? (schedule.weekdays.length ? schedule.weekdays : [6]) : [],
-                                });
-                              }}>
-                              <option value="exact">Fecha puntual</option>
-                              <option value="range">Período</option>
-                              <option value="recurring">Recurrente</option>
-                            </select>
-                          </FormField>
-                          <div className={'grid min-w-0 gap-4 ' + (schedule.scheduleType !== 'exact' ? 'sm:grid-cols-2' : '')}>
-                            <FormField label={schedule.scheduleType === 'exact' ? 'Fecha' : 'Desde'} htmlFor={'start-date-' + schedule.id}
-                              hint={'Formato dd/mm/aaaa · ' + dateForDisplay(schedule.startDate)}>
-                              <input type="date" lang="es-AR" id={'start-date-' + schedule.id} className={inputClass}
-                                value={schedule.startDate}
-                                onChange={event => updateSchedule(schedule.id, { startDate: event.target.value })} />
-                            </FormField>
-                            {schedule.scheduleType !== 'exact' && (
-                              <FormField label="Hasta" htmlFor={'end-date-' + schedule.id}
-                                hint={'Formato dd/mm/aaaa · ' + dateForDisplay(schedule.endDate)}>
-                                <input type="date" lang="es-AR" id={'end-date-' + schedule.id} className={inputClass}
-                                  value={schedule.endDate}
-                                  onChange={event => updateSchedule(schedule.id, { endDate: event.target.value })} />
-                              </FormField>
-                            )}
-                          </div>
-                          {schedule.scheduleType === 'recurring' && (
-                            <fieldset>
-                              <legend className={labelClass}>Se repite los días</legend>
-                              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-                                {WEEKDAYS.map(day => {
-                                  const selected = schedule.weekdays.includes(day.number);
-                                  return (
-                                    <button key={day.number} type="button" aria-pressed={selected}
-                                      aria-label={'Todos los ' + day.short}
-                                      onClick={() => updateSchedule(schedule.id, {
-                                        weekdays: selected
-                                          ? schedule.weekdays.filter(value => value !== day.number)
-                                          : [...schedule.weekdays, day.number].sort((a, b) => a - b),
-                                      })}
-                                      className={'min-h-11 rounded-[4px] border px-1 text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-                                        (selected ? 'border-[#80b4db] bg-[#dceefa] text-primary-600' :
-                                          'border-[#d6e2eb] bg-white text-[#8294a4] hover:border-[#93bfe0]')}>
-                                      {day.short}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </fieldset>
-                          )}
-                          <div className="grid min-w-0 gap-4 sm:grid-cols-2">
-                            <FormField label="Horario de inicio" htmlFor={'start-time-' + schedule.id}>
-                              <input type="time" lang="es-AR" id={'start-time-' + schedule.id} className={inputClass}
-                                value={schedule.startTime}
-                                onChange={event => updateSchedule(schedule.id, { startTime: event.target.value })} />
-                            </FormField>
-                            <FormField label="Horario de fin (opcional)" htmlFor={'end-time-' + schedule.id}>
-                              <input type="time" lang="es-AR" id={'end-time-' + schedule.id} className={inputClass}
-                                value={schedule.endTime}
-                                onChange={event => updateSchedule(schedule.id, { endTime: event.target.value })} />
-                            </FormField>
-                          </div>
-                          <FormField label="Lugar" htmlFor={'venue-' + schedule.id}>
-                            <select id={'venue-' + schedule.id} className={inputClass} value={schedule.venueId}
-                              onChange={event => updateSchedule(schedule.id, { venueId: event.target.value })}>
-                              {DEMO_VENUES.map(place => (
-                                <option key={place.id} value={place.id}>{place.name}</option>
-                              ))}
-                            </select>
-                          </FormField>
-                          <div className="space-y-1 text-[14px] leading-5 text-[#5d7182]">
-                            <p className="font-medium">Información de la sede seleccionada</p>
-                            <dl className="grid grid-cols-[90px_minmax(0,1fr)] gap-x-3 gap-y-1">
-                              <dt className="text-[#92a0ac]">Localidad</dt><dd>{venue.locality}</dd>
-                              <dt className="text-[#92a0ac]">Dirección</dt><dd>{venue.address}</dd>
-                              <dt className="text-[#92a0ac]">Google Maps</dt>
-                              <dd><a href={'https://www.google.com/maps/search/?api=1&query=' +
-                                encodeURIComponent(venue.address + ', ' + venue.locality + ', Buenos Aires, Argentina')}
-                                target="_blank" rel="noopener noreferrer"
-                                className="font-medium text-primary-600 underline underline-offset-2">
-                                Ver ubicación ↗
-                              </a></dd>
-                            </dl>
-                          </div>
-                          <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-[4px] text-[16px] font-bold text-primary-600">
-                            <input type="checkbox" checked={schedule.suspendedByRain}
-                              onChange={event => updateSchedule(schedule.id, { suspendedByRain: event.target.checked })}
-                              className="h-5 w-5 accent-[#236999]" />
-                            Se suspende por lluvia
-                          </label>
-                          <FormField label={schedule.detailType === 'artists' ? 'Artistas' : 'Detalle de esta programación (opcional)'} htmlFor={'schedule-detail-' + schedule.id}>
-                            <textarea id={'schedule-detail-' + schedule.id} rows={3}
-                              className={inputClass + ' min-h-[108px] resize-y'}
-                              value={schedule.detail}
-                              onChange={event => updateSchedule(schedule.id, { detail: event.target.value })} />
-                          </FormField>
-                        </div>
-                      )}
-                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <button type="button" onClick={() => removeSchedule(schedule.id)}
-                          className="text-[14px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-                          Eliminar programación
-                        </button>
-                        {isExpanded && schedules.length > 1 && (
-                          <button type="button" onClick={() => setExpanded(current => current.filter(id => id !== schedule.id))}
-                            className="text-[14px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-                            Contraer
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-                <button type="button" onClick={addSchedule}
-                  className="flex min-h-12 w-full items-center rounded-[4px] border border-[#d6e2eb] bg-white px-4 text-left text-[16px] font-bold text-primary-600 transition-colors hover:bg-[#f4f9fc] focus-visible:outline-2 focus-visible:outline-primary-600">
-                  + &nbsp;Agregar otra programación
+              <div id="console-schedules" className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h2 className="text-[24px] font-bold leading-[30px] text-primary-600">2. Programaciones</h2>
+                  <p className="mt-1 text-[16px] leading-6">Cada programación puede tener fecha, horario y lugar diferentes.</p>
+                </div>
+                <button type="button" onClick={openNewSchedule}
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-[6px] bg-primary-600 px-4 text-[16px] font-bold text-white hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                  <MaterialIcon name="add" size={20} /> Agregar
                 </button>
-                <p className={noteClass}>Podés combinar varias fechas, sedes y horarios en una sola actividad.</p>
               </div>
+              <div className="overflow-x-auto rounded-[8px] border border-[#d4e2eb]" data-testid="console-schedules-table">
+                <table className="w-full min-w-[680px] border-collapse text-left text-[15px]">
+                  <thead className="bg-[#eaf3f9] text-primary-600">
+                    <tr>
+                      <th scope="col" className="px-3 py-3 font-bold">Fecha / frecuencia</th>
+                      <th scope="col" className="px-3 py-3 font-bold">Horario</th>
+                      <th scope="col" className="px-3 py-3 font-bold">Lugar</th>
+                      <th scope="col" className="px-3 py-3 font-bold">Lluvia</th>
+                      <th scope="col" className="px-3 py-3 text-right font-bold">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#d4e2eb]">
+                    {schedules.map((schedule, index) => {
+                      const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
+                      const venue = venueById(schedule.venueId);
+                      return (
+                        <tr key={schedule.id} data-testid="console-schedule-row" className="align-middle">
+                          <td className="px-3 py-3">
+                            <span className="font-bold text-grey-900">{dateLabel}</span>
+                            {periodLabel && <span className="mt-1 block text-[13px] leading-5 text-[#657b8d]">{periodLabel}</span>}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-3">
+                            {schedule.startTime || 'A confirmar'}
+                            {schedule.endTime ? ' a ' + schedule.endTime : ''}{schedule.startTime ? ' h' : ''}
+                          </td>
+                          <td className="px-3 py-3">{venue.name}</td>
+                          <td className="px-3 py-3">{schedule.suspendedByRain ? 'Sí' : 'No'}</td>
+                          <td className="px-3 py-3">
+                            <div className="flex items-center justify-end gap-1">
+                              <button type="button" onClick={() => editSchedule(schedule)}
+                                aria-label={'Editar programación ' + (index + 1)} title="Editar"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
+                                <MaterialIcon name="edit" size={22} />
+                              </button>
+                              <button type="button" onClick={() => duplicateSchedule(schedule)}
+                                aria-label={'Duplicar programación ' + (index + 1)} title="Duplicar"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
+                                <MaterialIcon name="content_copy" size={22} />
+                              </button>
+                              <button type="button" onClick={() => removeSchedule(schedule.id)}
+                                aria-label={'Eliminar programación ' + (index + 1)} title="Eliminar"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-[#b5444b] hover:bg-[#ffedef] focus-visible:outline-2 focus-visible:outline-[#b5444b]">
+                                <MaterialIcon name="delete" size={22} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {schedules.length === 0 && (
+                      <tr><td colSpan={5} className="px-4 py-6 text-center text-[#607487]">
+                        Todavía no hay programaciones. Agregá una para comenzar.
+                      </td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <p className={noteClass}>Podés editar, duplicar o eliminar programaciones sin repetir los datos de la actividad.</p>
             </section>
 
             <section aria-labelledby="console-registration">
@@ -582,29 +493,6 @@ export function AgendaConsolePreviewPage() {
               </label>
             </section>
 
-            <section aria-labelledby="console-publishing">
-              <div id="console-publishing">
-                <SectionTitle number={5} title="Publicación"
-                  subtitle="Opcional: si completás una fecha futura, la actividad se publicará automáticamente ese día." />
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FormField label="Fecha de publicación (opcional)" htmlFor="publish-date"
-                  hint={'Formato dd/mm/aaaa · ' + dateForDisplay(draft.publishDate)}>
-                  <input id="publish-date" type="date" lang="es-AR" className={inputClass}
-                    value={draft.publishDate}
-                    onChange={event => updateDraft({ publishDate: event.target.value })} />
-                </FormField>
-                <FormField label="Hora de publicación" htmlFor="publish-time">
-                  <input id="publish-time" type="time" lang="es-AR" className={inputClass}
-                    value={draft.publishTime}
-                    onChange={event => updateDraft({ publishTime: event.target.value })} />
-                </FormField>
-              </div>
-              <p className={noteClass}>
-                Sin fecha de publicación, se publica al guardar. Se oculta a las 00:00 del día siguiente a la última fecha de actividad.
-              </p>
-            </section>
-
             <div className="flex flex-wrap justify-end gap-3 border-t border-[#edf0f3] pt-6">
               <button type="button" onClick={() => setMobileView('preview')}
                 className="min-h-12 rounded-[4px] border border-[#236999] px-5 text-[16px] font-bold text-primary-600 hover:bg-[#edf6fc] lg:hidden">
@@ -628,6 +516,15 @@ export function AgendaConsolePreviewPage() {
           </aside>
         </div>
       </main>
+      {scheduleEditor && (
+        <ConsoleScheduleEditorDialog
+          key={scheduleEditor.mode + '-' + scheduleEditor.schedule.id}
+          schedule={scheduleEditor.schedule}
+          mode={scheduleEditor.mode}
+          onSave={saveSchedule}
+          onClose={() => setScheduleEditor(null)}
+        />
+      )}
       {detailPreview && (
         <ConsoleDetailDialog
           activity={detailPreview}
