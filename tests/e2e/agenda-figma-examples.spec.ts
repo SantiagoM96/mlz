@@ -454,7 +454,7 @@ test('Figma Agenda V2: mapa de sede, tipografía, separación, chevron y borde r
     };
   });
   expect(metrics.padding).toBe('16px');
-  expect(metrics.gap).toBe('16px');
+  expect(metrics.gap).toBe('8px');
   expect(metrics.type).toEqual([
     { size: '18px', weight: '700' },
     { size: '18px', weight: '400' },

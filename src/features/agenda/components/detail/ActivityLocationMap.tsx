@@ -24,7 +24,7 @@ export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) 
       >
         <div
           data-testid="agenda-location-details"
-          className="flex min-w-0 flex-col justify-center gap-4 p-4"
+          className="flex min-w-0 flex-col justify-center gap-2 p-4"
         >
           <p className="break-words text-[18px] font-bold leading-normal text-grey-900">{venue}</p>
           <p className="break-words text-[18px] font-normal leading-normal text-grey-900">
