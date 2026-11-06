@@ -1,7 +1,12 @@
-import { expect, test, type Locator } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 
 const route = '/agenda-de-la-comunidad/actividades';
 test.use({ reducedMotion: 'no-preference' });
+
+async function openWhenWhereOnMobile(page: Page) {
+  const tab = page.getByRole('tab', { name: 'Cuándo y dónde' });
+  if (await tab.count()) await tab.click();
+}
 
 // Para medir gestos, el tirador debe estar quieto: la hoja entra con una animación de 230 ms.
 async function awaitSheetEntrance(sheet: Locator): Promise<void> {
@@ -111,48 +116,53 @@ test('Abrir una ficha desde el listado respeta scroll y diseño responsive', asy
   await expect(page.getByRole('navigation', { name: 'Ruta de navegación' })).toBeInViewport();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   await expect(page.getByTestId('agenda-detail-image')).toBeVisible();
+  await openWhenWhereOnMobile(page);
   await expect(page.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Copiar enlace' })).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('ficha V2: descripción primero, Cuándo y dónde y mapa debajo', async ({ page }, info) => {
+test('ficha V2: información y fechas separadas en mobile, columnas y mapa en desktop', async ({ page }, info) => {
   for (const path of ['/agenda-de-la-comunidad/actividades/actividad-1',
     '/agenda-de-la-comunidad/actividades/tita-y-rhodesia']) {
     await page.goto(path);
     const desc = page.getByRole('region', { name: 'Descripción de la actividad' });
     const image = page.getByTestId('agenda-detail-image');
-    const sidebar = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-    const map = page.getByRole('region', { name: 'Mapa de ubicación' });
     await expect(desc).toBeVisible();
     await expect(image).toBeVisible();
+    const informationPositions = await page.evaluate(() => ({
+      desc: document.querySelector('[aria-label="Descripción de la actividad"]')!.getBoundingClientRect().top,
+      image: document.querySelector('[data-testid="agenda-detail-image"]')!.getBoundingClientRect().top,
+      imageBottom: document.querySelector('[data-testid="agenda-detail-image"]')!.getBoundingClientRect().bottom,
+    }));
+    expect(informationPositions.desc).toBeLessThan(informationPositions.image);
+    await openWhenWhereOnMobile(page);
+    const sidebar = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+    const map = page.getByRole('region', { name: 'Mapa de ubicación' });
     await expect(sidebar).toBeVisible();
     await expect(map).toBeVisible();
     await expect(sidebar.getByRole('heading', { name: 'Cuándo y dónde' })).toBeVisible();
     await expect(sidebar.locator('section')).toHaveCount(1);
-
     if (path.endsWith('/tita-y-rhodesia')) {
       await expect(sidebar.locator('[data-agenda-chip="activity"]')).not.toHaveCount(0);
     }
-    const positions = await page.evaluate(() => {
-      const rect = (query: string) => document.querySelector(query)!.getBoundingClientRect();
-      return {
-        desc: rect('[aria-label="Descripción de la actividad"]').top,
-        image: rect('[data-testid="agenda-detail-image"]').top,
-        imageBottom: rect('[data-testid="agenda-detail-image"]').bottom,
-        sidebarX: rect('[aria-label="Cuándo y dónde"]').x,
-        imageX: rect('[data-testid="agenda-detail-image"]').x,
-        map: rect('[aria-label="Mapa de ubicación"]').top,
-      };
-    });
-    expect(positions.desc).toBeLessThan(positions.image);
-    expect(positions.map).toBeGreaterThan(positions.imageBottom);
+    const positions = await page.evaluate(() => ({
+      sidebar: document.querySelector('[aria-label="Cuándo y dónde"]')!.getBoundingClientRect().toJSON(),
+      map: document.querySelector('[aria-label="Mapa de ubicación"]')!.getBoundingClientRect().toJSON(),
+    }));
+    if ((info.project.use.viewport?.width ?? 0) >= 1024) {
+      expect(positions.map.top).toBeGreaterThan(informationPositions.imageBottom);
+      const imageX = await page.getByTestId('agenda-detail-image')
+        .evaluate(element => element.getBoundingClientRect().x);
+      expect(positions.sidebar.x).toBeGreaterThan(imageX);
+    } else {
+      expect(positions.map.top).toBeGreaterThanOrEqual(positions.sidebar.bottom);
+      await expect(desc).toBeHidden();
+      await expect(image).toBeHidden();
+    }
     await expect(sidebar.getByRole('link', { name: /Google Maps/ })).toHaveCount(0);
     await expect(map.getByRole('link', { name: 'Ver en Google Maps' })).toBeVisible();
-    if ((info.project.use.viewport?.width ?? 0) >= 1024) {
-      expect(positions.sidebarX).toBeGreaterThan(positions.imageX);
-    }
     await expect(page.getByRole('navigation', { name: 'Ruta de navegación' }))
       .toHaveCSS('color', 'rgb(35, 105, 153)');
   }
@@ -197,6 +207,7 @@ test('mobile: arrastre hacia arriba estira el drawer y recupera su altura como e
 
 test('ficha V2: Cuándo y dónde sticky, mapa compacto y tipografía institucional', async ({ page }, info) => {
   await page.goto('/agenda-de-la-comunidad/actividades/actividad-1');
+  await openWhenWhereOnMobile(page);
   const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
   const map = page.getByRole('region', { name: 'Mapa de ubicación' });
   const iframe = map.locator('iframe');
