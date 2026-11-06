@@ -13,15 +13,18 @@ export function ActivitySummary({
 }: { activity: AgendaActivity; previewDateISO?: string }) {
   const schedules = getActivitySchedulePresentations(activity, previewDateISO);
   const multiple = getUniqueActivityLocations(schedules).length > 1;
+  const badges = activity.badges.filter(badge =>
+    badge.kind !== 'rain' || !schedules.some(schedule => schedule.suspendedByRain !== undefined),
+  );
 
   return (
     <aside aria-label="Cuándo y dónde" className="min-w-0">
       <h2 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">
         Cuándo y dónde
       </h2>
-      {activity.badges.length > 0 && (
+      {badges.length > 0 && (
         <div className="mb-4">
-          <ActivityBadges badges={activity.badges} />
+          <ActivityBadges badges={badges} />
         </div>
       )}
       <div className="space-y-4">
