@@ -33,7 +33,7 @@ export function ActivitySummary({
         {schedules.map(schedule => (
           <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
             <div className="space-y-4 text-[18px] leading-[26px] text-grey-900">
-              <ActivityScheduleDateTime schedule={schedule} timeWeight="normal" />
+              <ActivityScheduleDateTime schedule={schedule} />
               {multiple && (
                 <div className="space-y-2 pt-2">
                   <p className="font-bold">{schedule.venue || schedule.locality}</p>

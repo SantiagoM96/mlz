@@ -129,7 +129,7 @@ export function ConsoleDetailDialog({
                   {presentations.map(schedule => (
                     <section key={schedule.id} className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
                       <div className="space-y-4 text-[18px] leading-[26px] text-grey-900">
-                        <ActivityScheduleDateTime schedule={schedule} timeWeight="normal" />
+                        <ActivityScheduleDateTime schedule={schedule} />
                         {schedule.suspendedByRain && (
                           <span className="inline-flex items-center gap-2 rounded-[6px] bg-[#e5f0ff] px-3 py-2 text-[15px] font-medium leading-5 text-[#006eff]">
                             <MaterialIcon name="rainy" size={19} />
@@ -173,7 +173,6 @@ export function ConsoleDetailDialog({
                               ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
                               : 'Horario a confirmar',
                           }}
-                          timeWeight="normal"
                         />
                         <p>{schedule.venue}</p>
                       </div>

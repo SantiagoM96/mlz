@@ -387,7 +387,7 @@ test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa 
 
 
 test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular y reloj en todas las vistas', async ({ page }, info) => {
-  const verify = async (root: import('@playwright/test').Locator, title: string, period: string, time: string, timeWeight: string) => {
+  const verify = async (root: import('@playwright/test').Locator, title: string, period: string, time: string) => {
     const date = root.locator('[data-agenda-field="date"]').first();
     await expect(date.locator('[data-material-symbol="event_available"]')).toHaveCount(1);
     await expect(date.locator('p').first()).toHaveText(title);
@@ -399,7 +399,7 @@ test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular
     const timeField = root.locator('[data-agenda-field="time"]').first();
     await expect(timeField.locator('[data-material-symbol="schedule"]')).toHaveCount(1);
     await expect(timeField.locator('p')).toHaveText(time);
-    expect(await timeField.locator('p').evaluate(el => getComputedStyle(el).fontWeight)).toBe(timeWeight);
+    expect(await timeField.locator('p').evaluate(el => getComputedStyle(el).fontWeight)).toBe('700');
     await expect(root).not.toContainText(/\b\d{1,2}\/\d{1,2}\/\d{4}\b/);
   };
 
@@ -407,28 +407,28 @@ test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('Yoga en Comunidad');
   await verify(page.getByTestId('agenda-card').first(), 'Todos los martes',
-    'Del 10 de noviembre al 15 de diciembre', '09:00 a 10:00 h', '700');
+    'Del 10 de noviembre al 15 de diciembre', '09:00 a 10:00 h');
 
   await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
   await verify(page.getByRole('complementary', { name: 'Cuándo y dónde' }), 'Todos los martes',
-    'Del 10 de noviembre al 15 de diciembre', '09:00 a 10:00 h', '400');
+    'Del 10 de noviembre al 15 de diciembre', '09:00 a 10:00 h');
 
   await page.goto(list + '/preview-v2-muestra');
   await verify(page.getByRole('complementary', { name: 'Cuándo y dónde' }), 'Todos los días',
-    'Del 10 al 17 de noviembre', '11:00 a 19:00 h', '400');
+    'Del 10 al 17 de noviembre', '11:00 a 19:00 h');
 
   await page.goto(list);
   await search.fill('Muestra fotográfica barrial');
   await verify(page.getByTestId('agenda-card').first(), 'Todos los días',
-    'Del 10 al 17 de noviembre', '11:00 a 19:00 h', '700');
+    'Del 10 al 17 de noviembre', '11:00 a 19:00 h');
 
   await page.goto(consoleRoute + '?caso=preview-v2-muestra');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
   const previewCard = page.getByTestId('console-preview-card').first();
-  await verify(previewCard, 'Todos los días', 'Del 10 al 17 de noviembre', '11:00 a 19:00 h', '700');
+  await verify(previewCard, 'Todos los días', 'Del 10 al 17 de noviembre', '11:00 a 19:00 h');
   await previewCard.getByRole('button', { name: 'Ver más' }).click();
   await verify(page.getByTestId('console-detail-preview'), 'Todos los días',
-    'Del 10 al 17 de noviembre', '11:00 a 19:00 h', '400');
+    'Del 10 al 17 de noviembre', '11:00 a 19:00 h');
 });
