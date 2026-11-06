@@ -1,19 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
-import { labelClass } from './ConsoleFormPrimitives';
+import { Field, inputClass } from './ConsoleScheduleFormPrimitives';
+import { ConsoleVenueSelector } from './ConsoleVenueSelector';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 import { WEEKDAYS } from './demoData';
-import { venueById } from './scheduleRules';
+
 import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
-
-const inputClass = 'min-h-12 w-full min-w-0 rounded-[6px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
-
-function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
-  return <div className="min-w-0">
-    <label htmlFor={id} className={labelClass}>{label}</label>
-    {children}
-  </div>;
-}
 
 interface Props {
   schedule: ConsoleSchedule;
@@ -31,16 +23,12 @@ export function ConsoleScheduleEditorDialog({
 }: Props) {
   const [value, setValue] = useState<ConsoleSchedule>(() => ({ ...schedule, weekdays: [...schedule.weekdays] }));
   const [error, setError] = useState('');
-  const [addingVenue, setAddingVenue] = useState(false);
-  const [venueFields, setVenueFields] = useState({ name: '', locality: '', address: '' });
-  const [venueError, setVenueError] = useState('');
   const firstRef = useRef<HTMLSelectElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const update = (changes: Partial<ConsoleSchedule>) => {
     setValue(current => ({ ...current, ...changes }));
     setError('');
   };
-  const venue = venueById(value.venueId, venues);
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -70,27 +58,6 @@ export function ConsoleScheduleEditorDialog({
     } else if (!event.shiftKey && document.activeElement === last) {
       event.preventDefault(); first.focus();
     }
-  };
-
-  const addVenue = () => {
-    const next = {
-      name: venueFields.name.trim().replace(/\s+/g, ' '),
-      locality: venueFields.locality.trim().replace(/\s+/g, ' '),
-      address: venueFields.address.trim().replace(/\s+/g, ' '),
-    };
-    if (!next.name || !next.locality || !next.address) {
-      setVenueError('Completá nombre, localidad y dirección para guardar la sede.');
-      return;
-    }
-    if (venues.some(item => item.name.toLocaleLowerCase('es-AR') === next.name.toLocaleLowerCase('es-AR')
-      && item.locality.toLocaleLowerCase('es-AR') === next.locality.toLocaleLowerCase('es-AR'))) {
-      setVenueError('Esta sede ya está registrada. Seleccionala en la lista.');
-      return;
-    }
-    const id = onCreateVenue(next);
-    update({ venueId: id });
-    setVenueError('');
-    setAddingVenue(false);
   };
 
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
@@ -184,61 +151,12 @@ export function ConsoleScheduleEditorDialog({
                 value={value.endTime} onChange={event => update({ endTime: event.target.value })}/>
             </Field>
           </div>
-          <div className="space-y-2">
-            <Field id="console-schedule-venue" label="Lugar">
-              <select id="console-schedule-venue" value={value.venueId} className={inputClass}
-                onChange={event => update({ venueId: event.target.value })}>
-                {venues.map(place => <option key={place.id} value={place.id}>{place.name}</option>)}
-              </select>
-            </Field>
-            <button type="button" onClick={() => { setAddingVenue(current => !current); setVenueError(''); }}
-              className="inline-flex min-h-10 items-center gap-2 rounded-[6px] text-[15px] font-bold text-primary-600 hover:underline"
-              aria-expanded={addingVenue}>
-              <MaterialIcon name="add" size={20}/> Agregar nuevo lugar
-            </button>
-          </div>
-          {addingVenue && (
-            <section aria-label="Nuevo lugar" data-testid="console-new-venue"
-              className="space-y-3 rounded-[8px] border border-[#c5dce9] bg-[#f5f9fc] p-4">
-              <h3 className="font-bold text-primary-600">Nuevo lugar</h3>
-              <Field id="console-venue-name" label="Nombre del lugar">
-                <input id="console-venue-name" className={inputClass} value={venueFields.name}
-                  onChange={event => { setVenueFields(v => ({ ...v, name: event.target.value })); setVenueError(''); }}
-                  placeholder="Ej.: Centro Cultural del Barrio"/>
-              </Field>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <Field id="console-venue-locality" label="Localidad">
-                  <input id="console-venue-locality" className={inputClass} value={venueFields.locality}
-                    onChange={event => { setVenueFields(v => ({ ...v, locality: event.target.value })); setVenueError(''); }}
-                    placeholder="Ej.: Banfield"/>
-                </Field>
-                <Field id="console-venue-address" label="Dirección">
-                  <input id="console-venue-address" className={inputClass} value={venueFields.address}
-                    onChange={event => { setVenueFields(v => ({ ...v, address: event.target.value })); setVenueError(''); }}
-                    placeholder="Calle y altura"/>
-                </Field>
-              </div>
-              {venueError && <p role="alert" className="text-[14px] font-medium text-[#ac343e]">{venueError}</p>}
-              <div className="flex flex-wrap justify-end gap-2">
-                <button type="button" onClick={() => setAddingVenue(false)}
-                  className="min-h-11 rounded-[6px] border border-primary-600 px-4 font-bold text-primary-600">Cancelar lugar</button>
-                <button type="button" onClick={addVenue}
-                  className="min-h-11 rounded-[6px] bg-primary-600 px-4 font-bold text-white">Guardar lugar</button>
-              </div>
-            </section>
-          )}
-          <dl className="grid grid-cols-[90px_minmax(0,1fr)] gap-x-3 gap-y-1 text-[14px] leading-6 text-[#5d7182]">
-            <dt>Localidad</dt><dd>{venue.locality}</dd>
-            <dt>Dirección</dt><dd>{venue.address}</dd>
-            <dt>Google Maps</dt><dd>
-              <a href={'https://www.google.com/maps/search/?api=1&query=' +
-                encodeURIComponent(venue.address + ', ' + venue.locality + ', Buenos Aires, Argentina')}
-                target="_blank" rel="noopener noreferrer"
-                className="font-medium text-primary-600 underline underline-offset-2">
-                Ver ubicación <MaterialIcon name="arrow_forward" size={16} className="inline"/>
-              </a>
-            </dd>
-          </dl>
+          <ConsoleVenueSelector
+            venueId={value.venueId}
+            venues={venues}
+            onVenueChange={venueId => update({ venueId })}
+            onCreateVenue={onCreateVenue}
+          />
           <label className="flex min-h-11 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
             <input type="checkbox" checked={value.suspendedByRain}
               onChange={event => update({ suspendedByRain: event.target.checked })}
