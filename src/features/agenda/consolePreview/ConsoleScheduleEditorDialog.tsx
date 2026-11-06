@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
-import {
-  WEEKDAYS, sameScheduleContent, venueById, type ConsoleSchedule, type ConsoleVenue,
-} from './model';
+import type { ConsoleSchedule, ConsoleVenue } from './model';
+import { WEEKDAYS } from './demoData';
+import { sameScheduleContent, venueById } from './scheduleRules';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[6px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
 

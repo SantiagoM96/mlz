@@ -10,10 +10,9 @@ import { ConsoleImageUpload } from '../../features/agenda/consolePreview/Console
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
-import {
-  CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES,
-  createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule, type ConsoleVenue,
-} from '../../features/agenda/consolePreview/model';
+import type { ConsoleDraft, ConsoleSchedule, ConsoleVenue } from '../../features/agenda/consolePreview/model';
+import { CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
+import { createDemoSchedule, venueById } from '../../features/agenda/consolePreview/scheduleRules';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
 const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
