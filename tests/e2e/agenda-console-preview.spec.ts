@@ -365,3 +365,20 @@ test('Consola: la ficha de vista previa contiene el foco y lo devuelve al botón
   await expect(dialog).toHaveCount(0);
   await expect(opener).toBeFocused();
 });
+
+test('Consola: detalle sin programaciones conserva el estado vacío y no publica enlaces', async ({ page }, info) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Eliminar programación 1' }).click();
+  await expect(page.getByTestId('console-schedule-row')).toHaveCount(0);
+
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
+  const modal = page.getByTestId('console-detail-preview');
+  await expect(modal.getByText('Agregá una programación para ver las fechas.')).toBeVisible();
+  await expect(modal.getByTestId('agenda-detail-programming')).toHaveCount(0);
+  await expect(modal.getByTestId('agenda-console-detail-map-panel')).toHaveCount(0);
+  await modal.getByRole('button', { name: 'Cerrar vista previa del detalle' }).click();
+  await expect(modal).toHaveCount(0);
+});
