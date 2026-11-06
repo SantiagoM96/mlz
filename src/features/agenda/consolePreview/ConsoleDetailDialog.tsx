@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
 import { ActivityCharacteristic } from '../../../components/agenda/ActivityCharacteristic';
 import { ActivityScheduleDateTime } from '../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
-import { AgendaDetailMobileTabs, type AgendaDetailTab } from '../../../components/agenda/AgendaDetailMobileTabs';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrationLink';
 import { ActivityLocationMap } from '../components/detail/ActivityLocationMap';
@@ -24,11 +23,6 @@ export function ConsoleDetailDialog({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [tabState, setTabState] = useState<{ id: string; tab: AgendaDetailTab }>({
-    id: activity.id, tab: 'information',
-  });
-  const mobileTab = tabState.id === activity.id ? tabState.tab : 'information';
-  const setMobileTab = (tab: AgendaDetailTab) => setTabState({ id: activity.id, tab });
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -93,16 +87,10 @@ export function ConsoleDetailDialog({
                 <h2 id="console-detail-heading" className="break-words text-[32px] font-bold leading-10 text-primary-600">
                   {activity.title}
                 </h2>
-                <div className="lg:hidden">
-                  <AgendaDetailMobileTabs idPrefix="agenda-console"
-                    active={mobileTab} onChange={setMobileTab} />
-                </div>
               </div>
-              <div id="agenda-console-panel-information" role="tabpanel"
-                aria-labelledby="agenda-console-tab-information"
+              <div id="agenda-console-panel-information"
                 data-testid="agenda-console-detail-information"
-                className={(mobileTab === 'information' ? 'block' : 'hidden') +
-                  ' mt-4 min-w-0 space-y-8 lg:block lg:space-y-6'}>
+                className="mt-4 min-w-0 space-y-8 lg:space-y-6">
                 <ActivityDescription activity={activity} />
               <img
                 className="aspect-[400/224] w-full rounded-lg object-cover lg:aspect-[2/1] lg:rounded-[10px]"
@@ -125,10 +113,8 @@ export function ConsoleDetailDialog({
 
             {/* El tabpanel es una superficie de contenido; su pista de sticky es independiente. */}
             <div data-testid="agenda-console-detail-sidebar"
-              className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-                ' min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4'}>
-              <div id="agenda-console-panel-when-where" role="tabpanel"
-                aria-labelledby="agenda-console-tab-when-where"
+              className="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4">
+              <div id="agenda-console-panel-when-where"
                 className="flow-root min-w-0 space-y-4 lg:contents lg:space-y-0">
               <p className="flex items-center gap-2 text-[18px] font-bold text-primary-600">
                 <MaterialIcon name="link" size={20} /> Compartir
@@ -207,8 +193,7 @@ export function ConsoleDetailDialog({
             </div>
             {first && (
               <div data-testid="agenda-console-detail-map-panel"
-                className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-                  ' min-w-0 lg:col-start-1 lg:row-start-2 lg:block'}>
+                className="min-w-0 lg:col-start-1 lg:row-start-2">
                 <ActivityLocationMap activity={{
                   ...activity,
                   locality: first.locality,

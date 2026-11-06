@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
-import { AgendaDetailMobileTabs, type AgendaDetailTab } from '../../components/agenda/AgendaDetailMobileTabs';
 import { ActivityDescription } from '../../components/agenda/ActivityDescription';
 import { ActivitySummary } from '../../features/agenda/components/detail/ActivitySummary';
 import { ActivityRegistrationLink } from '../../features/agenda/components/detail/ActivityRegistrationLink';
@@ -22,11 +21,6 @@ const publicActivities = getPublicActivityList(editorialActivities);
 
 export function AgendaActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [tabState, setTabState] = useState<{ id: string | undefined; tab: AgendaDetailTab }>({
-    id, tab: 'information',
-  });
-  const mobileTab = tabState.id === id ? tabState.tab : 'information';
-  const setMobileTab = (tab: AgendaDetailTab) => setTabState({ id, tab });
   const directActivity = publicActivities.find(activity => activity.id === id);
   // Los enlaces previos con el ID editorial siguen funcionando:
   // al separar sedes redirigen a la primera ficha pública.
@@ -74,16 +68,9 @@ export function AgendaActivityDetailPage() {
           <div className="space-y-4">
             <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
             <h1 className="break-words text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
-            <div className="lg:hidden">
-              <AgendaDetailMobileTabs idPrefix="agenda-public"
-                active={mobileTab} onChange={setMobileTab} />
-            </div>
           </div>
-          <div id="agenda-public-panel-information" role="tabpanel"
-            aria-labelledby="agenda-public-tab-information"
-            data-testid="agenda-detail-information"
-            className={(mobileTab === 'information' ? 'block' : 'hidden') +
-              ' mt-4 min-w-0 space-y-8 lg:block lg:space-y-6'}>
+          <div id="agenda-public-panel-information" data-testid="agenda-detail-information"
+            className="mt-4 min-w-0 space-y-8 lg:space-y-6">
             <ActivityDescription key={activity.id} activity={activity} />
             <img
               data-testid="agenda-detail-image"
@@ -101,10 +88,8 @@ export function AgendaActivityDetailPage() {
         {/* La pista alta sirve únicamente como límite para sticky.
             El tabpanel no debe heredar su altura ni generar un espacio fantasma. */}
         <div data-testid="agenda-detail-sidebar"
-          className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-            ' min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4'}>
-          <div id="agenda-public-panel-when-where" role="tabpanel"
-            aria-labelledby="agenda-public-tab-when-where"
+          className="min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:flex lg:h-full lg:min-h-0 lg:flex-col lg:gap-4">
+          <div id="agenda-public-panel-when-where"
             className="flow-root min-w-0 space-y-4 lg:contents lg:space-y-0">
           <ActivityShare key={activity.id} title={activity.title} />
           <div data-testid="agenda-detail-sticky"
@@ -116,8 +101,7 @@ export function AgendaActivityDetailPage() {
         </div>
         {onlySchedule && (
           <div data-testid="agenda-detail-map-panel"
-            className={(mobileTab === 'when-where' ? 'block' : 'hidden') +
-              ' min-w-0 lg:col-start-1 lg:row-start-2 lg:block'}>
+            className="min-w-0 lg:col-start-1 lg:row-start-2">
             <ActivityLocationMap activity={locationActivity} />
           </div>
         )}

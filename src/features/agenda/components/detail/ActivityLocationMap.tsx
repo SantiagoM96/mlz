@@ -5,7 +5,7 @@ import { formatActivityAddress } from '../../utils/formatActivityAddress';
 
 /**
  * Agenda V2 · Figma 7508:17278 / 7508:17259.
- * Mapa dinámico, datos de sede a 18px y enlace con chevron 24px.
+ * Mobile: información a la izquierda y miniatura de mapa a la derecha. Sin mapa gigante debajo.
  */
 export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) {
   if (!activity.address) return null;
@@ -19,7 +19,7 @@ export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) 
       <h2 className="sr-only">Ubicación en el mapa</h2>
       <div
         data-testid="agenda-location-card"
-        className="grid grid-cols-1 overflow-hidden rounded-lg border border-[#d1d1d1] bg-white
+        className="grid grid-cols-[minmax(0,1fr)_112px] overflow-hidden rounded-lg border border-[#d1d1d1] bg-white
           sm:grid-cols-[minmax(0,1fr)_41.4%]"
       >
         <div
@@ -46,7 +46,7 @@ export function ActivityLocationMap({ activity }: { activity: AgendaActivity }) 
         <iframe
           title={'Mapa de ' + venue}
           src={'https://www.google.com/maps?q=' + mapQuery + '&output=embed'}
-          className="h-[180px] w-full border-0 sm:h-full sm:min-h-[147px]"
+          className="h-full min-h-[148px] w-full border-0 pointer-events-none sm:min-h-[147px] sm:pointer-events-auto"
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
