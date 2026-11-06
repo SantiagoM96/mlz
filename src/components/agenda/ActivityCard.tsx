@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import type { AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { ActivityBadges } from './ActivityBadges';
@@ -49,8 +49,12 @@ function CardContents({
         </div>
         {showCharacteristics && (
           <div data-testid="agenda-card-schedules" className="flex min-w-0 flex-col gap-4">
-            {schedules.map(schedule => (
-              <div key={schedule.id} className="flex min-w-0 flex-col gap-2">
+            {schedules.map((schedule, index) => (
+              <Fragment key={schedule.id}>
+                {index > 0 && (
+                  <div aria-hidden="true" data-agenda-programming-divider
+                    className="h-px w-full bg-[#e7e7e7]" />
+                )}
                 {schedule.periodLabel ? (
                   <ActivityCharacteristic
                     variant="con-label"
@@ -70,13 +74,13 @@ function CardContents({
                   icon="schedule"
                   value={schedule.timeLabel}
                 />
-              </div>
+              </Fragment>
             ))}
             {schedules.length === 0 && (
-              <div className="flex flex-col gap-2">
+              <>
                 <ActivityCharacteristic variant="sin-label" icon="calendar_month" value={activity.dayLabel} />
                 <ActivityCharacteristic variant="sin-label" icon="schedule" value={activity.timeLabel} />
-              </div>
+              </>
             )}
             <ActivityCharacteristic
               variant="con-label"
