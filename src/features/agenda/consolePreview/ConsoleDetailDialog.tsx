@@ -1,16 +1,12 @@
 import { useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
-import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
-import { ActivityScheduleParticipants } from '../../../components/agenda/ActivityScheduleParticipants';
-import { ActivityScheduleDateTime } from '../../../components/agenda/ActivityScheduleDateTime';
 import { ActivityDescription } from '../../../components/agenda/ActivityDescription';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ActivityRegistrationLink } from '../components/detail/ActivityRegistrationLink';
 import { ActivityLocationMap } from '../components/detail/ActivityLocationMap';
 import { getActivitySchedulePresentations, getUniqueActivityLocations } from '../utils/activitySchedules';
-import { formatActivityAddress } from '../utils/formatActivityAddress';
-import { getActivityMapUrl } from '../utils/activityMap';
 import { useConsoleDialogFocus } from './useConsoleDialogFocus';
+import { ConsoleDetailScheduleSummary } from './ConsoleDetailScheduleSummary';
 
 /**
  * Simulación del detalle público: no navega a una actividad real y no envía datos.
@@ -33,7 +29,6 @@ export function ConsoleDetailDialog({
   const badges = activity.schedules
     ? activity.badges.filter(badge => badge.kind !== 'rain')
     : activity.badges;
-  const rainBadge = { kind: 'rain' as const, label: 'Se suspende por lluvia' };
 
   const missing = (activity.schedules ?? []).filter(
     schedule => !presentations.some(item => item.id === schedule.id),
@@ -115,70 +110,13 @@ export function ConsoleDetailDialog({
                 <MaterialIcon name="link" size={20} /> Compartir
               </p>
               <div data-testid="agenda-console-detail-sticky" className="lg:sticky lg:top-[88px] lg:max-h-[calc(100dvh-112px)] lg:overflow-y-auto lg:overscroll-contain">
-              <aside aria-label="Cuándo y dónde" className="min-w-0">
-                <h3 className="mb-4 text-[24px] font-bold leading-[30px] text-primary-600">Cuándo y dónde</h3>
-                {badges.length > 0 && <div className="mb-4"><ActivityBadges badges={badges} /></div>}
-                {presentations.length === 0 && missing.length === 0 && (
-                  <p className="rounded-lg border border-[#d1d1d1] p-4 text-[16px] text-grey-900">
-                    Agregá una programación para ver las fechas.
-                  </p>
-                )}
-                <div className="space-y-4">
-                  {presentations.map(schedule => (
-                    <div key={schedule.id} data-testid="agenda-detail-programming" className="space-y-4">
-                      {schedule.suspendedByRain === true && (
-                        <div data-testid="agenda-schedule-rain" className="w-fit max-w-full">
-                          <ActivityBadges badges={[rainBadge]} />
-                        </div>
-                      )}
-                    <section className="min-w-0 rounded-lg border border-[#d1d1d1] bg-white p-4">
-                      <div className="space-y-4 text-[18px] leading-[26px] text-grey-900">
-                        <ActivityScheduleDateTime schedule={schedule} />
-                        {uniqueLocations.length > 1 && (
-                          <div className="space-y-1 pt-2">
-                            <p className="font-bold">{schedule.venue}</p>
-                            {schedule.address && (
-                              <>
-                                <p className="break-words">{formatActivityAddress(schedule.address, schedule.locality)}</p>
-                                <a
-                                  href={getActivityMapUrl({
-                                    ...activity, locality: schedule.locality,
-                                    venue: schedule.venue, address: schedule.address,
-                                  })}
-                                  target="_blank" rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
-                                >
-                                  Ver en Google Maps <MaterialIcon name="chevron_right" size={20} />
-                                </a>
-                              </>
-                            )}
-                          </div>
-                        )}
-                        <ActivityScheduleParticipants schedule={schedule} />
-                        {schedule.detailType !== 'artists' && schedule.detail?.trim() && (
-                          <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
-                        )}
-                      </div>
-                    </section>
-                    </div>
-                  ))}
-                  {missing.map(schedule => (
-                    <section key={schedule.id} className="rounded-lg border border-[#d1d1d1] bg-white p-4 text-[18px] leading-[26px]">
-                      <div className="space-y-4">
-                        <ActivityScheduleDateTime
-                          schedule={{
-                            dateLabel: 'Fecha a confirmar',
-                            timeLabel: schedule.startTime
-                              ? schedule.startTime + (schedule.endTime ? ' a ' + schedule.endTime : '') + ' h'
-                              : 'Horario a confirmar',
-                          }}
-                        />
-                        <p>{schedule.venue}</p>
-                      </div>
-                    </section>
-                  ))}
-                </div>
-              </aside>
+              <ConsoleDetailScheduleSummary
+                activity={activity}
+                presentations={presentations}
+                missing={missing}
+                badges={badges}
+                multipleLocations={uniqueLocations.length > 1}
+              />
               <ActivityRegistrationLink
                 activity={{ ...activity, registrationUrl: undefined }}
                 preview
