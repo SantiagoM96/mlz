@@ -2,9 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
-import { MaterialIcon } from '../../components/ui/MaterialIcon';
-import { ActivityBadges } from '../../components/agenda/ActivityBadges';
-import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
+import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import {
@@ -143,55 +141,16 @@ function CardPreview({ draft, schedules, onViewDetail }: {
           ? 'Una ficha pública para esta actividad'
           : publicViews.length + ' fichas públicas, una por sede'}
       </p>
-      <div className="space-y-5">
-        {publicViews.map(activity => {
-          const presentedSchedules = getActivitySchedulePresentations(activity, '1900-01-01');
-          const main = presentedSchedules[0];
-          const multiple = publicViews.length > 1;
-          return (
-            <article key={activity.id} data-testid="console-preview-card"
-              className="overflow-hidden rounded-[8px] border border-[#e7e7e7] bg-white shadow-sm">
-              <img
-                className="h-[154px] w-full object-cover"
-                src={activity.image}
-                alt={draft.coverDataUrl ? 'Portada seleccionada' : ''}
-              />
-              <div className="flex flex-col gap-3 px-6 pb-[18px] pt-3">
-                <p className="text-[16px] font-medium uppercase leading-[26px] text-[#888]">{activity.type}</p>
-                <h3 className="text-[22px] font-bold leading-[28px] text-primary-600">{activity.title}</h3>
-                {activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
-                {multiple && activity.venue && (
-                  <p className="flex items-start gap-2 text-[16px] font-bold leading-6 text-grey-900">
-                    <MaterialIcon name="location_on" size={20} className="mt-0.5" />
-                    <span>{activity.venue}</span>
-                  </p>
-                )}
-                <div className="mt-1 flex flex-col gap-4 text-[18px] font-bold leading-6 text-grey-900">
-                  <div className="flex items-start gap-2">
-                    <MaterialIcon name="calendar_month" size={20} className="mt-0.5" />
-                    <div className="min-w-0">
-                      <p>{main?.dateLabel ?? 'Fecha a confirmar'}</p>
-                      {main?.periodLabel && <p className="mt-1 text-[16px] font-normal leading-5">{main.periodLabel}</p>}
-                      {activity.schedules && activity.schedules.length > 1 && (
-                        <p className="mt-1 text-[14px] font-normal leading-5 text-[#687f91]">
-                          + {activity.schedules.length - 1} {activity.schedules.length === 2 ? 'programación' : 'programaciones'}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <p className="flex items-start gap-2">
-                    <MaterialIcon name="schedule" size={20} className="mt-0.5" />
-                    <span>{main?.timeLabel ?? 'Horario a confirmar'}</span>
-                  </p>
-                </div>
-                <button type="button" onClick={() => onViewDetail(activity)}
-                  className="mt-1 inline-flex min-h-9 items-center self-start gap-1 rounded-[4px] text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-                  Ver más <MaterialIcon name="chevron_right" size={18} />
-                </button>
-              </div>
-            </article>
-          );
-        })}
+      <div className="flex min-w-0 flex-col gap-4">
+        {publicViews.map(activity => (
+          <div key={activity.id} data-testid="console-preview-card" className="min-w-0">
+            <ActivityCard
+              activity={activity}
+              previewDateISO="1900-01-01"
+              onViewDetail={() => onViewDetail(activity)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

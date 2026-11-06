@@ -14,3 +14,18 @@ export function formatActivityAddress(address: string | undefined, locality: str
 
   return displayedLocality ? `${streetWithNumber} - ${displayedLocality}` : streetWithNumber;
 }
+
+/**
+ * Ubicación compacta de la tarjeta según Agenda V2 de Figma:
+ * conserva la numeración tal como vino, sin agregar «N°», y separa localidad con «·».
+ * Nunca infiere la dirección física cuando falta.
+ */
+export function formatActivityCardAddress(address: string | undefined, locality: string): string {
+  const normalized = address?.trim();
+  if (!normalized) return 'Dirección a confirmar';
+
+  const parts = /^(.*?)\s*(?:,\s*|\s+-\s+)([^,]+)$/.exec(normalized);
+  const street = parts?.[1]?.trim() || normalized;
+  const location = parts?.[2]?.trim() || locality.trim();
+  return location ? `${street} · ${location}` : street;
+}
