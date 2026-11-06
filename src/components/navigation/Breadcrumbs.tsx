@@ -10,13 +10,15 @@ export interface BreadcrumbsProps {
   items: readonly BreadcrumbItem[];
   className?: string;
   tone?: 'primary' | 'neutral';
+  /** Mostrar solo el vínculo al padre en mobile, evitando truncar la página actual. */
+  mobileParentOnly?: boolean;
 }
 
 /**
  * Breadcrumb institucional: una sola línea, con el elemento actual truncado
  * cuando no entra. En mobile se mantienen visibles el padre y la página actual.
  */
-export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className = '', mobileParentOnly = false }: BreadcrumbsProps) {
   // El breadcrumb institucional siempre utiliza el azul primario.
   const linkColor = 'text-primary-600 visited:text-primary-600 hover:text-primary-600';
 
@@ -26,7 +28,22 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
       className={`my-6 w-full min-w-0 text-[18px] leading-6
         text-primary-600 ${className}`}
     >
-      <ol className="flex w-full min-w-0 flex-nowrap items-center gap-2 overflow-hidden">
+      {mobileParentOnly && items.length > 1 && (
+        <div className="flex min-w-0 items-center sm:hidden">
+          <Link
+            to={items[items.length - 2]?.to ?? '/agenda-de-la-comunidad/actividades'}
+            className={`inline-flex min-w-0 items-center gap-2 rounded-sm font-medium ${linkColor}
+              focus-visible:outline-2 focus-visible:outline-primary-600`}
+            aria-label={'Volver a ' + items[items.length - 2]?.label}
+            data-testid="breadcrumb-mobile-back"
+          >
+            <MaterialIcon name="arrow_back" size={20} />
+            <span className="truncate">{items[items.length - 2]?.label}</span>
+          </Link>
+        </div>
+      )}
+      <ol className={`w-full min-w-0 flex-nowrap items-center gap-2 overflow-hidden
+        ${mobileParentOnly ? 'hidden sm:flex' : 'flex'}`}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           const isParent = index === items.length - 2;
