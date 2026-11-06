@@ -61,8 +61,8 @@ export function ConsoleScheduleEditorDialog({
       'button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]',
     ) ?? []).filter(el => el.getClientRects().length > 0);
     if (buttons.length === 0) return;
-    const first = buttons[0];
-    const last = buttons[buttons.length - 1];
+    const first = buttons[0]!;
+    const last = buttons[buttons.length - 1]!;
     if (event.shiftKey && document.activeElement === first) {
       event.preventDefault(); last.focus();
     } else if (!event.shiftKey && document.activeElement === last) {
