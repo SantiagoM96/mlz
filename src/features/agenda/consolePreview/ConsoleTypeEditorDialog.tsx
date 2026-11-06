@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
+import { useConsoleDialogFocus } from './useConsoleDialogFocus';
 
 /** La categoría es fija; cada categoría admite nuevos tipos administrables. */
 export function ConsoleTypeEditorDialog({
@@ -13,15 +14,11 @@ export function ConsoleTypeEditorDialog({
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  const { onKeyDown } = useConsoleDialogFocus({
+    panelRef, initialFocusRef: inputRef, onClose,
+  });
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +33,7 @@ export function ConsoleTypeEditorDialog({
   return (
     <div className="fixed inset-0 z-[140] flex items-center justify-center bg-[#102c40]/65 p-4"
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
-      <section role="dialog" aria-modal="true" aria-labelledby="console-new-type-heading"
+      <section ref={panelRef} onKeyDown={onKeyDown} role="dialog" aria-modal="true" aria-labelledby="console-new-type-heading"
         data-testid="console-type-editor"
         className="w-full max-w-[490px] rounded-[12px] bg-white p-5 shadow-xl sm:p-6">
         <div className="flex items-start justify-between gap-3">

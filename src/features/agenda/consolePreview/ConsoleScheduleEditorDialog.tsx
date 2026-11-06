@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ConsoleVenueSelector } from './ConsoleVenueSelector';
 import { ConsoleScheduleDateFields } from './ConsoleScheduleDateFields';
 import { ConsoleScheduleAdditionalFields } from './ConsoleScheduleAdditionalFields';
+import { useConsoleDialogFocus } from './useConsoleDialogFocus';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 
 import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
@@ -30,35 +31,9 @@ export function ConsoleScheduleEditorDialog({
     setError('');
   };
 
-  useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    firstRef.current?.focus();
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => {
-      document.body.style.overflow = previous;
-      window.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [onClose]);
-
-  // El foco no puede escapar del modal durante la edición.
-  const trapFocus = (event: ReactKeyboardEvent<HTMLElement>) => {
-    if (event.key !== 'Tab') return;
-    const buttons = Array.from(panelRef.current?.querySelectorAll<HTMLElement>(
-      'button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]',
-    ) ?? []).filter(el => el.getClientRects().length > 0);
-    if (buttons.length === 0) return;
-    const first = buttons[0]!;
-    const last = buttons[buttons.length - 1]!;
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault(); last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault(); first.focus();
-    }
-  };
+  const { onKeyDown } = useConsoleDialogFocus({
+    panelRef, initialFocusRef: firstRef, onClose,
+  });
 
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,7 +50,7 @@ export function ConsoleScheduleEditorDialog({
     <div className="fixed inset-0 z-[130] flex items-center justify-center overflow-hidden bg-[#102c40]/65 p-0 sm:p-4"
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
       <section ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="schedule-editor-heading"
-        onKeyDown={trapFocus} data-testid="console-schedule-editor"
+        onKeyDown={onKeyDown} data-testid="console-schedule-editor"
         className="flex h-full max-h-[100dvh] w-full max-w-[850px] min-h-0 flex-col overflow-hidden bg-white shadow-xl sm:h-auto sm:max-h-[calc(100dvh-32px)] sm:rounded-[12px]">
         <header className="z-10 flex shrink-0 items-start justify-between gap-4 border-b border-[#d4e2eb] bg-white px-4 py-4 sm:px-6">
           <div>

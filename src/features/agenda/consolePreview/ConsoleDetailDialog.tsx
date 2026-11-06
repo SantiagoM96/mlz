@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import type { AgendaActivity } from '../../../data/agenda';
 import { ActivityBadges } from '../../../components/agenda/ActivityBadges';
 import { ActivityScheduleParticipants } from '../../../components/agenda/ActivityScheduleParticipants';
@@ -10,6 +10,7 @@ import { ActivityLocationMap } from '../components/detail/ActivityLocationMap';
 import { getActivitySchedulePresentations, getUniqueActivityLocations } from '../utils/activitySchedules';
 import { formatActivityAddress } from '../utils/formatActivityAddress';
 import { getActivityMapUrl } from '../utils/activityMap';
+import { useConsoleDialogFocus } from './useConsoleDialogFocus';
 
 /**
  * Simulación del detalle público: no navega a una actividad real y no envía datos.
@@ -23,19 +24,10 @@ export function ConsoleDetailDialog({
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [onClose]);
+  const panelRef = useRef<HTMLElement>(null);
+  const { onKeyDown } = useConsoleDialogFocus({
+    panelRef, initialFocusRef: closeRef, onClose,
+  });
 
   const presentations = getActivitySchedulePresentations(activity, '1900-01-01');
   const badges = activity.schedules
@@ -57,6 +49,8 @@ export function ConsoleDetailDialog({
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}
     >
       <section
+        ref={panelRef}
+        onKeyDown={onKeyDown}
         role="dialog"
         aria-modal="true"
         aria-labelledby="console-detail-heading"
