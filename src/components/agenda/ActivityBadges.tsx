@@ -15,7 +15,7 @@ export function ActivityBadges({ badges, variant = 'default' }: { badges: Agenda
         <span
           key={badge.kind}
           data-agenda-chip="activity"
-          className={`inline-flex items-center gap-1.5 rounded-[6px] font-medium ${variant === 'summary' ? 'min-h-[30px] max-w-full px-[10px] py-1 text-[18px] leading-[22px]' : 'min-h-6 px-[6px] py-0.5 text-sm'} ${styles[badge.kind]}`}
+          className={`inline-flex min-w-0 items-center gap-1.5 rounded-[6px] font-medium ${variant === 'summary' ? 'min-h-[30px] max-w-full px-[10px] py-1 text-[18px] leading-[22px]' : 'min-h-6 max-w-full px-2 py-0.5 text-[16px] leading-5'} ${styles[badge.kind]}`}
         >
           <MaterialIcon
             name={
@@ -24,7 +24,7 @@ export function ActivityBadges({ badges, variant = 'default' }: { badges: Agenda
                 : badge.kind === 'rain' ? 'rainy'
                 : 'confirmation_number'
             }
-            size={variant === 'summary' ? 20 : 16}
+            size={variant === 'summary' ? 20 : badge.kind === 'rain' ? 18 : 16}
           />
           {badge.label}
         </span>
