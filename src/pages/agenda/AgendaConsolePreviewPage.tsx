@@ -9,8 +9,9 @@ import { ConsoleImageUpload } from '../../features/agenda/consolePreview/Console
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
 import { ConsoleGeneralInfoSection } from '../../features/agenda/consolePreview/ConsoleGeneralInfoSection';
+import { ConsoleRegistrationSection } from '../../features/agenda/consolePreview/ConsoleRegistrationSection';
 import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
-import { FormField, SectionTitle, inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
+import { SectionTitle, inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
@@ -162,52 +163,10 @@ export function AgendaConsolePreviewPage() {
               <p className={noteClass}>Podés editar, duplicar o eliminar programaciones sin repetir los datos de la actividad.</p>
             </section>
 
-            <section aria-labelledby="console-registration">
-              <div id="console-registration">
-                <SectionTitle number={3} title="Inscripción"
-                  subtitle="Una misma modalidad de inscripción para todas las fechas de la actividad." />
-              </div>
-              <div className="space-y-4">
-                <FormField label="Modalidad" htmlFor="registration-mode">
-                  <select id="registration-mode" className={inputClass} value={draft.registrationMode}
-                    onChange={event => {
-                      const registrationMode = event.target.value as ConsoleDraft['registrationMode'];
-                      updateDraft({
-                        registrationMode,
-                        registrationInformation: registrationMode === 'in-person'
-                          && draft.registrationInformation === INITIAL_DRAFT.registrationInformation
-                          ? '' : draft.registrationInformation,
-                      });
-                    }}>
-                    <option value="none">Sin inscripción</option>
-                    <option value="online">Inscripción online</option>
-                    <option value="in-person">Inscripción presencial</option>
-                  </select>
-                </FormField>
-                {draft.registrationMode === 'online' && (
-                  <FormField label="Enlace de inscripción" htmlFor="registration-url">
-                    <input id="registration-url" type="url" className={inputClass}
-                      placeholder="https://ejemplo.gob.ar/inscripcion"
-                      value={draft.registrationUrl}
-                      onChange={event => updateDraft({ registrationUrl: event.target.value })} />
-                  </FormField>
-                )}
-                {draft.registrationMode !== 'none' && (
-                  <FormField label={'Información de inscripción ' +
-                    (draft.registrationMode === 'online' ? '(opcional)' : '')}
-                    htmlFor="registration-info">
-                    <textarea id="registration-info" className={inputClass + ' min-h-[100px] resize-y'} rows={3}
-                      value={draft.registrationInformation}
-                      placeholder={draft.registrationMode === 'in-person'
-                        ? 'Indicá dónde y cómo inscribirse presencialmente' : 'Aclaraciones para inscribirse'}
-                      onChange={event => updateDraft({ registrationInformation: event.target.value })} />
-                  </FormField>
-                )}
-                <p className={noteClass}>
-                  La información de inscripción se mostrará en la ficha pública, debajo de «Cuándo y dónde».
-                </p>
-              </div>
-            </section>
+            <ConsoleRegistrationSection
+              draft={draft}
+              onDraftChange={updateDraft}
+            />
 
             <section aria-labelledby="console-images">
               <div id="console-images">
