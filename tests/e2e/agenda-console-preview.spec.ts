@@ -55,6 +55,14 @@ test('Consola Agenda V2: tabla compacta, modal y guardado independiente por prog
   await expect(rows.first()).toContainText('Domingo 22 de noviembre');
 
   await page.getByRole('button', { name: 'Duplicar programación 1' }).click();
+  const duplicateModal = page.getByTestId('console-schedule-editor');
+  await expect(duplicateModal.getByRole('heading', { name: 'Duplicar programación' })).toBeVisible();
+  await expect(rows).toHaveCount(1); // La copia no se crea hasta confirmar.
+  await duplicateModal.getByRole('button', { name: 'Crear copia' }).click();
+  await expect(duplicateModal.getByRole('alert')).toContainText('Ya existe una programación idéntica');
+  await duplicateModal.getByLabel('Fecha', { exact: true }).fill('2026-11-23');
+  await duplicateModal.getByRole('button', { name: 'Crear copia' }).click();
+  await expect(duplicateModal).toHaveCount(0);
   await expect(rows).toHaveCount(2);
   await page.getByRole('button', { name: 'Eliminar programación 2' }).click();
   await expect(rows).toHaveCount(1);
@@ -93,4 +101,112 @@ test('consola demostrativa: captura de pantalla responsive', async ({ page }, in
   const shot = info.outputPath('consola-preview-' + info.project.name + '.png');
   await page.screenshot({ path: shot, fullPage: true, animations: 'disabled' });
   await info.attach('consola-preview-' + info.project.name, { path: shot, contentType: 'image/png' });
+});
+
+test('Consola: tipos nuevos según categoría fija y lugares reutilizables', async ({ page }) => {
+  await page.goto(route);
+  const category = page.getByLabel('Categoría', { exact: true });
+  const type = page.getByLabel('Tipo de actividad', { exact: true });
+  await expect(category.locator('option')).toHaveCount(3);
+  await category.selectOption('Cultural');
+  await expect(type).toHaveValue('Teatro');
+
+  await page.getByRole('button', { name: 'Agregar tipo de actividad' }).click();
+  const typeDialog = page.getByTestId('console-type-editor');
+  await typeDialog.getByLabel('Nombre del nuevo tipo').fill('Seminario');
+  await typeDialog.getByRole('button', { name: 'Guardar tipo' }).click();
+  await expect(typeDialog).toHaveCount(0);
+  await expect(type).toHaveValue('Seminario');
+  await expect(type.locator('option', { hasText: 'Seminario' })).toHaveCount(1);
+  await page.getByRole('button', { name: 'Agregar tipo de actividad' }).click();
+  await typeDialog.getByLabel('Nombre del nuevo tipo').fill('seminario');
+  await typeDialog.getByRole('button', { name: 'Guardar tipo' }).click();
+  await expect(typeDialog.getByRole('alert')).toContainText('ya existe');
+  await typeDialog.getByRole('button', { name: 'Cancelar' }).click();
+
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const modal = page.getByTestId('console-schedule-editor');
+  await modal.getByRole('button', { name: 'Agregar nuevo lugar' }).click();
+  const venuePanel = modal.getByTestId('console-new-venue');
+  await venuePanel.getByLabel('Nombre del lugar').fill('Centro Cultural Banfield');
+  await venuePanel.getByLabel('Localidad').fill('Banfield');
+  await venuePanel.getByLabel('Dirección').fill('Maipú 123');
+  await venuePanel.getByRole('button', { name: 'Guardar lugar' }).click();
+  await expect(venuePanel).toHaveCount(0);
+  await expect(modal.getByLabel('Lugar')).toContainText('Centro Cultural Banfield');
+  await expect(modal).toContainText('Maipú 123');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(page.getByTestId('console-schedules-table')).toContainText('Centro Cultural Banfield');
+  await page.getByRole('button', { name: 'Agregar', exact: true }).click();
+  const newModal = page.getByTestId('console-schedule-editor');
+  await expect(newModal.getByLabel('Lugar')).toContainText('Centro Cultural Banfield');
+  await newModal.getByRole('button', { name: 'Cancelar' }).click();
+});
+
+test('Consola: validaciones esenciales y barra de acciones fija dentro del modal', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Agregar', exact: true }).click();
+  const modal = page.getByTestId('console-schedule-editor');
+  const footer = modal.locator('footer');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal.getByRole('alert')).toContainText('Completá la fecha y el horario de inicio');
+
+  await modal.getByRole('combobox', { name: 'Tipo de fecha' }).selectOption('range');
+  await modal.getByLabel('Desde').fill('2026-11-20');
+  await modal.getByLabel('Hasta').fill('2026-11-18');
+  await modal.getByLabel('Horario de inicio').fill('11:00');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal.getByRole('alert')).toContainText('La fecha de fin debe ser igual o posterior');
+  await modal.getByLabel('Hasta').fill('2026-11-21');
+  await modal.getByLabel('Horario de fin (opcional)').fill('10:00');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal.getByRole('alert')).toContainText('El horario de fin debe ser posterior');
+  await modal.getByRole('combobox', { name: 'Tipo de fecha' }).selectOption('recurring');
+  await modal.getByRole('button', { name: 'Todos los Sáb' }).click();
+  await modal.getByLabel('Horario de fin (opcional)').fill('12:00');
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal.getByRole('alert')).toContainText('Seleccioná al menos un día');
+  await modal.getByRole('button', { name: 'Todos los Mar' }).click();
+
+  await page.setViewportSize({ width: 390, height: 600 });
+  await expect(footer).toBeVisible();
+  const positionBefore = await footer.evaluate(el => el.getBoundingClientRect().bottom);
+  const form = modal.getByRole('form', { name: 'Formulario de programación' });
+  await form.evaluate(el => { el.scrollTop = el.scrollHeight; });
+  const positionAfter = await footer.evaluate(el => el.getBoundingClientRect().bottom);
+  expect(Math.abs(positionAfter - positionBefore)).toBeLessThanOrEqual(2);
+  await modal.getByRole('button', { name: 'Guardar programación' }).click();
+  await expect(modal).toHaveCount(0);
+  await expect(page.getByTestId('console-schedule-row')).toHaveCount(2);
+});
+
+test('Consola: portada y galería permiten reemplazar y eliminar imágenes', async ({ page }) => {
+  await page.goto(route);
+  const png = { name: 'prueba.png', mimeType: 'image/png', buffer: Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/fQcAAAAASUVORK5CYII=', 'base64') };
+  await page.getByLabel('Agregar portada').setInputFiles(png);
+  await expect(page.getByRole('button', { name: 'Eliminar Portada' })).toBeVisible();
+  await expect(page.getByAltText('Portada seleccionada')).toBeVisible();
+  await page.getByLabel('Agregar foto adicional 1').setInputFiles(png);
+  await expect(page.getByRole('button', { name: 'Eliminar Foto adicional 1' })).toBeVisible();
+  await page.getByRole('button', { name: 'Eliminar Portada' }).click();
+  await expect(page.getByAltText('Portada seleccionada')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Eliminar Foto adicional 1' }).click();
+  await expect(page.getByRole('button', { name: 'Eliminar Foto adicional 1' })).toHaveCount(0);
+});
+
+test('Consola desktop: la vista previa acompaña el scroll sin superar el formulario', async ({ page }, info) => {
+  if ((info.project.use.viewport?.width ?? 0) < 1024) return;
+  await page.setViewportSize({ width: 1415, height: 620 });
+  await page.goto(route);
+  const sticky = page.getByTestId('console-preview-sticky');
+  await expect(sticky).toHaveCSS('position', 'sticky');
+  const form = page.getByRole('form', { name: 'Formulario de nueva actividad' });
+  const start = await sticky.evaluate(el => el.getBoundingClientRect().top);
+  await page.evaluate(() => window.scrollTo(0, 500));
+  await expect.poll(async () => sticky.evaluate(el => Math.round(el.getBoundingClientRect().top))).toBe(24);
+  expect(start).toBeGreaterThan(24);
+  const formBottom = await form.evaluate(el => el.getBoundingClientRect().bottom);
+  const asideBottom = await sticky.evaluate(el => el.getBoundingClientRect().bottom);
+  expect(asideBottom).toBeLessThanOrEqual(Math.max(formBottom, 620));
 });

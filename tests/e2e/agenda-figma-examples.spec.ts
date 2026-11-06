@@ -137,7 +137,7 @@ test('Consola V2: desde cada ficha de ejemplo se cargan fechas y campos editable
   await expect(page.getByTestId('console-schedules-table')).toContainText('Todos los jueves');
   await expect(page.getByTestId('console-schedules-table')).toContainText('Parque de Lomas');
 
-  await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-huerta');
+  await page.getByRole('combobox', { name: 'Casos de demostración' }).selectOption('preview-v2-huerta');
   await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Taller de huerta comunitaria');
   await expect(page.getByRole('combobox', { name: 'Modalidad', exact: true })).toHaveValue('in-person');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
@@ -237,7 +237,7 @@ test('La consola agrupa fechas por sede y permite la vista previa de cada ubicac
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Formulario', exact: true }).click();
   }
-  await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-folklore');
+  await page.getByRole('combobox', { name: 'Casos de demostración' }).selectOption('preview-v2-folklore');
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
   }
