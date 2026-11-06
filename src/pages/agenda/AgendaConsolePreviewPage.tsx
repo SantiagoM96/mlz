@@ -2,7 +2,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
-import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
