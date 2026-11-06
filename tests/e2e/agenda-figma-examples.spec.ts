@@ -489,8 +489,9 @@ test('Figma Agenda V2: mapa de sede, tipografía, separación, chevron y borde r
     };
   });
   if ((info.project.use.viewport?.width ?? 0) < 640) {
-    expect(responsive.frame.y).toBeGreaterThanOrEqual(responsive.panel.bottom - 1);
-    expect(responsive.frame.height).toBeGreaterThanOrEqual(180);
+    expect(Math.abs(responsive.frame.y - responsive.card.y)).toBeLessThanOrEqual(2);
+    expect(responsive.frame.x).toBeGreaterThanOrEqual(responsive.panel.right - 1);
+    expect(Math.round(responsive.frame.width)).toBe(112);
   } else {
     expect(Math.abs(responsive.frame.y - responsive.card.y)).toBeLessThanOrEqual(2);
     expect(responsive.frame.width / responsive.card.width).toBeGreaterThan(0.4);
