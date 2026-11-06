@@ -67,7 +67,12 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 | `consolePreview/demoData.ts` | Catálogos, weekdays, valores iniciales, datos ficticios |
 | `consolePreview/scheduleRules.ts` | Creación de programación por defecto, comparación normalizada (y, cuando se caracterice, validación) |
 | `ConsoleScheduleEditorDialog` | Edición interactiva de una programación y su modal |
-| `ScheduleTable` (futuro) | Tabla y acciones por fila, sin estado autónomo |
+| `ScheduleTable` | Tabla y acciones por fila, sin estado autónomo; botones tipados por tono |
+| `ConsoleCardPreview` | Lista de tarjetas de vista previa; reutiliza `ActivityCard` |
+| `previewActivity.ts` | Conversión de borrador + programaciones a actividad pública sin guardar |
+| `demoCasePreset.ts` | Transformación de casos ficticios a borradores editables |
+| `useConsoleSchedules.ts` | Estado de programaciones, sedes, editor y operaciones CRUD demo |
+| `ConsoleFormPrimitives.tsx` | Labels, campos, títulos y clases actuales del formulario |
 | `VenueSelector` (futuro) | Lugar guardado o nuevo, sin conocimiento de la página |
 | `ConsoleTypeEditorDialog` | Alta de tipo en la categoría activa |
 | `ConsoleDetailDialog` | Contenedor de vista previa de ficha pública, sin duplicar reglas |
@@ -108,7 +113,28 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 
 - Modal de detalle sin un mecanismo equivalente al trap de foco del editor.
 - Reglas `sameScheduleContent` no comparan `detailType`; evaluar semántica y pruebas antes de cambiar.
-- Proyección demo a `AgendaActivity` reside dentro de página y lee `import.meta.env.BASE_URL`.
-- Creación de IDs de sedes y programaciones reside en handlers de página.
-- `getFigmaExamplePreset` y nombres heredados remiten a una fuente histórica, pero no serán modificados hasta que el comportamiento quede caracterizado.
+- La proyección demo a `AgendaActivity` ya no reside en la página: está en `previewActivity.ts`; la resolución de imagen sigue leyendo `import.meta.env.BASE_URL` y aún no está desacoplada para test unitario de Node.
+- Los handlers de creación de IDs de sedes y programaciones se movieron a `useConsoleSchedules.ts`; aún pueden extraerse como funciones puras si aparecen nuevos consumidores.
+- `getDemoCasePreset` ya vive en `demoCasePreset.ts`. Se conservaron IDs, datos, rutas y nombres de pruebas heredadas; no se consultó Figma.
 - El conjunto de siete presets produce diez fichas públicas de revisión en la configuración vigente; no confundir cantidad de actividades y fichas.
+
+## Avance real de P2 y primera consolidación de componentes (06/11/2026)
+
+- `ScheduleTable.tsx`: extraída la tabla (markup y `data-testid` intactos); recibe datos, sedes y handlers. Incluye `ScheduleActionButton` local con variantes tipadas `primary`/`danger`, sin cambio en strings CSS finales.
+- `previewActivity.ts`: aisladas `imageForDraft` y `makePreviewActivity` (conversión no persistente); `ConsoleCardPreview.tsx` reproduce el JSX previo y sigue usando `ActivityCard`.
+- `demoCasePreset.ts`: casos ficticios editables y función `getDemoCasePreset`; se conservó todo el contenido de prueba.
+- `useConsoleSchedules.ts`: estado de sedes/programaciones, operaciones CRUD y modo de edición. La página sigue coordinando la vista mobile y el cambio de caso; no se añadió un store global.
+- `ConsoleFormPrimitives.tsx`: `FormField`, `SectionTitle` y clases existentes fuera de la página. El editor reutiliza el estilo exacto de `labelClass`; mantiene la geometría diferenciada de los controles.
+- `tests/e2e/agenda-console-preview.spec.ts`: prueba adicional para cambios de caso, limpieza del editor y creación posterior, además de cobertura CRUD preexistente.
+- `AgendaConsolePreviewPage.tsx`: de ~589 líneas tras P1 a ~337 líneas. La página sigue componiendo el formulario; no se reemplazaron bloques de JSX por diseños nuevos.
+- La Agenda pública, las rutas, los ejemplos, los diez casos de revisión y los estilos CSS globales **no fueron modificados**.
+
+### Pendientes para otro lote revisable
+
+1. Dividir `ConsoleScheduleEditorDialog` (validación de fechas, subformulario de sede y modal/foco) previa caracterización por pruebas.
+2. Reducir duplicación de `ConsoleDetailDialog` vs ficha pública conservando su comportamiento de preview.
+3. Establecer baseline de **comparación automática de screenshots**; actualmente se capturan evidencias pero no se comparan imágenes pixel a pixel.
+4. Evaluar CSS Modules / variantes únicamente sobre patrones duplicados adicionales, sin uniformar radios `4px` y `6px` ni mover Tailwind indiscriminadamente.
+5. Revisión de accesibilidad de foco en diálogo de detalle y restauración del foco tras cierre; fuera del refactor visualmente neutro.
+
+**Verificación de la tanda:** consultar los checks del SHA final del PR #8. No inferir éxito desde el código o ejecuciones anteriores.
