@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as Reac
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { Field, inputClass } from './ConsoleScheduleFormPrimitives';
 import { ConsoleVenueSelector } from './ConsoleVenueSelector';
+import { ConsoleScheduleDateFields } from './ConsoleScheduleDateFields';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
-import { WEEKDAYS } from './demoData';
 
 import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
 
@@ -96,61 +96,11 @@ export function ConsoleScheduleEditorDialog({
 
         <form id="console-schedule-form" onSubmit={handleSave} noValidate aria-label="Formulario de programación"
           className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6">
-          <Field id="console-schedule-kind" label="Tipo de fecha">
-            <select ref={firstRef} id="console-schedule-kind" className={inputClass}
-              value={value.scheduleType}
-              onChange={event => {
-                const scheduleType = event.target.value as ConsoleSchedule['scheduleType'];
-                update({ scheduleType,
-                  weekdays: scheduleType === 'recurring' ? (value.weekdays.length ? value.weekdays : [6]) : [] });
-              }}>
-              <option value="exact">Fecha puntual</option>
-              <option value="range">Período</option>
-              <option value="recurring">Recurrente</option>
-            </select>
-          </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field id="console-schedule-start" label={value.scheduleType === 'exact' ? 'Fecha' : 'Desde'}>
-              <input id="console-schedule-start" type="date" lang="es-AR" className={inputClass}
-                value={value.startDate} onChange={event => update({ startDate: event.target.value })}/>
-            </Field>
-            {value.scheduleType !== 'exact' && (
-              <Field id="console-schedule-end" label="Hasta">
-                <input id="console-schedule-end" type="date" lang="es-AR" className={inputClass}
-                  value={value.endDate} onChange={event => update({ endDate: event.target.value })}/>
-              </Field>
-            )}
-          </div>
-          {value.scheduleType === 'recurring' && (
-            <fieldset>
-              <legend className="mb-2 text-[16px] font-bold text-primary-600">Se repite los días</legend>
-              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-                {WEEKDAYS.map(day => {
-                  const selected = value.weekdays.includes(day.number);
-                  return <button key={day.number} type="button" aria-pressed={selected}
-                    aria-label={'Todos los ' + day.short}
-                    onClick={() => update({ weekdays: selected
-                      ? value.weekdays.filter(item => item !== day.number)
-                      : [...value.weekdays, day.number].sort((a, b) => a - b) })}
-                    className={'min-h-11 rounded-[6px] border px-1 text-[13px] font-medium focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-                      (selected ? 'border-[#80b4db] bg-[#dceefa] text-primary-600' :
-                        'border-[#d6e2eb] bg-white text-[#8294a4] hover:border-[#93bfe0]')}>
-                    {day.short}
-                  </button>;
-                })}
-              </div>
-            </fieldset>
-          )}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field id="console-schedule-start-time" label="Horario de inicio">
-              <input id="console-schedule-start-time" type="time" lang="es-AR" className={inputClass}
-                value={value.startTime} onChange={event => update({ startTime: event.target.value })}/>
-            </Field>
-            <Field id="console-schedule-end-time" label="Horario de fin (opcional)">
-              <input id="console-schedule-end-time" type="time" lang="es-AR" className={inputClass}
-                value={value.endTime} onChange={event => update({ endTime: event.target.value })}/>
-            </Field>
-          </div>
+          <ConsoleScheduleDateFields
+            value={value}
+            onScheduleChange={update}
+            selectRef={firstRef}
+          />
           <ConsoleVenueSelector
             venueId={value.venueId}
             venues={venues}
