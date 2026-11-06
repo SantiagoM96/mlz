@@ -198,6 +198,7 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 ### Regresiones específicas incorporadas
 
 - Trampa de foco del diálogo de tipos, Escape, retorno del foco, bloqueo y restauración del scroll al cancelar y guardar.
+- Alta de sede en editor: al guardar, foco al selector de lugar; al cancelar, foco al botón «Agregar nuevo lugar», sin cambiar el diseño.
 - Retorno del foco al botón «Editar programación» tras Cancelar y Escape.
 - Trampa de foco en la ficha demo, Escape/cierre por botón, retorno a «Ver más» y restauración del scroll.
 - Ficha demo sin programaciones: estado vacío, sin filas ni mapa.
