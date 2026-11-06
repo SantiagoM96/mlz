@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
+import { labelClass } from './ConsoleFormPrimitives';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 import { WEEKDAYS } from './demoData';
 import { sameScheduleContent, venueById } from './scheduleRules';
@@ -8,7 +9,7 @@ const inputClass = 'min-h-12 w-full min-w-0 rounded-[6px] border border-[#93bfe0
 
 function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
   return <div className="min-w-0">
-    <label htmlFor={id} className="mb-1.5 block text-[16px] font-bold leading-6 text-primary-600">{label}</label>
+    <label htmlFor={id} className={labelClass}>{label}</label>
     {children}
   </div>;
 }
