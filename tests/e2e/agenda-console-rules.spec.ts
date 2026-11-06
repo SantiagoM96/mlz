@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { DEMO_VENUES } from '../../src/features/agenda/consolePreview/demoData';
 import { createDemoSchedule, sameScheduleContent, venueById } from '../../src/features/agenda/consolePreview/scheduleRules';
+import { normalizeConsoleSchedule, validateConsoleSchedule } from '../../src/features/agenda/consolePreview/scheduleEditorRules';
 
 test.describe('Agenda V2 — contratos puros de programaciones', () => {
   test('una programación nueva conserva valores iniciales de demostración', () => {
@@ -73,5 +74,53 @@ test.describe('Agenda V2 — contratos puros de programaciones', () => {
   test('búsqueda de sedes: reutiliza una existente y conserva fallback actual', () => {
     expect(venueById('parque-lomas', DEMO_VENUES).name).toBe('Parque de Lomas');
     expect(venueById('sede-inexistente', DEMO_VENUES).id).toBe('plaza-grigera');
+  });
+});
+
+test.describe('Agenda V2 — reglas de guardado del editor', () => {
+  test('normalización conserva datos y no muta días ni el borrador original', () => {
+    const draft = {
+      ...createDemoSchedule(7),
+      scheduleType: 'recurring' as const,
+      startDate: ' 2026-11-07 ',
+      endDate: ' 2026-11-28 ',
+      weekdays: [6, 2, 6],
+      startTime: '10:00',
+      participants: ' Ana y Juan ',
+      detail: '  Encuentro  ',
+    };
+    const result = normalizeConsoleSchedule(draft);
+    expect(result).toMatchObject({
+      id: 7,
+      startDate: '2026-11-07',
+      endDate: '2026-11-28',
+      weekdays: [2, 6],
+      participants: 'Ana y Juan',
+      detail: 'Encuentro',
+    });
+    expect(draft.weekdays).toEqual([6, 2, 6]);
+    expect(draft.startDate).toBe(' 2026-11-07 ');
+  });
+
+  test('fecha puntual descarta fin de período y días no activos', () => {
+    const draft = { ...createDemoSchedule(7), startDate: '2026-11-12', startTime: '10:00', endDate: '2026-11-30', weekdays: [6] };
+    expect(normalizeConsoleSchedule(draft)).toMatchObject({ endDate: '', weekdays: [] });
+  });
+
+  test('errores se mantienen en orden: requeridos, fechas, recurrencia y horario', () => {
+    const empty = createDemoSchedule(7);
+    expect(validateConsoleSchedule(empty, [])).toBe('Completá la fecha y el horario de inicio.');
+    const range = { ...empty, scheduleType: 'range' as const, startDate: '2026-11-20', endDate: '2026-11-18', startTime: '11:00' };
+    expect(validateConsoleSchedule(range, [])).toBe('La fecha de fin debe ser igual o posterior a la fecha de inicio.');
+    const recurring = { ...range, scheduleType: 'recurring' as const, endDate: '2026-11-21', weekdays: [] };
+    expect(validateConsoleSchedule(recurring, [])).toBe('Seleccioná al menos un día para la recurrencia.');
+    expect(validateConsoleSchedule({ ...recurring, weekdays: [6], endTime: '10:00' }, [])).toBe('El horario de fin debe ser posterior al horario de inicio.');
+  });
+
+  test('identifica duplicados por contenido excluyendo la misma ID, sin falsos positivos', () => {
+    const value = { ...createDemoSchedule(1), startDate: '2026-11-20', startTime: '11:00' };
+    expect(validateConsoleSchedule(value, [value])).toBeNull();
+    expect(validateConsoleSchedule({ ...value, id: 2 }, [value])).toContain('Ya existe una programación idéntica.');
+    expect(validateConsoleSchedule({ ...value, id: 2, startTime: '12:00' }, [value])).toBeNull();
   });
 });

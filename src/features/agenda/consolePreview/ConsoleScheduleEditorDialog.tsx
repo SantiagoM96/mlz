@@ -3,7 +3,8 @@ import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { labelClass } from './ConsoleFormPrimitives';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 import { WEEKDAYS } from './demoData';
-import { sameScheduleContent, venueById } from './scheduleRules';
+import { venueById } from './scheduleRules';
+import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
 
 const inputClass = 'min-h-12 w-full min-w-0 rounded-[6px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
 
@@ -94,29 +95,10 @@ export function ConsoleScheduleEditorDialog({
 
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const normalized: ConsoleSchedule = {
-      ...value,
-      startDate: value.startDate.trim(),
-      endDate: value.scheduleType === 'exact' ? '' : value.endDate.trim(),
-      weekdays: value.scheduleType === 'recurring' ? [...new Set(value.weekdays)].sort((a,b) => a-b) : [],
-      participants: value.participants.trim(),
-      detail: value.detail.trim(),
-    };
-    if (!normalized.startDate || !normalized.startTime) {
-      setError('Completá la fecha y el horario de inicio.'); return;
-    }
-    if (normalized.scheduleType !== 'exact' &&
-        (!normalized.endDate || normalized.endDate < normalized.startDate)) {
-      setError('La fecha de fin debe ser igual o posterior a la fecha de inicio.'); return;
-    }
-    if (normalized.scheduleType === 'recurring' && normalized.weekdays.length === 0) {
-      setError('Seleccioná al menos un día para la recurrencia.'); return;
-    }
-    if (normalized.endTime && normalized.endTime <= normalized.startTime) {
-      setError('El horario de fin debe ser posterior al horario de inicio.'); return;
-    }
-    if (schedules.some(item => item.id !== normalized.id && sameScheduleContent(item, normalized))) {
-      setError('Ya existe una programación idéntica. Modificá la fecha, el horario, la sede o sus datos particulares.');
+    const normalized = normalizeConsoleSchedule(value);
+    const validationError = validateConsoleSchedule(normalized, schedules);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     onSave(normalized);
