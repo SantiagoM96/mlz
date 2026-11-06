@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
@@ -9,37 +9,11 @@ import { ConsoleImageUpload } from '../../features/agenda/consolePreview/Console
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
 import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
+import { FormField, SectionTitle, inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
 import { useConsoleSchedules } from '../../features/agenda/consolePreview/useConsoleSchedules';
-
-const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
-const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
-const noteClass = 'mt-2 text-[14px] leading-[21px] text-[#718092]';
-
-function FormField({ label, htmlFor, children, hint }: {
-  label: string; htmlFor: string; children: ReactNode; hint?: string;
-}) {
-  return (
-    <div className="min-w-0">
-      <label className={labelClass} htmlFor={htmlFor}>{label}</label>
-      {children}
-      {hint && <p className={noteClass}>{hint}</p>}
-    </div>
-  );
-}
-
-function SectionTitle({ number, title, subtitle }: { number: number; title: string; subtitle?: string }) {
-  return (
-    <div className="mb-5">
-      <h2 className="text-[24px] font-bold leading-[30px] text-primary-600">
-        {number}. {title}
-      </h2>
-      {subtitle && <p className="mt-1 text-[16px] leading-6 text-grey-900">{subtitle}</p>}
-    </div>
-  );
-}
 
 function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
   if (!file || !file.type.startsWith('image/')) return;
