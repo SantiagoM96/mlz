@@ -46,7 +46,7 @@ export function ActivityBadges({ badges, variant = 'default' }: {
                 className={isSummary ? '' : 'scale-90'}
               />
             </span>
-            <span data-agenda-chip-label className="min-w-0 break-words leading-5">
+            <span data-agenda-chip-label className={isSummary ? "min-w-0 break-words leading-[22px]" : "min-w-0 break-words leading-5"}>
               {badge.label}
             </span>
           </span>
