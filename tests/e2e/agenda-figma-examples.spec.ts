@@ -400,7 +400,7 @@ test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular
     await expect(timeField.locator('[data-material-symbol="schedule"]')).toHaveCount(1);
     await expect(timeField.locator('p')).toHaveText(time);
     expect(await timeField.locator('p').evaluate(el => getComputedStyle(el).fontWeight)).toBe(timeWeight);
-    await expect(root).not.toContainText(/\\b\\d{1,2}\\/\\d{1,2}\\/\\d{4}\\b/);
+    await expect(root).not.toContainText(/\b\d{1,2}\/\d{1,2}\/\d{4}\b/);
   };
 
   await page.goto(list);
