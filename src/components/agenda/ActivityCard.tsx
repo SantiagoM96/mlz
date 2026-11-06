@@ -80,7 +80,7 @@ function CardContents({
             ))}
           </div>
         )}
-        <div className="mt-auto">{action}</div>
+        <div className="mt-auto pl-7">{action}</div>
       </div>
     </>
   );
@@ -111,7 +111,7 @@ export function ActivityCard({
             action={(
               <button type="button" onClick={onViewDetail}
                 className="inline-flex min-h-9 items-center gap-2 text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
-                Ver más <MaterialIcon name="chevron_right" size={24} />
+                <span>Ver más</span> <MaterialIcon name="chevron_right" size={24} />
               </button>
             )}
           />
@@ -129,7 +129,7 @@ export function ActivityCard({
             action={(
               <span className="inline-flex min-h-7 items-center gap-2 text-[16px]
                 font-medium text-primary-600 no-underline group-hover:no-underline">
-                Ver más <MaterialIcon name="chevron_right" size={24} />
+                <span>Ver más</span> <MaterialIcon name="chevron_right" size={24} />
               </span>
             )}
           />

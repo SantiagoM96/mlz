@@ -432,3 +432,93 @@ test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular
   await verify(page.getByTestId('console-detail-preview'), 'Todos los días',
     'Del 10 al 17 de noviembre', '11:00 a 19:00 h');
 });
+
+
+test('Figma Agenda V2: mapa de sede, tipografía, separación, chevron y borde responsive', async ({ page }, info) => {
+  await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
+  const region = page.getByRole('region', { name: 'Mapa de ubicación' });
+  const location = region.getByTestId('agenda-location-card');
+  const details = region.getByTestId('agenda-location-details');
+  await expect(location).toBeVisible();
+  await expect(details.getByText('Plaza Grigera', { exact: true })).toBeVisible();
+  const metrics = await details.evaluate(element => {
+    const items = Array.from(element.children) as HTMLElement[];
+    const style = getComputedStyle(element);
+    return {
+      padding: style.padding,
+      gap: style.gap,
+      type: items.map(child => ({
+        size: getComputedStyle(child).fontSize,
+        weight: getComputedStyle(child).fontWeight,
+      })),
+    };
+  });
+  expect(metrics.padding).toBe('16px');
+  expect(metrics.gap).toBe('16px');
+  expect(metrics.type).toEqual([
+    { size: '18px', weight: '700' },
+    { size: '18px', weight: '400' },
+    { size: '18px', weight: '500' },
+  ]);
+  const link = region.getByRole('link', { name: 'Ver en Google Maps' });
+  await expect(link).toHaveAttribute('target', '_blank');
+  const icon = link.locator('[data-material-symbol="chevron_right"]');
+  await expect(icon).toHaveCount(1);
+  const size = await icon.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return [rect.width, rect.height];
+  });
+  expect(size).toEqual([24, 24]);
+  expect(await location.evaluate(element => getComputedStyle(element).borderTopLeftRadius)).toBe('8px');
+  expect(await location.evaluate(element => getComputedStyle(element).borderTopColor)).toBe('rgb(209, 209, 209)');
+  await expect(region.getByTitle('Mapa de Plaza Grigera')).toBeVisible();
+  const responsive = await region.evaluate(element => {
+    const card = element.querySelector('[data-testid="agenda-location-card"]')!;
+    const panel = element.querySelector('[data-testid="agenda-location-details"]')!;
+    const frame = element.querySelector('iframe')!;
+    return {
+      panel: panel.getBoundingClientRect().toJSON(),
+      frame: frame.getBoundingClientRect().toJSON(),
+      card: card.getBoundingClientRect().toJSON(),
+    };
+  });
+  if ((info.project.use.viewport?.width ?? 0) < 640) {
+    expect(responsive.frame.y).toBeGreaterThanOrEqual(responsive.panel.bottom - 1);
+    expect(responsive.frame.height).toBeGreaterThanOrEqual(180);
+  } else {
+    expect(Math.abs(responsive.frame.y - responsive.card.y)).toBeLessThanOrEqual(2);
+    expect(responsive.frame.width / responsive.card.width).toBeGreaterThan(0.4);
+    expect(responsive.frame.width / responsive.card.width).toBeLessThan(0.43);
+  }
+});
+
+test('Agenda V2: Ver más alineado con texto de fecha y chevron centrado', async ({ page }, info) => {
+  await page.goto(list);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Yoga en Comunidad');
+  const card = page.getByTestId('agenda-card').first();
+  const date = card.locator('[data-agenda-field="date"] p').first();
+  const more = card.getByText('Ver más', { exact: true });
+  const icon = card.locator('[data-material-symbol="chevron_right"]');
+  const positions = await Promise.all([date, more, icon].map(locator =>
+    locator.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return { x: rect.x, centerY: rect.y + rect.height / 2 };
+    })));
+  expect(Math.abs(positions[0].x - positions[1].x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(positions[1].centerY - positions[2].centerY)).toBeLessThanOrEqual(1);
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+  }
+
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  const preview = page.getByTestId('console-preview-card').first();
+  const aligned = await Promise.all([
+    preview.locator('[data-agenda-field="date"] p').first(),
+    preview.getByRole('button', { name: 'Ver más' }).getByText('Ver más', { exact: true }),
+  ].map(locator => locator.evaluate(el => el.getBoundingClientRect().x)));
+  expect(Math.abs(aligned[0] - aligned[1])).toBeLessThanOrEqual(1);
+});
