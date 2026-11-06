@@ -12,6 +12,8 @@ export interface ConsoleSchedule {
   suspendedByRain: boolean;
   detail: string;
   detailType?: 'artists';
+  participants: string;
+  participantsType: 'artists' | 'speakers' | 'participants';
 }
 
 export interface ConsoleDraft {
@@ -81,6 +83,8 @@ export const INITIAL_SCHEDULES: ConsoleSchedule[] = [{
   venueId: 'plaza-grigera',
   suspendedByRain: false,
   detail: 'Cada encuentro incluye una parte teórica y una práctica de armado de compostera.',
+  participants: '',
+  participantsType: 'participants',
 }];
 
 export function createDemoSchedule(id: number): ConsoleSchedule {
@@ -95,6 +99,8 @@ export function createDemoSchedule(id: number): ConsoleSchedule {
     venueId: 'plaza-grigera',
     suspendedByRain: false,
     detail: '',
+    participants: '',
+    participantsType: 'participants',
   };
 }
 

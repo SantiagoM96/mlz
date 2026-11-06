@@ -32,6 +32,11 @@ export type MaterialIconName =
   | 'check'
   | 'link'
   | 'content_copy'
+  | 'add'
+  | 'edit'
+  | 'delete'
+  | 'groups'
+  | 'record_voice_over'
   | 'star'
   | 'info';
 
