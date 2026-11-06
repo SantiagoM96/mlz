@@ -249,3 +249,42 @@ test('Tarjetas Figma: componentes con/sin label, grupos 8 px y bloques 16 px', a
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   }
 });
+
+test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según Figma', async ({ page }) => {
+  await page.goto(list);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
+  await search.fill('Taller de compostaje');
+  const chips = page.locator('[data-testid="agenda-card"] [data-agenda-chip="activity"]');
+  await expect(chips).toHaveCount(2);
+  const measurements = await chips.evaluateAll(elements => elements.map(element => {
+    const icon = element.querySelector('[data-agenda-chip-icon]') as HTMLElement;
+    const label = element.querySelector('[data-agenda-chip-label]') as HTMLElement;
+    const chipBounds = element.getBoundingClientRect();
+    const iconBounds = icon.getBoundingClientRect();
+    const textBounds = label.getBoundingClientRect();
+    return {
+      chipHeight: chipBounds.height,
+      fontSize: getComputedStyle(label).fontSize,
+      gap: getComputedStyle(element).gap,
+      alignItems: getComputedStyle(element).alignItems,
+      iconWidth: iconBounds.width,
+      iconOffset: Math.abs(iconBounds.y + iconBounds.height / 2 - (chipBounds.y + chipBounds.height / 2)),
+      labelOffset: Math.abs(textBounds.y + textBounds.height / 2 - (chipBounds.y + chipBounds.height / 2)),
+    };
+  }));
+  for (const chip of measurements) {
+    expect(chip.chipHeight).toBe(24);
+    expect(chip.fontSize).toBe('16px');
+    expect(chip.gap).toBe('6px');
+    expect(chip.alignItems).toBe('center');
+    expect(chip.iconWidth).toBe(16);
+    expect(chip.iconOffset).toBeLessThanOrEqual(1);
+    expect(chip.labelOffset).toBeLessThanOrEqual(1);
+  }
+
+  await search.fill('Yoga en Comunidad');
+  const rainyChip = page.locator('[data-agenda-chip-kind="rain"]');
+  await expect(rainyChip).toHaveCount(1);
+  expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBe(18);
+  expect(await rainyChip.locator('[data-agenda-chip-label]').evaluate(element => getComputedStyle(element).fontSize)).toBe('16px');
+});
