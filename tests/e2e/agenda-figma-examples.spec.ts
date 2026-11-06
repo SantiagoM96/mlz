@@ -12,27 +12,37 @@ const items = [
   ['preview-v2-itinerante', 'Jornada ambiental itinerante'],
 ] as const;
 
-test('Agenda V2: los siete ejemplos se muestran en el listado normal, sin página extra', async ({ page }) => {
+test('Agenda V2: una ficha por sede en el mismo listado y filtros', async ({ page }) => {
   await page.goto(list);
+  const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   const grid = page.getByTestId('agenda-grid');
   await expect(grid).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ver los 7 ejemplos' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Ejemplos de actividades' })).toHaveCount(0);
-  await expect(grid.getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(0);
 
-  for (const [index, [, title]] of items.entries()) {
-    const card = grid.getByTestId('agenda-card').nth(index);
-    await expect(card).toContainText(title);
-    await expect(card).not.toContainText('Ejemplo de diseño');
-    await expect(card.getByRole('link', { name: 'Ver más sobre ' + title })).toBeVisible();
+  const expected = [
+    ['Jornada de reciclaje', 1],
+    ['Muestra fotográfica barrial', 1],
+    ['Taller de compostaje', 1],
+    ['Fútbol en Comunidad', 2],
+    ['Folklore en Comunidad', 1],
+    ['Taller de huerta comunitaria', 1],
+    ['Jornada ambiental itinerante', 2],
+    ['Yoga en Comunidad', 2],
+  ] as const;
+  for (const [title, count] of expected) {
+    await search.fill(title);
+    await expect(grid.locator('a[href*="preview-v2-"]')).toHaveCount(count);
+    await expect(grid.getByRole('link', { name: 'Ver más sobre ' + title })).toHaveCount(count);
   }
+  await search.fill('Yoga en Comunidad');
+  await expect(grid).toContainText('Plaza Grigera');
+  await expect(grid).toContainText('Polideportivo Evita');
+  await expect(grid.getByText('Se suspende por lluvia')).toHaveCount(1);
 
+  await search.fill('Taller de compostaje');
   await expect(grid).toContainText('Todos los sábados');
   await expect(grid).toContainText('Del 07/11/2026 al 28/11/2026');
-
-  await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('Jornada ambiental itinerante');
-  await expect(page.getByTestId('agenda-grid')).toContainText('Jornada ambiental itinerante');
-  await expect(page.getByTestId('agenda-grid').getByText('Ejemplo de diseño · No es una convocatoria')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -55,12 +65,17 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Del 07/11/2026 al 28/11/2026');
   await expect(page.getByRole('button', { name: 'Inscribirse' })).toBeDisabled();
 
-  await page.goto(list + '/preview-v2-futbol');
+  await page.goto(list + '/preview-v2-futbol--sede-plaza-grigera');
   const futbol = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-  await expect(futbol.locator('section')).toHaveCount(2);
+  await expect(futbol.locator('section')).toHaveCount(1);
   await expect(futbol).toContainText('Todos los martes');
-  await expect(futbol).toContainText('Todos los jueves');
-  await expect(futbol.getByRole('link', { name: /Ver en Google Maps/ })).toHaveCount(2);
+  await expect(futbol).not.toContainText('Todos los jueves');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
+
+  await page.goto(list + '/preview-v2-futbol--sede-parque-de-lomas');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).toContainText('Todos los jueves');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' })).not.toContainText('Todos los martes');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
 
   await page.goto(list + '/preview-v2-folklore');
   const folklore = page.getByRole('complementary', { name: 'Cuándo y dónde' });
@@ -72,11 +87,16 @@ test('Agenda V2: los siete detalles respetan los casos de programación de Figma
   await expect(page.getByRole('heading', { name: 'Inscripción', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Inscribirse' })).toHaveCount(0);
 
-  await page.goto(list + '/preview-v2-itinerante');
+  await page.goto(list + '/preview-v2-itinerante--sede-plaza-grigera');
   const itinerante = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-  await expect(itinerante.locator('section')).toHaveCount(2);
-  await expect(itinerante).toContainText('Plaza Grigera');
-  await expect(itinerante).toContainText('Parque de Lomas');
+  await expect(itinerante.locator('section')).toHaveCount(1);
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
+  await expect(page.getByText('Plaza Grigera').first()).toBeVisible();
+
+  await page.goto(list + '/preview-v2-itinerante--sede-parque-de-lomas');
+  await expect(page.getByRole('complementary', { name: 'Cuándo y dónde' }).locator('section')).toHaveCount(1);
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toBeVisible();
+  await expect(page.getByText('Parque de Lomas').first()).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -115,25 +135,58 @@ test('Consola V2: portada, detalle y texto de programación se visualizan sin pu
   await expect(dialog).toHaveCount(0);
 });
 
-test('Yoga en Comunidad: una sola ficha, dos sedes con condiciones de lluvia independientes', async ({ page }) => {
-  await page.goto(list + '/preview-v2-yoga-dos-sedes/');
-  await expect(page.getByRole('heading', { name: 'Yoga en Comunidad', exact: true, level: 1 })).toHaveCount(1);
-  const summary = page.getByRole('complementary', { name: 'Cuándo y dónde' });
-  const schedules = summary.locator('section');
-  await expect(schedules).toHaveCount(2);
+test('Yoga en Comunidad: dos fichas públicas independientes y un mapa por sede', async ({ page }) => {
+  const path = list + '/preview-v2-yoga-dos-sedes--sede-';
+  await page.goto(path + 'plaza-grigera');
+  await expect(page.getByRole('heading', { name: 'Yoga en Comunidad', exact: true, level: 1 })).toBeVisible();
+  const plaza = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(plaza.locator('section')).toHaveCount(1);
+  await expect(plaza).toContainText('Todos los martes');
+  await expect(plaza).toContainText('Se suspende por lluvia');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Plaza Grigera');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Polideportivo Evita');
 
-  const outdoors = schedules.nth(0);
-  await expect(outdoors).toContainText('Todos los martes');
-  await expect(outdoors).toContainText('Plaza Grigera');
-  await expect(outdoors).toContainText('Se suspende por lluvia');
-  await expect(outdoors).not.toContainText('No se suspende por lluvia');
+  await page.goto(path + 'polideportivo-evita');
+  await expect(page.getByRole('heading', { name: 'Yoga en Comunidad', exact: true, level: 1 })).toBeVisible();
+  const polideportivo = page.getByRole('complementary', { name: 'Cuándo y dónde' });
+  await expect(polideportivo.locator('section')).toHaveCount(1);
+  await expect(polideportivo).toContainText('Todos los jueves');
+  await expect(polideportivo).not.toContainText('suspende por lluvia');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Polideportivo Evita');
+  await expect(page.getByRole('region', { name: 'Mapa de ubicación' })).not.toContainText('Plaza Grigera');
 
-  const indoors = schedules.nth(1);
-  await expect(indoors).toContainText('Todos los jueves');
-  await expect(indoors).toContainText('Polideportivo Evita');
-  await expect(indoors).not.toContainText('suspende por lluvia');
-
-  await expect(summary.getByRole('link', { name: /Ver en Google Maps/ })).toHaveCount(2);
-  await expect(page.getByRole('note')).toHaveCount(0);
+  await page.goto(list + '/preview-v2-yoga-dos-sedes');
+  await expect(page).toHaveURL(/preview-v2-yoga-dos-sedes--sede-plaza-grigera/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
+});
+
+test('La consola agrupa fechas por sede y permite la vista previa de cada ubicación', async ({ page }, info) => {
+  await page.goto(consoleRoute + '?caso=preview-v2-yoga-dos-sedes');
+  await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Yoga en Comunidad');
+  await expect(page.getByRole('heading', { name: 'Programación 2' })).toBeVisible();
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  const cards = page.getByTestId('console-preview-card');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.nth(0)).toContainText('Plaza Grigera');
+  await expect(cards.nth(0)).toContainText('Se suspende por lluvia');
+  await expect(cards.nth(1)).toContainText('Polideportivo Evita');
+  await expect(cards.nth(1)).not.toContainText('suspende por lluvia');
+
+  await cards.nth(1).getByRole('button', { name: 'Ver más' }).click();
+  const detail = page.getByTestId('console-detail-preview');
+  await expect(detail.getByRole('region', { name: 'Mapa de ubicación' })).toContainText('Polideportivo Evita');
+  await expect(detail).not.toContainText('Plaza Grigera');
+  await page.getByRole('button', { name: 'Cerrar vista previa del detalle' }).click();
+
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Formulario', exact: true }).click();
+  }
+  await page.getByRole('combobox', { name: 'Cargar actividad' }).selectOption('preview-v2-folklore');
+  if ((info.project.use.viewport?.width ?? 0) < 1024) {
+    await page.getByRole('button', { name: 'Vista previa', exact: true }).click();
+  }
+  await expect(page.getByTestId('console-preview-card')).toHaveCount(1);
+  await expect(page.getByTestId('console-preview-card')).toContainText('+ 1 programación');
 });
