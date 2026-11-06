@@ -2,6 +2,7 @@ import type { AgendaActivity } from '../../../../data/agenda';
 import { ActivityBadges } from '../../../../components/agenda/ActivityBadges';
 import { ActivityCharacteristic } from '../../../../components/agenda/ActivityCharacteristic';
 import { ActivityScheduleDateTime } from '../../../../components/agenda/ActivityScheduleDateTime';
+import { ActivityScheduleParticipants } from '../../../../components/agenda/ActivityScheduleParticipants';
 import { MaterialIcon } from '../../../../components/ui/MaterialIcon';
 import { getActivityMapUrl } from '../../utils/activityMap';
 import { formatActivityAddress } from '../../utils/formatActivityAddress';
@@ -64,9 +65,9 @@ export function ActivitySummary({
                   )}
                 </div>
               )}
-              {schedule.detail?.trim() && (schedule.detailType === 'artists'
-                ? <ActivityCharacteristic variant="sin-label" icon="comedy_mask" field="artists" value={schedule.detail.trim()} />
-                : <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
+              <ActivityScheduleParticipants schedule={schedule} />
+              {schedule.detailType !== 'artists' && schedule.detail?.trim() && (
+                <p className="pt-1 whitespace-pre-line italic text-[#888]">{schedule.detail}</p>
               )}
             </div>
           </section>

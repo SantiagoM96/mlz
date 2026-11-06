@@ -22,6 +22,9 @@ export interface AgendaSchedule {
   detail?: string;
   /** El detalle contiene nombres de artistas, no una nota genérica. */
   detailType?: 'artists';
+  /** Participantes identificados para esta fecha; independientes del detalle editorial. */
+  participants?: string;
+  participantsType?: 'artists' | 'speakers' | 'participants';
   /** Condición de lluvia de esta programación; puede diferir entre sedes. */
   suspendedByRain?: boolean;
 }

@@ -40,7 +40,7 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
   const groups = new Map<string, AgendaSchedule[]>();
   for (const schedule of activity.schedules) {
     // Un encuentro con artistas/contenido propio no comparte detalle con otra fecha.
-    const uniqueEncounter = schedule.scheduleType === 'exact' && Boolean(schedule.detail?.trim());
+    const uniqueEncounter = schedule.scheduleType === 'exact' && Boolean(schedule.detail?.trim() || schedule.participants?.trim());
     const key = venueKey(schedule) + (uniqueEncounter ? '|encuentro:' + schedule.id : '');
     const existing = groups.get(key);
     if (existing) existing.push(schedule);
@@ -53,7 +53,7 @@ export function getPublicActivityViews(activity: AgendaActivity): AgendaActivity
     if (!first) return activity;
     const venue = venueSlug(first.venue || first.locality);
     // Las URLs por fecha distinguen dos encuentros realizados en una misma sede.
-    const encounter = schedules.length === 1 && first.scheduleType === 'exact' && Boolean(first.detail?.trim());
+    const encounter = schedules.length === 1 && first.scheduleType === 'exact' && Boolean(first.detail?.trim() || first.participants?.trim());
     const slug = encounter ? venue + '--fecha-' + first.startDate : venue;
     const occurrence = (usedSlugs.get(slug) ?? 0) + 1;
     usedSlugs.set(slug, occurrence);

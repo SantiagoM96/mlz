@@ -4,6 +4,7 @@ import { MaterialIcon } from '../ui/MaterialIcon';
 import { ActivityBadges } from './ActivityBadges';
 import { ActivityCharacteristic } from './ActivityCharacteristic';
 import { ActivityScheduleDateTime } from './ActivityScheduleDateTime';
+import { ActivityScheduleParticipants } from './ActivityScheduleParticipants';
 import { formatActivityCardAddress } from '../../features/agenda/utils/formatActivityAddress';
 import { Link } from 'react-router-dom';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
@@ -73,14 +74,8 @@ function CardContents({
               label={venue}
               value={formatActivityCardAddress(address, locality)}
             />
-            {schedules.map(schedule => schedule.detailType === 'artists' && schedule.detail?.trim() && (
-              <ActivityCharacteristic
-                key={schedule.id}
-                variant="sin-label"
-                icon="comedy_mask"
-                field="artists"
-                value={schedule.detail.trim()}
-              />
+            {schedules.map(schedule => (
+              <ActivityScheduleParticipants key={schedule.id} schedule={schedule} />
             ))}
           </div>
         )}
