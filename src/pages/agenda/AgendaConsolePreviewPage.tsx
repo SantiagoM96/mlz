@@ -17,6 +17,11 @@ import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
 import { useConsoleSchedules } from '../../features/agenda/consolePreview/useConsoleSchedules';
 
+function mobileViewTabClassName(selected: boolean): string {
+  return 'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+    (selected ? 'bg-primary-600 text-white' : 'text-primary-600');
+}
+
 export function AgendaConsolePreviewPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [draft, setDraft] = useState<ConsoleDraft>(
@@ -109,14 +114,12 @@ export function AgendaConsolePreviewPage() {
         <div className="mb-6 flex gap-2 rounded-[8px] border border-[#dce7ee] bg-[#f6f9fb] p-1.5 lg:hidden" aria-label="Cambiar vista">
           <button type="button" onClick={() => setMobileView('form')}
             aria-pressed={mobileView === 'form'}
-            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-              (mobileView === 'form' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            className={mobileViewTabClassName(mobileView === 'form')}>
             Formulario
           </button>
           <button type="button" onClick={() => setMobileView('preview')}
             aria-pressed={mobileView === 'preview'}
-            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-              (mobileView === 'preview' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            className={mobileViewTabClassName(mobileView === 'preview')}>
             Vista previa
           </button>
         </div>

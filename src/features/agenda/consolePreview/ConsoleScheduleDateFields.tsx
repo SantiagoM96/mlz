@@ -3,6 +3,11 @@ import type { ConsoleSchedule } from './model';
 import { WEEKDAYS } from './demoData';
 import { Field, inputClass } from './ConsoleScheduleFormPrimitives';
 
+const weekdayButtonClassName = (selected: boolean) =>
+  'min-h-11 rounded-[6px] border px-1 text-[13px] font-medium focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+  (selected ? 'border-[#80b4db] bg-[#dceefa] text-primary-600'
+    : 'border-[#d6e2eb] bg-white text-[#8294a4] hover:border-[#93bfe0]');
+
 interface Props {
   value: ConsoleSchedule;
   onScheduleChange: (changes: Partial<ConsoleSchedule>) => void;
@@ -49,9 +54,7 @@ export function ConsoleScheduleDateFields({ value, onScheduleChange, selectRef }
                     onClick={() => onScheduleChange({ weekdays: selected
                       ? value.weekdays.filter(item => item !== day.number)
                       : [...value.weekdays, day.number].sort((a, b) => a - b) })}
-                    className={'min-h-11 rounded-[6px] border px-1 text-[13px] font-medium focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-                      (selected ? 'border-[#80b4db] bg-[#dceefa] text-primary-600' :
-                        'border-[#d6e2eb] bg-white text-[#8294a4] hover:border-[#93bfe0]')}>
+                    className={weekdayButtonClassName(selected)}>
                     {day.short}
                   </button>;
                 })}
