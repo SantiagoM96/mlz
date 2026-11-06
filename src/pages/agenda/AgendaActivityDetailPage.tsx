@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { ActivityShare } from '../../components/agenda/ActivityShare';
@@ -13,21 +13,35 @@ import {
 import { agendaActivities } from '../../data/agenda';
 import { featuredActivity } from '../../data/agenda-featured';
 import { agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
+import { getPublicActivityList, getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
 import { NotFoundPage } from '../not-found/NotFoundPage';
+
+const editorialActivities = [featuredActivity, ...agendaActivities, ...agendaV2PreviewActivities];
+const publicActivities = getPublicActivityList(editorialActivities);
 
 export function AgendaActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const activity = [featuredActivity, ...agendaActivities, ...agendaV2PreviewActivities].find(a => a.id === id);
-  const isPreview = agendaV2PreviewActivities.some(a => a.id === id);
+  const directActivity = publicActivities.find(activity => activity.id === id);
+  // Los enlaces previos con el ID editorial siguen funcionando:
+  // al separar sedes redirigen a la primera ficha pública.
+  const original = directActivity ? undefined : editorialActivities.find(activity => activity.id === id);
+  const firstVenue = original ? getPublicActivityViews(original)[0] : undefined;
+  const redirectTo = !directActivity && original && getPublicActivityViews(original).length > 1
+    ? firstVenue : undefined;
+  const activity = directActivity ?? redirectTo;
+  const isPreview = Boolean(activity?.id.startsWith('preview-v2-'));
   const previewDateISO = isPreview ? '2026-11-05' : undefined;
   const isVisible = activity ? isAgendaActivityVisible(activity, previewDateISO) : false;
 
   useEffect(() => {
     document.title = activity && isVisible
-      ? activity.title + ' | Agenda de la Comunidad'
+      ? activity.title + (activity.id.includes('--sede-') ? ' · ' + activity.venue : '') + ' | Agenda de la Comunidad'
       : 'Actividad no encontrada | Agenda de la Comunidad';
   }, [activity, isVisible]);
 
+  if (redirectTo) {
+    return <Navigate to={'/agenda-de-la-comunidad/actividades/' + redirectTo.id} replace />;
+  }
   if (!activity || !isVisible) return <NotFoundPage />;
 
   const schedules = getActivitySchedulePresentations(activity, previewDateISO);
@@ -53,6 +67,12 @@ export function AgendaActivityDetailPage() {
           <div className="space-y-4">
             <p className="text-[16px] font-medium uppercase text-[#787878]">{activity.type}</p>
             <h1 className="text-[32px] font-bold leading-10 text-primary-600">{activity.title}</h1>
+            {activity.id.includes('--sede-') && activity.venue && (
+              <p className="flex items-center gap-2 text-[18px] font-bold leading-6 text-grey-900">
+                <span>{activity.venue}</span>
+                <span className="font-normal text-[#687d8d]">· {activity.locality}</span>
+              </p>
+            )}
             <ActivityDescription key={activity.id} activity={activity} />
           </div>
           <img
