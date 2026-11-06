@@ -3,6 +3,7 @@ import type { AgendaActivity } from '../../data/agenda';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { ActivityBadges } from './ActivityBadges';
 import { ActivityCharacteristic } from './ActivityCharacteristic';
+import { formatActivityCardAddress } from '../../features/agenda/utils/formatActivityAddress';
 import { Link } from 'react-router-dom';
 import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
 
@@ -26,6 +27,10 @@ function CardContents({
   showCharacteristics,
 }: Omit<Props, 'onViewDetail'> & { action: ReactNode }) {
   const schedules = getActivitySchedulePresentations(activity, previewDateISO);
+  const firstSchedule = schedules[0];
+  const venue = firstSchedule?.venue?.trim() || activity.venue?.trim() || 'Lugar a confirmar';
+  const address = firstSchedule?.address || activity.address;
+  const locality = firstSchedule?.locality || activity.locality;
 
   return (
     <>
@@ -42,12 +47,6 @@ function CardContents({
           </h2>
           {showBadges && activity.badges.length > 0 && <ActivityBadges badges={activity.badges} />}
         </div>
-        {activity.id.includes('--sede-') && activity.venue && (
-          <p className="flex min-w-0 items-start gap-2 text-[16px] font-bold leading-6 text-grey-900">
-            <MaterialIcon name="location_on" size={20} className="mt-0.5" />
-            <span className="min-w-0 break-words">{activity.venue}</span>
-          </p>
-        )}
         {showCharacteristics && (
           <div data-testid="agenda-card-schedules" className="flex min-w-0 flex-col gap-4">
             {schedules.map(schedule => (
@@ -79,6 +78,13 @@ function CardContents({
                 <ActivityCharacteristic variant="sin-label" icon="schedule" value={activity.timeLabel} />
               </div>
             )}
+            <ActivityCharacteristic
+              variant="con-label"
+              size="place"
+              icon="location_on"
+              label={venue}
+              value={formatActivityCardAddress(address, locality)}
+            />
           </div>
         )}
         <div className="mt-auto">{action}</div>
