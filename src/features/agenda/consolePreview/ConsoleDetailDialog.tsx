@@ -83,9 +83,6 @@ export function ConsoleDetailDialog({
                 <h2 id="console-detail-heading" className="break-words text-[32px] font-bold leading-10 text-primary-600">
                   {activity.title}
                 </h2>
-                {activity.id.includes('--sede-') && activity.venue && (
-                  <p className="text-[18px] font-bold text-grey-900">{activity.venue} · {activity.locality}</p>
-                )}
                 <ActivityDescription activity={activity} />
               </div>
               <img
