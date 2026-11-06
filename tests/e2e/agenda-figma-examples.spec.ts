@@ -492,21 +492,23 @@ test('Figma Agenda V2: mapa de sede, tipografía, separación, chevron y borde r
   }
 });
 
-test('Agenda V2: Ver más alineado con texto de fecha y chevron centrado', async ({ page }, info) => {
+test('Agenda V2: Ver más alineado con categoría y título; chevron centrado', async ({ page }, info) => {
   await page.goto(list);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('Yoga en Comunidad');
   const card = page.getByTestId('agenda-card').first();
-  const date = card.locator('[data-agenda-field="date"] p').first();
+  const category = card.locator('p.uppercase').first();
+  const title = card.getByRole('heading', { name: 'Yoga en Comunidad' });
   const more = card.getByText('Ver más', { exact: true });
   const icon = card.locator('[data-material-symbol="chevron_right"]');
-  const positions = await Promise.all([date, more, icon].map(locator =>
+  const positions = await Promise.all([category, title, more, icon].map(locator =>
     locator.evaluate(el => {
       const rect = el.getBoundingClientRect();
       return { x: rect.x, centerY: rect.y + rect.height / 2 };
     })));
   expect(Math.abs(positions[0].x - positions[1].x)).toBeLessThanOrEqual(1);
-  expect(Math.abs(positions[1].centerY - positions[2].centerY)).toBeLessThanOrEqual(1);
+  expect(Math.abs(positions[0].x - positions[2].x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(positions[2].centerY - positions[3].centerY)).toBeLessThanOrEqual(1);
   if ((info.project.use.viewport?.width ?? 0) < 1024) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   }
@@ -517,7 +519,7 @@ test('Agenda V2: Ver más alineado con texto de fecha y chevron centrado', async
   }
   const preview = page.getByTestId('console-preview-card').first();
   const aligned = await Promise.all([
-    preview.locator('[data-agenda-field="date"] p').first(),
+    preview.locator('p.uppercase').first(),
     preview.getByRole('button', { name: 'Ver más' }).getByText('Ver más', { exact: true }),
   ].map(locator => locator.evaluate(el => el.getBoundingClientRect().x)));
   expect(Math.abs(aligned[0] - aligned[1])).toBeLessThanOrEqual(1);

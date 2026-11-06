@@ -80,7 +80,7 @@ function CardContents({
             ))}
           </div>
         )}
-        <div className="mt-auto pl-7">{action}</div>
+        <div className="mt-auto">{action}</div>
       </div>
     </>
   );
