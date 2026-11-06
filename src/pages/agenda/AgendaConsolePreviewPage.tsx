@@ -5,26 +5,17 @@ import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agen
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePreview/ConsoleScheduleEditorDialog';
 import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/ConsoleTypeEditorDialog';
-import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
 import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
 import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
 import { ConsoleGeneralInfoSection } from '../../features/agenda/consolePreview/ConsoleGeneralInfoSection';
 import { ConsoleRegistrationSection } from '../../features/agenda/consolePreview/ConsoleRegistrationSection';
+import { ConsoleImagesSection } from '../../features/agenda/consolePreview/ConsoleImagesSection';
 import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
-import { SectionTitle, inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
+import { inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
 import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
 import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
 import { useConsoleSchedules } from '../../features/agenda/consolePreview/useConsoleSchedules';
-
-function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
-  if (!file || !file.type.startsWith('image/')) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (typeof reader.result === 'string') onReady(reader.result);
-  };
-  reader.readAsDataURL(file);
-}
 
 export function AgendaConsolePreviewPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -168,37 +159,21 @@ export function AgendaConsolePreviewPage() {
               onDraftChange={updateDraft}
             />
 
-            <section aria-labelledby="console-images">
-              <div id="console-images">
-                <SectionTitle number={4} title="Imágenes y portada"
-                  subtitle="Agregá una portada opcional y fotos adicionales para la galería." />
-              </div>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <ConsoleImageUpload id="cover-image" label="Portada" source={draft.coverDataUrl}
-                  onFile={file => readLocalImage(file, url => updateDraft({ coverDataUrl: url }))}
-                  onRemove={() => updateDraft({ coverDataUrl: '' })}/>
-                {[0, 1].map(index => (
-                  <ConsoleImageUpload key={index} id={'gallery-' + index}
-                    label={'Foto adicional ' + (index + 1)} source={draft.galleryDataUrls[index] ?? ''}
-                    onFile={file => readLocalImage(file, url => {
-                      setDraft(current => {
-                        const next = [...current.galleryDataUrls];
-                        next[index] = url;
-                        return { ...current, galleryDataUrls: next };
-                      });
-                    })}
-                    onRemove={() => setDraft(current => ({
-                      ...current,
-                      galleryDataUrls: current.galleryDataUrls.map((url, i) => i === index ? '' : url),
-                    }))}/>
-                ))}
-              </div>
-              <label className="mt-4 flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-                <input type="checkbox" className="h-5 w-5 accent-[#236999]" checked={draft.featured}
-                  onChange={event => updateDraft({ featured: event.target.checked })} />
-                Destacar actividad
-              </label>
-            </section>
+            <ConsoleImagesSection
+              draft={draft}
+              onDraftChange={updateDraft}
+              onGalleryFile={(index, url) => {
+                setDraft(current => {
+                  const next = [...current.galleryDataUrls];
+                  next[index] = url;
+                  return { ...current, galleryDataUrls: next };
+                });
+              }}
+              onGalleryRemove={index => setDraft(current => ({
+                ...current,
+                galleryDataUrls: current.galleryDataUrls.map((url, i) => i === index ? '' : url),
+              }))}
+            />
 
             <div className="flex flex-wrap justify-end gap-3 border-t border-[#edf0f3] pt-6">
               <button type="button" onClick={() => setMobileView('preview')}
