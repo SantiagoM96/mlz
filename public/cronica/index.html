@@ -120,6 +120,19 @@
  .preview .photo-dropzone-title{font-size:16px}
  .preview .photo-dropzone-description{font-size:12px}
 }
+
+/* Selector visual por placa: logotipos SVG originales de Crónica. */
+.editor-panel .logo-control-field{margin-top:14px}
+.editor-panel .logo-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px}
+.editor-panel .logo-choice{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;min-width:0;min-height:80px;padding:8px 3px;background:#292c32;border:1px solid #4a4e56;border-radius:9px;color:#e4e5e9;font:500 11px Inter,Arial,sans-serif;cursor:pointer}
+.editor-panel .logo-choice[aria-pressed=true]{border-color:#ed0000;box-shadow:inset 0 0 0 1px #ed0000;background:#34282c}
+.editor-panel .logo-choice:hover{border-color:#8c9099}
+.editor-panel .logo-choice[aria-pressed=true]:hover{border-color:#ed0000}
+.editor-panel .logo-choice:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.editor-panel .logo-choice-preview{display:flex;justify-content:center;align-items:center;width:42px;height:46px;border-radius:5px;background:#444850}
+.editor-panel .logo-choice-preview img{display:block;width:30px;height:33px;object-fit:contain}
+.editor-panel .logo-choice-preview.no-logo{background:#34383e}
+.editor-panel .logo-choice-preview .material-icons{font-size:25px;color:#aeb4bf}
 </style></head><body><header><div class="site-container header-inner"><span class="header-title">Generador de posteos Crónica</span></div></header><main><aside class="editor-panel"><section class="panel-group carousel-panel" aria-label="Páginas del carrusel">
 <div class="carousel-heading"><h2>Páginas</h2><span id="pageIndicator" class="carousel-current" role="status" aria-live="polite">1 de 1 · Portada</span></div>
 <div class="carousel-compact-row"><div class="carousel-pages" id="carouselPages" role="group" aria-label="Seleccionar página"></div>
@@ -127,6 +140,12 @@
 </section>
 <section class="panel-group"><h2>Contenido</h2>
 <div class="control-field"><label for="file">Fotografía</label><input id="file" type="file" accept="image/*"><p class="hint compact-hint">Arrastrá la foto en la vista previa para ajustar su encuadre.</p></div>
+<div class="control-field logo-control-field"><label>Logo Crónica</label><div class="logo-choices" role="group" aria-label="Seleccionar logo de la placa">
+<button type="button" class="logo-choice" data-logo="none" aria-pressed="false" title="Sin logo"><span class="logo-choice-preview no-logo"><span class="material-icons" aria-hidden="true">hide_image</span></span><span>Sin logo</span></button>
+<button type="button" class="logo-choice" data-logo="primary" aria-pressed="false" title="Logo primario: rojo con C blanca"><span class="logo-choice-preview"><img src="./logos/primario.svg" alt=""></span><span>Primario</span></button>
+<button type="button" class="logo-choice" data-logo="secondary" aria-pressed="true" title="Logo secundario: blanco con C roja"><span class="logo-choice-preview"><img src="./logos/secundario.svg" alt=""></span><span>Secundario</span></button>
+<button type="button" class="logo-choice" data-logo="white" aria-pressed="false" title="Logo todo blanco"><span class="logo-choice-preview"><img src="./logos/blanco.svg" alt=""></span><span>Blanco</span></button>
+</div><p class="hint compact-hint">Aparece sobre la foto, a 80 px del borde superior y derecho.</p></div>
 <div class="control-field"><label class="switch-row" for="showStrap"><span>Mostrar volanta</span><span class="switch"><input id="showStrap" type="checkbox" role="switch" checked><span class="switch-track"></span></span></label></div>
 <div class="control-field" id="strapField"><label for="strapText">Texto de la volanta</label><input id="strapText" type="text" maxlength="140" value="JUEVES NEGRO EN TODO EL PAÍS: ¿QUÉ RECLAMAN?" placeholder="Escribí el texto de la volanta"><p class="hint compact-hint">Máximo una línea. El tamaño se ajusta automáticamente al ancho disponible.</p></div>
 <div class="control-field"><label for="headline">Texto principal</label><textarea id="headline">FRANCIA ESTALLA: *MILES SALEN A LAS CALLES CONTRA LOS BAJOS SALARIOS Y EL ALTO COSTO DE VIDA*</textarea></div>
@@ -146,8 +165,25 @@
 'use strict';
 
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false;
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='secondary';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
+const LOGO_WIDTH=75,LOGO_HEIGHT=Math.round(LOGO_WIDTH*191/175);
+const logoImages={},logoSources={primary:'./logos/primario.svg',secondary:'./logos/secundario.svg',white:'./logos/blanco.svg'};
+const logosReady=Promise.all(Object.entries(logoSources).map(([key,src])=>new Promise(resolve=>{
+ const img=new Image();logoImages[key]=img;
+ img.onload=()=>{render();resolve()};
+ img.onerror=()=>{console.error('No se pudo cargar logo:',src);resolve()};
+ img.src=src;
+})));
+function drawBrandLogo(){
+ if(selectedLogo==='none')return;
+ const img=logoImages[selectedLogo];
+ if(!img||!img.complete||!img.naturalWidth)return;
+ ctx.drawImage(img,W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
+}
+function syncLogoChoices(){
+ document.querySelectorAll('.logo-choice').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.logo===selectedLogo)));
+}
 function parseRich(text){
  const out=[];let state={accent:false,italic:false,strike:false},buffer='';
  const flush=()=>{if(buffer){out.push({text:buffer,...state});buffer=''}};
@@ -255,6 +291,7 @@ function render(){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
   drawPhoto(imageBottom);
+  drawBrandLogo();
   ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
@@ -278,10 +315,10 @@ function render(){
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value,showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,image,zoom,offsetX,offsetY};
+  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY};
 }
 function newBlankPage(){
- return {headline:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',strapText:'',showStrap:true,size:'52',alignment:'left',forceUppercase:false,
+ return {headline:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',strapText:'',showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'secondary',
   image:null,zoom:1,offsetX:0,offsetY:0};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
@@ -289,6 +326,7 @@ function loadPage(page){
  el('headline').value=page.headline;el('strapText').value=page.strapText;
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  forceUppercase=Boolean(page.forceUppercase);el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));
+ selectedLogo=page.logo||'secondary';syncLogoChoices();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
  el('file').value='';dragging=false;
  el('alignLeft').setAttribute('aria-pressed',String(page.alignment==='left'));
@@ -324,6 +362,7 @@ function initializeCarousel(){
  });
 }
 
+document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
 for(const id of ['headline','strapText','size'])el(id).addEventListener('input',render);
 el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));render()});
@@ -390,10 +429,11 @@ el('clearAll').addEventListener('click',()=>{
  const initial=newBlankPage();if(activePage===0){initial.size='64';initial.alignment='center'}
  loadPage(initial);saveActivePage();
 });
-el('download').addEventListener('click',()=>{
+el('download').addEventListener('click',async()=>{
  const button=el('download');
  button.disabled=true;
  try{
+  await logosReady;
   render();
   canvas.toBlob(blob=>{
    button.disabled=false;
