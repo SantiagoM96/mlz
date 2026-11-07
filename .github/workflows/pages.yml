@@ -3,6 +3,17 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    # Cambios de documentación o CI no requieren volver a publicar el preview.
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'tsconfig*.json'
+      - '.github/workflows/pages.yml'
 permissions:
   contents: read
   pages: write
@@ -19,7 +30,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --no-audit --no-fund
+          cache: npm
+      - run: npm ci --no-audit --no-fund
       - run: npm run validate:prototypes
       - run: npm run lint
       - run: npm run build:pages

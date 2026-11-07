@@ -13,6 +13,7 @@ on:
       - 'src/data/agenda**'
       - 'src/styles/**'
       - 'package.json'
+      - 'package-lock.json'
       - 'playwright.config.ts'
 
 permissions:
@@ -48,14 +49,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+          cache-dependency-path: candidate/package-lock.json
 
       - name: Instalar candidato
         working-directory: candidate
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Instalar referencia
         working-directory: baseline
-        run: npm install --no-audit --no-fund
+        # Durante el primer PR del lockfile, main todavía puede no tenerlo.
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
 
       - name: Instalar Chromium
         working-directory: candidate
