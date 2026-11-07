@@ -101,7 +101,8 @@
 .editor-panel .help-button .material-icons{font-size:14px;line-height:1}
 .editor-panel .help-tooltip{
  position:absolute;left:calc(100% + 12px);top:50%;
- width:260px;max-width:calc(100vw - 48px);padding:11px 13px;
+ width:min(260px,var(--help-available-width,260px));max-width:calc(100vw - 48px);padding:11px 13px;
+ overflow-wrap:break-word;
  transform:translateY(-50%);border:1px solid #525762;border-radius:8px;
  background:#34383e;color:#f4f4f4;font-size:12px;line-height:1.5;
  font-weight:400;text-align:left;box-shadow:0 8px 24px #0007;
@@ -116,3 +117,9 @@
 .editor-panel .help-trigger:hover .help-tooltip,
 .editor-panel .help-trigger:focus-within .help-tooltip,
 .editor-panel .help-trigger.is-open .help-tooltip{opacity:1;visibility:visible;pointer-events:auto}
+
+/* Corregir la altura común de los labels de Formato y Alineación. */
+.editor-panel .cronica-format-row .help-label-row{height:20px;min-height:20px;margin:0 0 9px;align-items:center}
+.editor-panel .cronica-format-row .help-label-row>label{display:flex;align-items:center;height:20px;margin:0!important;line-height:20px;white-space:nowrap}
+.editor-panel .cronica-format-row .align-field>label{display:flex;align-items:center;height:20px;line-height:20px;margin:0 0 9px!important}
+.editor-panel .cronica-format-row .help-trigger{align-self:center}
