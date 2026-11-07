@@ -192,7 +192,7 @@
   <p id="exportDialogDescription">¿Querés descargar solamente esta página o todas las imágenes del carrusel?</p>
   <div class="export-dialog-options">
    <button type="button" id="exportCurrent" class="export-dialog-option"><span class="material-icons" aria-hidden="true">image</span><span><strong>Solo esta imagen</strong><small id="exportCurrentDetail">Página actual · PNG 1080 × 1440</small></span><span class="material-icons export-arrow" aria-hidden="true">arrow_forward</span></button>
-   <button type="button" id="exportAll" class="export-dialog-option"><span class="material-icons" aria-hidden="true">collections</span><span><strong>Todas las imágenes</strong><small id="exportAllDetail">ZIP con todas las páginas en PNG</small></span><span class="material-icons export-arrow" aria-hidden="true">arrow_forward</span></button>
+   <button type="button" id="exportAll" class="export-dialog-option"><span class="material-icons" aria-hidden="true">collections</span><span><strong>Todas las imágenes</strong><small id="exportAllDetail">Cada página se descarga como un PNG separado</small></span><span class="material-icons export-arrow" aria-hidden="true">arrow_forward</span></button>
   </div>
   <p class="export-dialog-feedback" id="exportFeedback" role="status" aria-live="polite" hidden></p>
  </section>
@@ -474,7 +474,7 @@ let exportBusy=false,exportLastFocus=null;
 function showExportDialog(){
  saveActivePage();
  el('exportCurrentDetail').textContent='Página '+(activePage+1)+' · PNG 1080 × 1440';
- el('exportAllDetail').textContent=carouselPages.length+' páginas · archivo ZIP con PNG';
+ el('exportAllDetail').textContent=carouselPages.length+' archivos PNG por separado';
  el('exportFeedback').hidden=true;
  exportLastFocus=document.activeElement;
  exportDialog.hidden=false;
@@ -520,37 +520,6 @@ function pngBlob(){
   catch(error){reject(error)}
  });
 }
-// ZIP sin dependencias externas, con entradas PNG almacenadas sin recomprimir.
-const crcTable=Array.from({length:256},(_,i)=>{
- let c=i;for(let k=0;k<8;k++)c=(c&1)?(0xedb88320^(c>>>1)):(c>>>1);return c>>>0;
-});
-function crc32(bytes){
- let c=0xffffffff;
- for(let i=0;i<bytes.length;i++)c=crcTable[(c^bytes[i])&255]^(c>>>8);
- return (c^0xffffffff)>>>0;
-}
-function makeZip(files){
- const encode=new TextEncoder(),parts=[],centralParts=[];
- let offset=0;
- const write16=(v,o,n)=>v.setUint16(o,n,true),write32=(v,o,n)=>v.setUint32(o,n>>>0,true);
- for(const item of files){
-  const name=encode.encode(item.name),data=item.data,crc=crc32(data);
-  const local=new Uint8Array(30+name.length),lv=new DataView(local.buffer);
-  write32(lv,0,0x04034b50);write16(lv,4,20);write16(lv,6,0x0800);write16(lv,8,0);
-  write32(lv,14,crc);write32(lv,18,data.length);write32(lv,22,data.length);
-  write16(lv,26,name.length);local.set(name,30);
-  parts.push(local,data);
-  const central=new Uint8Array(46+name.length),cv=new DataView(central.buffer);
-  write32(cv,0,0x02014b50);write16(cv,4,20);write16(cv,6,20);write16(cv,8,0x0800);
-  write32(cv,16,crc);write32(cv,20,data.length);write32(cv,24,data.length);
-  write16(cv,28,name.length);write32(cv,42,offset);central.set(name,46);
-  centralParts.push(central);offset+=local.length+data.length;
- }
- const centralSize=centralParts.reduce((n,c)=>n+c.length,0),end=new Uint8Array(22),ev=new DataView(end.buffer);
- write32(ev,0,0x06054b50);write16(ev,8,files.length);write16(ev,10,files.length);
- write32(ev,12,centralSize);write32(ev,16,offset);
- return new Blob([...parts,...centralParts,end],{type:'application/zip'});
-}
 async function runExport(all){
  if(exportBusy)return;
  exportBusy=true;
@@ -564,23 +533,29 @@ async function runExport(all){
   await Promise.all([logosReady,document.fonts.ready]);
   const timestamp=exportTimestamp(0);
   if(all){
-   const files=[],count=carouselPages.length;
+   const count=carouselPages.length,files=[];
    for(let i=0;i<count;i++){
-    feedback.textContent='Generando página '+(i+1)+' de '+count+'...';
+    feedback.textContent='Preparando imagen '+(i+1)+' de '+count+'...';
     activePage=i;loadPage(carouselPages[i]);render();
-    const blob=await pngBlob(),data=new Uint8Array(await blob.arrayBuffer());
-    files.push({name:'Cronica-pagina-'+String(i+1).padStart(2,'0')+'_'+(i===0?timestamp:exportTimestamp(i))+'.png',data});
+    const blob=await pngBlob();
+    files.push({
+     name:'Cronica-pagina-'+String(i+1).padStart(2,'0')+'_'+(i===0?timestamp:exportTimestamp(i))+'.png',
+     blob
+    });
    }
    lastExportTimestampSecond+=Math.max(0,count-1);
-   saveDownloadedBlob(makeZip(files),'Cronica-carrusel-'+count+'-paginas_'+timestamp+'.zip');
-   el('status').textContent='ZIP descargado con '+count+' páginas · 1080 × 1440 px';
+   // Descargas individuales: iniciar todas juntas para evitar múltiples ZIP.
+   // El navegador puede pedir autorización para descargar varios archivos.
+   feedback.textContent='Iniciando '+count+' descargas PNG...';
+   for(const file of files)saveDownloadedBlob(file.blob,file.name);
+   el('status').textContent='Se iniciaron '+count+' descargas PNG individuales · 1080 × 1440 px. Si faltan archivos, permití las descargas múltiples en el navegador.';
   }else{
    render();
    const blob=await pngBlob();
    saveDownloadedBlob(blob,'Cronica-pagina-'+String(originalIndex+1).padStart(2,'0')+'_'+timestamp+'.png');
    el('status').textContent='PNG de página '+(originalIndex+1)+' listo para descargar · 1080 × 1440 px';
   }
-  feedback.textContent='Descarga preparada.';
+  feedback.textContent='Descarga iniciada.';
  }catch(error){
   console.error('Error al exportar:',error);
   feedback.textContent=error.name==='SecurityError'?'La fotografía bloquea la exportación. Cargá otra imagen desde tu dispositivo.':'No se pudo exportar: '+error.message;
