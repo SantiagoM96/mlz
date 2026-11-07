@@ -78,3 +78,6 @@
 .editor-panel #headline::-webkit-scrollbar-thumb{background:#686d76;border-radius:999px}
 .editor-panel #headline::-webkit-scrollbar-thumb:hover{background:#8e939d}
 
+
+/* Mostrar mayúsculas en el textarea sin convertir su valor, para restaurar el caso original al desactivar. */
+.editor-panel #headline.uppercase-preview{text-transform:uppercase}
