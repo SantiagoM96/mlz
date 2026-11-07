@@ -169,8 +169,12 @@ function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
   size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY};
 }
+// Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
+const COVER_STRAP="LA CLAVE DE ESTA NOTICIA";
+const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato principal* y dejá los detalles para las siguientes placas.";
+const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
 function newBlankPage(){
- return {headline:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
+ return {headline:INTERNAL_HEADLINE,strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
   image:null,zoom:1,offsetX:0,offsetY:0};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
@@ -308,7 +312,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- const initial=newBlankPage();if(activePage===0){initial.size='64';initial.alignment='center'}
+ const initial=newBlankPage();if(activePage===0){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
  loadPage(initial);saveActivePage();
 });
 // Exportar una placa o todo el carrusel sin perder el estado de edición.
