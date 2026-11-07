@@ -422,5 +422,31 @@ async function runExport(all){
 }
 el('exportCurrent').addEventListener('click',()=>runExport(false));
 el('exportAll').addEventListener('click',()=>runExport(true));
+// Ayudas accesibles también mediante toque, teclado y Escape.
+document.querySelectorAll('.help-trigger').forEach(trigger=>{
+ const button=trigger.querySelector('.help-button');
+ button.addEventListener('click',event=>{
+  event.stopPropagation();
+  const shouldOpen=!trigger.classList.contains('is-open');
+  document.querySelectorAll('.help-trigger').forEach(other=>{
+   other.classList.remove('is-open');
+   other.querySelector('.help-button').setAttribute('aria-expanded','false');
+  });
+  trigger.classList.toggle('is-open',shouldOpen);
+  button.setAttribute('aria-expanded',String(shouldOpen));
+ });
+});
+function closeHelpTooltips(){
+ document.querySelectorAll('.help-trigger.is-open').forEach(trigger=>{
+  trigger.classList.remove('is-open');
+  trigger.querySelector('.help-button').setAttribute('aria-expanded','false');
+ });
+}
+document.addEventListener('click',event=>{
+ if(!event.target.closest('.help-trigger'))closeHelpTooltips();
+});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape')closeHelpTooltips();
+});
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
 })();
