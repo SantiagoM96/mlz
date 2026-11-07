@@ -497,6 +497,16 @@ exportDialog.addEventListener('keydown',event=>{
   if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
  }
 });
+// Marcas de tiempo locales, con segundos diferentes por imagen y exportación.
+let lastExportTimestampSecond=0;
+function exportTimestamp(index=0){
+ const now=Math.floor(Date.now()/1000);
+ if(index===0)lastExportTimestampSecond=Math.max(now,lastExportTimestampSecond+1);
+ const d=new Date((lastExportTimestampSecond+index)*1000);
+ const pad=n=>String(n).padStart(2,'0');
+ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+
+  '_'+pad(d.getHours())+'-'+pad(d.getMinutes())+'-'+pad(d.getSeconds());
+}
 function saveDownloadedBlob(blob,filename){
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
@@ -550,20 +560,22 @@ async function runExport(all){
  try{
   saveActivePage();
   await Promise.all([logosReady,document.fonts.ready]);
+  const timestamp=exportTimestamp(0);
   if(all){
    const files=[],count=carouselPages.length;
    for(let i=0;i<count;i++){
     feedback.textContent='Generando página '+(i+1)+' de '+count+'...';
     activePage=i;loadPage(carouselPages[i]);render();
     const blob=await pngBlob(),data=new Uint8Array(await blob.arrayBuffer());
-    files.push({name:'Cronica-pagina-'+String(i+1).padStart(2,'0')+'.png',data});
+    files.push({name:'Cronica-pagina-'+String(i+1).padStart(2,'0')+'_'+(i===0?timestamp:exportTimestamp(i))+'.png',data});
    }
-   saveDownloadedBlob(makeZip(files),'Cronica-carrusel-'+count+'-paginas.zip');
+   lastExportTimestampSecond+=Math.max(0,count-1);
+   saveDownloadedBlob(makeZip(files),'Cronica-carrusel-'+count+'-paginas_'+timestamp+'.zip');
    el('status').textContent='ZIP descargado con '+count+' páginas · 1080 × 1440 px';
   }else{
    render();
    const blob=await pngBlob();
-   saveDownloadedBlob(blob,'Cronica-pagina-'+(originalIndex+1)+'.png');
+   saveDownloadedBlob(blob,'Cronica-pagina-'+String(originalIndex+1).padStart(2,'0')+'_'+timestamp+'.png');
    el('status').textContent='PNG de página '+(originalIndex+1)+' listo para descargar · 1080 × 1440 px';
   }
   feedback.textContent='Descarga preparada.';
