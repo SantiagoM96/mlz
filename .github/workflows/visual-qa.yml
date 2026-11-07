@@ -19,7 +19,6 @@ on:
       - 'package-lock.json'
       - 'vite.config.ts'
       - 'playwright.config.ts'
-      - 'playwright.parity.config.ts'
       - 'tsconfig*.json'
       - 'eslint.config.js'
       - '.github/workflows/**'

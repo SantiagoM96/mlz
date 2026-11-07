@@ -1,12 +1,12 @@
 # MLZ — Instrucciones para agentes de IA
 
 ## Alcance y seguridad
-MLZ es un frontend institucional de la Municipalidad de Lomas de Zamora, implementado con React 19, TypeScript, Vite 8, Tailwind CSS 4 y React Router 7. Es un prototipo: no presentar datos de demostración como actividades confirmadas.
+MLZ es un frontend institucional de la Municipalidad de Lomas de Zamora, implementado con React 19, TypeScript, Vite 8, Tailwind CSS 4 y React Router 7. Es un prototipo: los prototipos no representan necesariamente servicios municipales en producción.
 
 - Trabajar en ramas específicas y mediante pull requests; nunca hacer commits de refactorización directamente a `main`, merges automáticos ni despliegues.
-- No modificar Figma, Vercel, configuración de producción, datos de actividades ni rutas públicas sin autorización explícita.
+- No modificar Figma, Vercel, configuración de producción ni rutas públicas sin autorización explícita.
 - No introducir secretos, credenciales ni nuevas dependencias sin necesidad demostrada.
-- No eliminar pruebas ni alterar expectativas solo para que pasen.
+- No eliminar pruebas ni alterar expectativas solo para que pasen; retirar pruebas de funcionalidades eliminadas es válido con alcance documentado.
 - No declarar validaciones completadas sin registrar el comando ejecutado y su resultado.
 
 ## Arquitectura y límites
@@ -24,12 +24,6 @@ Antes de mover archivos, inspeccionar la estructura real, las importaciones, los
 - Iconos generales: Google Material Symbols Outlined mediante `src/components/ui/MaterialIcon.tsx`. Logotipos e ilustraciones pueden usar recursos oficiales.
 - Tokens de referencia: `--color-primary-500: #358dc2`, `--color-primary-600: #236999`, `--color-primary-700: #19577f`, `--color-info-500: #006eff`, `--color-grey-900: #3d3d3d`. Consultar las definiciones reales antes de añadir o sustituir valores.
 - Ancho máximo institucional: 1200 px, incluyendo el comportamiento de `PageContainer`. Preservar breakpoints, densidad, espaciados, imágenes y jerarquía aprobados.
-- Figma Agenda: https://www.figma.com/design/i1EyRb02SVGEtP6nWElLlT/AGENDA-DE-ACTIVIDADES---TEATROS-LOCALES . Consultar el frame concreto de cada vista o componente; Figma es referencia visual, no sustituye la validación funcional. No editar Figma.
-
-## Agenda: invariantes
-Preservar filtros multiselección, búsqueda, chips, limpieza, ordenamiento, dropdowns, cierre exterior/Escape, foco y restauración del foco, scroll lock, navegación y scroll restoration. Conservar tarjetas, ficha de detalle, descripción completa, resumen sticky y compartir.
-
-En mobile, preservar drawer, backdrop, gestos de arrastre, resistencia, rebote, animaciones de entrada/salida y `prefers-reduced-motion`; no recalibrar curvas ni duraciones sin evidencia. Mantener áreas táctiles cómodas (objetivo 44 px cuando aplique) sin aumentar artificialmente la separación. Revisar las referencias de UX Motion de Deportes antes de cambiar interacciones.
 
 ## React, TypeScript y accesibilidad
 Componentes PascalCase; hooks `useCamelCase`; funciones y variables camelCase; tipos PascalCase. Props explícitas y estrechas; evitar `any`, efectos innecesarios, estado derivable duplicado y memoización sin justificación. Limpiar listeners, timers y bloqueos de scroll.
@@ -59,4 +53,4 @@ Usar HTML semántico, controles nativos, etiquetas accesibles, foco visible y te
 Para pruebas de navegador, instalar Chromium mediante `npx playwright install chromium` cuando el entorno lo requiera. La existencia de un script no demuestra que haya pasado. Nunca publicar mediante `build:pages` o workflows sin revisar el efecto sobre producción.
 
 ## Antes de entregar
-Resumir cambios por responsabilidad, rutas y API preservadas, duplicaciones realmente eliminadas, tests ejecutados con sus resultados, pruebas no ejecutadas, riesgos, commits y enlace al PR. No hacer merge automático.
+Resumir cambios, rutas preservadas, tests ejecutados con sus resultados, pruebas no ejecutadas, riesgos, commits y enlace al PR. No hacer merge automático.
