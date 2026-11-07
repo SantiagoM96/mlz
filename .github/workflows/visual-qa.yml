@@ -6,6 +6,23 @@ on:
     branches: [main]
   push:
     branches: [main]
+    # PRs conservan cobertura completa; push a main ejecuta E2E solo si afecta a la web.
+    paths:
+      - 'src/**'
+      - 'public/assets/**'
+      - 'public/bae/**'
+      - 'public/prototipos/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'playwright.config.ts'
+      - 'playwright.parity.config.ts'
+      - 'tsconfig*.json'
+      - 'eslint.config.js'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
@@ -30,8 +47,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
       - name: Instalar dependencias
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Instalar Chromium y librerías del sistema
         run: npx playwright install --with-deps chromium
       - name: Verificar el build

@@ -1,15 +1,9 @@
 name: Validación enfocada — Motion Agenda
 
+# La suite E2E general ya incluye motion-smoke.spec.ts en las cuatro resoluciones.
+# Mantener este workflow solo para diagnósticos rápidos solicitados manualmente.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'src/components/agenda/**'
-      - 'src/pages/agenda/**'
-      - 'src/styles/globals.css'
-      - 'tests/e2e/motion-smoke.spec.ts'
-      - '.github/workflows/motion-smoke.yml'
 
 permissions:
   contents: read
@@ -24,8 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
       - name: Instalar dependencias
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
       - name: Compilar

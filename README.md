@@ -12,7 +12,7 @@ Frontend multipágina de **MLZ / Municipio de Lomas de Zamora**, desarrollado co
 ## Desarrollo local
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -33,7 +33,7 @@ Vite inicia normalmente en `http://localhost:5173`. Para comprobar el proyecto:
 
 Instalar el navegador antes de ejecutar pruebas en un entorno nuevo: `npx playwright install chromium` (en Linux puede requerir `--with-deps`). Playwright arranca un servidor Vite de pruebas salvo que se configure `PLAYWRIGHT_BASE_URL`. Los proyectos incluyen **1415, 768, 432 y 390 px**; los reportes se guardan en `test-results/` y `playwright-report/`.
 
-Los workflows de GitHub Actions ejecutan TypeScript, ESLint, build y Playwright en los pull requests. Su existencia no reemplaza la comprobación de los resultados de una ejecución concreta.
+Los workflows de GitHub Actions instalan dependencias mediante `npm ci` y el `package-lock.json` versionado, para obtener resoluciones reproducibles. En cada pull request se comprueban TypeScript, ESLint, build y Playwright; los pushes a `main` ejecutan la suite E2E solo cuando cambian archivos relevantes. `Motion Agenda` queda disponible como prueba manual enfocada porque sus casos ya se ejecutan en la suite E2E general. GitHub Pages sigue publicando automáticamente el **preview**, después de validar prototipos, lint y build, pero esa publicación no espera la batería E2E completa. Consultar `docs/ci-cd.md` para más detalles y límites de los checks.
 
 ## Rutas públicas
 
