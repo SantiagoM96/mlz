@@ -1,12 +1,19 @@
-/* Borde hover limpio: CSS dashed nativo, sin rasterizado SVG ni escalado de guiones. */
+/* Borde hover de 5 px de guion y 3 px de espacio, con grosor constante de 1 px. */
 .preview .canvas-stage{position:relative}
 .preview .photo-hover-border{
  position:absolute;top:var(--hover-inset,18px);left:var(--hover-inset,18px);
  right:var(--hover-inset,18px);
  height:calc(var(--photo-height,60%) - 2 * var(--hover-inset,18px));
  z-index:2;pointer-events:none;opacity:0;
- border:1px dashed #41464e;border-radius:var(--hover-radius,6px);
+ border:0;
  transition:opacity .15s ease;
+}
+.preview .photo-hover-outline{display:block;width:100%;height:100%;overflow:visible}
+.preview .photo-hover-outline-rect{
+ fill:none;stroke:#41464e;stroke-width:1;stroke-dasharray:5 3;
+ stroke-linecap:butt;vector-effect:non-scaling-stroke;
+ width:calc(100% - 1px);height:calc(100% - 1px);
+ rx:var(--hover-radius,6px);
 }
 .preview .canvas-stage:has(.photo-dropzone:hover) .photo-hover-border,
 .preview .canvas-stage:has(.photo-dropzone:focus-visible) .photo-hover-border,
