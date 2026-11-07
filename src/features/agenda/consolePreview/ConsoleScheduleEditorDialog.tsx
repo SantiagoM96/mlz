@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { MaterialIcon } from '../../../components/ui/MaterialIcon';
 import { ConsoleVenueSelector } from './ConsoleVenueSelector';
 import { ConsoleScheduleDateFields } from './ConsoleScheduleDateFields';
@@ -6,7 +6,7 @@ import { ConsoleScheduleAdditionalFields } from './ConsoleScheduleAdditionalFiel
 import { useConsoleDialogFocus } from './useConsoleDialogFocus';
 import type { ConsoleSchedule, ConsoleVenue } from './model';
 
-import { normalizeConsoleSchedule, validateConsoleSchedule } from './scheduleEditorRules';
+import { normalizeConsoleSchedule, getConsoleScheduleValidationIssue, type ConsoleScheduleValidationIssue } from './scheduleEditorRules';
 
 interface Props {
   schedule: ConsoleSchedule;
@@ -23,24 +23,41 @@ export function ConsoleScheduleEditorDialog({
   schedule, mode, schedules, venues, onCreateVenue, onSave, onClose,
 }: Props) {
   const [value, setValue] = useState<ConsoleSchedule>(() => ({ ...schedule, weekdays: [...schedule.weekdays] }));
-  const [error, setError] = useState('');
+  const [validationIssue, setValidationIssue] = useState<ConsoleScheduleValidationIssue | null>(null);
   const firstRef = useRef<HTMLSelectElement>(null);
   const panelRef = useRef<HTMLElement>(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
   const update = (changes: Partial<ConsoleSchedule>) => {
     setValue(current => ({ ...current, ...changes }));
-    setError('');
+    setValidationIssue(null);
   };
 
   const { onKeyDown } = useConsoleDialogFocus({
     panelRef, initialFocusRef: firstRef, onClose,
   });
 
+  useEffect(() => {
+    if (!validationIssue) return;
+    const selectors: Record<ConsoleScheduleValidationIssue['field'], string> = {
+      startDate: '#console-schedule-start',
+      startTime: '#console-schedule-start-time',
+      endDate: '#console-schedule-end',
+      weekdays: '#console-schedule-weekdays',
+      endTime: '#console-schedule-end-time',
+      schedule: '#console-schedule-error',
+    };
+    const target = validationIssue.field === 'schedule'
+      ? errorRef.current
+      : panelRef.current?.querySelector<HTMLElement>(selectors[validationIssue.field]);
+    target?.focus();
+  }, [validationIssue]);
+
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalized = normalizeConsoleSchedule(value);
-    const validationError = validateConsoleSchedule(normalized, schedules);
-    if (validationError) {
-      setError(validationError);
+    const issue = getConsoleScheduleValidationIssue(normalized, schedules);
+    if (issue) {
+      setValidationIssue(issue);
       return;
     }
     onSave(normalized);
@@ -75,6 +92,7 @@ export function ConsoleScheduleEditorDialog({
             value={value}
             onScheduleChange={update}
             selectRef={firstRef}
+            invalidField={validationIssue?.field}
           />
           <ConsoleVenueSelector
             venueId={value.venueId}
@@ -86,7 +104,7 @@ export function ConsoleScheduleEditorDialog({
             value={value}
             onScheduleChange={update}
           />
-          {error && <p role="alert" data-testid="console-schedule-error" className="rounded-[6px] bg-[#fff1f2] p-3 text-[14px] font-medium text-[#9d2936]">{error}</p>}
+          {validationIssue && <p ref={errorRef} id="console-schedule-error" tabIndex={-1} role="alert" data-testid="console-schedule-error" className="rounded-[6px] bg-[#fff1f2] p-3 text-[14px] font-medium text-[#9d2936]">{validationIssue.message}</p>}
         </form>
         <footer className="z-10 flex shrink-0 flex-wrap justify-end gap-3 border-t border-[#d4e2eb] bg-white px-4 py-4 sm:px-6">
           <button type="button" onClick={onClose}
