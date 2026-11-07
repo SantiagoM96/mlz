@@ -25,21 +25,56 @@
 .editor-panel #formatUppercase .material-icons{font-size:20px}
 .editor-panel #formatUppercase .uppercase-label{font-size:10px;font-weight:800;letter-spacing:-.6px;position:absolute;right:3px;bottom:2px}
 .editor-panel #formatUppercase[aria-pressed=true]{background:#ed0000;border-color:#ed0000;color:#fff}
-</style></head><body><header><div class="site-container header-inner"><span class="header-title">Generador de posteos Crónica</span></div></header><main><aside class="editor-panel"><section class="panel-group carousel-panel" aria-label="Páginas del carrusel"><h2>Páginas del carrusel</h2><p class="carousel-intro">Editá cada placa por separado. La primera siempre es la portada.</p><p class="carousel-current" id="pageIndicator" role="status" aria-live="polite">Página 1 de 1 · Portada</p><div class="carousel-pages" id="carouselPages" role="group" aria-label="Seleccionar página"></div><div class="carousel-actions"><button type="button" id="addPage"><span class="material-icons" aria-hidden="true">add</span> Agregar página</button><button type="button" id="removePage" class="remove-page" disabled><span class="material-icons" aria-hidden="true">delete_outline</span> Eliminar página</button></div></section>
+
+/* Navegación compacta del carrusel */
+.editor-panel .carousel-panel{padding:12px 13px!important;margin:0 0 18px!important;border-radius:9px}
+.carousel-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.carousel-heading h2{margin:0!important;font-size:12px}
+.carousel-heading .carousel-current{margin:0;font-size:11px;white-space:nowrap}
+.carousel-compact-row{display:flex;align-items:center;gap:9px;min-width:0}
+.editor-panel .carousel-pages{display:flex;flex:1;flex-wrap:wrap;align-items:center;gap:5px;min-width:0;margin:0}
+.editor-panel .carousel-pages button{flex:0 0 auto;display:inline-flex;justify-content:center;align-items:center;min-height:32px!important;height:32px;width:32px;padding:0!important;border-radius:7px;font-size:13px;line-height:1}
+.editor-panel .carousel-pages button[aria-current=page]{background:#ed0000;border-color:#ed0000}
+.editor-panel .carousel-actions{display:flex;flex:0 0 auto;gap:5px;align-items:center}
+.editor-panel .carousel-actions button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;min-height:32px;padding:0;border-radius:7px}
+.editor-panel .carousel-actions button .material-icons{font-size:19px;line-height:1}
+.editor-panel .carousel-actions .remove-page{background:#363a43}
+.editor-panel .carousel-actions .remove-page:disabled{opacity:.35}
+@media(max-width:600px){.editor-panel .carousel-pages button,.editor-panel .carousel-actions button{height:36px;min-height:36px!important;width:36px;flex-basis:36px}}
+/* Formato y alineación en la misma fila */
+.editor-panel .cronica-format-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;margin-top:16px!important}
+.editor-panel .cronica-format-row .format-field{min-width:0;margin:0!important}
+.editor-panel .cronica-format-row .align-field{margin:0!important}
+.editor-panel .cronica-format-row label{display:block;margin:0 0 9px!important;white-space:nowrap}
+.editor-panel .cronica-format-row .format-buttons{display:flex;flex-wrap:nowrap;gap:0}
+.editor-panel .cronica-format-row .format-buttons button{display:flex;flex:0 0 35px;width:35px;height:38px;align-items:center;justify-content:center;padding:0;min-width:0}
+.editor-panel .cronica-format-row .format-buttons #formatUppercase,
+.editor-panel .cronica-format-row .format-buttons #formatClear{margin-left:7px;border:1px solid #4a4e56!important;border-radius:7px!important}
+.editor-panel .cronica-format-row .format-buttons #formatUppercase{position:static;min-width:35px}
+.editor-panel .cronica-format-row .format-buttons #formatUppercase[aria-pressed=true]{background:#ed0000;border-color:#ed0000!important}
+.editor-panel .cronica-format-row .align-buttons{display:flex}
+.editor-panel .cronica-format-row .align-buttons button{width:36px;height:38px}
+@media(max-width:440px){.editor-panel .cronica-format-row{grid-template-columns:1fr auto;gap:8px}.editor-panel .cronica-format-row .format-buttons button{flex-basis:31px;width:31px}.editor-panel .cronica-format-row .format-buttons #formatUppercase,.editor-panel .cronica-format-row .format-buttons #formatClear{min-width:31px;margin-left:5px}.editor-panel .cronica-format-row .align-buttons button{width:31px}}
+</style></head><body><header><div class="site-container header-inner"><span class="header-title">Generador de posteos Crónica</span></div></header><main><aside class="editor-panel"><section class="panel-group carousel-panel" aria-label="Páginas del carrusel">
+<div class="carousel-heading"><h2>Páginas</h2><span id="pageIndicator" class="carousel-current" role="status" aria-live="polite">1 de 1 · Portada</span></div>
+<div class="carousel-compact-row"><div class="carousel-pages" id="carouselPages" role="group" aria-label="Seleccionar página"></div>
+<div class="carousel-actions"><button type="button" id="addPage" aria-label="Agregar página interna" title="Agregar página interna"><span class="material-icons" aria-hidden="true">add</span></button><button type="button" id="removePage" class="remove-page" disabled aria-label="Eliminar página seleccionada" title="Eliminar página"><span class="material-icons" aria-hidden="true">delete_outline</span></button></div></div>
+</section>
 <section class="panel-group"><h2>Contenido</h2>
 <div class="control-field"><label for="file">Fotografía</label><input id="file" type="file" accept="image/*"><p class="hint compact-hint">Arrastrá la foto en la vista previa para ajustar su encuadre.</p></div>
 <div class="control-field"><label class="switch-row" for="showStrap"><span>Mostrar volanta</span><span class="switch"><input id="showStrap" type="checkbox" role="switch" checked><span class="switch-track"></span></span></label></div>
 <div class="control-field" id="strapField"><label for="strapText">Texto de la volanta</label><input id="strapText" type="text" maxlength="140" value="JUEVES NEGRO EN TODO EL PAÍS: ¿QUÉ RECLAMAN?" placeholder="Escribí el texto de la volanta"><p class="hint compact-hint">Máximo una línea. El tamaño se ajusta automáticamente al ancho disponible.</p></div>
 <div class="control-field"><label for="headline">Texto principal</label><textarea id="headline">FRANCIA ESTALLA: *MILES SALEN A LAS CALLES CONTRA LOS BAJOS SALARIOS Y EL ALTO COSTO DE VIDA*</textarea></div>
 <div class="control-field size-field"><label for="size">Tamaño de tipografía: <output id="sizeLabel">64</output> px</label><input id="size" type="range" min="32" max="95" value="64"></div>
-<div class="control-field format-field"><label>Formato del texto principal</label><div class="format-buttons" role="group" aria-label="Formato del texto seleccionado">
+<div class="typography-row cronica-format-row"><div class="control-field format-field"><label>Formato de texto</label><div class="format-buttons" role="group" aria-label="Formato del texto seleccionado">
 <button type="button" id="formatAccent" title="Destacar selección (*texto*)" aria-label="Destacar selección"><span class="material-icons" aria-hidden="true">format_color_text</span></button>
 <button type="button" id="formatItalic" title="Cursiva (_texto_)" aria-label="Aplicar cursiva"><span class="material-icons" aria-hidden="true">format_italic</span></button>
 <button type="button" id="formatStrike" title="Tachado (~texto~)" aria-label="Aplicar tachado"><span class="material-icons" aria-hidden="true">strikethrough_s</span></button>
+<button type="button" id="formatUppercase" title="Mostrar todo el texto en mayúsculas" aria-label="Mostrar todo el texto en mayúsculas" aria-pressed="false"><span class="material-icons" aria-hidden="true">text_format</span></button>
 <button type="button" id="formatClear" title="Quitar formato de la selección" aria-label="Quitar formato de la selección"><span class="material-icons" aria-hidden="true">delete_outline</span></button>
-<button type="button" id="formatUppercase" title="Mostrar todo el texto en mayúsculas" aria-label="Mostrar todo el texto en mayúsculas" aria-pressed="false"><span class="material-icons" aria-hidden="true">text_fields</span><span class="uppercase-label">AA</span></button>
-</div><p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón AA activa o desactiva las mayúsculas de todo el texto sin modificar lo que escribiste.</p></div>
-<div class="control-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto principal"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div>
+</div></div>
+<div class="control-field align-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div></div>
+<p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón de mayúsculas cambia la visualización sin modificar lo escrito.</p>
 </section>
 </aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main><script>
 (function(){
@@ -89,7 +124,7 @@ function drawStrap(y,isCover){
  let size=isCover?34:32;
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
- const textWidth=ctx.measureText(content).width,barHeight=isCover?60:62;
+ const textWidth=ctx.measureText(content).width,barHeight=isCover?48:50;
  const width=isCover?Math.min(maxWidth,Math.ceil(textWidth+44)):W;
  const left=isCover?(W-width)/2:0;
  ctx.fillStyle=RED;ctx.fillRect(left,y,width,barHeight);
@@ -135,7 +170,7 @@ function render(){
   const lineHeight=()=>Math.round(size*1.09);
   function textTop(){return availableBottom-(lines.length?size*0.85+(lines.length-1)*lineHeight():0)}
   const showBar=el('showStrap').checked&&el('strapText').value.trim().length>0;
-  const barHeight=showBar?(cover?60:62):0;
+  const barHeight=showBar?(cover?48:50):0;
   const requiredGap=cover?80:80;
   while(size>32&&textTop()-(showBar?barHeight+requiredGap:80)<230){
     size-=2;lines=wrappedLines(desired,size);
@@ -145,9 +180,9 @@ function render(){
   let panelTop,barY;
   if(cover){
    panelTop=Math.max(160,top-110);
-   barY=panelTop-30;
+   barY=panelTop-24;
   }else{
-   panelTop=Math.max(160,top-80-(showBar?barHeight:0));
+   panelTop=Math.max(160,top-50-(showBar?barHeight:0));
    barY=panelTop;
   }
   const imageBottom=cover?panelTop:panelTop;
@@ -157,7 +192,7 @@ function render(){
   ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
-  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-8,W,16);
+  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-6.5,W,13);
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
   if(cover){
@@ -199,10 +234,10 @@ function renderCarouselNavigation(){
   const button=document.createElement('button');button.type='button';
   button.setAttribute('aria-current',index===activePage?'page':'false');
   button.setAttribute('aria-label',index===0?'Página 1, portada':'Página '+(index+1)+', interna');
-  button.innerHTML='<span class="material-icons" aria-hidden="true">'+(index===0?'web':'article')+'</span><span class="page-name">'+(index===0?'1 · Portada':(index+1)+' · Interna')+'</span>';
+  button.textContent=String(index+1);
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
- el('pageIndicator').textContent='Página '+(activePage+1)+' de '+carouselPages.length+' · '+(activePage===0?'Portada':'Interna');
+ el('pageIndicator').textContent=(activePage+1)+' de '+carouselPages.length+' · '+(activePage===0?'Portada':'Interna');
  el('removePage').disabled=activePage===0;
 }
 function selectPage(index){
