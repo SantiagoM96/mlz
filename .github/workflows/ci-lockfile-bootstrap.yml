@@ -1,0 +1,41 @@
+# Workflow temporal: se elimina del PR final después de generar package-lock.json.
+name: Bootstrap de lockfile npm
+on:
+  push:
+    branches: [chore/ci-efficient-reproducible]
+    paths:
+      - '.github/workflows/ci-lockfile-bootstrap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generar lockfile exacto a partir de package.json
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Verificar instalación reproducible
+        run: npm ci --no-audit --no-fund
+      - name: Validar compilación
+        run: npm run typecheck && npm run lint && npm run build
+      - name: Guardar lockfile en la rama de mantenimiento
+        id: commit
+        continue-on-error: true
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          git commit -m 'chore(deps): fijar árbol reproducible de npm'
+          git push origin HEAD:refs/heads/chore/ci-efficient-reproducible
+      - name: Entregar lockfile por logs si GitHub impide el push
+        if: steps.commit.outcome == 'failure'
+        run: |
+          echo 'LOCK_BEGIN'
+          base64 -w0 package-lock.json | fold -w 1200
+          echo 'LOCK_END'
