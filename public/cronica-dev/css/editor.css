@@ -81,3 +81,6 @@
 
 /* Mostrar mayúsculas en el textarea sin convertir su valor, para restaurar el caso original al desactivar. */
 .editor-panel #headline.uppercase-preview{text-transform:uppercase}
+
+/* La volanta nunca depende del botón de mayúsculas del texto principal. */
+.editor-panel #strapText{text-transform:uppercase}
