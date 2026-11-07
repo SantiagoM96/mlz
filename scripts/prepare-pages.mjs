@@ -1,48 +1,22 @@
 import { copyFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+
 const dist = join(process.cwd(), 'dist');
-const staticPaths = [
-  'jovenes-en-comunidad',
-  'agenda-de-la-comunidad',
-  'agenda-de-la-comunidad/actividades',
-  'agenda-de-la-comunidad/consola-preview',
-  'agenda-de-la-comunidad/actividades/tita-y-rhodesia',
-  'agenda-de-la-comunidad/actividades/preview-v2-yoga-dos-sedes',
-  'agenda-de-la-comunidad/actividades/preview-v2-yoga-dos-sedes--sede-plaza-grigera',
-  'agenda-de-la-comunidad/actividades/preview-v2-yoga-dos-sedes--sede-polideportivo-evita',
-  'agenda-de-la-comunidad/actividades/preview-v2-futbol--sede-plaza-grigera',
-  'agenda-de-la-comunidad/actividades/preview-v2-futbol--sede-parque-de-lomas',
-  'agenda-de-la-comunidad/actividades/preview-v2-itinerante--sede-plaza-grigera',
-  'agenda-de-la-comunidad/actividades/preview-v2-itinerante--sede-parque-de-lomas',
-  'agenda-de-la-comunidad/actividades/preview-v2-compostaje',
-  'agenda-de-la-comunidad/actividades/preview-v2-futbol',
-  'agenda-de-la-comunidad/actividades/preview-v2-muestra',
-  'agenda-de-la-comunidad/actividades/preview-v2-itinerante',
-  'agenda-de-la-comunidad/actividades/preview-v2-huerta',
-  'agenda-de-la-comunidad/actividades/preview-v2-folklore',
-  'agenda-de-la-comunidad/actividades/preview-v2-reciclaje',
-  ...Array.from({ length: 18 }, (_, i) => `agenda-de-la-comunidad/actividades/actividad-${i + 1}`),
-];
-for (const route of staticPaths) {
-  const directory = join(dist, route);
-  mkdirSync(directory, { recursive: true });
-  copyFileSync(join(dist, 'index.html'), join(directory, 'index.html'));
-}
-// BAE is a standalone HTML editor, not a React route. Publish its own index explicitly.
+
+// Vite publica los prototipos de public/: /bae/, /cronica/ y /prototipos/.
 const baeSource = join(process.cwd(), 'public', 'bae', 'index.html');
-if (!existsSync(baeSource)) throw new Error('Missing BAE standalone editor: public/bae/index.html');
+if (!existsSync(baeSource)) {
+  throw new Error('Missing BAE standalone editor: public/bae/index.html');
+}
 mkdirSync(join(dist, 'bae'), { recursive: true });
 copyFileSync(baeSource, join(dist, 'bae', 'index.html'));
-const halftoneSource = join(process.cwd(), 'public', 'bae', 'halftone-editable.svg');
-if (!existsSync(halftoneSource)) throw new Error('Missing BAE halftone SVG');
-copyFileSync(halftoneSource, join(dist, 'bae', 'halftone-editable.svg'));
-const halftone2Source = join(process.cwd(), 'public', 'bae', 'halftone-2.svg');
-if (!existsSync(halftone2Source)) throw new Error('Missing BAE second halftone SVG');
-copyFileSync(halftone2Source, join(dist, 'bae', 'halftone-2.svg'));
-const baeLogoSource = join(process.cwd(), 'public', 'bae', 'bae-negocios-logo.svg');
-if (!existsSync(baeLogoSource)) throw new Error('Missing BAE logo SVG');
-copyFileSync(baeLogoSource, join(dist, 'bae', 'bae-negocios-logo.svg'));
-console.log('BAE editor and halftone SVG published');
+
+for (const asset of ['halftone-editable.svg', 'halftone-2.svg', 'bae-negocios-logo.svg']) {
+  const source = join(process.cwd(), 'public', 'bae', asset);
+  if (!existsSync(source)) throw new Error('Missing BAE asset: ' + asset);
+  copyFileSync(source, join(dist, 'bae', asset));
+}
+
 copyFileSync(join(dist, 'index.html'), join(dist, '404.html'));
 writeFileSync(join(dist, '.nojekyll'), '');
-console.log('Rutas estáticas preparadas en GitHub Pages:', staticPaths.length);
+console.log('Prototipos estáticos preservados; Agenda y Jóvenes fuera de esta publicación.');
