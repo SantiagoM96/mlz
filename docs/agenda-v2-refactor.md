@@ -211,3 +211,28 @@ tests/e2e/                         # Characterization tests y regresiones por vi
 - Revisión de diferencias intencionales de `ActivitySummary` entre sitio y consola antes de plantear una variante compartida, sin modificar la página pública sin autorización.
 
 **Estado de integración:** PR de refactor en borrador; sin merge ni despliegue.
+
+
+## Avance P6 — comparación visual real entre base y PR
+
+### Implementación
+
+- Nuevo workflow `.github/workflows/agenda-console-parity.yml` exclusivo de pull requests a `main` con cambios relevantes de Agenda.
+- Nuevo `playwright.parity.config.ts` y suite aislada `tests/visual-parity/agenda-console-parity.spec.ts`: la suite visual **no** corre dentro del `npm run test:e2e` habitual, porque necesita su propia referencia.
+- En cada matriz se descargan dos versiones exactas: `github.event.pull_request.base.sha` y `github.event.pull_request.head.sha`. Se sirven localmente en dos puertos diferentes, con idéntica versión de Chromium, sistema operativo, fuentes, viewport y casos de prueba.
+- La primera pasada genera snapshots de **la base** usando `--update-snapshots`. La segunda compara el PR contra esas mismas imágenes mediante `toHaveScreenshot`. Los snapshots no se actualizan al comparar el PR: cualquier diferencia superior al umbral falla.
+- Umbral declarado: `maxDiffPixelRatio: 0.0005` (0,05 % de píxeles diferentes), con `animations: 'disabled'`, `caret: 'hide'` y página completa.
+- Matriz: **390, 432, 768 y 1415 px**. Se toman **20 capturas por viewport**, 80 comparaciones en total: estado inicial y siete casos seleccionables, tanto formulario como tarjetas; diálogos de edición, alta de lugar, alta de tipo y detalle de Yoga en Comunidad.
+- Referencias, capturas fallidas, diffs y reportes se conservan como artefactos GitHub Actions durante 14 días.
+- El módulo de pruebas usa IDs estables directamente, porque los módulos Vite con `import.meta.env` no deben importarse directamente en Node/Playwright. La espera de imágenes solo decodifica las ya cargadas; no bloquea en elementos ocultos o `loading=lazy`.
+
+### Evidencia y criterio de aceptación
+
+- [Comparación visual entre base y PR](https://github.com/SantiagoM96/mlz/actions/runs/42317346733): consultar el estado final de los cuatro proyectos, sin inferir aprobaciones de una ejecución parcial.
+- [QA funcional habitual](https://github.com/SantiagoM96/mlz/actions/runs/42317346783) y [TypeScript, ESLint y build](https://github.com/SantiagoM96/mlz/actions/runs/42317346738) se ejecutan por separado.
+- **Referencia técnica vs. referencia editorial:** las capturas de la base prueban que la refactorización no introduce cambios visuales significativos frente a esa versión; **no prueban** que el diseño sea el definitivo o esté aprobado por Comunicación. Todavía se necesita una referencia visual aprobada y revisión humana antes de integrar cambios que modifiquen estilos.
+- No se consultó Figma, no se tocaron las páginas públicas, no se hizo merge y no se publicó este refactor.
+
+### Próxima decisión
+
+Una vez aprobadas paridad visual 4/4 y regresiones 4/4 sobre el código final, hacer revisión humana de los diffs y del PR antes de plantear su integración. Si el código base cambia, volver a ejecutar para verificar el nuevo contrato visual y resolver diferencias deliberadas en lugar de elevar la tolerancia.
