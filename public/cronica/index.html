@@ -116,7 +116,7 @@ function drawPhoto(height){
 function render(){
  try{
   const cover=activePage===0,requestedSize=Number(el('size').value);
-  const footerBaseline=H-EDGE,footerTop=footerBaseline-27;
+  const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
   const availableBottom=cover?footerTop-50:H-EDGE;
   const desired=el('headline').value;
   let size=requestedSize,lines=wrappedLines(desired,size);
@@ -132,7 +132,7 @@ function render(){
   const top=lines.length?baselines[0]-size:availableBottom;
   let panelTop,barY;
   if(cover){
-   panelTop=Math.max(160,top-(showBar?80:80));
+   panelTop=Math.max(160,top-110);
    barY=panelTop-30;
   }else{
    panelTop=Math.max(160,top-80-(showBar?barHeight:0));
@@ -226,7 +226,7 @@ clearFormatButton.addEventListener('click',()=>{
  field.setSelectionRange(left,left+cleaned.length);
  field.focus();render();
 });
-el('file').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{image=img;zoom=1;offsetX=0;offsetY=0;render();URL.revokeObjectURL(url)};img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};img.src=url});
+el('file').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;const pageIndex=activePage,url=URL.createObjectURL(file),img=new Image();img.onload=()=>{if(pageIndex===activePage){image=img;zoom=1;offsetX=0;offsetY=0;render()}else if(carouselPages[pageIndex]){carouselPages[pageIndex].image=img;carouselPages[pageIndex].zoom=1;carouselPages[pageIndex].offsetX=0;carouselPages[pageIndex].offsetY=0}URL.revokeObjectURL(url)};img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};img.src=url});
 el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
