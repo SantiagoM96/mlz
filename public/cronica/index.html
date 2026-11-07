@@ -29,11 +29,11 @@
 </section>
 
 
-</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage"><canvas id="art" width="1080" height="1350" aria-label="Vista previa de la página seleccionada"></canvas></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1350</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main><script>
+</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main><script>
 (function(){
 'use strict';
 
-const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1350;
+const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 function parseRich(text){
@@ -246,7 +246,7 @@ el('download').addEventListener('click',()=>{
    const url=URL.createObjectURL(blob),a=document.createElement('a');
    a.href=url;a.download='Cronica-pagina-'+(activePage+1)+'.png';document.body.appendChild(a);a.click();a.remove();
    setTimeout(()=>URL.revokeObjectURL(url),30000);
-   el('status').textContent='PNG listo para descargar · 1080 × 1350 px';
+   el('status').textContent='PNG listo para descargar · 1080 × 1440 px';
   },'image/png');
  }catch(error){
   button.disabled=false;
