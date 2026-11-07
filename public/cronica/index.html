@@ -79,33 +79,31 @@
 .editor-panel #headline::-webkit-scrollbar-thumb{background:#686d76;border-radius:999px}
 .editor-panel #headline::-webkit-scrollbar-thumb:hover{background:#8e939d}
 
-/* Placeholder: zona gris uniforme en reposo, borde solo al interactuar. */
-.preview .canvas-stage{position:relative;--drop-inset:35px}
+/* Hover de fotografía: línea de 2px, guiones con remates redondos, esquinas de 16px y márgenes de 50px en la preview. */
+.preview .canvas-stage{position:relative}
+.preview .photo-hover-border{position:absolute;top:50px;left:50px;width:calc(100% - 100px);height:calc(var(--photo-height,60%) - 100px);z-index:2;pointer-events:none;overflow:visible;opacity:0;transition:opacity .15s ease}
+.preview .canvas-stage:has(.photo-dropzone:hover) .photo-hover-border,
+.preview .canvas-stage:has(.photo-dropzone:focus-visible) .photo-hover-border,
+.preview .canvas-stage.is-drag-over:has(.photo-dropzone:not([hidden])) .photo-hover-border{opacity:1}
 .preview .photo-dropzone{
- position:absolute;top:var(--drop-inset);left:var(--drop-inset);right:var(--drop-inset);
- height:calc(var(--photo-height,60%) - 2 * var(--drop-inset));min-height:60px;
- z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ position:absolute;top:0;left:0;right:0;height:var(--photo-height,60%);
+ z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
  gap:10px;padding:20px;text-align:center;cursor:pointer;color:#41464e;
- background:transparent;border:1.5px dashed transparent;
- border-radius:16px;outline:0;box-shadow:none;
- transition:border-color .15s ease;
+ background:transparent;border:0;outline:0;box-shadow:none;
 }
 .preview .photo-dropzone[hidden]{display:none!important}
+.preview .photo-dropzone:focus-visible{outline:0}
 .preview .photo-dropzone .material-icons{font-size:42px;line-height:1;color:#41464e}
 .preview .photo-dropzone-title{font-family:Inter,Arial,sans-serif;font-size:20px;font-weight:700;line-height:1.3;color:#41464e}
 .preview .photo-dropzone-description{font-family:Inter,Arial,sans-serif;font-size:14px;line-height:1.5;color:#535862;opacity:1}
-.preview .photo-dropzone:hover,.preview .photo-dropzone:focus-visible,
-.preview .canvas-stage.is-drag-over .photo-dropzone{background:transparent;border-color:rgba(65,70,78,.66);outline:0;box-shadow:none}
 .preview .canvas-stage.is-drag-over:has(.photo-dropzone[hidden])::after{
  content:'Soltá la imagen para reemplazarla';position:absolute;
- top:var(--drop-inset);left:var(--drop-inset);right:var(--drop-inset);
- height:calc(var(--photo-height,60%) - 2 * var(--drop-inset));z-index:2;
+ top:0;left:0;right:0;height:var(--photo-height,60%);z-index:2;
  display:flex;align-items:center;justify-content:center;
  background:rgba(0,0,0,.28);color:#fff;font:700 16px Inter,Arial,sans-serif;
- border:2px dashed rgba(255,255,255,.8);border-radius:16px;pointer-events:none;
+ pointer-events:none;
 }
 @media(max-width:480px){
- .preview .canvas-stage{--drop-inset:22px}
  .preview .photo-dropzone{gap:6px;padding:12px}
  .preview .photo-dropzone .material-icons{font-size:32px}
  .preview .photo-dropzone-title{font-size:16px}
@@ -174,7 +172,7 @@
 <div class="control-field align-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div></div>
 <p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón de mayúsculas cambia la visualización sin modificar lo escrito.</p>
 </section>
-</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
+</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><svg id="photoHoverSvg" class="photo-hover-border" aria-hidden="true"><rect id="photoHoverRect" x="1" y="1" width="0" height="0" rx="16" ry="16" fill="none" stroke="#41464e" stroke-width="2" stroke-dasharray="12 16" stroke-linecap="round"/></svg><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
 <div id="exportDialog" class="export-dialog-backdrop" hidden>
  <section class="export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitle" aria-describedby="exportDialogDescription">
   <button type="button" class="export-dialog-close" id="exportClose" aria-label="Cerrar ventana"><span class="material-icons" aria-hidden="true">close</span></button>
@@ -418,14 +416,22 @@ clearFormatButton.addEventListener('click',()=>{
  field.setSelectionRange(left,left+cleaned.length);
  field.focus();render();
 });
+function updateHoverBorderGeometry(){
+ const border=el('photoHoverSvg'),outline=el('photoHoverRect');
+ if(!border||!outline)return;
+ const width=border.clientWidth,height=border.clientHeight;
+ if(width<=2||height<=2)return;
+ border.setAttribute('viewBox','0 0 '+width+' '+height);
+ outline.setAttribute('width',String(width-2));
+ outline.setAttribute('height',String(height-2));
+}
+window.addEventListener('resize',updateHoverBorderGeometry);
 function updatePhotoDropzone(){
  const zone=el('photoDropzone'),stage=el('photoStage');
  if(!zone||!stage)return;
  zone.hidden=Boolean(image);
- // La altura se calcula en CSS para preservar los 35 px de margen superior e inferior.
  stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
- // El hover termina antes del borde superior de la línea roja (13 px en el lienzo).
- stage.style.setProperty('--hover-photo-height',(Math.max(0,photoBottom-6.5)/H*100)+'%');
+ updateHoverBorderGeometry();
  canvas.style.cursor=image?'grab':'default';
 }
 function loadPhoto(file){
