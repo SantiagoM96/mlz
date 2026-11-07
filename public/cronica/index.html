@@ -81,15 +81,6 @@
 
 /* Placeholder: zona gris uniforme en reposo, borde solo al interactuar. */
 .preview .canvas-stage{position:relative;--drop-inset:35px}
-.preview .canvas-stage::before{
- content:'';position:absolute;top:0;left:0;right:0;
- height:var(--hover-photo-height,60%);z-index:1;
- background:rgba(0,0,0,.11);opacity:0;
- pointer-events:none;transition:opacity .15s ease;
-}
-.preview .canvas-stage:has(.photo-dropzone:hover)::before,
-.preview .canvas-stage:has(.photo-dropzone:focus-visible)::before,
-.preview .canvas-stage.is-drag-over:has(.photo-dropzone:not([hidden]))::before{opacity:1}
 .preview .photo-dropzone{
  position:absolute;top:var(--drop-inset);left:var(--drop-inset);right:var(--drop-inset);
  height:calc(var(--photo-height,60%) - 2 * var(--drop-inset));min-height:60px;
@@ -202,7 +193,7 @@
 'use strict';
 
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='secondary';
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='secondary',photoHover=false;
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 const LOGO_WIDTH=75*1.25,LOGO_HEIGHT=LOGO_WIDTH*191/175;
 const logoImages={},logoSources={primary:'./logos/primario.svg',secondary:'./logos/secundario.svg',white:'./logos/blanco.svg'};
@@ -284,7 +275,7 @@ function drawText(lines,size,baselines){
   }
  });
 }
-function drawPhoto(height){
+function drawPhoto(height,includeHover=true){
  photoBottom=Math.max(130,height);
  ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
  if(image){
@@ -295,9 +286,14 @@ function drawPhoto(height){
   ctx.drawImage(image,(W-iw)/2+offsetX,(photoBottom-ih)/2+offsetY,iw,ih);ctx.restore();
  }else{
   // El aviso de carga se presenta como capa HTML interactiva, fuera del PNG.
+  // La capa de hover queda bajo la línea roja y la volanta dibujadas después.
+  if(includeHover&&photoHover){
+   ctx.fillStyle='rgba(0,0,0,.11)';
+   ctx.fillRect(0,0,W,photoBottom);
+  }
  }
 }
-function render(){
+function render(includeHover=true){
  try{
   const cover=activePage===0,requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
@@ -327,7 +323,7 @@ function render(){
   const imageBottom=cover?panelTop:panelTop;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  drawPhoto(imageBottom);
+  drawPhoto(imageBottom,includeHover);
   drawBrandLogo();
   ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
@@ -434,6 +430,7 @@ function updatePhotoDropzone(){
 }
 function loadPhoto(file){
  if(!file)return;
+ setPhotoHover(false);
  if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
  const pageIndex=activePage,url=URL.createObjectURL(file),img=new Image();
  img.onload=()=>{
@@ -446,6 +443,15 @@ function loadPhoto(file){
 }
 el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value=''});
 const photoZone=el('photoDropzone'),photoStage=el('photoStage');
+function setPhotoHover(active){
+ if(photoHover===active)return;
+ photoHover=active;
+ if(!image)render();
+}
+photoZone.addEventListener('pointerenter',()=>setPhotoHover(true));
+photoZone.addEventListener('pointerleave',()=>setPhotoHover(false));
+photoZone.addEventListener('focus',()=>setPhotoHover(true));
+photoZone.addEventListener('blur',()=>setPhotoHover(false));
 photoZone.addEventListener('click',()=>el('file').click());
 photoZone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();el('file').click()}});
 function isImageDrag(event){
@@ -456,10 +462,10 @@ function isOverPhoto(event){
  const r=photoStage.getBoundingClientRect();
  return event.clientY>=r.top&&event.clientY<=r.top+r.height*(photoBottom/H);
 }
-photoStage.addEventListener('dragenter',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();photoStage.classList.add('is-drag-over')}});
-photoStage.addEventListener('dragover',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();event.dataTransfer.dropEffect='copy';photoStage.classList.add('is-drag-over')}else photoStage.classList.remove('is-drag-over')});
-photoStage.addEventListener('dragleave',event=>{if(!photoStage.contains(event.relatedTarget))photoStage.classList.remove('is-drag-over')});
-photoStage.addEventListener('drop',event=>{photoStage.classList.remove('is-drag-over');if(!isOverPhoto(event))return;event.preventDefault();loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0])});
+photoStage.addEventListener('dragenter',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();photoStage.classList.add('is-drag-over');setPhotoHover(true)}});
+photoStage.addEventListener('dragover',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();event.dataTransfer.dropEffect='copy';photoStage.classList.add('is-drag-over');setPhotoHover(true)}else{photoStage.classList.remove('is-drag-over');setPhotoHover(false)}});
+photoStage.addEventListener('dragleave',event=>{if(!photoStage.contains(event.relatedTarget)){photoStage.classList.remove('is-drag-over');setPhotoHover(false)}});
+photoStage.addEventListener('drop',event=>{photoStage.classList.remove('is-drag-over');setPhotoHover(false);if(!isOverPhoto(event))return;event.preventDefault();loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0])});
 el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
@@ -536,7 +542,7 @@ async function runExport(all){
    const count=carouselPages.length,files=[];
    for(let i=0;i<count;i++){
     feedback.textContent='Preparando imagen '+(i+1)+' de '+count+'...';
-    activePage=i;loadPage(carouselPages[i]);render();
+    activePage=i;loadPage(carouselPages[i]);render(false);
     const blob=await pngBlob();
     files.push({
      name:'Cronica-pagina-'+String(i+1).padStart(2,'0')+'_'+(i===0?timestamp:exportTimestamp(i))+'.png',
@@ -550,7 +556,7 @@ async function runExport(all){
    for(const file of files)saveDownloadedBlob(file.blob,file.name);
    el('status').textContent='Se iniciaron '+count+' descargas PNG individuales · 1080 × 1440 px. Si faltan archivos, permití las descargas múltiples en el navegador.';
   }else{
-   render();
+   render(false);
    const blob=await pngBlob();
    saveDownloadedBlob(blob,'Cronica-pagina-'+String(originalIndex+1).padStart(2,'0')+'_'+timestamp+'.png');
    el('status').textContent='PNG de página '+(originalIndex+1)+' listo para descargar · 1080 × 1440 px';
