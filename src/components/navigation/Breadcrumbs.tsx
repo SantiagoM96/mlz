@@ -31,7 +31,7 @@ export function Breadcrumbs({ items, className = '', mobileParentOnly = false }:
       {mobileParentOnly && items.length > 1 && (
         <div className="flex min-w-0 items-center sm:hidden">
           <Link
-            to={items[items.length - 2]?.to ?? '/agenda-de-la-comunidad/actividades'}
+            to={items[items.length - 2]?.to ?? '/'}
             className={`inline-flex min-w-0 items-center gap-2 rounded-sm font-medium ${linkColor}
               focus-visible:outline-2 focus-visible:outline-primary-600`}
             aria-label={'Volver a ' + items[items.length - 2]?.label}

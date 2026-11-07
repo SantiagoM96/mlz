@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PageContainer } from '../layout/PageContainer';
 import { MaterialIcon } from '../ui/MaterialIcon';
 
@@ -12,7 +12,6 @@ const desktopMenu = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
 
   const logoMunicipio = import.meta.env.BASE_URL + 'assets/logo-municipio-blanco.svg';
   const logoComunidad = import.meta.env.BASE_URL + 'assets/logo-comunidad-blanco.svg';
@@ -94,22 +93,6 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
             >
               Inicio
-            </Link>
-            <Link
-              to="/agenda-de-la-comunidad"
-              aria-current={location.pathname.endsWith('/agenda-de-la-comunidad') ? 'page' : undefined}
-              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
-              onClick={() => setOpen(false)}
-            >
-              Agenda de la Comunidad
-            </Link>
-            <Link
-              to="/jovenes-en-comunidad"
-              aria-current={location.pathname.endsWith('/jovenes-en-comunidad') ? 'page' : undefined}
-              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
-              onClick={() => setOpen(false)}
-            >
-              Jóvenes en Comunidad
             </Link>
             <p className="px-3 pt-3 text-sm text-white/75">
               Próximamente: Gestión, Trámites y Turnos
