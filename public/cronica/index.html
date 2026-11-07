@@ -172,7 +172,7 @@
 <div class="control-field align-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div></div>
 <p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón de mayúsculas cambia la visualización sin modificar lo escrito.</p>
 </section>
-</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><svg id="photoHoverSvg" class="photo-hover-border" viewBox="0 0 1080 1440" preserveAspectRatio="none" aria-hidden="true"><rect id="photoHoverRect" x="50" y="50" width="980" height="600" rx="16" ry="16" fill="none" stroke="#41464e" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-dasharray="7 12" stroke-linecap="round"/></svg><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
+</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><svg id="photoHoverSvg" class="photo-hover-border" viewBox="0 0 1080 1440" preserveAspectRatio="none" aria-hidden="true"><rect id="photoHoverRect" x="50" y="50" width="980" height="600" rx="16" ry="16" fill="none" stroke="#41464e" stroke-width="1" vector-effect="non-scaling-stroke" stroke-dasharray="7 5" stroke-linecap="round"/></svg><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
 <div id="exportDialog" class="export-dialog-backdrop" hidden>
  <section class="export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitle" aria-describedby="exportDialogDescription">
   <button type="button" class="export-dialog-close" id="exportClose" aria-label="Cerrar ventana"><span class="material-icons" aria-hidden="true">close</span></button>
@@ -251,7 +251,7 @@ function drawStrap(y,isCover){
  let size=isCover?34:32;
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
- const textWidth=ctx.measureText(content).width,barHeight=isCover?48:50;
+ const textWidth=ctx.measureText(content).width,barHeight=isCover?52:50;
  const width=isCover?Math.min(maxWidth,Math.ceil(textWidth+44)):W;
  const left=isCover?(W-width)/2:0;
  ctx.fillStyle=RED;ctx.fillRect(left,y,width,barHeight);
@@ -301,7 +301,7 @@ function render(includeHover=true){
   const lineHeight=()=>Math.round(size*1.09);
   function textTop(){return availableBottom-(lines.length?size*0.85+(lines.length-1)*lineHeight():0)}
   const showBar=el('showStrap').checked;
-  const barHeight=showBar?(cover?48:50):0;
+  const barHeight=showBar?(cover?52:50):0;
   const requiredGap=cover?80:80;
   while(size>32&&textTop()-(showBar?barHeight+requiredGap:80)<230){
     size-=2;lines=wrappedLines(desired,size);
@@ -312,8 +312,8 @@ function render(includeHover=true){
   if(cover){
    // La distancia desde el borde inferior de la volanta hasta el texto es 50 px.
    // Sin volanta, se mide desde el borde inferior de la línea roja de 13 px.
-   panelTop=Math.max(160,top-(showBar?74:56.5));
-   barY=panelTop-24;
+   panelTop=Math.max(160,top-(showBar?76:56.5));
+   barY=panelTop-26;
   }else{
    panelTop=Math.max(160,top-50-(showBar?barHeight:0));
    barY=panelTop;
