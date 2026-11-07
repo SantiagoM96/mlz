@@ -86,32 +86,32 @@
 .editor-panel #strapText{text-transform:uppercase}
 
 /* Ayudas contextuales del editor: burbuja con flecha en hover, foco y toque. */
-.editor-panel .help-label-row{display:flex;align-items:center;gap:6px;min-height:21px;margin:0 0 7px}
-.editor-panel .help-label-row>label{margin:0;line-height:1.35;font-weight:600}
+.editor-panel .help-label-row{display:flex;align-items:center;gap:5px;min-height:20px;margin:0 0 7px}
+.editor-panel .help-label-row>label{display:flex;align-items:center;margin:0;line-height:1.35;font-weight:600}
 .editor-panel .help-trigger{position:relative;display:inline-flex;align-items:center;flex:none;z-index:10}
 .editor-panel .help-trigger:has(.help-button[aria-expanded="true"]){z-index:20}
 .editor-panel .help-button{
  display:inline-flex;align-items:center;justify-content:center;
- width:21px;height:21px;min-width:21px;padding:0;border:0;border-radius:50%;
+ width:18px;height:18px;min-width:18px;padding:0;border:0;border-radius:50%;
  background:transparent;color:#aeb4bf;cursor:help;
 }
 .editor-panel .help-button:hover,.editor-panel .help-button:focus-visible,
 .editor-panel .help-button[aria-expanded="true"]{color:#f4f4f4;background:#34383e}
 .editor-panel .help-button:focus-visible{outline:2px solid #ed0000;outline-offset:2px}
-.editor-panel .help-button .material-icons{font-size:17px;line-height:1}
+.editor-panel .help-button .material-icons{font-size:14px;line-height:1}
 .editor-panel .help-tooltip{
- position:absolute;left:50%;top:calc(100% + 12px);
+ position:absolute;left:calc(100% + 12px);top:50%;
  width:260px;max-width:calc(100vw - 48px);padding:11px 13px;
- transform:translateX(-50%);border:1px solid #525762;border-radius:8px;
+ transform:translateY(-50%);border:1px solid #525762;border-radius:8px;
  background:#34383e;color:#f4f4f4;font-size:12px;line-height:1.5;
  font-weight:400;text-align:left;box-shadow:0 8px 24px #0007;
  opacity:0;visibility:hidden;pointer-events:none;
  transition:opacity .12s ease,visibility .12s ease;
 }
 .editor-panel .help-tooltip::before{
- content:"";position:absolute;left:50%;top:-6px;width:10px;height:10px;
- transform:translateX(-50%) rotate(45deg);
- background:#34383e;border-left:1px solid #525762;border-top:1px solid #525762;
+ content:"";position:absolute;left:-6px;top:50%;width:10px;height:10px;
+ transform:translateY(-50%) rotate(45deg);
+ background:#34383e;border-left:1px solid #525762;border-bottom:1px solid #525762;
 }
 .editor-panel .help-trigger:hover .help-tooltip,
 .editor-panel .help-trigger:focus-within .help-tooltip,
