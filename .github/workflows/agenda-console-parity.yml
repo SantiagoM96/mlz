@@ -1,0 +1,105 @@
+name: Paridad visual — Consola Agenda V2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/agenda-console-parity.yml'
+      - 'tests/e2e/agenda-console-parity.spec.ts'
+      - 'src/pages/agenda/**'
+      - 'src/features/agenda/**'
+      - 'src/components/agenda/**'
+      - 'src/data/agenda**'
+      - 'src/styles/**'
+      - 'package.json'
+      - 'playwright.config.ts'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agenda-parity-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    # No se requieren permisos de escritura ni secretos para capturas visuales.
+    name: Paridad con main — ${{ matrix.project }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-1415, mobile-432, mobile-390, tablet-768]
+    steps:
+      - name: Checkout del código candidato (PR)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+
+      - name: Checkout de la referencia (main actual)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar candidato
+        working-directory: candidate
+        run: npm install --no-audit --no-fund
+
+      - name: Instalar referencia
+        working-directory: baseline
+        run: npm install --no-audit --no-fund
+
+      - name: Instalar Chromium
+        working-directory: candidate
+        run: npx playwright install --with-deps chromium
+
+      - name: Iniciar referencia y candidato
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npm --prefix baseline run dev -- --host 127.0.0.1 --port 4174 --strictPort > baseline-server.log 2>&1 &
+          nohup npm --prefix candidate run dev -- --host 127.0.0.1 --port 4173 --strictPort > candidate-server.log 2>&1 &
+          for attempt in {1..90}; do
+            if curl --fail --silent --output /dev/null http://127.0.0.1:4174/agenda-de-la-comunidad/consola-preview \
+              && curl --fail --silent --output /dev/null http://127.0.0.1:4173/agenda-de-la-comunidad/consola-preview; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat baseline-server.log candidate-server.log
+          exit 1
+
+      - name: Generar referencia temporal desde main
+        working-directory: candidate
+        env:
+          CI: 'true'
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:4174
+        run: npx playwright test tests/e2e/agenda-console-parity.spec.ts --project=${{ matrix.project }} --update-snapshots --retries=0
+
+      - name: Comparar visualmente el PR con main
+        working-directory: candidate
+        env:
+          CI: 'true'
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:4173
+        run: npx playwright test tests/e2e/agenda-console-parity.spec.ts --project=${{ matrix.project }} --retries=0
+
+      - name: Conservar capturas, diferencias y logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agenda-parity-${{ matrix.project }}
+          path: |
+            candidate/tests/e2e/agenda-console-parity.spec.ts-snapshots/
+            candidate/test-results/
+            candidate/playwright-report/
+            baseline-server.log
+            candidate-server.log
+          if-no-files-found: warn
+          retention-days: 14
