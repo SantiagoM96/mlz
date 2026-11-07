@@ -496,7 +496,11 @@ function closeExportDialog(){
  document.body.style.overflow='';
  if(exportLastFocus&&exportLastFocus.isConnected)exportLastFocus.focus();
 }
-exportTrigger.addEventListener('click',showExportDialog);
+exportTrigger.addEventListener('click',()=>{
+ // Si el carrusel tiene una sola página, descargar el PNG sin abrir el diálogo.
+ if(carouselPages.length===1){runExport(false);return}
+ showExportDialog();
+});
 el('exportClose').addEventListener('click',closeExportDialog);
 exportDialog.addEventListener('click',event=>{if(event.target===exportDialog)closeExportDialog()});
 exportDialog.addEventListener('keydown',event=>{
