@@ -45,7 +45,7 @@ const base=Math.max(W/image.width,photoBottom/image.height),scale=base*zoom,iw=i
 const maxX=Math.max(0,(iw-W)/2),maxY=Math.max(0,(ih-photoBottom)/2);
 offsetX=Math.max(-maxX,Math.min(maxX,offsetX));offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
 ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(image,(W-iw)/2+offsetX,(photoBottom-ih)/2+offsetY,iw,ih);ctx.restore();
-}else if(!importingArticle){ctx.fillStyle='#343a40';ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('Cargá una fotografía',W/2,photoBottom/2);ctx.textAlign='left'}
+} // El aviso de carga es HTML interactivo, no forma parte del PNG.
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
 ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';halftoneCtx.drawImage(halftone,0,0,1080,1235.84);halftoneCtx.globalCompositeOperation='source-in';halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';halftoneCtx.fillRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
@@ -64,7 +64,7 @@ for(let i=0;i<lines.length;i++){
  }
 }
 ctx.fillStyle=colors.text;ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('baenegocios.com',W/2,footerBaseline);ctx.textAlign='left';
-const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
+const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 }
 // Algunos navegadores restauran el valor anterior del slider aunque el HTML diga 5.
@@ -90,7 +90,52 @@ document.querySelectorAll('.texture-option').forEach(button=>button.addEventList
 // Selector accesible de variante, sin librerías externas.
 const themeSwatches=[...document.querySelectorAll('.theme-swatch')];themeSwatches.forEach(button=>button.addEventListener('click',()=>{el('theme').value=button.dataset.theme;themeSwatches.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));el('theme').dispatchEvent(new Event('change',{bubbles:true}))}));
 el('theme').addEventListener('change',render);
-el('file').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{image=img;zoom=1;offsetX=0;offsetY=0;render();URL.revokeObjectURL(url)};img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};img.src=url});
+function updatePhotoStage(){
+ const stage=el('photoStage'),zone=el('photoDropzone');if(!stage||!zone)return;
+ stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
+ const scale=stage.getBoundingClientRect().width/W;
+ stage.style.setProperty('--hover-inset',(50*scale)+'px');
+ stage.style.setProperty('--hover-radius',(16*scale)+'px');
+ zone.hidden=Boolean(image)||importingArticle;
+ canvas.style.cursor=image?'grab':'default';
+}
+window.addEventListener('resize',updatePhotoStage);
+function loadPhoto(file){
+ if(!file)return;
+ if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{image=img;zoom=1;offsetX=0;offsetY=0;render();URL.revokeObjectURL(url)};
+ img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
+ img.src=url;
+}
+el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value=''});
+const photoStage=el('photoStage'),photoZone=el('photoDropzone');
+photoZone.addEventListener('click',()=>el('file').click());
+photoZone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();el('file').click()}});
+function isImageDrag(event){
+ const dt=event.dataTransfer;
+ return Boolean(dt&&([...dt.types].includes('Files')||[...dt.items||[]].some(item=>item.kind==='file'&&item.type.startsWith('image/'))));
+}
+function isOverPhoto(event){
+ const r=photoStage.getBoundingClientRect();
+ return event.clientY>=r.top&&event.clientY<=r.top+r.height*(photoBottom/H);
+}
+photoStage.addEventListener('dragenter',event=>{
+ if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();photoStage.classList.add('is-drag-over')}
+});
+photoStage.addEventListener('dragover',event=>{
+ if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();event.dataTransfer.dropEffect='copy';photoStage.classList.add('is-drag-over')}
+ else photoStage.classList.remove('is-drag-over');
+});
+photoStage.addEventListener('dragleave',event=>{
+ if(!photoStage.contains(event.relatedTarget))photoStage.classList.remove('is-drag-over');
+});
+photoStage.addEventListener('drop',event=>{
+ photoStage.classList.remove('is-drag-over');
+ if(!isImageDrag(event)||!isOverPhoto(event))return;
+ event.preventDefault();
+ loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0]);
+});
 el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
@@ -101,7 +146,7 @@ el('clearAll').addEventListener('click',()=>{
  el('theme').value='dark';document.querySelectorAll('.theme-swatch').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.theme==='dark')));
  el('size').value='70';el('dots').value='5';textAlignment='left';
  el('alignLeft').setAttribute('aria-pressed','true');el('alignCenter').setAttribute('aria-pressed','false');
- image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;
+ image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de BAE Negocios.';
  render();
 });
@@ -124,5 +169,39 @@ el('download').addEventListener('click',()=>{
   el('status').textContent=error.name==='SecurityError'?'La fotografía importada bloquea la exportación. Volvé a importar la URL o cargá la foto manualmente.':'No se pudo exportar: '+error.message;
  }
 });
+// Tooltips: ajustar ancho dentro del panel; hover, teclado, toque y Escape.
+function sizeHelpTooltips(){
+ const panel=document.querySelector('.editor-panel');if(!panel)return;
+ const rightLimit=panel.getBoundingClientRect().right-12;
+ document.querySelectorAll('.help-trigger').forEach(trigger=>{
+  const button=trigger.querySelector('.help-button');
+  const space=Math.floor(rightLimit-button.getBoundingClientRect().right-12);
+  trigger.style.setProperty('--help-available-width',Math.max(85,space)+'px');
+ });
+}
+window.addEventListener('resize',sizeHelpTooltips);
+document.querySelectorAll('.help-trigger').forEach(trigger=>{
+ trigger.addEventListener('pointerenter',sizeHelpTooltips);
+ trigger.addEventListener('focusin',sizeHelpTooltips);
+ const button=trigger.querySelector('.help-button');
+ button.addEventListener('click',event=>{
+  event.stopPropagation();
+  const open=!trigger.classList.contains('is-open');
+  document.querySelectorAll('.help-trigger').forEach(other=>{
+   other.classList.remove('is-open');other.querySelector('.help-button').setAttribute('aria-expanded','false');
+  });
+  trigger.classList.toggle('is-open',open);
+  button.setAttribute('aria-expanded',String(open));
+ });
+});
+function closeHelpTooltips(){
+ document.querySelectorAll('.help-trigger.is-open').forEach(trigger=>{
+  trigger.classList.remove('is-open');
+  trigger.querySelector('.help-button').setAttribute('aria-expanded','false');
+ });
+}
+document.addEventListener('click',event=>{if(!event.target.closest('.help-trigger'))closeHelpTooltips()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closeHelpTooltips()});
+sizeHelpTooltips();
 window.BAEEditor={setImporting(active){importingArticle=active;render()},setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
 })();
