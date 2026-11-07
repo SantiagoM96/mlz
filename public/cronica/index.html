@@ -67,6 +67,13 @@
 .editor-panel .carousel-actions{align-self:flex-start;position:relative;top:0}
 /* No proyectar sombra del canvas hacia los botones: borde tenue sin sombra exterior. */
 .preview .canvas-stage canvas{box-shadow:none!important;outline:1px solid rgba(255,255,255,.09);outline-offset:0}
+
+/* Scrollbar discreta para el campo de texto principal. */
+.editor-panel #headline{scrollbar-width:thin;scrollbar-color:#686d76 #292c32}
+.editor-panel #headline::-webkit-scrollbar{width:6px}
+.editor-panel #headline::-webkit-scrollbar-track{background:transparent}
+.editor-panel #headline::-webkit-scrollbar-thumb{background:#686d76;border-radius:999px}
+.editor-panel #headline::-webkit-scrollbar-thumb:hover{background:#8e939d}
 </style></head><body><header><div class="site-container header-inner"><span class="header-title">Generador de posteos Crónica</span></div></header><main><aside class="editor-panel"><section class="panel-group carousel-panel" aria-label="Páginas del carrusel">
 <div class="carousel-heading"><h2>Páginas</h2><span id="pageIndicator" class="carousel-current" role="status" aria-live="polite">1 de 1 · Portada</span></div>
 <div class="carousel-compact-row"><div class="carousel-pages" id="carouselPages" role="group" aria-label="Seleccionar página"></div>
