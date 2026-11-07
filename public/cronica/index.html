@@ -79,9 +79,16 @@
 .editor-panel #headline::-webkit-scrollbar-thumb{background:#686d76;border-radius:999px}
 .editor-panel #headline::-webkit-scrollbar-thumb:hover{background:#8e939d}
 
-/* Borde de hover: 50 px sobre el lienzo original de 1080px, trazo fino y guiones cortos. */
+/* Borde hover limpio: CSS dashed nativo, sin rasterizado SVG ni escalado de guiones. */
 .preview .canvas-stage{position:relative}
-.preview .photo-hover-border{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .15s ease}
+.preview .photo-hover-border{
+ position:absolute;top:var(--hover-inset,18px);left:var(--hover-inset,18px);
+ right:var(--hover-inset,18px);
+ height:calc(var(--photo-height,60%) - 2 * var(--hover-inset,18px));
+ z-index:2;pointer-events:none;opacity:0;
+ border:1px dashed #41464e;border-radius:var(--hover-radius,6px);
+ transition:opacity .15s ease;
+}
 .preview .canvas-stage:has(.photo-dropzone:hover) .photo-hover-border,
 .preview .canvas-stage:has(.photo-dropzone:focus-visible) .photo-hover-border,
 .preview .canvas-stage.is-drag-over:has(.photo-dropzone:not([hidden])) .photo-hover-border{opacity:1}
@@ -172,7 +179,7 @@
 <div class="control-field align-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div></div>
 <p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón de mayúsculas cambia la visualización sin modificar lo escrito.</p>
 </section>
-</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><svg id="photoHoverSvg" class="photo-hover-border" aria-hidden="true"><rect id="photoHoverRect" x="0" y="0" width="0" height="0" rx="0" ry="0" fill="none" stroke="#41464e" stroke-width="1" stroke-dasharray="5 4" stroke-linecap="round"/></svg><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
+</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><div class="photo-hover-border" aria-hidden="true"></div><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main>
 <div id="exportDialog" class="export-dialog-backdrop" hidden>
  <section class="export-dialog" role="dialog" aria-modal="true" aria-labelledby="exportDialogTitle" aria-describedby="exportDialogDescription">
   <button type="button" class="export-dialog-close" id="exportClose" aria-label="Cerrar ventana"><span class="material-icons" aria-hidden="true">close</span></button>
@@ -421,21 +428,13 @@ clearFormatButton.addEventListener('click',()=>{
  field.focus();render();
 });
 function updateHoverBorderGeometry(){
- const svg=el('photoHoverSvg'),outline=el('photoHoverRect');
- if(!svg||!outline)return;
- // El recuadro conserva márgenes de 50px y radio de 16px EN EL DISEÑO.
- // Los guiones (5px), espacios (4px) y trazo (1px) se miden EN LA PREVIEW
- // para que no queden microscópicos cuando se reduce el canvas.
- const width=svg.getBoundingClientRect().width;
- if(width<=0)return;
- const scale=width/W,fullHeight=H*scale,inset=50*scale;
- svg.setAttribute('viewBox','0 0 '+width+' '+fullHeight);
- outline.setAttribute('x',String(inset));
- outline.setAttribute('y',String(inset));
- outline.setAttribute('width',String(Math.max(0,width-2*inset)));
- outline.setAttribute('height',String(Math.max(0,photoBottom*scale-2*inset)));
- outline.setAttribute('rx',String(16*scale));
- outline.setAttribute('ry',String(16*scale));
+ const stage=el('photoStage');
+ if(!stage)return;
+ const scale=stage.getBoundingClientRect().width/W;
+ // Los márgenes y el radio se basan en el lienzo 1080px; el punteado
+ // mantiene siempre un grosor de 1 píxel en pantalla.
+ stage.style.setProperty('--hover-inset',(50*scale)+'px');
+ stage.style.setProperty('--hover-radius',(16*scale)+'px');
 }
 window.addEventListener('resize',updateHoverBorderGeometry);
 function updatePhotoDropzone(){
