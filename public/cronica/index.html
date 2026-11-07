@@ -78,6 +78,17 @@
 .editor-panel #headline::-webkit-scrollbar-track{background:transparent}
 .editor-panel #headline::-webkit-scrollbar-thumb{background:#686d76;border-radius:999px}
 .editor-panel #headline::-webkit-scrollbar-thumb:hover{background:#8e939d}
+
+/* Carga de imagen integrada en la zona fotográfica del preview. */
+.preview .canvas-stage{position:relative}
+.preview .photo-dropzone{position:absolute;inset:0 0 auto 0;height:60%;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center;cursor:pointer;color:#fff;background:transparent;transition:background .15s ease,outline-color .15s ease;outline:2px dashed transparent;outline-offset:-9px}
+.preview .photo-dropzone[hidden]{display:none!important}
+.preview .photo-dropzone .material-icons{font-size:42px;line-height:1;opacity:.92}
+.preview .photo-dropzone-title{font-family:Inter,Arial,sans-serif;font-size:20px;font-weight:700;line-height:1.3}
+.preview .photo-dropzone-description{font-family:Inter,Arial,sans-serif;font-size:14px;line-height:1.5;opacity:.83}
+.preview .photo-dropzone:hover,.preview .photo-dropzone:focus-visible{background:rgba(0,0,0,.16);outline-color:rgba(255,255,255,.65)}
+.preview .canvas-stage.is-drag-over .photo-dropzone{background:rgba(0,0,0,.35);outline-color:#fff}
+.preview .canvas-stage.is-drag-over:has(.photo-dropzone[hidden])::after{content:'Soltá la imagen para reemplazarla';position:absolute;inset:0 0 auto 0;height:var(--photo-height,60%);z-index:2;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);color:#fff;font:700 16px Inter,Arial,sans-serif;outline:2px dashed #fff;outline-offset:-9px;pointer-events:none}
 </style></head><body><header><div class="site-container header-inner"><span class="header-title">Generador de posteos Crónica</span></div></header><main><aside class="editor-panel"><section class="panel-group carousel-panel" aria-label="Páginas del carrusel">
 <div class="carousel-heading"><h2>Páginas</h2><span id="pageIndicator" class="carousel-current" role="status" aria-live="polite">1 de 1 · Portada</span></div>
 <div class="carousel-compact-row"><div class="carousel-pages" id="carouselPages" role="group" aria-label="Seleccionar página"></div>
@@ -99,7 +110,7 @@
 <div class="control-field align-field"><label>Alineación</label><div class="align-buttons" role="group" aria-label="Alineación del texto"><button id="alignLeft" type="button" aria-label="Alinear a la izquierda" title="Alinear a la izquierda" aria-pressed="true"><span class="material-icons" aria-hidden="true">format_align_left</span></button><button id="alignCenter" type="button" aria-label="Alinear al centro" title="Alinear al centro" aria-pressed="false"><span class="material-icons" aria-hidden="true">format_align_center</span></button></div></div></div>
 <p class="hint format-instructions">Seleccioná un fragmento para aplicarle formato. El botón de mayúsculas cambia la visualización sin modificar lo escrito.</p>
 </section>
-</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main><script>
+</aside><section class="preview"><div class="preview-toolbar"><div class="preview-zoom"><label for="photoZoom">Zoom</label><input id="photoZoom" type="range" min="100" max="300" step="5" value="100" aria-label="Zoom de la fotografía"><output id="zoomLabel" for="photoZoom">100 %</output></div><p class="hint preview-instructions" id="status">Vista previa activa · Arrastrá la foto para reencuadrarla.</p></div><div class="canvas-stage" id="photoStage"><canvas id="art" width="1080" height="1440" aria-label="Vista previa de la página seleccionada"></canvas><div id="photoDropzone" class="photo-dropzone" role="button" tabindex="0" aria-label="Elegir una fotografía o arrastrar una imagen para cargar"><span class="material-icons" aria-hidden="true">add_photo_alternate</span><span class="photo-dropzone-title">Agregá una fotografía</span><span class="photo-dropzone-description">Hacé clic o arrastrá una imagen acá</span></div></div><div class="preview-actions"><button id="download" class="export-button">Exportar PNG 1080 × 1440</button><button id="clearAll" type="button" class="secondary clear-button"><span class="material-icons" aria-hidden="true">restart_alt</span>Limpiar</button></div></section></main><script>
 (function(){
 'use strict';
 
@@ -179,8 +190,7 @@ function drawPhoto(height){
   ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();
   ctx.drawImage(image,(W-iw)/2+offsetX,(photoBottom-ih)/2+offsetY,iw,ih);ctx.restore();
  }else{
-  ctx.fillStyle='#343a40';ctx.font='28px Inter,Arial,sans-serif';ctx.textAlign='center';
-  ctx.fillText('Cargá una fotografía',W/2,photoBottom/2);ctx.textAlign='left';
+  // El aviso de carga se presenta como capa HTML interactiva, fuera del PNG.
  }
 }
 function render(){
@@ -227,6 +237,7 @@ function render(){
    ctx.font='54px "Material Icons"';ctx.textAlign='right';
    ctx.fillText('arrow_forward',W-EDGE,footerBaseline+8);ctx.textAlign='left';
   }
+  updatePhotoDropzone();
   el('sizeLabel').textContent=el('size').value;
   el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);
   el('status').textContent=size<requestedSize?'Texto largo: tamaño ajustado para respetar los márgenes.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
@@ -304,7 +315,42 @@ clearFormatButton.addEventListener('click',()=>{
  field.setSelectionRange(left,left+cleaned.length);
  field.focus();render();
 });
-el('file').addEventListener('change',event=>{const file=event.target.files[0];if(!file)return;const pageIndex=activePage,url=URL.createObjectURL(file),img=new Image();img.onload=()=>{if(pageIndex===activePage){image=img;zoom=1;offsetX=0;offsetY=0;render()}else if(carouselPages[pageIndex]){carouselPages[pageIndex].image=img;carouselPages[pageIndex].zoom=1;carouselPages[pageIndex].offsetX=0;carouselPages[pageIndex].offsetY=0}URL.revokeObjectURL(url)};img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};img.src=url});
+function updatePhotoDropzone(){
+ const zone=el('photoDropzone'),stage=el('photoStage');
+ if(!zone||!stage)return;
+ zone.hidden=Boolean(image);
+ zone.style.height=(photoBottom/H*100)+'%';
+ stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
+ canvas.style.cursor=image?'grab':'default';
+}
+function loadPhoto(file){
+ if(!file)return;
+ if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
+ const pageIndex=activePage,url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{
+  if(pageIndex===activePage){image=img;zoom=1;offsetX=0;offsetY=0;render()}
+  else if(carouselPages[pageIndex]){carouselPages[pageIndex].image=img;carouselPages[pageIndex].zoom=1;carouselPages[pageIndex].offsetX=0;carouselPages[pageIndex].offsetY=0}
+  URL.revokeObjectURL(url);
+ };
+ img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
+ img.src=url;
+}
+el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value=''});
+const photoZone=el('photoDropzone'),photoStage=el('photoStage');
+photoZone.addEventListener('click',()=>el('file').click());
+photoZone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();el('file').click()}});
+function isImageDrag(event){
+ const dt=event.dataTransfer;
+ return Boolean(dt&&([...dt.types].includes('Files')||[...dt.items||[]].some(item=>item.kind==='file'&&item.type.startsWith('image/'))));
+}
+function isOverPhoto(event){
+ const r=photoStage.getBoundingClientRect();
+ return event.clientY>=r.top&&event.clientY<=r.top+r.height*(photoBottom/H);
+}
+photoStage.addEventListener('dragenter',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();photoStage.classList.add('is-drag-over')}});
+photoStage.addEventListener('dragover',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();event.dataTransfer.dropEffect='copy';photoStage.classList.add('is-drag-over')}else photoStage.classList.remove('is-drag-over')});
+photoStage.addEventListener('dragleave',event=>{if(!photoStage.contains(event.relatedTarget))photoStage.classList.remove('is-drag-over')});
+photoStage.addEventListener('drop',event=>{photoStage.classList.remove('is-drag-over');if(!isOverPhoto(event))return;event.preventDefault();loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0])});
 el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
