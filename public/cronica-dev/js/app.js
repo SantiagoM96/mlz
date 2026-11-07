@@ -166,7 +166,7 @@ function render(includeHover=true){
 /* Cada placa conserva sus propios controles, foto, zoom y encuadre durante la edición. */
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
- return {headline:el('headline').value,strapText:el('strapText').value,showStrap:el('showStrap').checked,
+ return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
   size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY};
 }
 function newBlankPage(){
@@ -175,7 +175,7 @@ function newBlankPage(){
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
 function loadPage(page){
- el('headline').value=page.headline;el('strapText').value=page.strapText;
+ el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
  selectedLogo=page.logo||'primary';syncLogoChoices();
@@ -216,7 +216,17 @@ function initializeCarousel(){
 
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
-for(const id of ['headline','strapText','size'])el(id).addEventListener('input',render);
+for(const id of ['headline','size'])el(id).addEventListener('input',render);
+el('strapText').addEventListener('input',()=>{
+ const field=el('strapText'),start=field.selectionStart,end=field.selectionEnd;
+ const value=field.value.toLocaleUpperCase('es-AR');
+ if(field.value!==value){
+  field.value=value;
+  // Conservar cursor y selección al normalizar las letras.
+  if(start!==null&&end!==null)field.setSelectionRange(start,end);
+ }
+ render();
+});
 el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;syncUppercaseUI();render()});
 for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{
  textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));
