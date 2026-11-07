@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { agendaV2ExampleCases } from '../../src/data/agenda-v2-previews';
+
 
 /**
  * Estas capturas NO se generan desde el código probado.
@@ -8,9 +8,18 @@ import { agendaV2ExampleCases } from '../../src/data/agenda-v2-previews';
  * Son una referencia técnica comparativa, no un baseline editorial aprobado.
  */
 const route = '/agenda-de-la-comunidad/consola-preview';
+// IDs editoriales públicos, sin importar módulos Vite dentro de Node/Playwright.
 const cases = [
   { id: '', label: 'inicial' },
-  ...agendaV2ExampleCases.map(item => ({ id: item.id, label: item.id })),
+  ...[
+    'preview-v2-reciclaje',
+    'preview-v2-muestra',
+    'preview-v2-compostaje',
+    'preview-v2-futbol',
+    'preview-v2-folklore',
+    'preview-v2-huerta',
+    'preview-v2-itinerante',
+  ].map(id => ({ id, label: id })),
 ];
 
 const screenshotOptions = {
