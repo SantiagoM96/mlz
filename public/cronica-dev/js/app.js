@@ -422,6 +422,23 @@ async function runExport(all){
 }
 el('exportCurrent').addEventListener('click',()=>runExport(false));
 el('exportAll').addEventListener('click',()=>runExport(true));
+// Ajustar el ancho de cada globo al espacio libre del panel, con 12 px de margen interior.
+function sizeHelpTooltips(){
+ const panel=document.querySelector('.editor-panel');
+ if(!panel)return;
+ const rightLimit=panel.getBoundingClientRect().right-12;
+ document.querySelectorAll('.help-trigger').forEach(trigger=>{
+  const button=trigger.querySelector('.help-button');
+  const available=rightLimit-button.getBoundingClientRect().right-12;
+  trigger.style.setProperty('--help-available-width',Math.max(96,Math.floor(available))+'px');
+ });
+}
+window.addEventListener('resize',sizeHelpTooltips);
+document.querySelectorAll('.help-trigger').forEach(trigger=>{
+ trigger.addEventListener('pointerenter',sizeHelpTooltips);
+ trigger.addEventListener('focusin',sizeHelpTooltips);
+});
+sizeHelpTooltips();
 // Ayudas accesibles también mediante toque, teclado y Escape.
 document.querySelectorAll('.help-trigger').forEach(trigger=>{
  const button=trigger.querySelector('.help-button');
