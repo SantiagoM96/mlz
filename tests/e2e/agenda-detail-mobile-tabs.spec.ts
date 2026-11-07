@@ -1,4 +1,17 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Locator } from '@playwright/test';
+
+// Una sola lectura de layout evita combinar posiciones tomadas antes y después
+// de un reflow asíncrono (por ejemplo, al cargar la fuente Geometria).
+async function descriptionImageGap(description: Locator): Promise<number> {
+  await expect(description).toBeVisible();
+  return description.evaluate(element => {
+    const image = element.nextElementSibling;
+    if (!(image instanceof HTMLImageElement)) {
+      throw new Error('La imagen debe seguir a la descripción dentro de la misma sección.');
+    }
+    return Math.round(image.getBoundingClientRect().top - element.getBoundingClientRect().bottom);
+  });
+}
 
 const base = '/agenda-de-la-comunidad/actividades';
 const consoleRoute = '/agenda-de-la-comunidad/consola-preview';
@@ -115,10 +128,9 @@ test('Ficha mobile: sin margen fantasma tras horarios y descripción a imagen a 
   const width = info.project.use.viewport?.width ?? 0;
   const infoPanel = page.getByTestId('agenda-detail-information');
   const description = infoPanel.getByRole('region', { name: 'Descripción de la actividad' });
-  const image = page.getByTestId('agenda-detail-image');
-  const distance = await Promise.all([description, image].map(locator =>
-    locator.evaluate(el => el.getBoundingClientRect().toJSON())));
-  expect(Math.round(distance[1].top - distance[0].bottom)).toBe(width < 1024 ? 16 : 24);
+  await expect(page.getByTestId('agenda-detail-image')).toBeVisible();
+  await page.evaluate(async () => { await document.fonts.ready; });
+  expect(await descriptionImageGap(description)).toBe(width < 1024 ? 16 : 24);
 
   // Yoga no requiere inscripción. El único hijo del sticky debe ser el resumen.
   const sticky = page.getByTestId('agenda-detail-sticky');
@@ -138,10 +150,9 @@ test('Ficha mobile: sin margen fantasma tras horarios y descripción a imagen a 
   await page.getByTestId('console-preview-card').first().getByRole('button', { name: 'Ver más' }).click();
   const modal = page.getByTestId('console-detail-preview');
   const modalDescription = modal.getByRole('region', { name: 'Descripción de la actividad' });
-  const modalImage = modal.getByTestId('agenda-console-detail-image');
-  const modalCoords = await Promise.all([modalDescription, modalImage].map(locator =>
-    locator.evaluate(el => el.getBoundingClientRect().toJSON())));
-  expect(Math.round(modalCoords[1].top - modalCoords[0].bottom)).toBe(width < 1024 ? 16 : 24);
+  await expect(modal.getByTestId('agenda-console-detail-image')).toBeVisible();
+  await page.evaluate(async () => { await document.fonts.ready; });
+  expect(await descriptionImageGap(modalDescription)).toBe(width < 1024 ? 16 : 24);
   const modalSticky = modal.getByTestId('agenda-console-detail-sticky');
   await expect(modalSticky.locator(':scope > *')).toHaveCount(1);
   if (width < 1024) {

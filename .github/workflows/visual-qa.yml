@@ -10,6 +10,12 @@ on:
 permissions:
   contents: read
 
+# Los pushes sucesivos al mismo PR sustituyen ejecuciones E2E obsoletas.
+# Los pushes a main no se cancelan y conservan su trazabilidad.
+concurrency:
+  group: visual-qa-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   playwright:
     name: Chromium — ${{ matrix.project }}

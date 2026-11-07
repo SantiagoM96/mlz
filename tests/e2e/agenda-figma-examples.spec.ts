@@ -331,11 +331,11 @@ test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según
     };
   }));
   for (const chip of measurements) {
-    expect(chip.chipHeight).toBe(24);
+    expect(chip.chipHeight).toBeCloseTo(24, 2);
     expect(chip.fontSize).toBe('16px');
     expect(chip.gap).toBe('6px');
     expect(chip.alignItems).toBe('center');
-    expect(chip.iconWidth).toBe(16);
+    expect(chip.iconWidth).toBeCloseTo(16, 2);
     expect(chip.iconOffset).toBeLessThanOrEqual(1);
     expect(chip.labelOffset).toBeLessThanOrEqual(1);
   }
@@ -343,7 +343,7 @@ test('Chips de Agenda: alineación óptica, tipografía, altura e íconos según
   await search.fill('Yoga en Comunidad');
   const rainyChip = page.locator('[data-agenda-chip-kind="rain"]');
   await expect(rainyChip).toHaveCount(1);
-  expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBe(18);
+  expect(await rainyChip.locator('[data-agenda-chip-icon]').evaluate(element => element.getBoundingClientRect().width)).toBeCloseTo(18, 2);
   expect(await rainyChip.locator('[data-agenda-chip-label]').evaluate(element => getComputedStyle(element).fontSize)).toBe('16px');
 });
 
@@ -361,7 +361,10 @@ test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa 
       const rect = element.getBoundingClientRect();
       return { width: rect.width, height: rect.height };
     });
-    expect(size).toEqual({ width: 24, height: 24 });
+    // Chromium puede devolver fracciones de subpíxel (ej.: 23.99993896484375).
+    // Tolerar centésimas de píxel conserva la exigencia de geometría 24 × 24.
+    expect(size.width).toBeCloseTo(24, 2);
+    expect(size.height).toBeCloseTo(24, 2);
   }
 
   await page.goto(list + '/preview-v2-folklore--sede-plaza-grigera--fecha-2026-11-14');
@@ -383,7 +386,8 @@ test('Agenda V2: chevron de tarjetas 24 × 24 y bordes de detalles como el mapa 
     const rect = element.getBoundingClientRect();
     return { width: rect.width, height: rect.height };
   });
-  expect(previewSize).toEqual({ width: 24, height: 24 });
+  expect(previewSize.width).toBeCloseTo(24, 2);
+  expect(previewSize.height).toBeCloseTo(24, 2);
 
   await card.getByRole('button', { name: 'Ver más' }).click();
   const preview = page.getByTestId('console-detail-preview');
@@ -578,9 +582,12 @@ test('Agenda V2: sidebar fija Cuándo y dónde a 24 px con el contenido REAL; Co
   const scrollTarget = Math.max(0, Math.floor(initial.gridTop + 140));
   await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), scrollTarget);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
-  const stickyTop = await sticky.evaluate(element => element.getBoundingClientRect().top);
-  expect(stickyTop).toBeGreaterThanOrEqual(23);
-  expect(stickyTop).toBeLessThanOrEqual(25);
+  // Esperar a que termine el reposicionamiento antes de medir el sticky.
+  // Se conserva exactamente el rango exigido (24 ± 1 px), sin modificar el CSS.
+  await expect.poll(async () => {
+    const top = await sticky.evaluate(element => element.getBoundingClientRect().top);
+    return Math.abs(top - 24);
+  }).toBeLessThanOrEqual(1);
 
   // Compartir queda arriba y se aleja de la pantalla al desplazar la página.
   expect(await share.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(24);

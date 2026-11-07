@@ -1,204 +1,41 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { agendaV2ExampleCases, agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
-import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { ConsoleScheduleEditorDialog } from '../../features/agenda/consolePreview/ConsoleScheduleEditorDialog';
 import { ConsoleTypeEditorDialog } from '../../features/agenda/consolePreview/ConsoleTypeEditorDialog';
-import { ConsoleImageUpload } from '../../features/agenda/consolePreview/ConsoleImageUpload';
-import { getPublicActivityViews } from '../../features/agenda/utils/publicActivityViews';
-import { formatAgendaScheduleDate } from '../../features/agenda/utils/activitySchedules';
+import { ScheduleTable } from '../../features/agenda/consolePreview/ScheduleTable';
+import { CardPreview } from '../../features/agenda/consolePreview/ConsoleCardPreview';
+import { ConsoleGeneralInfoSection } from '../../features/agenda/consolePreview/ConsoleGeneralInfoSection';
+import { ConsoleRegistrationSection } from '../../features/agenda/consolePreview/ConsoleRegistrationSection';
+import { ConsoleImagesSection } from '../../features/agenda/consolePreview/ConsoleImagesSection';
+import { getDemoCasePreset } from '../../features/agenda/consolePreview/demoCasePreset';
+import { inputClass, labelClass, noteClass } from '../../features/agenda/consolePreview/ConsoleFormPrimitives';
 import { ConsoleDetailDialog } from '../../features/agenda/consolePreview/ConsoleDetailDialog';
-import {
-  CATEGORY_TYPES, DEMO_VENUES, INITIAL_DRAFT, INITIAL_SCHEDULES,
-  createDemoSchedule, venueById, type ConsoleDraft, type ConsoleSchedule, type ConsoleVenue,
-} from '../../features/agenda/consolePreview/model';
+import type { ConsoleDraft } from '../../features/agenda/consolePreview/model';
+import { CATEGORY_TYPES, INITIAL_DRAFT, INITIAL_SCHEDULES } from '../../features/agenda/consolePreview/demoData';
+import { useConsoleSchedules } from '../../features/agenda/consolePreview/useConsoleSchedules';
 
-const inputClass = 'min-h-12 w-full min-w-0 rounded-[4px] border border-[#93bfe0] bg-white px-4 py-2.5 text-[16px] leading-6 text-[#236999] outline-none transition-colors placeholder:text-[#8baac3] focus-visible:border-primary-600 focus-visible:ring-2 focus-visible:ring-[#236999]/20';
-const labelClass = 'mb-1.5 block text-[16px] font-bold leading-6 text-primary-600';
-const noteClass = 'mt-2 text-[14px] leading-[21px] text-[#718092]';
-
-function FormField({ label, htmlFor, children, hint }: {
-  label: string; htmlFor: string; children: ReactNode; hint?: string;
-}) {
-  return (
-    <div className="min-w-0">
-      <label className={labelClass} htmlFor={htmlFor}>{label}</label>
-      {children}
-      {hint && <p className={noteClass}>{hint}</p>}
-    </div>
-  );
-}
-
-function SectionTitle({ number, title, subtitle }: { number: number; title: string; subtitle?: string }) {
-  return (
-    <div className="mb-5">
-      <h2 className="text-[24px] font-bold leading-[30px] text-primary-600">
-        {number}. {title}
-      </h2>
-      {subtitle && <p className="mt-1 text-[16px] leading-6 text-grey-900">{subtitle}</p>}
-    </div>
-  );
-}
-
-function imageForDraft(draft: ConsoleDraft): string {
-  if (draft.coverDataUrl) return draft.coverDataUrl;
-  const byType: Record<string, string> = {
-    Taller: draft.category === 'Ambiental' ? 'taller-ambiental' : 'taller',
-    Música: 'musica', Teatro: 'teatro', Danza: 'danza', Cine: 'cine',
-    Muestra: 'muestra', Entrenamiento: 'entrenamiento', Torneo: 'torneo',
-    'Visita guiada': 'visita-guiada', Jornada: 'jornada', Charla: 'charla',
-    Presentación: 'presentacion', Literatura: 'encuentro-literario',
-    Aeróbica: 'aerobica', 'Cuerpo–mente': 'cuerpo-mente',
-  };
-  return import.meta.env.BASE_URL + 'assets/agenda/types/' +
-    (byType[draft.type] ?? 'jornada') + '.png';
-}
-
-function makePreviewActivity(draft: ConsoleDraft, schedules: readonly ConsoleSchedule[], venues: readonly ConsoleVenue[]): AgendaActivity {
-  const first = schedules[0];
-  const venue = venueById(first?.venueId ?? '', venues);
-  const badges: AgendaActivity['badges'] = [];
-  if (draft.inclusive) badges.push({ kind: 'accessible', label: 'Disciplina inclusiva' });
-  if (draft.registrationMode !== 'none') badges.push({ kind: 'registration', label: 'Requiere inscripción' });
-  if (draft.featured) badges.push({ kind: 'featured', label: 'Destacado' });
-  return {
-    id: 'demo-consola',
-    title: draft.title.trim() || 'Título de la actividad',
-    category: draft.category,
-    type: draft.type,
-    locality: venue.locality,
-    dayLabel: 'Fecha a confirmar',
-    timeLabel: 'Horario a confirmar',
-    image: imageForDraft(draft),
-    badges,
-    description: draft.description,
-    registrationMode: draft.registrationMode,
-    registrationInformation: draft.registrationMode === 'none' ? undefined : draft.registrationInformation,
-    // Los enlaces ingresados nunca se activan desde la vista previa.
-    registrationUrl: undefined,
-    schedules: schedules.map(schedule => {
-      const selectedVenue = venueById(schedule.venueId, venues);
-      return {
-        id: String(schedule.id),
-        scheduleType: schedule.scheduleType,
-        startDate: schedule.startDate,
-        endDate: schedule.scheduleType !== 'exact' ? schedule.endDate : null,
-        weekdays: schedule.scheduleType === 'recurring' ? schedule.weekdays : [],
-        startTime: schedule.startTime,
-        endTime: schedule.endTime || null,
-        locality: selectedVenue.locality,
-        venue: selectedVenue.name,
-        address: selectedVenue.address + ' - ' + selectedVenue.locality,
-        detail: schedule.detail,
-        detailType: schedule.detailType,
-        participants: schedule.participants,
-        participantsType: schedule.participantsType,
-        suspendedByRain: schedule.suspendedByRain,
-      };
-    }),
-  };
-}
-
-function CardPreview({ draft, schedules, venues, onViewDetail }: {
-  draft: ConsoleDraft;
-  schedules: ConsoleSchedule[];
-  venues: readonly ConsoleVenue[];
-  onViewDetail: (activity: AgendaActivity) => void;
-}) {
-  const editorialActivity = makePreviewActivity(draft, schedules, venues);
-  const publicViews = getPublicActivityViews(editorialActivity);
-
-  return (
-    <div>
-      <h2 className="mb-2 text-[24px] font-bold leading-[30px] text-primary-600">Vista previa</h2>
-      <p className="mb-5 text-[14px] leading-5 text-[#687f91]">
-        {publicViews.length === 1
-          ? 'Una ficha pública para esta actividad'
-          : publicViews.length + ' fichas públicas, separadas por sede o encuentro'}
-      </p>
-      <div className="flex min-w-0 flex-col gap-4">
-        {publicViews.map(activity => (
-          <div key={activity.id} data-testid="console-preview-card" className="min-w-0">
-            <ActivityCard
-              activity={activity}
-              previewDateISO="1900-01-01"
-              onViewDetail={() => onViewDetail(activity)}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function getFigmaExamplePreset(id: string | null): {
-  draft: ConsoleDraft; schedules: ConsoleSchedule[];
-} | null {
-  const activity = agendaV2PreviewActivities.find(value => value.id === id);
-  if (!activity) return null;
-  const badges = activity.badges;
-  return {
-    draft: {
-      ...INITIAL_DRAFT,
-      title: activity.title,
-      category: activity.category,
-      type: activity.type,
-      description: activity.description ?? '',
-      inclusive: badges.some(item => item.kind === 'accessible'),
-      registrationMode: activity.registrationMode ?? 'none',
-      registrationInformation: activity.registrationInformation ?? '',
-      registrationUrl: activity.registrationMode === 'online'
-        ? 'https://example.org/inscripcion-de-prueba' : '',
-      featured: badges.some(item => item.kind === 'featured'),
-      coverDataUrl: activity.image,
-      galleryDataUrls: [],
-    },
-    schedules: (activity.schedules ?? []).map((schedule, index) => ({
-      ...createDemoSchedule(index + 1),
-      id: index + 1,
-      scheduleType: schedule.scheduleType,
-      startDate: schedule.startDate,
-      endDate: schedule.endDate ?? '',
-      weekdays: [...(schedule.weekdays ?? [])],
-      startTime: schedule.startTime,
-      endTime: schedule.endTime ?? '',
-      venueId: DEMO_VENUES.find(venue => venue.name === schedule.venue)?.id ?? DEMO_VENUES[0].id,
-      suspendedByRain: schedule.suspendedByRain === true,
-      detail: schedule.detailType === 'artists' ? '' : (schedule.detail ?? ''),
-      detailType: schedule.detailType,
-      participants: schedule.detailType === 'artists' ? (schedule.detail ?? '') : '',
-      participantsType: schedule.detailType === 'artists' ? 'artists' : 'participants',
-    })),
-  };
-}
-
-function readLocalImage(file: File | undefined, onReady: (dataUrl: string) => void) {
-  if (!file || !file.type.startsWith('image/')) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (typeof reader.result === 'string') onReady(reader.result);
-  };
-  reader.readAsDataURL(file);
+function mobileViewTabClassName(selected: boolean): string {
+  return 'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
+    (selected ? 'bg-primary-600 text-white' : 'text-primary-600');
 }
 
 export function AgendaConsolePreviewPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [draft, setDraft] = useState<ConsoleDraft>(
-    () => getFigmaExamplePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
+    () => getDemoCasePreset(searchParams.get('caso'))?.draft ?? { ...INITIAL_DRAFT },
   );
-  const [schedules, setSchedules] = useState<ConsoleSchedule[]>(
-    () => getFigmaExamplePreset(searchParams.get('caso'))?.schedules
-      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })),
-  );
-  const [scheduleEditor, setScheduleEditor] = useState<{
-    mode: 'create' | 'edit' | 'duplicate'; schedule: ConsoleSchedule;
-  } | null>(null);
-  const [venues, setVenues] = useState<ConsoleVenue[]>(() => DEMO_VENUES.map(item => ({ ...item })));
   const [typesByCategory, setTypesByCategory] = useState<Record<string, string[]>>(
     () => Object.fromEntries(Object.entries(CATEGORY_TYPES).map(([key, values]) => [key, [...values]])),
   );
+  const {
+    schedules, scheduleEditor, venues,
+    beginNewSchedule, editSchedule, saveSchedule, duplicateSchedule,
+    createVenue, removeSchedule, resetSchedules, closeScheduleEditor,
+  } = useConsoleSchedules(() => getDemoCasePreset(searchParams.get('caso'))?.schedules
+    ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
   const [addingType, setAddingType] = useState(false);
   const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
   const [detailPreview, setDetailPreview] = useState<AgendaActivity | null>(null);
@@ -211,32 +48,8 @@ export function AgendaConsolePreviewPage() {
     setDraft(current => ({ ...current, ...changes }));
   };
   const openNewSchedule = () => {
-    const nextId = Math.max(0, ...schedules.map(schedule => schedule.id)) + 1;
-    setScheduleEditor({ mode: 'create', schedule: createDemoSchedule(nextId) });
+    beginNewSchedule();
     setMobileView('form');
-  };
-  const editSchedule = (schedule: ConsoleSchedule) => {
-    setScheduleEditor({ mode: 'edit', schedule: { ...schedule, weekdays: [...schedule.weekdays] } });
-  };
-  const saveSchedule = (schedule: ConsoleSchedule) => {
-    setSchedules(current => scheduleEditor?.mode === 'edit'
-      ? current.map(item => item.id === schedule.id ? schedule : item)
-      : [...current, schedule]);
-    setScheduleEditor(null);
-  };
-  const duplicateSchedule = (schedule: ConsoleSchedule) => {
-    const nextId = Math.max(0, ...schedules.map(item => item.id)) + 1;
-    setScheduleEditor({
-      mode: 'duplicate',
-      schedule: { ...schedule, id: nextId, weekdays: [...schedule.weekdays] },
-    });
-  };
-  const createVenue = (venue: Omit<ConsoleVenue, 'id'>): string => {
-    const nextId = 'nueva-sede-' + (Math.max(0, ...venues
-      .map(item => Number(item.id.replace('nueva-sede-', '')))
-      .filter(Number.isFinite)) + 1);
-    setVenues(current => [...current, { id: nextId, ...venue }]);
-    return nextId;
   };
   const createType = (name: string) => {
     setTypesByCategory(current => ({
@@ -246,19 +59,14 @@ export function AgendaConsolePreviewPage() {
     updateDraft({ type: name });
     setAddingType(false);
   };
-  const removeSchedule = (id: number) => {
-    setSchedules(current => current.filter(schedule => schedule.id !== id));
-  };
   const changeCategory = (category: string) => {
     updateDraft({ category, type: typesByCategory[category]?.[0] ?? 'Taller' });
   };
-  const loadFigmaCase = (id: string) => {
-    const preset = getFigmaExamplePreset(id);
+  const loadDemoCase = (id: string) => {
+    const preset = getDemoCasePreset(id);
     setSearchParams(id ? { caso: id } : {});
     setDraft(preset?.draft ?? { ...INITIAL_DRAFT });
-    setSchedules(preset?.schedules
-      ?? INITIAL_SCHEDULES.map(s => ({ ...s, weekdays: [...s.weekdays] })));
-    setScheduleEditor(null);
+    resetSchedules(preset?.schedules ?? INITIAL_SCHEDULES);
     setMobileView('form');
     setDetailPreview(null);
   };
@@ -287,7 +95,7 @@ export function AgendaConsolePreviewPage() {
               Elegí un ejemplo para probar la consola. No se guardan ni publican actividades.
             </p>
             <select id="figma-preset" className={inputClass} value={searchParams.get('caso') ?? ''}
-              onChange={event => loadFigmaCase(event.target.value)}>
+              onChange={event => loadDemoCase(event.target.value)}>
               <option value="">Taller de compostaje · Inicial</option>
               {agendaV2ExampleCases.map(example => {
                 const activity = agendaV2PreviewActivities.find(item => item.id === example.id);
@@ -306,14 +114,12 @@ export function AgendaConsolePreviewPage() {
         <div className="mb-6 flex gap-2 rounded-[8px] border border-[#dce7ee] bg-[#f6f9fb] p-1.5 lg:hidden" aria-label="Cambiar vista">
           <button type="button" onClick={() => setMobileView('form')}
             aria-pressed={mobileView === 'form'}
-            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-              (mobileView === 'form' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            className={mobileViewTabClassName(mobileView === 'form')}>
             Formulario
           </button>
           <button type="button" onClick={() => setMobileView('preview')}
             aria-pressed={mobileView === 'preview'}
-            className={'min-h-11 flex-1 rounded-[6px] px-3 text-[16px] font-bold focus-visible:outline-2 focus-visible:outline-primary-600 ' +
-              (mobileView === 'preview' ? 'bg-primary-600 text-white' : 'text-primary-600')}>
+            className={mobileViewTabClassName(mobileView === 'preview')}>
             Vista previa
           </button>
         </div>
@@ -322,53 +128,13 @@ export function AgendaConsolePreviewPage() {
           <form onSubmit={event => event.preventDefault()}
             className={'min-w-0 space-y-8 ' + (mobileView === 'preview' ? 'hidden lg:block' : '')}
             aria-label="Formulario de nueva actividad">
-            <section aria-labelledby="console-information">
-              <div id="console-information"><SectionTitle number={1} title="Información general" /></div>
-              <div className="space-y-4">
-                <FormField label="Título" htmlFor="console-title">
-                  <input id="console-title" className={inputClass} value={draft.title}
-                    onChange={event => updateDraft({ title: event.target.value })} placeholder="Nombre de la actividad" />
-                </FormField>
-                <div className="grid min-w-0 gap-4 sm:grid-cols-2">
-                  <FormField label="Categoría" htmlFor="console-category">
-                    <select id="console-category" className={inputClass} value={draft.category}
-                      onChange={event => changeCategory(event.target.value)}>
-                      {Object.keys(CATEGORY_TYPES).map(category => (
-                        <option key={category} value={category}>{category}</option>
-                      ))}
-                    </select>
-                  </FormField>
-                  <FormField label="Tipo de actividad" htmlFor="console-type">
-                    <select id="console-type" className={inputClass} value={draft.type}
-                      onChange={event => updateDraft({ type: event.target.value })}>
-                      {[...new Set([...(typesByCategory[draft.category] ?? []), draft.type])].map(type =>
-                        <option key={type} value={type}>{type}</option>)}
-                    </select>
-                    <button type="button" onClick={() => setAddingType(true)}
-                      className="mt-2 inline-flex min-h-10 items-center gap-1.5 rounded-[6px] text-[15px] font-bold text-primary-600 hover:underline">
-                      <MaterialIcon name="add" size={19}/> Agregar tipo de actividad
-                    </button>
-                  </FormField>
-                </div>
-                <p className="text-[14px] leading-5 text-[#61788b]">
-                  Las categorías son fijas; los tipos se pueden agregar desde la consola.
-                </p>
-                <FormField label="Descripción general" htmlFor="console-description">
-                  <textarea id="console-description" rows={4} className={inputClass + ' min-h-[120px] resize-y'}
-                    value={draft.description} onChange={event => updateDraft({ description: event.target.value })}
-                    placeholder="Contá de qué se trata la actividad" />
-                </FormField>
-                <div className="space-y-3 pt-1">
-                  <label className="flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-                    <input type="checkbox" checked={draft.inclusive}
-                      onChange={event => updateDraft({ inclusive: event.target.checked })}
-                      className="h-5 w-5 accent-[#236999]" />
-                    Disciplina inclusiva
-                  </label>
-                </div>
-              </div>
-            </section>
-
+            <ConsoleGeneralInfoSection
+              draft={draft}
+              typesByCategory={typesByCategory}
+              onDraftChange={updateDraft}
+              onCategoryChange={changeCategory}
+              onAddType={() => setAddingType(true)}
+            />
 
             <section aria-labelledby="console-schedules">
               <div id="console-schedules" className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -381,157 +147,36 @@ export function AgendaConsolePreviewPage() {
                   <MaterialIcon name="add" size={20} /> Agregar
                 </button>
               </div>
-              <div className="overflow-x-auto rounded-[8px] border border-[#d4e2eb]" data-testid="console-schedules-table">
-                <table className="w-full min-w-[680px] border-collapse text-left text-[15px]">
-                  <thead className="bg-[#eaf3f9] text-primary-600">
-                    <tr>
-                      <th scope="col" className="px-3 py-3 font-bold">Fecha / frecuencia</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Horario</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Lugar</th>
-                      <th scope="col" className="px-3 py-3 font-bold">Lluvia</th>
-                      <th scope="col" className="px-3 py-3 text-right font-bold">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#d4e2eb]">
-                    {schedules.map((schedule, index) => {
-                      const { dateLabel, periodLabel } = formatAgendaScheduleDate(schedule);
-                      const venue = venueById(schedule.venueId, venues);
-                      return (
-                        <tr key={schedule.id} data-testid="console-schedule-row" className="align-middle">
-                          <td className="px-3 py-3">
-                            <span className="font-bold text-grey-900">{dateLabel}</span>
-                            {periodLabel && <span className="mt-1 block text-[13px] leading-5 text-[#657b8d]">{periodLabel}</span>}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-3">
-                            {schedule.startTime || 'A confirmar'}
-                            {schedule.endTime ? ' a ' + schedule.endTime : ''}{schedule.startTime ? ' h' : ''}
-                          </td>
-                          <td className="max-w-[220px] px-3 py-3">
-                            <span className="font-medium">{venue.name}</span>
-                            {schedule.participants.trim() && (
-                              <span className="mt-1 flex items-start gap-1.5 text-[13px] leading-5 text-[#61788b]">
-                                <MaterialIcon name={schedule.participantsType === 'artists' ? 'comedy_mask'
-                                  : schedule.participantsType === 'speakers' ? 'record_voice_over' : 'groups'} size={16}/>
-                                <span className="min-w-0 break-words">{schedule.participants}</span>
-                              </span>
-                            )}
-                            {schedule.detail.trim() && (
-                              <span className="mt-1 block max-w-[210px] truncate text-[13px] leading-5 text-[#61788b]"
-                                title={schedule.detail}>{schedule.detail}</span>
-                            )}
-                          </td>
-                          <td className="px-3 py-3">{schedule.suspendedByRain ? 'Sí' : 'No'}</td>
-                          <td className="px-3 py-3">
-                            <div className="flex items-center justify-end gap-1">
-                              <button type="button" onClick={() => editSchedule(schedule)}
-                                aria-label={'Editar programación ' + (index + 1)} title="Editar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                                <MaterialIcon name="edit" size={22} />
-                              </button>
-                              <button type="button" onClick={() => duplicateSchedule(schedule)}
-                                aria-label={'Duplicar programación ' + (index + 1)} title="Duplicar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-primary-600 hover:bg-[#eaf3f9] focus-visible:outline-2 focus-visible:outline-primary-600">
-                                <MaterialIcon name="content_copy" size={22} />
-                              </button>
-                              <button type="button" onClick={() => removeSchedule(schedule.id)}
-                                aria-label={'Eliminar programación ' + (index + 1)} title="Eliminar"
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-[6px] text-[#b5444b] hover:bg-[#ffedef] focus-visible:outline-2 focus-visible:outline-[#b5444b]">
-                                <MaterialIcon name="delete" size={22} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    {schedules.length === 0 && (
-                      <tr><td colSpan={5} className="px-4 py-6 text-center text-[#607487]">
-                        Todavía no hay programaciones. Agregá una para comenzar.
-                      </td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <ScheduleTable
+                schedules={schedules}
+                venues={venues}
+                onEdit={editSchedule}
+                onDuplicate={duplicateSchedule}
+                onRemove={removeSchedule}
+              />
               <p className={noteClass}>Podés editar, duplicar o eliminar programaciones sin repetir los datos de la actividad.</p>
             </section>
 
-            <section aria-labelledby="console-registration">
-              <div id="console-registration">
-                <SectionTitle number={3} title="Inscripción"
-                  subtitle="Una misma modalidad de inscripción para todas las fechas de la actividad." />
-              </div>
-              <div className="space-y-4">
-                <FormField label="Modalidad" htmlFor="registration-mode">
-                  <select id="registration-mode" className={inputClass} value={draft.registrationMode}
-                    onChange={event => {
-                      const registrationMode = event.target.value as ConsoleDraft['registrationMode'];
-                      updateDraft({
-                        registrationMode,
-                        registrationInformation: registrationMode === 'in-person'
-                          && draft.registrationInformation === INITIAL_DRAFT.registrationInformation
-                          ? '' : draft.registrationInformation,
-                      });
-                    }}>
-                    <option value="none">Sin inscripción</option>
-                    <option value="online">Inscripción online</option>
-                    <option value="in-person">Inscripción presencial</option>
-                  </select>
-                </FormField>
-                {draft.registrationMode === 'online' && (
-                  <FormField label="Enlace de inscripción" htmlFor="registration-url">
-                    <input id="registration-url" type="url" className={inputClass}
-                      placeholder="https://ejemplo.gob.ar/inscripcion"
-                      value={draft.registrationUrl}
-                      onChange={event => updateDraft({ registrationUrl: event.target.value })} />
-                  </FormField>
-                )}
-                {draft.registrationMode !== 'none' && (
-                  <FormField label={'Información de inscripción ' +
-                    (draft.registrationMode === 'online' ? '(opcional)' : '')}
-                    htmlFor="registration-info">
-                    <textarea id="registration-info" className={inputClass + ' min-h-[100px] resize-y'} rows={3}
-                      value={draft.registrationInformation}
-                      placeholder={draft.registrationMode === 'in-person'
-                        ? 'Indicá dónde y cómo inscribirse presencialmente' : 'Aclaraciones para inscribirse'}
-                      onChange={event => updateDraft({ registrationInformation: event.target.value })} />
-                  </FormField>
-                )}
-                <p className={noteClass}>
-                  La información de inscripción se mostrará en la ficha pública, debajo de «Cuándo y dónde».
-                </p>
-              </div>
-            </section>
+            <ConsoleRegistrationSection
+              draft={draft}
+              onDraftChange={updateDraft}
+            />
 
-            <section aria-labelledby="console-images">
-              <div id="console-images">
-                <SectionTitle number={4} title="Imágenes y portada"
-                  subtitle="Agregá una portada opcional y fotos adicionales para la galería." />
-              </div>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <ConsoleImageUpload id="cover-image" label="Portada" source={draft.coverDataUrl}
-                  onFile={file => readLocalImage(file, url => updateDraft({ coverDataUrl: url }))}
-                  onRemove={() => updateDraft({ coverDataUrl: '' })}/>
-                {[0, 1].map(index => (
-                  <ConsoleImageUpload key={index} id={'gallery-' + index}
-                    label={'Foto adicional ' + (index + 1)} source={draft.galleryDataUrls[index] ?? ''}
-                    onFile={file => readLocalImage(file, url => {
-                      setDraft(current => {
-                        const next = [...current.galleryDataUrls];
-                        next[index] = url;
-                        return { ...current, galleryDataUrls: next };
-                      });
-                    })}
-                    onRemove={() => setDraft(current => ({
-                      ...current,
-                      galleryDataUrls: current.galleryDataUrls.map((url, i) => i === index ? '' : url),
-                    }))}/>
-                ))}
-              </div>
-              <label className="mt-4 flex min-h-7 cursor-pointer items-center gap-2 text-[16px] font-bold text-primary-600">
-                <input type="checkbox" className="h-5 w-5 accent-[#236999]" checked={draft.featured}
-                  onChange={event => updateDraft({ featured: event.target.checked })} />
-                Destacar actividad
-              </label>
-            </section>
+            <ConsoleImagesSection
+              draft={draft}
+              onDraftChange={updateDraft}
+              onGalleryFile={(index, url) => {
+                setDraft(current => {
+                  const next = [...current.galleryDataUrls];
+                  next[index] = url;
+                  return { ...current, galleryDataUrls: next };
+                });
+              }}
+              onGalleryRemove={index => setDraft(current => ({
+                ...current,
+                galleryDataUrls: current.galleryDataUrls.map((url, i) => i === index ? '' : url),
+              }))}
+            />
 
             <div className="flex flex-wrap justify-end gap-3 border-t border-[#edf0f3] pt-6">
               <button type="button" onClick={() => setMobileView('preview')}
@@ -574,7 +219,7 @@ export function AgendaConsolePreviewPage() {
           venues={venues}
           onCreateVenue={createVenue}
           onSave={saveSchedule}
-          onClose={() => setScheduleEditor(null)}
+          onClose={closeScheduleEditor}
         />
       )}
       {detailPreview && (
