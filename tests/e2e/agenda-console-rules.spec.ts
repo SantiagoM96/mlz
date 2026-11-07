@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { DEMO_VENUES } from '../../src/features/agenda/consolePreview/demoData';
 import { createDemoSchedule, sameScheduleContent, venueById } from '../../src/features/agenda/consolePreview/scheduleRules';
-import { normalizeConsoleSchedule, validateConsoleSchedule } from '../../src/features/agenda/consolePreview/scheduleEditorRules';
+import { normalizeConsoleSchedule, validateConsoleSchedule, getConsoleScheduleValidationIssue } from '../../src/features/agenda/consolePreview/scheduleEditorRules';
 import { normalizeVenueInput, validateVenueInput } from '../../src/features/agenda/consolePreview/venueRules';
 
 test.describe('Agenda V2 — contratos puros de programaciones', () => {
@@ -143,4 +143,21 @@ test.describe('Agenda V2 — reglas puras de sedes', () => {
       name: 'Plaza Grigera', locality: 'Banfield', address: 'Maipú 123',
     }, DEMO_VENUES)).toBeNull();
   });
+});
+
+test('Agenda V2 — accesibilidad: identifica campo incorrecto conservando mensajes', () => {
+  const empty = createDemoSchedule(8);
+  expect(getConsoleScheduleValidationIssue(empty, []))
+    .toEqual({ field: 'startDate', message: 'Completá la fecha y el horario de inicio.' });
+  const withDate = { ...empty, startDate: '2026-11-20' };
+  expect(getConsoleScheduleValidationIssue(withDate, [])?.field).toBe('startTime');
+  const withTime = { ...withDate, startTime: '11:00' };
+  expect(getConsoleScheduleValidationIssue(withTime, [])).toBeNull();
+  const range = { ...withTime, scheduleType: 'range' as const, endDate: '2026-11-18' };
+  expect(getConsoleScheduleValidationIssue(range, [])?.field).toBe('endDate');
+  const recurring = { ...range, endDate: '2026-11-21', scheduleType: 'recurring' as const };
+  expect(getConsoleScheduleValidationIssue(recurring, [])?.field).toBe('weekdays');
+  expect(getConsoleScheduleValidationIssue({ ...recurring, weekdays: [6], endTime: '10:00' }, [])?.field)
+    .toBe('endTime');
+  expect(getConsoleScheduleValidationIssue({ ...withTime, id: 9 }, [withTime])?.field).toBe('schedule');
 });

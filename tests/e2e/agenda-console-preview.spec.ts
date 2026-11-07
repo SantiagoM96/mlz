@@ -406,3 +406,86 @@ test('Consola: al guardar o cancelar una sede nueva el foco permanece en el edit
   await expect(selectedVenue).toBeFocused();
   await expect(selectedVenue.locator('option:checked')).toHaveText('Club Vecinal de Prueba');
 });
+
+test('Consola accesible: error de programación enfoca el primer campo inválido y lo describe', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Agregar', exact: true }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  const save = editor.getByRole('button', { name: 'Guardar programación' });
+  await save.click();
+  const date = editor.getByLabel('Fecha', { exact: true });
+  await expect(date).toBeFocused();
+  await expect(date).toHaveAttribute('aria-invalid', 'true');
+  await expect(date).toHaveAttribute('aria-describedby', 'console-schedule-error');
+  await expect(editor.getByRole('alert')).toContainText('Completá la fecha');
+
+  await date.fill('2026-11-20');
+  await expect(date).toHaveAttribute('aria-invalid', 'false');
+  await save.click();
+  const startTime = editor.getByLabel('Horario de inicio');
+  await expect(startTime).toBeFocused();
+  await expect(startTime).toHaveAttribute('aria-invalid', 'true');
+  await expect(startTime).toHaveAttribute('aria-describedby', 'console-schedule-error');
+
+  await startTime.fill('11:00');
+  await save.click();
+  await expect(editor).toHaveCount(0);
+});
+
+test('Consola accesible: errores de tipo vuelven al nombre y se vinculan con ARIA', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Agregar tipo de actividad' }).click();
+  const dialog = page.getByTestId('console-type-editor');
+  const name = dialog.getByLabel('Nombre del nuevo tipo');
+  const save = dialog.getByRole('button', { name: 'Guardar tipo' });
+  await save.click();
+  await expect(name).toBeFocused();
+  await expect(name).toHaveAttribute('aria-invalid', 'true');
+  await expect(name).toHaveAttribute('aria-describedby', 'console-new-type-error');
+  await expect(dialog.getByRole('alert')).toContainText('Ingresá un nombre');
+
+  await name.fill('  Taller  ');
+  await save.click();
+  await expect(name).toBeFocused();
+  await expect(dialog.getByRole('alert')).toContainText('ya existe');
+  await name.fill('Seminario de prueba');
+  await expect(name).toHaveAttribute('aria-invalid', 'false');
+  await save.click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test('Consola accesible: alta de lugar enfoca campo obligatorio y duplicado', async ({ page }) => {
+  await page.goto(route);
+  await page.getByRole('button', { name: 'Editar programación 1' }).click();
+  const editor = page.getByTestId('console-schedule-editor');
+  await editor.getByRole('button', { name: 'Agregar nuevo lugar' }).click();
+  const place = editor.getByTestId('console-new-venue');
+  const save = place.getByRole('button', { name: 'Guardar lugar' });
+  const name = place.getByLabel('Nombre del lugar');
+  const locality = place.getByLabel('Localidad');
+  const address = place.getByLabel('Dirección');
+  await save.click();
+  await expect(name).toBeFocused();
+  await expect(name).toHaveAttribute('aria-invalid', 'true');
+  await expect(name).toHaveAttribute('aria-describedby', 'console-venue-error');
+
+  await name.fill('Plaza Grigera');
+  await save.click();
+  await expect(locality).toBeFocused();
+  await expect(locality).toHaveAttribute('aria-invalid', 'true');
+
+  await locality.fill('Lomas de Zamora');
+  await save.click();
+  await expect(address).toBeFocused();
+  await expect(address).toHaveAttribute('aria-invalid', 'true');
+
+  await address.fill('Dirección alternativa de prueba');
+  await save.click();
+  await expect(name).toBeFocused();
+  await expect(place.getByRole('alert')).toContainText('ya está registrada');
+
+  await name.fill('Centro Cultural Nuevo de Prueba');
+  await save.click();
+  await expect(place).toHaveCount(0);
+  await expect(editor.getByLabel('Lugar')).toBeFocused();
+});
