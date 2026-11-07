@@ -35,7 +35,11 @@ async function readyForCapture(page: Page) {
   await expect(page.getByRole('heading', { name: 'Nueva actividad', exact: true })).toBeVisible();
   await page.evaluate(async () => {
     await document.fonts.ready;
-    await Promise.all(Array.from(document.images).map(image => image.decode().catch(() => undefined)));
+    // No esperar `decode()` sobre imágenes ocultas/lazy aún no solicitadas:
+    // en mobile la tarjeta de la vista previa puede permanecer fuera del DOM visible.
+    await Promise.all(Array.from(document.images)
+      .filter(image => image.complete && image.naturalWidth > 0)
+      .map(image => image.decode().catch(() => undefined)));
     window.scrollTo({ top: 0, behavior: 'instant' });
   });
 }
@@ -88,7 +92,11 @@ test('paridad consola - ficha de vista previa', async ({ page }, info) => {
   await expect(page.getByTestId('console-detail-preview')).toBeVisible();
   await page.evaluate(async () => {
     await document.fonts.ready;
-    await Promise.all(Array.from(document.images).map(image => image.decode().catch(() => undefined)));
+    // No esperar `decode()` sobre imágenes ocultas/lazy aún no solicitadas:
+    // en mobile la tarjeta de la vista previa puede permanecer fuera del DOM visible.
+    await Promise.all(Array.from(document.images)
+      .filter(image => image.complete && image.naturalWidth > 0)
+      .map(image => image.decode().catch(() => undefined)));
     window.scrollTo({ top: 0, behavior: 'instant' });
   });
   await expect(page).toHaveScreenshot('modal-detalle-yoga.png', screenshotOptions);
