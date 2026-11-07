@@ -83,7 +83,7 @@
 .preview .canvas-stage{position:relative;--drop-inset:35px}
 .preview .canvas-stage::before{
  content:'';position:absolute;top:0;left:0;right:0;
- height:var(--photo-height,60%);z-index:1;
+ height:var(--hover-photo-height,60%);z-index:1;
  background:rgba(0,0,0,.11);opacity:0;
  pointer-events:none;transition:opacity .15s ease;
 }
@@ -204,7 +204,7 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='secondary';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
-const LOGO_WIDTH=75,LOGO_HEIGHT=Math.round(LOGO_WIDTH*191/175);
+const LOGO_WIDTH=75*1.25,LOGO_HEIGHT=LOGO_WIDTH*191/175;
 const logoImages={},logoSources={primary:'./logos/primario.svg',secondary:'./logos/secundario.svg',white:'./logos/blanco.svg'};
 const logosReady=Promise.all(Object.entries(logoSources).map(([key,src])=>new Promise(resolve=>{
  const img=new Image();logoImages[key]=img;
@@ -428,6 +428,8 @@ function updatePhotoDropzone(){
  zone.hidden=Boolean(image);
  // La altura se calcula en CSS para preservar los 35 px de margen superior e inferior.
  stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
+ // El hover termina antes del borde superior de la línea roja (13 px en el lienzo).
+ stage.style.setProperty('--hover-photo-height',(Math.max(0,photoBottom-6.5)/H*100)+'%');
  canvas.style.cursor=image?'grab':'default';
 }
 function loadPhoto(file){
