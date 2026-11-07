@@ -330,11 +330,15 @@ function render(includeHover=true){
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
   if(cover){
-   ctx.font='500 30px Inter,Arial,sans-serif';ctx.fillStyle=RED;
-   ctx.textAlign='left';ctx.fillText('CRONICA.COM.AR',EDGE,footerBaseline);
-   // Flecha hacia la derecha de Google Material Icons.
+   // Pie: texto en caja baja y flecha alineados por su centro vertical.
+   const footerCenterY=H-EDGE-16;
+   ctx.save();
+   ctx.fillStyle=RED;ctx.textBaseline='middle';
+   ctx.font='500 30px Inter,Arial,sans-serif';
+   ctx.textAlign='left';ctx.fillText('cronica.com.ar',EDGE,footerCenterY);
    ctx.font='54px "Material Icons"';ctx.textAlign='right';
-   ctx.fillText('arrow_forward',W-EDGE,footerBaseline+8);ctx.textAlign='left';
+   ctx.fillText('arrow_forward',W-EDGE,footerCenterY);
+   ctx.restore();
   }
   updatePhotoDropzone();
   el('sizeLabel').textContent=el('size').value;
