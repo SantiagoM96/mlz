@@ -19,6 +19,11 @@ function drawBrandLogo(){
  if(!img||!img.complete||!img.naturalWidth)return;
  ctx.drawImage(img,W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
 }
+// El campo refleja el modo mayúsculas sin alterar el texto que escribió el usuario.
+function syncUppercaseUI(){
+ el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));
+ el('headline').classList.toggle('uppercase-preview',forceUppercase);
+}
 function syncLogoChoices(){
  document.querySelectorAll('.logo-choice').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.logo===selectedLogo)));
 }
@@ -172,7 +177,7 @@ function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]
 function loadPage(page){
  el('headline').value=page.headline;el('strapText').value=page.strapText;
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
- forceUppercase=Boolean(page.forceUppercase);el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));
+ forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
  selectedLogo=page.logo||'primary';syncLogoChoices();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
  el('file').value='';dragging=false;
@@ -212,7 +217,7 @@ function initializeCarousel(){
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
 for(const id of ['headline','strapText','size'])el(id).addEventListener('input',render);
-el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));render()});
+el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;syncUppercaseUI();render()});
 for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{
  textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));
  el('alignCenter').setAttribute('aria-pressed',String(value==='center'));render();
@@ -403,5 +408,5 @@ async function runExport(all){
 }
 el('exportCurrent').addEventListener('click',()=>runExport(false));
 el('exportAll').addEventListener('click',()=>runExport(true));
-initializeCarousel();render();document.fonts.ready.then(render);
+initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
 })();
