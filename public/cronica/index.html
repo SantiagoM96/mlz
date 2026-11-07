@@ -66,7 +66,11 @@
 .editor-panel .carousel-compact-row{align-items:flex-start}
 .editor-panel .carousel-actions{align-self:flex-start;position:relative;top:0}
 /* No proyectar sombra del canvas hacia los botones: borde tenue sin sombra exterior. */
-.preview .canvas-stage canvas{box-shadow:none!important;outline:1px solid rgba(255,255,255,.09);outline-offset:0}
+/* Mantener la sombra original del canvas y situar los botones encima. */
+.preview .canvas-stage canvas{box-shadow:0 12px 45px #0007!important;outline:0}
+.preview .canvas-stage{z-index:0}
+.preview .preview-actions{z-index:3;position:relative;isolation:isolate}
+.preview .preview-actions button{position:relative;z-index:1}
 
 /* Scrollbar discreta para el campo de texto principal. */
 .editor-panel #headline{scrollbar-width:thin;scrollbar-color:#686d76 #292c32}
