@@ -83,8 +83,15 @@ ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(
  halftoneCtx.fillRect(0,0,1080,1236);
  halftoneCtx.globalCompositeOperation='source-over';
 }
-// No modificar: la textura queda anclada en boxTop y se revela desde abajo con el crecimiento de la caja.
-ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
+// Las texturas se mantienen ancladas al borde superior dinámico (boxTop).
+// Solo Textura 2 tiene zoom +50%: escala hacia abajo desde el top,
+// centrada horizontalmente y recortada por el clip de la caja.
+if(selectedTexture==='2'){
+ const scale=1.5,drawW=1080*scale,drawH=1121*scale;
+ ctx.drawImage(halftoneLayer,0,115,1080,1121,(W-drawW)/2,boxTop,drawW,drawH);
+}else{
+ ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121);
+}}ctx.restore();
 ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-16,W,16);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
