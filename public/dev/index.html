@@ -24,6 +24,9 @@ h1{font-size:clamp(29px,4vw,43px);letter-spacing:-.035em;line-height:1.15;margin
 .product:focus-visible{outline:2px solid #ed0000;outline-offset:4px}
 .logo-area{height:112px;display:flex;align-items:center;justify-content:flex-start;margin-bottom:22px}
 .logo-area img{object-fit:contain;object-position:left center;max-width:min(250px,100%);max-height:96px;width:auto;height:auto}
+/* Compensación óptica: Crónica es más alto, BAE más horizontal. Equilibrar superficie visible, no dimensiones. */
+.logo-area img.logo-cronica{width:155px;max-width:100%;height:auto}
+
 .product h2{margin:0 0 8px;font-size:23px;letter-spacing:-.02em}
 .product p{font-size:14px;color:#b5bac3;line-height:1.55;margin:0 0 25px;flex:1}
 .open{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;font-weight:650;font-size:14px;color:#fff}
@@ -41,7 +44,7 @@ footer{font-size:12px;color:#888e9a;padding:0 0 35px}
 <p class="intro">Accedé a los generadores para preparar placas y posteos. Este espacio reúne las versiones de prueba; los proyectos publicados se mantienen separados.</p>
 <div class="grid">
 <a class="product" href="../cronica-dev/" aria-label="Abrir generador de Crónica, versión de desarrollo">
-<div class="logo-area"><img src="../cronica/cronica-header-logo.svg" alt="Crónica"></div>
+<div class="logo-area"><img class="logo-cronica" src="../cronica/cronica-header-logo.svg" alt="Crónica"></div>
 <h2>Crónica</h2><p>Generador de posteos y carruseles para Instagram.</p>
 <span class="open">Abrir generador <span class="arrow" aria-hidden="true">→</span></span>
 </a>
