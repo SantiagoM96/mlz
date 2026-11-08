@@ -71,27 +71,28 @@ ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(
 drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
-ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';if(selectedTexture==='2'){// Conservar los cuatro tonos del SVG y su alpha; no aplanarlos con source-in.
- halftoneCtx.filter=el('theme').value==='white'?'none':'invert(1)';
- halftoneCtx.drawImage(halftone,0,0,1080,1235.84);
- halftoneCtx.filter='none';
-}else{
- // El comportamiento original de Textura 2, ahora Textura 1, permanece intacto.
- halftoneCtx.drawImage(halftone,0,0,1080,1235.84);
- halftoneCtx.globalCompositeOperation='source-in';
- halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';
- halftoneCtx.fillRect(0,0,1080,1236);
- halftoneCtx.globalCompositeOperation='source-over';
-}
-// Las texturas se mantienen ancladas al borde superior dinámico (boxTop).
-// Solo Textura 2 tiene zoom +50%: escala hacia abajo desde el top,
-// centrada horizontalmente y recortada por el clip de la caja.
-if(selectedTexture==='2'){
- const scale=2,drawW=1080*scale,drawH=1121*scale;
- ctx.drawImage(halftoneLayer,0,115,1080,1121,(W-drawW)/2,boxTop,drawW,drawH);
-}else{
- ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121);
-}}ctx.restore();
+ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){
+ if(selectedTexture==='2'){
+  // Zoom 400 % del SVG original, el doble del tamaño anterior (200 %).
+  // Renderizar directamente el vector evita ampliar píxeles de un canvas intermedio.
+  const scale=4,drawW=1080*scale;
+  const previousFilter=ctx.filter;
+  ctx.filter=el('theme').value==='white'?'none':'invert(1)';
+  // Equivalente al recorte original con origen en 115: anclado a boxTop.
+  ctx.drawImage(halftone,(W-drawW)/2,boxTop-115*scale,drawW,1235.84*scale);
+  ctx.filter=previousFilter;
+ }else{
+  // Textura 1: conservar exactamente el render y el recorte anteriores.
+  halftoneCtx.clearRect(0,0,1080,1236);
+  halftoneCtx.globalCompositeOperation='source-over';
+  halftoneCtx.drawImage(halftone,0,0,1080,1235.84);
+  halftoneCtx.globalCompositeOperation='source-in';
+  halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';
+  halftoneCtx.fillRect(0,0,1080,1236);
+  halftoneCtx.globalCompositeOperation='source-over';
+  ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121);
+ }
+}ctx.restore();
 ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-16,W,16);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
