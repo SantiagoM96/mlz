@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
 const logoImages={},logoSources={primary:'./logos/primario.svg'};
@@ -25,17 +25,17 @@ document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListene
  selectedLogo=button.dataset.logo;syncLogoChoices();render();
 }));
 syncLogoChoices();
-const palette={dark:{bg:'#171717',text:'#fff',accent:'#D82626'},white:{bg:'#fff',text:'#171717',accent:'#D82626'},red:{bg:'#D82626',text:'#fff',accent:'#fff'}};
+const palette={pink:{bg:'#ffffff',text:'#7749A6',accent:'#E6008D',gradientStart:'#E6008D',gradientEnd:'#7749A6'},blue:{bg:'#ffffff',text:'#7749A6',accent:'#00A6D9',gradientStart:'#7749A6',gradientEnd:'#397FC6'}};
 function parseRich(text){const out=[];let style={accent:false,italic:false,strike:false},buffer='';const flush=()=>{if(buffer){out.push({text:buffer,...style});buffer=''}};for(const c of String(text)){const field=c==='*'?'accent':c==='_'?'italic':c==='~'?'strike':null;if(field){flush();style={...style,[field]:!style[field]}}else buffer+=c}flush();return out}
-function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
+function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
 function render(){
 try{
-const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=el('enableQuote').checked?wrapRich(el('quote').value,size,true):[];
+const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=el('enableQuote').checked?wrapRich(el('quote').value,size,true):[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
 ctx.textBaseline='alphabetic';
-ctx.font='30px Arial';
-const footerMetrics=ctx.measureText('diarioshow.com');
+ctx.font='500 30px "Poppins",Arial,sans-serif';
+const footerMetrics=ctx.measureText('diarioshow.com.ar');
 const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
@@ -43,7 +43,7 @@ const footerTop=footerBaseline-footerAscent;
 // Construir las líneas en orden visual y posicionarlas desde abajo.
 const lines=[...main,...quotes];
 const lineMetrics=lines.map(line=>{
- ctx.font=(line.quote?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';
+ ctx.font=(line.quote?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';
  const m=ctx.measureText(line.parts.map(p=>p.text).join('')||' ');
  return {ascent:m.actualBoundingBoxAscent||size,descent:m.actualBoundingBoxDescent||Math.ceil(size*.2)};
 });
@@ -70,23 +70,25 @@ ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(
 } // El aviso de carga es HTML interactivo, no forma parte del PNG.
 drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
-ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
-ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';halftoneCtx.drawImage(halftone,0,0,1080,1235.84);halftoneCtx.globalCompositeOperation='source-in';halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';halftoneCtx.fillRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
-ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-16,W,16);
+// Variantes Diario Show: caja blanca sin semitonos y barra de 16 px (mismas medidas que BAE).
+// La caja y la barra se desplazan juntas cuando el texto necesita más líneas.
+const gradient=ctx.createLinearGradient(0,0,W,0);
+gradient.addColorStop(0,colors.gradientStart);gradient.addColorStop(1,colors.gradientEnd);
+ctx.fillStyle=gradient;ctx.fillRect(0,boxTop-16,W,16);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
  const line=lines[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
  let x=centered?(W-total)/2:80;
  for(const part of line.parts){
-  ctx.font=((line.quote||part.italic)?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';
+  ctx.font=((line.quote||part.italic)?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
   ctx.fillText(part.text,x,baselines[i]);
   if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
   x+=part.width;
  }
 }
-ctx.fillStyle=colors.text;ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('diarioshow.com',W/2,footerBaseline);ctx.textAlign='left';
+ctx.fillStyle=colors.text;ctx.font='500 30px "Poppins",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 }
@@ -111,7 +113,14 @@ clearFormatButton.addEventListener('click',()=>{
 });
 document.querySelectorAll('.texture-option').forEach(button=>button.addEventListener('click',()=>{selectedTexture=button.dataset.texture;halftone=halftoneAssets[selectedTexture]||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));render()}));
 // Selector accesible de variante, sin librerías externas.
-const themeSwatches=[...document.querySelectorAll('.theme-swatch')];themeSwatches.forEach(button=>button.addEventListener('click',()=>{el('theme').value=button.dataset.theme;themeSwatches.forEach(b=>b.setAttribute('aria-pressed',String(b===button)));el('theme').dispatchEvent(new Event('change',{bubbles:true}))}));
+const variantButtons=[...document.querySelectorAll('.ds-variant-option')];
+function setVariant(value){
+ if(!palette[value])return;
+ el('theme').value=value;
+ variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
+ render();
+}
+variantButtons.forEach(button=>button.addEventListener('click',()=>setVariant(button.dataset.variant)));
 el('theme').addEventListener('change',render);
 function updatePhotoStage(){
  const stage=el('photoStage'),zone=el('photoDropzone');if(!stage||!zone)return;
@@ -166,9 +175,9 @@ canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener(
 el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quote').value='';el('enableQuote').checked=false;el('quote').hidden=true;el('file').value='';
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
- el('theme').value='dark';document.querySelectorAll('.theme-swatch').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.theme==='dark')));
- el('size').value='70';el('dots').value='5';textAlignment='left';
- el('alignLeft').setAttribute('aria-pressed','true');el('alignCenter').setAttribute('aria-pressed','false');
+ setVariant('pink');
+ el('size').value='70';el('dots').value='5';textAlignment='center';
+ el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
  image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de Diario Show.';
  render();
