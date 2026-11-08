@@ -3,6 +3,28 @@
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+const LOGO_MARGIN=80,LOGO_WIDTH=165,LOGO_HEIGHT=LOGO_WIDTH*192/358;
+let selectedLogo='primary';
+const logoImages={},logoSources={primary:'./logos/primario.svg',white:'./logos/blanco.svg'};
+for(const [key,src] of Object.entries(logoSources)){
+ const img=new Image();logoImages[key]=img;
+ img.onload=()=>render();
+ img.onerror=()=>console.error('No se pudo cargar el logo de BAE:',src);
+ img.src=src;
+}
+function drawBrandLogo(){
+ if(selectedLogo==='none')return;
+ const img=logoImages[selectedLogo];
+ if(!img||!img.complete||!img.naturalWidth)return;
+ ctx.drawImage(img,W-LOGO_MARGIN-LOGO_WIDTH,LOGO_MARGIN,LOGO_WIDTH,LOGO_HEIGHT);
+}
+function syncLogoChoices(){
+ document.querySelectorAll('.logo-choice').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.logo===selectedLogo)));
+}
+document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{
+ selectedLogo=button.dataset.logo;syncLogoChoices();render();
+}));
+syncLogoChoices();
 const palette={dark:{bg:'#171717',text:'#fff',accent:'#D82626'},white:{bg:'#fff',text:'#171717',accent:'#D82626'},red:{bg:'#D82626',text:'#fff',accent:'#fff'}};
 function parseRich(text){const out=[];let style={accent:false,italic:false,strike:false},buffer='';const flush=()=>{if(buffer){out.push({text:buffer,...style});buffer=''}};for(const c of String(text)){const field=c==='*'?'accent':c==='_'?'italic':c==='~'?'strike':null;if(field){flush();style={...style,[field]:!style[field]}}else buffer+=c}flush();return out}
 function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
@@ -46,6 +68,7 @@ const maxX=Math.max(0,(iw-W)/2),maxY=Math.max(0,(ih-photoBottom)/2);
 offsetX=Math.max(-maxX,Math.min(maxX,offsetX));offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
 ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(image,(W-iw)/2+offsetX,(photoBottom-ih)/2+offsetY,iw,ih);ctx.restore();
 } // El aviso de carga es HTML interactivo, no forma parte del PNG.
+drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
 ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';halftoneCtx.drawImage(halftone,0,0,1080,1235.84);halftoneCtx.globalCompositeOperation='source-in';halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';halftoneCtx.fillRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
@@ -146,7 +169,7 @@ el('clearAll').addEventListener('click',()=>{
  el('theme').value='dark';document.querySelectorAll('.theme-swatch').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.theme==='dark')));
  el('size').value='70';el('dots').value='5';textAlignment='left';
  el('alignLeft').setAttribute('aria-pressed','true');el('alignCenter').setAttribute('aria-pressed','false');
- image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;photoStage.classList.remove('is-drag-over');
+ image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de BAE Negocios.';
  render();
 });
