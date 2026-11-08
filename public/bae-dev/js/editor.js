@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-2.svg?v=1');loadTexture('2','./textures/punteado-grises-ajustados.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const LOGO_MARGIN=80,LOGO_WIDTH=123.75*1.15,LOGO_HEIGHT=LOGO_WIDTH*192/358;
 let selectedLogo='primary';
 const logoImages={},logoSources={primary:'./logos/primario.svg',white:'./logos/blanco.svg'};
@@ -71,7 +71,20 @@ ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(
 drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
-ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';halftoneCtx.drawImage(halftone,0,0,1080,1235.84);halftoneCtx.globalCompositeOperation='source-in';halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';halftoneCtx.fillRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
+ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(0,0,1080,1236);halftoneCtx.globalCompositeOperation='source-over';if(selectedTexture==='2'){// Conservar los cuatro tonos del SVG y su alpha; no aplanarlos con source-in.
+ halftoneCtx.filter=el('theme').value==='white'?'none':'invert(1)';
+ halftoneCtx.drawImage(halftone,0,0,1080,1235.84);
+ halftoneCtx.filter='none';
+}else{
+ // El comportamiento original de Textura 2, ahora Textura 1, permanece intacto.
+ halftoneCtx.drawImage(halftone,0,0,1080,1235.84);
+ halftoneCtx.globalCompositeOperation='source-in';
+ halftoneCtx.fillStyle=el('theme').value==='dark'?'#ffffff':'#000000';
+ halftoneCtx.fillRect(0,0,1080,1236);
+ halftoneCtx.globalCompositeOperation='source-over';
+}
+// No modificar: la textura queda anclada en boxTop y se revela desde abajo con el crecimiento de la caja.
+ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121)}ctx.restore();
 ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-16,W,16);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
