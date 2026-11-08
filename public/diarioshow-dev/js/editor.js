@@ -34,7 +34,7 @@ const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').val
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
 ctx.textBaseline='alphabetic';
-ctx.font='500 30px "Poppins",Arial,sans-serif';
+ctx.font='500 30px "Inter",Arial,sans-serif';
 const footerMetrics=ctx.measureText('diarioshow.com.ar');
 const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
@@ -88,7 +88,7 @@ for(let i=0;i<lines.length;i++){
   x+=part.width;
  }
 }
-ctx.fillStyle=colors.text;ctx.font='500 30px "Poppins",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
+ctx.fillStyle=colors.text;ctx.font='500 30px "Inter",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 }
