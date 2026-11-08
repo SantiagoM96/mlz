@@ -155,10 +155,9 @@
 /* DS Dashboard tiene letras negras: fondo claro y proporciones originales en header oscuro. */
 .header-inner .brand-logo-diarioshow{
  width:240px;max-width:42vw;height:auto;object-fit:contain;
- background:#f8f8f8;border-radius:6px;padding:9px 12px;
 }
 @media(max-width:700px){
- .header-inner .brand-logo-diarioshow{width:195px;max-width:60vw;padding:8px 10px}
+ .header-inner .brand-logo-diarioshow{width:195px;max-width:60vw}
 }
 /* El logo primario es vertical (253x275); dejar aire en la miniatura. */
 .editor-panel .logo-choice-preview img{width:25px;height:30px}
