@@ -87,7 +87,7 @@ ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){halftoneCtx.clearRect(
 // Solo Textura 2 tiene zoom +50%: escala hacia abajo desde el top,
 // centrada horizontalmente y recortada por el clip de la caja.
 if(selectedTexture==='2'){
- const scale=1.5,drawW=1080*scale,drawH=1121*scale;
+ const scale=2,drawW=1080*scale,drawH=1121*scale;
  ctx.drawImage(halftoneLayer,0,115,1080,1121,(W-drawW)/2,boxTop,drawW,drawH);
 }else{
  ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121);
