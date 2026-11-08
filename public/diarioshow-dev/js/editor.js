@@ -30,7 +30,7 @@ function parseRich(text){const out=[];let style={accent:false,italic:false,strik
 function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
 function render(){
 try{
-const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=el('enableQuote').checked?wrapRich(el('quote').value,size,true):[];
+const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
 ctx.textBaseline='alphabetic';
@@ -96,7 +96,7 @@ const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/
 function resetDefaultHalftone(){el('dots').value='5';el('dotsLabel').textContent='5%';render()}
 resetDefaultHalftone();
 window.addEventListener('pageshow',event=>{if(event.persisted)resetDefaultHalftone()});
-el('enableQuote').addEventListener('change',()=>{el('quote').hidden=!el('enableQuote').checked;render()});for(const id of ['headline','quote','enableQuote','size','dots'])el(id).addEventListener('input',render);for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));el('alignCenter').setAttribute('aria-pressed',String(value==='center'));render()});for(const [id,marker] of [['formatAccent','*'],['formatItalic','_'],['formatStrike','~']]){const button=el(id);button.addEventListener('mousedown',e=>e.preventDefault());button.addEventListener('click',()=>{const field=el('headline'),a=field.selectionStart,b=field.selectionEnd;if(a===b){field.focus();return}const selected=field.value.slice(a,b);field.setRangeText(marker+selected+marker,a,b,'select');field.setSelectionRange(a+1,b+1);field.focus();render()})}
+for(const id of ['headline','size','dots'])el(id).addEventListener('input',render);for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));el('alignCenter').setAttribute('aria-pressed',String(value==='center'));render()});for(const [id,marker] of [['formatAccent','*'],['formatItalic','_'],['formatStrike','~']]){const button=el(id);button.addEventListener('mousedown',e=>e.preventDefault());button.addEventListener('click',()=>{const field=el('headline'),a=field.selectionStart,b=field.selectionEnd;if(a===b){field.focus();return}const selected=field.value.slice(a,b);field.setRangeText(marker+selected+marker,a,b,'select');field.setSelectionRange(a+1,b+1);field.focus();render()})}
 
 const clearFormatButton=el('formatClear');
 clearFormatButton.addEventListener('mousedown',event=>event.preventDefault());
@@ -173,7 +173,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- el('articleUrl').value='';el('headline').value='';el('quote').value='';el('enableQuote').checked=false;el('quote').hidden=true;el('file').value='';
+ el('articleUrl').value='';el('headline').value='';el('file').value='';
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  el('size').value='70';el('dots').value='5';textAlignment='center';
