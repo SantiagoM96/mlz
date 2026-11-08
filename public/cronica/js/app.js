@@ -5,8 +5,8 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false;
 const RED='#ed0000',BLACK='#080808',EDGE=80;
-const LOGO_WIDTH=75*1.25,LOGO_HEIGHT=LOGO_WIDTH*191/175;
-const logoImages={},logoSources={primary:'./logos/primario.svg',secondary:'./logos/secundario.svg',white:'./logos/blanco.svg'};
+const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
+const logoImages={},logoSources={primary:'../cronica/logos/primario.svg',secondary:'../cronica/logos/secundario.svg',white:'../cronica/logos/blanco.svg'};
 const logosReady=Promise.all(Object.entries(logoSources).map(([key,src])=>new Promise(resolve=>{
  const img=new Image();logoImages[key]=img;
  img.onload=()=>{render();resolve()};

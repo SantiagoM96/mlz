@@ -44,7 +44,7 @@
 .editor-panel .cronica-format-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;margin-top:16px!important}
 .editor-panel .cronica-format-row .format-field{min-width:0;margin:0!important}
 .editor-panel .cronica-format-row .align-field{margin:0!important}
-.editor-panel .cronica-format-row label{display:block;margin:0 0 9px!important;white-space:nowrap}
+/* Los labels usan la misma fila de 20 px en ambas columnas; no se aplican márgenes globales a los labels. */
 .editor-panel .cronica-format-row .format-buttons{display:flex;flex-wrap:nowrap;gap:0}
 .editor-panel .cronica-format-row .format-buttons button{display:flex;flex:0 0 35px;width:35px;height:38px;align-items:center;justify-content:center;padding:0;min-width:0}
 .editor-panel .cronica-format-row .format-buttons #formatUppercase,
@@ -86,8 +86,8 @@
 .editor-panel #strapText{text-transform:uppercase}
 
 /* Ayudas contextuales del editor: burbuja con flecha en hover, foco y toque. */
-.editor-panel .help-label-row{display:flex;align-items:center;gap:5px;min-height:20px;margin:0 0 7px}
-.editor-panel .help-label-row>label{display:flex;align-items:center;margin:0;line-height:1.35;font-weight:600}
+.editor-panel .help-label-row{display:flex;align-items:center;gap:5px;height:20px;min-height:20px;margin:0 0 7px}
+.editor-panel .help-label-row>label{display:flex;align-items:center;min-height:20px;margin:0!important;line-height:20px;font-weight:600}
 .editor-panel .help-trigger{position:relative;display:inline-flex;align-items:center;flex:none;z-index:10}
 .editor-panel .help-trigger:has(.help-button[aria-expanded="true"]){z-index:20}
 .editor-panel .help-button{
@@ -118,8 +118,38 @@
 .editor-panel .help-trigger:focus-within .help-tooltip,
 .editor-panel .help-trigger.is-open .help-tooltip{opacity:1;visibility:visible;pointer-events:auto}
 
-/* Corregir la altura común de los labels de Formato y Alineación. */
-.editor-panel .cronica-format-row .help-label-row{height:20px;min-height:20px;margin:0 0 9px;align-items:center}
-.editor-panel .cronica-format-row .help-label-row>label{display:flex;align-items:center;height:20px;margin:0!important;line-height:20px;white-space:nowrap}
-.editor-panel .cronica-format-row .align-field>label{display:flex;align-items:center;height:20px;line-height:20px;margin:0 0 9px!important}
-.editor-panel .cronica-format-row .help-trigger{align-self:center}
+/* Fila única de encabezados: Formato y Alineación comparten estructura y baseline. */
+.editor-panel .cronica-format-row{align-items:start}
+.editor-panel .cronica-format-row .format-field,
+.editor-panel .cronica-format-row .align-field{margin:0!important;padding:0;align-self:start}
+.editor-panel .cronica-format-row .help-label-row{
+ display:flex;align-items:center;gap:5px;
+ height:20px;min-height:20px;max-height:20px;
+ margin:0 0 9px!important;padding:0;
+}
+.editor-panel .cronica-format-row .help-label-row>label{
+ display:flex;align-items:center;justify-content:flex-start;
+ height:20px;min-height:20px;margin:0!important;padding:0!important;
+ font:600 14px/20px system-ui,sans-serif;white-space:nowrap;
+}
+.editor-panel .cronica-format-row .help-trigger{height:20px;display:inline-flex;align-items:center;align-self:center}
+.editor-panel .cronica-format-row .format-buttons,
+.editor-panel .cronica-format-row .align-buttons{margin-top:0}
+
+/* Navegación del entorno de pruebas: regreso al dashboard de productos. */
+.header-inner .dashboard-back-link{
+ margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ flex:0 0 auto;min-height:38px;padding:8px 12px;border:1px solid #4a4e56;
+ border-radius:7px;background:#292c32;color:#f4f4f4;text-decoration:none;
+ font:600 12px/1.3 system-ui,sans-serif;white-space:nowrap;
+ transition:border-color .15s ease,background-color .15s ease;
+}
+.header-inner .dashboard-back-link:hover{background:#363a43;border-color:#858991}
+.header-inner .dashboard-back-link:focus-visible{outline:2px solid #ed0000;outline-offset:2px}
+.header-inner .dashboard-back-link .material-icons{font-size:18px;line-height:1}
+@media(max-width:700px){
+ .header-inner .dashboard-back-link{margin-left:auto;min-height:36px;padding:7px 10px}
+}
+@media(max-width:440px){
+ .header-inner .dashboard-back-link{width:100%;justify-content:center;margin-left:0}
+}
