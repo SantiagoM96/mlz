@@ -73,9 +73,9 @@ ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 ctx.save();ctx.beginPath();ctx.rect(0,boxTop,W,H-boxTop);ctx.clip();
 ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){
  if(selectedTexture==='2'){
-  // Zoom 400 % del SVG original, el doble del tamaño anterior (200 %).
+  // Zoom 200 % del SVG original, reducción del 50 % respecto al tamaño anterior (400 %).
   // Renderizar directamente el vector evita ampliar píxeles de un canvas intermedio.
-  const scale=4,drawW=1080*scale;
+  const scale=2,drawW=1080*scale;
   const previousFilter=ctx.filter;
   ctx.filter=el('theme').value==='white'?'none':'invert(1)';
   // Equivalente al recorte original con origen en 115: anclado a boxTop.
