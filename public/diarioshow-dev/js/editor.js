@@ -3,6 +3,7 @@
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
 const logoImages={},logoSources={primary:'./logos/primario.svg'};
@@ -59,7 +60,7 @@ if(lines.length){
 const firstBaseline=baselines[0]??footerTop-50;
 const firstAscent=lineMetrics[0]?.ascent??size;
 const boxTop=Math.max(80,firstBaseline-firstAscent-50);
-photoBottom=boxTop-16;
+photoBottom=boxTop-GRADIENT_BAR_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
 if(image){
@@ -70,11 +71,11 @@ ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(
 } // El aviso de carga es HTML interactivo, no forma parte del PNG.
 drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
-// Variantes Diario Show: caja blanca sin semitonos y barra de 16 px (mismas medidas que BAE).
+// Variantes Diario Show: caja blanca sin semitonos y barra de 24 px (50 % más alta que la anterior).
 // La caja y la barra se desplazan juntas cuando el texto necesita más líneas.
 const gradient=ctx.createLinearGradient(0,0,W,0);
 gradient.addColorStop(0,colors.gradientStart);gradient.addColorStop(1,colors.gradientEnd);
-ctx.fillStyle=gradient;ctx.fillRect(0,boxTop-16,W,16);
+ctx.fillStyle=gradient;ctx.fillRect(0,boxTop-GRADIENT_BAR_HEIGHT,W,GRADIENT_BAR_HEIGHT);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
