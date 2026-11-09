@@ -97,3 +97,6 @@
 .export-dialog-option:disabled{opacity:.45;cursor:wait}
 .export-dialog-feedback{margin:13px 0 0;color:#c3c6cd;font-size:12px;line-height:1.5}
 @media(max-width:420px){.export-dialog{padding:20px 16px}.export-dialog-option{padding:11px 10px}}
+
+/* Dev: el logo seleccionado mantiene su borde interior y destaca el anillo exterior. */
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
