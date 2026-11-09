@@ -208,6 +208,11 @@ document.querySelectorAll('.texture-option').forEach(button=>button.addEventList
 const variantButtons=[...document.querySelectorAll('.ds-variant-option')];
 function setVariant(value){
  if(!palette[value])return;
+ // Primera vista de la tercera variante: ejemplo sin reemplazar contenido editado.
+ if(value==='quote'&&el('headline').value==='*Mauro Icardi* consiguió la *eximición de prisión* tras el escándalo con Wanda Nara'){
+  el('headline').value='OJALÁ A LA GENTE LE DIERA TANTO MIEDO TENER UN HIJO GOLPEADOR COMO TENER UN HIJO GAY';
+  el('quoteAuthor').value='La Joaqui';
+ }
  el('theme').value=value;
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  el('quoteAuthorField').hidden=value!=='quote';
