@@ -100,3 +100,5 @@
 
 /* Dev: el logo seleccionado mantiene su borde interior y destaca el anillo exterior. */
 .editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
+
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#ed0000}
