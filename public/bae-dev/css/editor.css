@@ -149,3 +149,7 @@
 /* Dev: selección con anillo exterior; conservar el borde interior neutro. */
 .editor-panel .texture-option[aria-pressed="true"] .texture-number,
 .editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
+
+.editor-panel .texture-option[aria-pressed="true"] .texture-number,
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#d82626}
+.theme-swatch[aria-pressed="true"]{outline-color:#d82626}
