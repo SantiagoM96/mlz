@@ -232,3 +232,8 @@
 @media (max-width:700px){
  .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
 }
+
+/* Diario Show: el módulo Textos es el último visible del panel.
+   El antiguo módulo oculto de texturas no debe dejar un divisor final. */
+.editor-panel .ds-texts-group{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.editor-panel #articleImportField[hidden]{display:none!important}
