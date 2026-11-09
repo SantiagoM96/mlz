@@ -145,3 +145,11 @@
 .editor-panel .logo-choice:hover .logo-choice-preview{background:#393d45}
 .editor-panel .logo-choice:focus-visible{outline:2px solid #a5a8b0;outline-offset:3px;border-radius:5px}
 
+
+/* Dev: selección con anillo exterior; conservar el borde interior neutro. */
+.editor-panel .texture-option[aria-pressed="true"] .texture-number,
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
+
+.editor-panel .texture-option[aria-pressed="true"] .texture-number,
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#d82626}
+.theme-swatch[aria-pressed="true"]{outline-color:#d82626}

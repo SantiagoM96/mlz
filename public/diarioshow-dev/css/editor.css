@@ -191,3 +191,8 @@
 .editor-panel .ds-variant-option:hover .ds-variant-preview{filter:brightness(1.12)}
 .editor-panel .ds-variant-option:focus-visible{outline:2px solid #a5a8b0;outline-offset:4px;border-radius:5px}
 .editor-panel .ds-legacy-textures{display:none!important}
+
+/* Dev: el estado seleccionado resalta únicamente el anillo exterior. */
+.editor-panel .texture-option[aria-pressed="true"] .texture-number,
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview,
+.editor-panel .ds-variant-option[aria-pressed="true"] .ds-variant-preview{border-color:#565a63}
