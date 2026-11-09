@@ -199,3 +199,13 @@
 
 /* Etiquetas legibles sin ensanchar las tarjetas: mismo patrón de BAE. */
 .editor-panel .ds-variant-option>span:last-child{font-size:11px;line-height:16px;white-space:nowrap}
+
+/* La misma sombra sutil de Crónica Dev (negro al 11 %).
+   Solo en dispositivos con hover real; no se dibuja en el PNG. */
+.preview .photo-dropzone{transition:background-color .15s ease}
+@media (hover:hover) and (pointer:fine){
+  .preview .photo-dropzone:not([hidden]):hover{background:rgba(0,0,0,.11)}
+}
+@media (prefers-reduced-motion:reduce){
+  .preview .photo-dropzone{transition:none}
+}
