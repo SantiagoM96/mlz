@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
+let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
 const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
@@ -36,7 +36,7 @@ function wrapRich(text,size,quote=false){const result=[];for(const paragraph of 
 
 /* Variante 3: cita editorial. El degradé cubre parte de la fotografía
    y la distribución vertical mantiene márgenes reales de 80 y espacios de 50 px. */
-function renderQuoteVariant(size,footerBaseline,footerTop){
+function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  const main=wrapRich(el('headline').value,size);
  const author=el('quoteAuthor').value.trim();
  const authorSize=36;
@@ -72,6 +72,11 @@ function renderQuoteVariant(size,footerBaseline,footerTop){
   offsetX=Math.max(-maxX,Math.min(maxX,offsetX));
   offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
   ctx.drawImage(image,(W-iw)/2+offsetX,(H-ih)/2+offsetY,iw,ih);
+ }
+ // La sombra del hover va sobre TODA la foto, antes del degradé, sin línea de corte.
+ if(includeHover&&photoHover&&!image){
+  ctx.fillStyle='rgba(0,0,0,.11)';
+  ctx.fillRect(0,0,W,H);
  }
  // Prueba de degradé: un solo fucsia institucional, del 0 al 100 % de opacidad.
  // La mezcla de cuatro tonos anterior se conserva en el historial de GitHub.
@@ -116,7 +121,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop){
  el('status').textContent=iconY<120?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }
 
-function render(){
+function render(includeHover=true){
 try{
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
@@ -129,7 +134,7 @@ const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
 const footerTop=footerBaseline-footerAscent;
 if(el('theme').value==='quote'){
- renderQuoteVariant(size,footerBaseline,footerTop);
+ renderQuoteVariant(size,footerBaseline,footerTop,includeHover);
  return;
 }
 // Construir las líneas en orden visual y posicionarlas desde abajo.
@@ -217,6 +222,8 @@ function setVariant(value){
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  el('quoteAuthorField').hidden=value!=='quote';
  el('articleImportField').hidden=value==='quote';
+ el('photoStage').classList.toggle('is-quote-variant',value==='quote');
+ photoHover=false;
  render();
 }
 variantButtons.forEach(button=>button.addEventListener('click',()=>setVariant(button.dataset.variant)));
@@ -241,6 +248,17 @@ function loadPhoto(file){
 }
 el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value=''});
 const photoStage=el('photoStage'),photoZone=el('photoDropzone');
+const supportsPointerHover=window.matchMedia('(hover:hover) and (pointer:fine)');
+function setPhotoHover(active){
+ const next=Boolean(active&&supportsPointerHover.matches&&!image&&!importingArticle&&el('theme').value==='quote');
+ if(photoHover===next)return;
+ photoHover=next;
+ render();
+}
+photoZone.addEventListener('pointerenter',()=>setPhotoHover(true));
+photoZone.addEventListener('pointerleave',()=>setPhotoHover(false));
+photoZone.addEventListener('focus',()=>setPhotoHover(true));
+photoZone.addEventListener('blur',()=>setPhotoHover(false));
 photoZone.addEventListener('click',()=>el('file').click());
 photoZone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();el('file').click()}});
 function isImageDrag(event){
@@ -277,7 +295,7 @@ el('clearAll').addEventListener('click',()=>{
  setVariant('pink');
  el('size').value='70';el('dots').value='5';textAlignment='center';
  el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
- image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
+ image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;photoHover=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de Diario Show.';
  render();
 });
@@ -285,8 +303,9 @@ el('download').addEventListener('click',()=>{
  const button=el('download');
  button.disabled=true;
  try{
-  render();
+  render(false);
   canvas.toBlob(blob=>{
+   render();
    button.disabled=false;
    if(!blob){el('status').textContent='No se pudo generar el PNG. Probá cargar la fotografía manualmente.';return}
    const url=URL.createObjectURL(blob),a=document.createElement('a');

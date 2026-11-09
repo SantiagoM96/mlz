@@ -237,3 +237,12 @@
    El antiguo módulo oculto de texturas no debe dejar un divisor final. */
 .editor-panel .ds-texts-group{border-bottom:0;margin-bottom:0;padding-bottom:0}
 .editor-panel #articleImportField[hidden]{display:none!important}
+
+/* Variante 3: el hover se dibuja en el canvas por detrás del degradé.
+   El dropzone sigue recibiendo eventos y mantiene el contorno punteado. */
+@media (hover:hover) and (pointer:fine){
+ .preview .canvas-stage.is-quote-variant .photo-dropzone:not([hidden]):hover,
+ .preview .canvas-stage.is-quote-variant .photo-dropzone:not([hidden]):focus-visible{
+  background:transparent;
+ }
+}
