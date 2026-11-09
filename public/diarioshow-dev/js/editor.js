@@ -27,7 +27,7 @@ document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListene
 syncLogoChoices();
 const palette={pink:{bg:'#ffffff',text:'#7749A6',accent:'#E6008D',gradientStart:'#E6008D',gradientEnd:'#7749A6'},blue:{bg:'#ffffff',text:'#7749A6',accent:'#00A6D9',gradientStart:'#7749A6',gradientEnd:'#397FC6'}};
 function parseRich(text){const out=[];let style={accent:false,italic:false,strike:false},buffer='';const flush=()=>{if(buffer){out.push({text:buffer,...style});buffer=''}};for(const c of String(text)){const field=c==='*'?'accent':c==='_'?'italic':c==='~'?'strike':null;if(field){flush();style={...style,[field]:!style[field]}}else buffer+=c}flush();return out}
-function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
+function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+'600 '+size+'px "Poppins",Arial,sans-serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
 function render(){
 try{
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=[];
@@ -43,7 +43,7 @@ const footerTop=footerBaseline-footerAscent;
 // Construir las líneas en orden visual y posicionarlas desde abajo.
 const lines=[...main,...quotes];
 const lineMetrics=lines.map(line=>{
- ctx.font=(line.quote?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';
+ ctx.font=(line.quote?'italic ':'')+'600 '+size+'px "Poppins",Arial,sans-serif';
  const m=ctx.measureText(line.parts.map(p=>p.text).join('')||' ');
  return {ascent:m.actualBoundingBoxAscent||size,descent:m.actualBoundingBoxDescent||Math.ceil(size*.2)};
 });
@@ -81,7 +81,7 @@ for(let i=0;i<lines.length;i++){
  const line=lines[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
  let x=centered?(W-total)/2:80;
  for(const part of line.parts){
-  ctx.font=((line.quote||part.italic)?'italic ':'')+'800 '+size+'px "Poppins",Arial,sans-serif';
+  ctx.font=((line.quote||part.italic)?'italic ':'')+'600 '+size+'px "Poppins",Arial,sans-serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
   ctx.fillText(part.text,x,baselines[i]);
   if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
