@@ -163,3 +163,8 @@
 @media (prefers-reduced-motion:reduce){
   .preview .photo-dropzone{transition:none}
 }
+
+/* Mobile: calle de scroll de 50 px por lado del canvas; no cambia toolbar ni botones. */
+@media (max-width:700px){
+ .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
+}
