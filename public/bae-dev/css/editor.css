@@ -153,3 +153,13 @@
 .editor-panel .texture-option[aria-pressed="true"] .texture-number,
 .editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#d82626}
 .theme-swatch[aria-pressed="true"]{outline-color:#d82626}
+
+/* La misma sombra sutil de Crónica Dev (negro al 11 %).
+   Solo en dispositivos con hover real; no se dibuja en el PNG. */
+.preview .photo-dropzone{transition:background-color .15s ease}
+@media (hover:hover) and (pointer:fine){
+  .preview .photo-dropzone:not([hidden]):hover{background:rgba(0,0,0,.11)}
+}
+@media (prefers-reduced-motion:reduce){
+  .preview .photo-dropzone{transition:none}
+}
