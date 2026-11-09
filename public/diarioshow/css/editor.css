@@ -161,3 +161,38 @@
 }
 /* El logo primario es vertical (253x275); dejar aire en la miniatura. */
 .editor-panel .logo-choice-preview img{width:25px;height:30px}
+
+/* Diario Show: variantes independientes de composición compartida.
+   El color del texto, la barra superior y la firma se dibujan en canvas. */
+.editor-panel .ds-variant-options{
+ display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-top:8px;
+}
+.editor-panel .ds-variant-option{
+ display:flex;flex-direction:column;align-items:center;gap:9px;
+ min-width:76px;width:76px;padding:0;border:0;border-radius:0;
+ background:transparent;color:#d5d8de;font:500 11px/16px system-ui,Arial,sans-serif;
+ cursor:pointer;text-align:center;
+}
+.editor-panel .ds-variant-preview{
+ display:block;width:76px;height:55px;border:2px solid #565a63;border-radius:8px;
+ background-color:#fff;background-repeat:no-repeat;
+ background-position:center;background-size:100% 100%;
+ overflow:hidden;
+}
+.editor-panel .ds-variant-preview-pink{
+ background-image:linear-gradient(90deg,#e6008d,#7749a6);
+}
+.editor-panel .ds-variant-preview-blue{
+ background-image:linear-gradient(90deg,#7749a6,#397fc6);
+}
+.editor-panel .ds-variant-option[aria-pressed="true"] .ds-variant-preview{
+ outline:2px solid #e6008d;outline-offset:2px;border-color:#e6008d;
+}
+.editor-panel .ds-variant-option:hover .ds-variant-preview{filter:brightness(1.12)}
+.editor-panel .ds-variant-option:focus-visible{outline:2px solid #a5a8b0;outline-offset:4px;border-radius:5px}
+.editor-panel .ds-legacy-textures{display:none!important}
+
+/* Dev: el estado seleccionado resalta únicamente el anillo exterior. */
+.editor-panel .texture-option[aria-pressed="true"] .texture-number,
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview,
+.editor-panel .ds-variant-option[aria-pressed="true"] .ds-variant-preview{border-color:#565a63}
