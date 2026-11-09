@@ -216,6 +216,7 @@ function setVariant(value){
  el('theme').value=value;
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  el('quoteAuthorField').hidden=value!=='quote';
+ el('articleImportField').hidden=value==='quote';
  render();
 }
 variantButtons.forEach(button=>button.addEventListener('click',()=>setVariant(button.dataset.variant)));
