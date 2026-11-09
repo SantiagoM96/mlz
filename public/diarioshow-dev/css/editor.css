@@ -227,3 +227,8 @@
  border:1px solid #4a4e56;border-radius:7px;padding:10px;
 }
 .editor-panel .ds-author-field input:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
+
+/* Mobile: calle de scroll de 50 px por lado del canvas; no cambia toolbar ni botones. */
+@media (max-width:700px){
+ .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
+}

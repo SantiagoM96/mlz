@@ -102,3 +102,8 @@
 .editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
 
 .editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#ed0000}
+
+/* Mobile: calle de scroll de 50 px por lado del canvas; no cambia toolbar ni botones. */
+@media (max-width:700px){
+ .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
+}
