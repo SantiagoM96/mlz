@@ -73,11 +73,11 @@ function renderQuoteVariant(size,footerBaseline,footerTop){
   offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
   ctx.drawImage(image,(W-iw)/2+offsetX,(H-ih)/2+offsetY,iw,ih);
  }
+ // Prueba de degradé: un solo fucsia institucional, del 0 al 100 % de opacidad.
+ // La mezcla de cuatro tonos anterior se conserva en el historial de GitHub.
  const gradient=ctx.createLinearGradient(0,gradientTop,0,H);
- gradient.addColorStop(0,'rgba(58,0,36,0)');
- gradient.addColorStop(.25,'rgba(92,0,52,.78)');
- gradient.addColorStop(.62,'rgba(190,0,107,.94)');
- gradient.addColorStop(1,'rgba(230,0,141,.98)');
+ gradient.addColorStop(0,'rgba(230,0,141,0)');
+ gradient.addColorStop(1,'rgba(230,0,141,1)');
  ctx.fillStyle=gradient;
  ctx.fillRect(0,gradientTop,W,H-gradientTop);
  drawBrandLogo();
