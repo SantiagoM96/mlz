@@ -588,3 +588,53 @@
 .editor-panel .ds-variant-preview-quote-blue::after{
  top:25px;font-size:32px;line-height:1
 }
+
+/* Síntesis visual 3:4: fotografía gris neutra y dos trazos redondos. */
+.editor-panel .ds-variant-preview-pink,
+.editor-panel .ds-variant-preview-blue{
+ background:linear-gradient(to bottom,transparent 53%,#fff 53%),#aeb4bc
+}
+.editor-panel .ds-variant-preview-pink::after,
+.editor-panel .ds-variant-preview-blue::after{content:none}
+.editor-panel .ds-variant-preview-pink i,
+.editor-panel .ds-variant-preview-blue i{
+ position:absolute;z-index:1;left:50%;height:4px;border-radius:5px;
+ transform:translateX(-50%);background:#7749a6;display:block;
+}
+.editor-panel .ds-variant-preview-pink i:first-child,
+.editor-panel .ds-variant-preview-blue i:first-child{top:66%;width:78%}
+.editor-panel .ds-variant-preview-pink i:nth-child(2),
+.editor-panel .ds-variant-preview-blue i:nth-child(2){
+ top:78%;width:56%;background:var(--variant-contrast)
+}
+/* Las citas usan color pleno; dos signos de cita identifican el diseño. */
+.editor-panel .ds-variant-preview-quote{background:#a30065}
+.editor-panel .ds-variant-preview-quote-blue{background:#008fbe}
+.editor-panel .ds-variant-preview-quote::before,
+.editor-panel .ds-variant-preview-quote-blue::before{
+ content:'“ ”';position:absolute;inset:16px 0 auto;text-align:center;
+ color:#fff;font:700 27px/1 Georgia,serif;background:none;opacity:1;height:auto
+}
+.editor-panel .ds-variant-preview-quote::after,
+.editor-panel .ds-variant-preview-quote-blue::after{content:none}
+.editor-panel .ds-variant-preview-quote i,
+.editor-panel .ds-variant-preview-quote-blue i{
+ position:absolute;left:50%;transform:translateX(-50%);
+ display:block;height:4px;border-radius:5px;background:#fff;
+}
+.editor-panel .ds-variant-preview-quote i:first-child,
+.editor-panel .ds-variant-preview-quote-blue i:first-child{top:64%;width:73%}
+.editor-panel .ds-variant-preview-quote i:nth-child(2),
+.editor-panel .ds-variant-preview-quote-blue i:nth-child(2){top:76%;width:54%}
+.editor-panel .ds-variant-option[aria-pressed="true"] .ds-variant-preview{
+ outline-width:4px;outline-offset:2px
+}
+/* Consejo superpuesto, sin reservar espacio entre la barra y el canvas. */
+@media(min-width:701px) and (max-width:1439px){
+ .preview .browser-zoom-tip{
+  position:absolute;display:flex;top:64px;left:auto;right:0;
+  width:210px;margin:0;z-index:12;align-self:auto;order:initial
+ }
+ .preview .preview-toolbar,.preview .canvas-stage,
+ .preview .preview-actions,.preview .bae-credits{order:initial}
+}
