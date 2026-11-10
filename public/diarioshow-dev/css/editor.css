@@ -1494,3 +1494,31 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-photo-layout-group .split-photo-fields>.control-field+.control-field{
  margin-top:var(--ds-internal-module-gap)!important;
 }
+
+
+/* Selección uniforme: mismo anillo que las miniaturas Logo Diario Show.
+   Se conserva el contorno gris del propio thumbnail, sin borde fucsia doble. */
+.editor-panel .ds-plate-design-group .ds-variant-option[aria-pressed="true"] .ds-variant-preview,
+.editor-panel #photoLayoutOptions .photo-layout-option[aria-pressed="true"] .photo-layout-thumbnail{
+ outline:2px solid #e6008d!important;
+ outline-offset:2px!important;
+ border-color:#565a63!important;
+}
+.editor-panel .ds-plate-design-group .ds-variant-option[aria-pressed="false"] .ds-variant-preview,
+.editor-panel #photoLayoutOptions .photo-layout-option[aria-pressed="false"] .photo-layout-thumbnail{
+ outline:none!important;
+}
+.editor-panel .ds-plate-design-group .ds-variant-options,
+.editor-panel #photoLayoutOptions.ds-variant-options{
+ column-gap:14px;
+}
+/* Etiquetas de las dos distribuciones: un término por línea y centradas. */
+.editor-panel #photoLayoutOptions .photo-layout-option>span.photo-layout-caption{
+ display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;
+ width:100%;gap:0;
+ text-align:center;white-space:normal!important;
+ font:500 11px/15px system-ui,Arial,sans-serif;
+}
+.editor-panel #photoLayoutOptions .photo-layout-caption>span{
+ display:block;white-space:nowrap;
+}
