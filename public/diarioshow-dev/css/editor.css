@@ -1741,3 +1741,34 @@ main > aside.editor-panel{
  .editor-panel #articleImportField .import-row #articleUrl{flex-basis:0!important;min-width:0!important}
  .editor-panel #articleImportField .import-row #importArticle{min-width:76px;padding:0 10px}
 }
+
+
+/* Token común de hover en todas las herramientas del panel.
+   Tono de referencia: selector Logo Diario Show (#393d45).
+   No se alteran selección, foco, texturas de las placas ni el halo propio del slider. */
+.editor-panel{--ds-control-hover:#393d45}
+.editor-panel .logo-choice:hover .logo-choice-preview,
+.editor-panel .ds-photo-picker .ds-photo-picker-surface:hover,
+.editor-panel .ds-photo-picker.is-drag-over .ds-photo-picker-surface,
+.editor-panel .ds-control-card-toggle:hover,
+.editor-panel .typography-row .format-buttons button:hover:not([aria-pressed="true"]),
+.editor-panel .typography-row .align-buttons button:hover:not([aria-pressed="true"]),
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button:hover:not([aria-pressed="true"]),
+.editor-panel #articleImportField .import-row #importArticle:hover:not(:disabled),
+.editor-panel .theme-swatch:hover,
+.editor-panel .texture-option:hover .texture-number{
+ background-color:var(--ds-control-hover)!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-option:hover .photo-layout-thumbnail,
+.editor-panel .ds-variant-option:hover .ds-variant-preview{
+ filter:none!important;
+}
+/* Las miniaturas son composiciones: evitar reemplazar sus colores o imágenes. */
+.editor-panel #photoLayoutOptions .photo-layout-option:hover .photo-layout-thumbnail{
+ border-color:#565a63;
+}
+/* Mantener el contorno blanco de la carga de fotografías en hover. */
+.editor-panel .ds-photo-picker .ds-photo-picker-surface:hover,
+.editor-panel .ds-photo-picker.is-drag-over .ds-photo-picker-surface{
+ border-color:#fff!important;
+}
