@@ -538,3 +538,73 @@
  }
 }
 
+
+/* Páginas del carrusel: miniaturas editoriales monocromáticas 3:4.
+   La portada usa caja de volanta alta; la interior solo un filete.
+   El número se mantiene sobre la zona fotográfica, sin sustituirla. */
+.editor-panel .carousel-compact-row{align-items:flex-start}
+.editor-panel .carousel-pages{align-items:flex-start;gap:7px}
+.editor-panel .carousel-pages button{
+ --page-photo:#41454d;--page-panel:#656a73;--page-strap:#3d4149;
+ --page-ink:#292d34;--page-accent:#a2a7b1;--page-number:#dadce1;
+ position:relative;box-sizing:border-box;
+ display:block;flex:0 0 39px;width:39px;height:52px;
+ min-height:52px!important;max-height:52px;
+ padding:0!important;overflow:hidden;
+ border:2px solid #636871;border-radius:7px;
+ background:#3b4048;color:var(--page-number);
+ box-shadow:none;
+}
+.editor-panel .carousel-pages button[aria-current="page"]{
+ --page-photo:#920714;--page-panel:#d32a36;--page-strap:#68000b;
+ --page-ink:#6a000a;--page-accent:#ff7a83;--page-number:#ffe4e5;
+ background:#ab0d19;border-color:#ed0000;
+ outline:2px solid #ed0000;outline-offset:1px;
+}
+.editor-panel .carousel-page-thumbnail{
+ display:flex;flex-direction:column;position:absolute;
+ inset:0;pointer-events:none;
+}
+.editor-panel .carousel-page-photo{
+ display:block;flex:0 0 51%;background:var(--page-photo);
+}
+.editor-panel .carousel-page-body{
+ display:flex;flex:1;min-height:0;flex-direction:column;
+ align-items:center;background:var(--page-panel);
+}
+.editor-panel .carousel-page-strap{
+ display:block;position:relative;flex:0 0 3px;
+ height:3px;width:100%;background:var(--page-strap);
+}
+.editor-panel .carousel-pages button[data-variant="cover"] .carousel-page-strap{
+ flex-basis:10px;height:10px;
+}
+.editor-panel .carousel-pages button[data-variant="cover"] .carousel-page-strap::after{
+ content:'';position:absolute;left:21%;right:21%;top:3px;
+ height:3px;background:var(--page-accent);border-radius:10px;
+}
+.editor-panel .carousel-page-lines{
+ display:flex;flex:1;min-height:0;width:100%;
+ flex-direction:column;align-items:center;justify-content:center;gap:4px;
+}
+.editor-panel .carousel-page-lines i{
+ display:block;flex:0 0 3px;height:3px;width:78%;
+ background:var(--page-ink);border-radius:10px;
+}
+.editor-panel .carousel-page-lines i:nth-child(2){
+ width:54%;background:var(--page-accent);
+}
+.editor-panel .carousel-page-number{
+ position:absolute;top:3px;left:50%;transform:translateX(-50%);
+ z-index:1;display:block;
+ font:700 14px/18px Inter,Arial,sans-serif;
+ color:var(--page-number);text-shadow:0 1px 2px rgba(0,0,0,.24);
+}
+.editor-panel .carousel-pages button:focus-visible{
+ outline:3px solid #f56b73;outline-offset:3px;
+}
+.editor-panel .carousel-pages button:hover{filter:brightness(1.09)}
+/* Los controles de agregar y eliminar mantienen sus dimensiones previas. */
+.editor-panel .carousel-actions button{
+ width:32px;height:32px;min-height:32px;flex-basis:32px;
+}
