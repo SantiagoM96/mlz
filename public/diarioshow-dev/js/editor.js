@@ -36,6 +36,16 @@ function setPhotoLayout(mode){
  syncPhotoZoom();render();
 }
 document.querySelectorAll('[data-photo-layout]').forEach(b=>b.addEventListener('click',()=>setPhotoLayout(b.dataset.photoLayout)));
+// Secciones plegables: solo se oculta el contenido, sin reiniciar controles.
+document.querySelectorAll('.ds-control-card-toggle').forEach(button=>{
+ button.addEventListener('click',()=>{
+  const body=el(button.getAttribute('aria-controls'));
+  const expanded=button.getAttribute('aria-expanded')!=='true';
+  button.setAttribute('aria-expanded',String(expanded));
+  body.hidden=!expanded;
+ });
+});
+
 const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
@@ -276,6 +286,14 @@ function setVariant(value){
  // La distribución compartida solo existe para las variantes 1 y 2.
  // En 3 y 4 vuelve el módulo original de una fotografía y su preview completa.
  el('photoLayoutOptions').closest('.ds-photo-layout-group').hidden=isQuote;
+ el('quotePhotoBody').closest('.ds-quote-photo-group').hidden=!isQuote;
+ // El mismo input original cambia de contenedor: conserva estilos y listeners.
+ const singleUpload=el('singlePhotoField');
+ const destination=el(isQuote?'quotePhotoBody':'photoUploadArea');
+ if(singleUpload.parentElement!==destination){
+  if(isQuote)destination.appendChild(singleUpload);
+  else destination.insertBefore(singleUpload,el('splitPhotoFields'));
+ }
  if(isQuote&&photoLayout!=='single')setPhotoLayout('single');
  el('quoteAuthorField').hidden=!isQuote;
  el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
