@@ -77,11 +77,13 @@ async function extract(url){
    return {title,images:uniqueImages(candidates,url)};
   }
  ];
- for(const service of services){
-  try{
-   merge(await service());
-   if(result.title&&result.images.length)break;
-  }catch(error){errors.push(error.message)}
+ // Consultas paralelas: un proxy caído no bloquea la respuesta de los demás.
+ const responses=await Promise.all(services.map(async service=>{
+  try{return {data:await service()}}catch(error){return {error:error.message||String(error)}}
+ }));
+ for(const response of responses){
+  if(response.data)merge(response.data);
+  else errors.push(response.error);
  }
  if(!result.title)throw Error('No se pudo leer el titular de esta noticia. '+errors.join('; '));
  return result;
@@ -124,11 +126,17 @@ let url;try{
  const legacy=['www.diarioshow.com','diarioshow.com'].includes(host);
  const cronica=['www.cronica.com.ar','cronica.com.ar'].includes(host)&&/^\/diarioshow(?:\/|$)/i.test(url.pathname);
  if(url.protocol!=='https:'||(!legacy&&!cronica))throw Error('Ingresá una noticia HTTPS de cronica.com.ar/diarioshow/ o diarioshow.com');
+ if(/^\/(?:diarioshow)?\/?$/i.test(url.pathname)||/^\/diarioshow\/(?:farandula|internacional|la-pavada|por-la-red)\/?$/i.test(url.pathname))throw Error('Pegá una URL de noticia individual, no una sección.');
 }catch(e){status.textContent=e.message;return}
 button.disabled=true;$('importOverlay').hidden=false;window.DiarioShowEditor.setImporting(true);status.textContent='Buscando el título y la fotografía…';
 try{
 const data=await extract(url.href);
-$('headline').value=data.title;$('enableQuote').checked=false;$('quote').hidden=true;window.DiarioShowEditor.refresh();
+$('headline').value=data.title;
+ // No modificar controles de citas eliminados del editor.
+ // La imagen nueva sustituye a la anterior y a su placeholder.
+ const editor=window.DiarioShowEditor;
+ editor.setImage(null);
+ const expectedRevision=editor.getPhotoRevision();
 if(data.images.length){
  status.textContent='Título importado. Descargando fotografía…';
  try{
@@ -136,7 +144,11 @@ if(data.images.length){
   for(const imageUrl of data.images.slice(0,8)){
    try{
     const img=await fetchImage(imageUrl);
-    window.DiarioShowEditor.setImage(img);
+    if(editor.getPhotoRevision()!==expectedRevision){
+     status.textContent='Se conservó la fotografía seleccionada manualmente.';
+     imported=true;break;
+    }
+    editor.setImage(img);
     status.textContent='Título y fotografía importados correctamente.';
     imported=true;break;
    }catch(error){console.warn('Foto candidata descartada:',error.message)}
