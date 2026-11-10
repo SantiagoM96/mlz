@@ -1522,3 +1522,37 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel #photoLayoutOptions .photo-layout-caption>span{
  display:block;white-space:nowrap;
 }
+
+
+/* Carga de fotografía: superficie punteada integrada al lenguaje del editor.
+   Input nativo accesible, visualmente oculto. */
+.editor-panel .ds-photo-picker{position:relative;width:100%;min-width:0}
+.editor-panel .ds-photo-picker .ds-photo-picker-native{
+ position:absolute!important;width:1px!important;height:1px!important;
+ padding:0!important;margin:0!important;overflow:hidden!important;
+ opacity:0!important;clip-path:inset(50%)!important;pointer-events:none!important;
+}
+.editor-panel .ds-photo-picker-surface{
+ display:flex;align-items:center;justify-content:center;gap:11px;
+ width:100%;min-width:0;min-height:58px;box-sizing:border-box;
+ margin:0!important;padding:12px 15px;
+ border:1.5px dashed #777c87;border-radius:10px;
+ background:#25272d;color:#adb1bb;cursor:pointer;
+ font:400 13px/20px system-ui,Arial,sans-serif;
+ transition:background-color .15s,border-color .15s,color .15s;
+}
+.editor-panel .ds-photo-picker-icon{flex:none;font-size:24px;color:#e6008d}
+.editor-panel .ds-photo-picker-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-panel .ds-photo-picker-action{color:#f1f2f6;font-weight:700}
+.editor-panel .ds-photo-picker-caption{color:#aeb4bf;font-weight:400}
+.editor-panel .ds-photo-picker-surface:hover,
+.editor-panel .ds-photo-picker.is-drag-over .ds-photo-picker-surface{
+ background:#30323a;border-color:#e6008d;
+}
+.editor-panel .ds-photo-picker-native:focus-visible+.ds-photo-picker-surface{
+ outline:2px solid #e6008d;outline-offset:2px;
+}
+.editor-panel .ds-photo-picker.has-photo .ds-photo-picker-caption{color:#c3c6ce}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .ds-photo-picker-surface{transition:none}
+}
