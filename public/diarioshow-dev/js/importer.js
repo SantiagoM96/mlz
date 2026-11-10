@@ -93,26 +93,29 @@ function validateExportableImage(img){
  return img;
 }
 async function fetchImage(url){
- const options=[
+ const endpoints=[
   url,
   'https://wsrv.nl/?url='+encodeURIComponent(url)+'&output=jpg',
   'https://api.allorigins.win/raw?url='+encodeURIComponent(url),
   'https://corsproxy.io/?url='+encodeURIComponent(url)
  ];
- for(const endpoint of options){
+ const attempt=async endpoint=>{
+  const res=await fetch(endpoint,{signal:timeout(9000)});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const blob=await res.blob();
+  // Algunos proxies devuelven octet-stream aunque la respuesta sea una foto.
+  if(!blob.size||(!blob.type.startsWith('image/')&&blob.type!=='application/octet-stream'))throw Error('Respuesta sin imagen');
+  const objectURL=URL.createObjectURL(blob);
   try{
-   const res=await fetch(endpoint,{signal:timeout(12000)});
-   if(!res.ok)continue;
-   const blob=await res.blob();
-   if(!blob.type.startsWith('image/'))continue;
-   const objectURL=URL.createObjectURL(blob);
-   try{
-    const img=new Image();img.src=objectURL;await img.decode();
-    return validateExportableImage(img);
-   }finally{URL.revokeObjectURL(objectURL)}
-  }catch(error){console.warn('No se pudo importar fotografía exportable:',error)}
- }
- throw Error('No se pudo descargar una versión exportable de la foto. Cargala manualmente.');
+   const img=new Image();img.src=objectURL;
+   await img.decode();
+   return validateExportableImage(img);
+  }finally{URL.revokeObjectURL(objectURL)}
+ };
+ // Probamos vías alternativas simultáneamente: una caída de proxy no bloquea
+ // los demás ni retrasa la descarga de la fotografía válida.
+ try{return await Promise.any(endpoints.map(attempt))}
+ catch{throw Error('No se pudo descargar una versión exportable de la foto. Cargala manualmente.')}
 }
 button.addEventListener('click',async()=>{
 let url;try{
@@ -129,14 +132,14 @@ $('headline').value=data.title;$('enableQuote').checked=false;$('quote').hidden=
 if(data.images.length){
  status.textContent='Título importado. Descargando fotografía…';
  try{
-  let imported=false,failures=[];
+  let imported=false;
   for(const imageUrl of data.images.slice(0,8)){
    try{
     const img=await fetchImage(imageUrl);
     window.DiarioShowEditor.setImage(img);
     status.textContent='Título y fotografía importados correctamente.';
     imported=true;break;
-   }catch(error){failures.push(error.message)}
+   }catch(error){console.warn('Foto candidata descartada:',error.message)}
   }
   if(!imported)status.textContent='Título importado, pero no se pudo descargar la fotografía. Podés cargarla manualmente.';
  }catch(error){status.textContent='Título importado, pero hubo un problema con la fotografía: '+error.message}
