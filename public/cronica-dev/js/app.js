@@ -162,6 +162,7 @@ function render(includeHover=true){
   el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);
   el('status').textContent=size<requestedSize?'Texto largo: tamaño ajustado para respetar los márgenes.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
  }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
+finally{window.dispatchEvent(new Event('modern:render'))}
 }
 /* Cada placa conserva sus propios controles, foto, zoom y encuadre durante la edición. */
 let carouselPages=[],activePage=0;
