@@ -301,7 +301,7 @@
 .preview .browser-zoom-tip-close:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
 /* Cuando la tercera columna no cabe, conservar el aviso separado
    del zoom y en el flujo del editor, sin crear scroll horizontal. */
-@media(max-width:1650px){
+@media(max-width:1439px){
  .preview .browser-zoom-tip{
   position:static;align-self:flex-end;width:min(100%,260px);
   margin:0;order:1
@@ -409,8 +409,4 @@
 .preview .browser-zoom-demo-headline i:nth-child(2){background:#D82626}
 .preview .browser-zoom-demo-headline i:nth-child(3){background:#fff}
 .preview .browser-zoom-demo-signature{background:#fff}
-/* Visibilidad explícita: en desktop pequeño se muestra en flujo, nunca fuera de pantalla. */
-@media(min-width:701px) and (max-width:1650px){
- .preview .browser-zoom-tip:not([hidden]){display:flex!important;position:static!important;order:1;align-self:flex-end;max-width:260px;z-index:1}
-}
 @media(max-width:700px){.preview .browser-zoom-tip{display:none!important}}
