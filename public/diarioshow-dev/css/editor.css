@@ -338,31 +338,46 @@
 .editor-panel .ds-author-toggle{margin:0 0 12px!important}
 .editor-panel .ds-author-field #quoteAuthorInputField>label{display:block;margin-bottom:8px}
 
-/* Consejo visible, descartable y pegado al control del zoom fotográfico.
-   Solo orienta sobre el zoom del navegador; no modifica el zoom del canvas. */
-.preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])){
- justify-content:flex-start;flex-wrap:wrap;column-gap:8px;row-gap:6px
+/* Aviso flotante: tercera columna visual, FUERA del módulo de zoom.
+   El módulo de zoom y el canvas mantienen el ancho y su alineación originales. */
+/* Reservar una tercera columna para el aviso sin achicar la preview. */
+@media(min-width:1260px){
+ main{
+  width:min(1320px,calc(100% - 40px));max-width:1320px;
+  grid-template-columns:minmax(340px,430px) minmax(0,540px) minmax(170px,210px);
+  column-gap:12px
+ }
+ main>.editor-panel{margin-right:12px}
 }
+.preview{position:relative}
 .preview .browser-zoom-tip{
- display:flex;align-items:center;gap:7px;flex:1 1 175px;min-width:0;
- padding:7px 8px;border:1px solid #55505a;border-radius:7px;
- background:#302b36;color:#efedf3;font:500 11px/1.35 Inter,Arial,sans-serif
+ position:absolute;top:0;left:calc(100% + 12px);z-index:4;
+ width:210px;display:flex;align-items:flex-start;gap:8px;
+ padding:10px;border:1px solid #55505a;border-radius:9px;
+ background:#302b36;box-shadow:0 8px 24px rgba(0,0,0,.2);
+ color:#efedf3;font:500 11px/1.45 Inter,Arial,sans-serif
 }
 .preview .browser-zoom-tip[hidden]{display:none!important}
 .preview .browser-zoom-tip-icon{flex:0 0 auto;font-size:18px;color:#f09bd0}
-.preview .browser-zoom-tip-copy{min-width:0}
+.preview .browser-zoom-tip-copy{flex:1;min-width:0}
 .preview .browser-zoom-tip-copy strong{font-weight:700;color:#fff}
 .preview .browser-zoom-tip-close{
  display:inline-flex;align-items:center;justify-content:center;
- width:24px;height:24px;flex:0 0 24px;padding:0;margin-left:auto;
+ flex:0 0 22px;width:22px;height:22px;padding:0;
  color:#d6d2db;background:transparent;border:0;border-radius:5px;cursor:pointer
 }
 .preview .browser-zoom-tip-close .material-icons{font-size:16px}
 .preview .browser-zoom-tip-close:hover{background:#4a424f;color:#fff}
 .preview .browser-zoom-tip-close:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
-.preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])) .preview-instructions{
- flex:1 0 100%;text-align:left
-}
-@media(max-width:520px){
- .preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])) .browser-zoom-tip{flex-basis:100%}
+/* Cuando la tercera columna no cabe, conservar el aviso separado
+   del zoom y en el flujo del editor, sin crear scroll horizontal. */
+@media(max-width:1259px){
+ .preview .browser-zoom-tip{
+  position:static;align-self:flex-end;width:min(100%,260px);
+  margin:0;order:1
+ }
+ .preview .preview-toolbar{order:0}
+ .preview .canvas-stage{order:2}
+ .preview .preview-actions{order:3}
+ .preview .bae-credits{order:4}
 }
