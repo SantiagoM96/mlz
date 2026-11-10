@@ -717,3 +717,20 @@
  }
 }
 
+
+/* Misma jerarquía de dos renglones que BAE y Crónica.
+   Primario más grueso y largo; destacado más fino y corto. */
+.editor-panel .ds-variant-preview i:first-child{
+ height:5px;border-radius:10px;
+}
+.editor-panel .ds-variant-preview i:nth-child(2){
+ height:3px;border-radius:10px;
+}
+.editor-panel .ds-variant-preview-pink i:first-child,
+.editor-panel .ds-variant-preview-blue i:first-child{width:84%}
+.editor-panel .ds-variant-preview-pink i:nth-child(2),
+.editor-panel .ds-variant-preview-blue i:nth-child(2){width:60%}
+.editor-panel .ds-variant-preview-quote i:first-child,
+.editor-panel .ds-variant-preview-quote-blue i:first-child{width:84%}
+.editor-panel .ds-variant-preview-quote i:nth-child(2),
+.editor-panel .ds-variant-preview-quote-blue i:nth-child(2){width:60%}
