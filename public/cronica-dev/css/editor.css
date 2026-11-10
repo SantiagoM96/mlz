@@ -538,3 +538,86 @@
  }
 }
 
+
+/* Navegación Páginas: pequeñas placas editoriales 3:4, con el mismo
+   vocabulario visual de Portada/Interior y número visible encima.
+   Seleccionada: escala monocromática de rojos; inactivas: grises. */
+.editor-panel .carousel-pages{
+ align-items:flex-start;gap:7px
+}
+.editor-panel .carousel-pages .carousel-page-thumb{
+ --page-bg:#353941;--page-photo:#656a73;--page-panel:#41454e;
+ --page-strap:#777c85;--page-text:#8d929b;--page-accent:#aaaeb7;
+ --page-number-bg:#292d34;--page-number:#d0d3d9;
+ position:relative;isolation:isolate;
+ display:block;width:42px;height:56px;min-height:56px!important;
+ flex:0 0 42px;aspect-ratio:3/4;
+ padding:0!important;border:1px solid #555a64;
+ border-radius:7px;overflow:hidden;
+ color:var(--page-number);background:var(--page-bg);
+ transition:border-color .15s ease,filter .15s ease;
+}
+.editor-panel .carousel-pages .carousel-page-thumb[aria-current="page"]{
+ --page-bg:#5e111a;--page-photo:#ab3b46;--page-panel:#761722;
+ --page-strap:#d85862;--page-text:#e97a83;--page-accent:#f2a0a6;
+ --page-number-bg:#820e1b;--page-number:#ffb4ba;
+ background:var(--page-bg);border-color:#ed0000
+}
+.editor-panel .carousel-page-art{
+ position:absolute;inset:0;display:flex;flex-direction:column;
+ overflow:hidden;pointer-events:none
+}
+.editor-panel .carousel-page-photo{
+ flex:0 0 48%;min-height:0;background:var(--page-photo)
+}
+.editor-panel .carousel-page-content{
+ flex:1;min-height:0;display:flex;flex-direction:column;
+ background:var(--page-panel)
+}
+.editor-panel .carousel-page-strap{
+ display:block;position:relative;flex:0 0 3px;
+ background:var(--page-strap)
+}
+.editor-panel .carousel-page-thumb[data-variant="cover"] .carousel-page-strap{
+ flex-basis:10px
+}
+.editor-panel .carousel-page-thumb[data-variant="cover"] .carousel-page-strap::after{
+ content:'';position:absolute;top:3px;left:25%;right:25%;
+ height:3px;border-radius:5px;background:var(--page-accent)
+}
+.editor-panel .carousel-page-lines{
+ display:flex;flex:1;min-height:0;flex-direction:column;
+ align-items:center;justify-content:center;gap:4px
+}
+.editor-panel .carousel-page-lines i{
+ display:block;width:76%;height:3px;flex:0 0 3px;
+ border-radius:6px;background:var(--page-text)
+}
+.editor-panel .carousel-page-lines i:nth-child(2){
+ width:52%;background:var(--page-accent)
+}
+.editor-panel .carousel-page-number{
+ position:absolute;top:5px;left:50%;transform:translateX(-50%);
+ display:flex;align-items:center;justify-content:center;
+ min-width:16px;height:17px;padding:0 3px;
+ border-radius:5px;background:var(--page-number-bg);
+ color:var(--page-number);font:700 11px/1 Inter,Arial,sans-serif;
+ z-index:1
+}
+.editor-panel .carousel-pages .carousel-page-thumb:hover{filter:brightness(1.12)}
+.editor-panel .carousel-pages .carousel-page-thumb:focus-visible{
+ outline:2px solid #ed0000;outline-offset:3px
+}
+/* Agregar y borrar conservan 32px aunque aumente la altura de páginas. */
+.editor-panel .carousel-actions{align-self:flex-start}
+.editor-panel .carousel-actions button{
+ width:32px;height:32px;min-height:32px!important;flex:0 0 32px
+}
+@media(max-width:600px){
+ .editor-panel .carousel-pages .carousel-page-thumb{
+  width:42px;height:56px;min-height:56px!important;flex-basis:42px
+ }
+ .editor-panel .carousel-actions button{
+  width:36px;height:36px;min-height:36px!important;flex-basis:36px
+ }
+}
