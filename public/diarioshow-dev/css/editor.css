@@ -340,9 +340,18 @@
 
 /* Aviso flotante: tercera columna visual, FUERA del módulo de zoom.
    El módulo de zoom y el canvas mantienen el ancho y su alineación originales. */
+/* Reservar una tercera columna para el aviso sin achicar la preview. */
+@media(min-width:1260px){
+ main{
+  width:min(1320px,calc(100% - 40px));max-width:1320px;
+  grid-template-columns:minmax(340px,430px) minmax(0,540px) minmax(170px,210px);
+  column-gap:12px
+ }
+ main>.editor-panel{margin-right:12px}
+}
 .preview{position:relative}
 .preview .browser-zoom-tip{
- position:absolute;top:0;left:calc(50% + 282px);z-index:4;
+ position:absolute;top:0;left:calc(100% + 12px);z-index:4;
  width:210px;display:flex;align-items:flex-start;gap:8px;
  padding:10px;border:1px solid #55505a;border-radius:9px;
  background:#302b36;box-shadow:0 8px 24px rgba(0,0,0,.2);
@@ -362,7 +371,7 @@
 .preview .browser-zoom-tip-close:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
 /* Cuando la tercera columna no cabe, conservar el aviso separado
    del zoom y en el flujo del editor, sin crear scroll horizontal. */
-@media(max-width:1500px){
+@media(max-width:1259px){
  .preview .browser-zoom-tip{
   position:static;align-self:flex-end;width:min(100%,260px);
   margin:0;order:1
