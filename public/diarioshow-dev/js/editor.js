@@ -306,6 +306,8 @@ photoStage.addEventListener('drop',event=>{
 /* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
    adentro cuando faltarían menos de 24px al borde de la pantalla. */
 function positionBrowserZoomTip(){
+ // CSS posiciona nativamente el aviso respecto del canvas cuando admite anchors.
+ if(window.CSS?.supports?.('position-anchor: --editor-poster') && window.CSS?.supports?.('left: anchor(right)'))return;
  const tip=el('browserZoomTip');
  const preview=tip.closest('.preview');
  const stage=el('photoStage');
@@ -314,7 +316,7 @@ function positionBrowserZoomTip(){
  const stageRect=stage.getBoundingClientRect();
  const tipWidth=tip.getBoundingClientRect().width||210;
  const freeRight=window.innerWidth-24-tipWidth-previewRect.left;
- const preferredLeft=stageRect.right-previewRect.left+12;
+ const preferredLeft=stageRect.right-previewRect.left+24;
  const left=Math.min(preferredLeft,freeRight);
  const top=stageRect.top-previewRect.top+24;
  preview.style.setProperty('--zoom-help-left',left+'px');
