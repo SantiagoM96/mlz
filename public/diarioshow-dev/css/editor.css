@@ -1774,33 +1774,45 @@ main > aside.editor-panel{
 }
 
 
-/* Microinteracción del valor: sin alterar la geometría del panel. */
+/* Valor animado en blanco; interacción neutra localizada solo en el thumb. */
 .editor-panel .ds-texts-group .ds-inline-type-size output{
  display:inline-block;transform-origin:100% 50%;
- color:#eff0f3;font-weight:600;
- transition:color .12s ease,font-weight .12s ease,transform .14s ease;
+ color:#fff!important;font-weight:600;
+ transition:transform .14s ease,font-weight .14s ease;
  will-change:transform;
 }
 .editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting output{
- color:#e6008d;font-weight:800;
- transform:scale(1.22);
+ color:#fff!important;font-weight:800;transform:scale(1.22);
 }
 .editor-panel .ds-texts-group .ds-inline-type-size:not(.is-adjusting) output{
- color:#eff0f3;
- transform:scale(1);
+ color:#fff!important;transform:scale(1);
 }
+.editor-panel .ds-texts-group .ds-inline-type-size .ds-size-unit,
 .editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting .ds-size-unit{
- color:#e6008d;
+ color:#fff!important;
 }
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:is(:hover,:active)::-webkit-slider-thumb,
-.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting input[type="range"]::-webkit-slider-thumb{
- background-color:#e6008d!important;border-color:#fff!important;
- box-shadow:0 0 0 2px #e6008d35,0 0 8px 2px #e6008d90!important;
+/* Anular hover general de la pista: un clic fuera de la bolita no la activa. */
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-webkit-slider-thumb{
+ background:#292c32!important;border-color:#f4f4f4!important;box-shadow:none!important;
 }
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:is(:hover,:active)::-moz-range-thumb,
-.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting input[type="range"]::-moz-range-thumb{
- background-color:#e6008d!important;border-color:#fff!important;
- box-shadow:0 0 0 2px #e6008d35,0 0 8px 2px #e6008d90!important;
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-moz-range-thumb{
+ background:#292c32!important;border-color:#f4f4f4!important;box-shadow:none!important;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-hover input[type="range"]::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-engaged input[type="range"]::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-hover input[type="range"]:hover::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-engaged input[type="range"]:active::-webkit-slider-thumb{
+ background:#9297a1!important;border-color:#fff!important;box-shadow:none!important;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-hover input[type="range"]::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-engaged input[type="range"]::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-hover input[type="range"]:hover::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-thumb-engaged input[type="range"]:active::-moz-range-thumb{
+ background:#9297a1!important;border-color:#fff!important;box-shadow:none!important;
 }
 @media(prefers-reduced-motion:reduce){
  .editor-panel .ds-texts-group .ds-inline-type-size output{
