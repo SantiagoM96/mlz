@@ -1678,31 +1678,66 @@ main > aside.editor-panel{
 }
 
 
-/* Slider sobrio: recorrido blanco, indicador sin resplandor en reposo.
-   Solo el puntero reacciona en fucsia al hover; cifra fucsia al arrastrar. */
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]{
- accent-color:#f4f4f4;
-}
+/* Slider sobrio: blanco y gris en reposo; fucsia solo durante la interacción. */
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]{accent-color:#f4f4f4}
 .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-runnable-track{
- background:linear-gradient(to right,
-  #f4f4f4 0%,#f4f4f4 var(--ds-size-progress,44.44%),
-  #484c55 var(--ds-size-progress,44.44%),#484c55 100%);
+ background:linear-gradient(to right,#f4f4f4 0%,#f4f4f4 var(--ds-size-progress,44.44%),#484c55 var(--ds-size-progress,44.44%),#484c55 100%);
 }
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-progress{
- background:#f4f4f4;
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-progress{background:#f4f4f4}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb{
+ background:#292c32;box-shadow:none;
 }
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb,
 .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{
- background:#292c32;
- box-shadow:none;
+ background:#292c32;box-shadow:none;
 }
 .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-webkit-slider-thumb,
-.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-moz-range-thumb{
- background:#e6008d;
- border-color:#fff;
- box-shadow:0 0 0 3px #e6008d30,0 0 11px 3px #e6008d85;
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-webkit-slider-thumb{
+ background:#e6008d;border-color:#fff;box-shadow:0 0 0 3px #e6008d30,0 0 11px 3px #e6008d80;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-moz-range-thumb{
+ background:#e6008d;border-color:#fff;box-shadow:0 0 0 3px #e6008d30,0 0 11px 3px #e6008d80;
 }
 .editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting output,
-.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting .ds-size-unit{
- color:#e6008d;
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting .ds-size-unit{color:#e6008d}
+
+/* Importador integrado: campo y acción dentro de una única superficie. */
+.editor-panel #articleImportField .import-row{
+ display:flex;align-items:stretch;flex-wrap:nowrap;gap:0;
+ width:100%;min-width:0;min-height:44px;overflow:hidden;
+ background:#292c32;border:1px solid #4a4e56;border-radius:9px;
+ transition:border-color .15s ease,background-color .15s ease;
+}
+.editor-panel #articleImportField .import-row:hover{border-color:#858991}
+.editor-panel #articleImportField .import-row:focus-within{
+ border-color:#f4f4f4;
+ box-shadow:0 0 0 1px #f4f4f4;
+}
+.editor-panel #articleImportField .import-row #articleUrl{
+ flex:1 1 auto;min-width:0;width:0;height:44px;
+ margin:0!important;padding:10px 12px!important;
+ border:0!important;border-radius:0!important;box-shadow:none!important;
+ background:transparent!important;color:#f4f4f4;font-size:12px;
+ outline:none!important;
+}
+.editor-panel #articleImportField .import-row #articleUrl::placeholder{
+ color:#9297a2;opacity:1;
+}
+.editor-panel #articleImportField .import-row #importArticle{
+ flex:0 0 auto;min-width:84px;margin:0;padding:0 14px;
+ border:0;border-left:1px solid #4a4e56;border-radius:0;
+ background:#383c45;color:#fff;font-size:12px;font-weight:650;
+ transition:background-color .15s ease,color .15s ease;
+}
+.editor-panel #articleImportField .import-row #importArticle:hover:not(:disabled){
+ background:#4a4e58;color:#fff;
+}
+.editor-panel #articleImportField .import-row #importArticle:active:not(:disabled){background:#555a65}
+.editor-panel #articleImportField .import-row #importArticle:focus-visible{
+ outline:2px solid #fff;outline-offset:-3px;
+}
+@media(max-width:480px){
+ .editor-panel #articleImportField .import-row{flex-wrap:nowrap!important}
+ .editor-panel #articleImportField .import-row #articleUrl{flex-basis:0!important;min-width:0!important}
+ .editor-panel #articleImportField .import-row #importArticle{min-width:76px;padding:0 10px}
 }
