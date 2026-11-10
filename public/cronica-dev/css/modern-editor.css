@@ -249,3 +249,17 @@ body[data-editor-brand="bae"]{--editor-accent:#d82626}
 .editor-panel .modern-card .modern-body .is-thumb-engaged #dots::-moz-range-thumb{
  background:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.27),0 0 10px 3px rgba(255,255,255,.48)!important;
 }
+
+
+/* Text-only touch surface: scrollable without affecting the photo drag area. */
+.preview .canvas-stage>.modern-text-hit{display:none}
+@media(max-width:700px){
+ .modern-track>.preview .canvas-stage>.modern-text-hit{
+  display:block;position:absolute;left:0;right:0;top:var(--photo-height,60%);bottom:0;
+  z-index:4;background:transparent;cursor:text;touch-action:pan-y;
+  -webkit-tap-highlight-color:transparent;
+ }
+ .modern-track>.preview .canvas-stage>.modern-text-hit:focus-visible{
+  outline:2px solid var(--editor-accent);outline-offset:3px;
+ }
+}
