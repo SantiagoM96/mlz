@@ -763,7 +763,10 @@ let zoomThumbHeld=null,zoomValueBounce;
 function mobileZoomHit(event){
  const rect=mobileZoom.getBoundingClientRect(),min=Number(mobileZoom.min),max=Number(mobileZoom.max);
  const t=max>min?(Number(mobileZoom.value)-min)/(max-min):0;
- const x=rect.left+7.5+t*Math.max(0,rect.width-15),y=rect.top+rect.height/2;
+ // Mobile: valor mínimo abajo, máximo arriba. Desktop conserva el rango horizontal.
+ const vertical=mobileTabViewport.matches;
+ const x=vertical?rect.left+rect.width/2:rect.left+7.5+t*Math.max(0,rect.width-15);
+ const y=vertical?rect.bottom-7.5-t*Math.max(0,rect.height-15):rect.top+rect.height/2;
  return Math.abs(event.clientX-x)<=10.5&&Math.abs(event.clientY-y)<=11.5;
 }
 mobileZoom.addEventListener('pointermove',event=>{
@@ -843,6 +846,18 @@ function openMobileHeadlineEditor(){
  setTimeout(keepMobileHeadlineAboveKeyboard,180);
  setTimeout(keepMobileHeadlineAboveKeyboard,420);
 }
+// En mobile el zoom se monta junto a la placa, no en la barra superior.
+// Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
+const zoomControl=el('dsPhotoZoomControl');
+const desktopZoomToolbar=document.querySelector('.preview-toolbar');
+function positionMobilePhotoZoom(){
+ if(mobileTabViewport.matches){
+  if(zoomControl.parentElement!==el('photoStage'))el('photoStage').appendChild(zoomControl);
+ }else if(zoomControl.parentElement!==desktopZoomToolbar){
+  desktopZoomToolbar.insertBefore(zoomControl,el('status'));
+ }
+ mobileZoomBox.classList.remove('is-thumb-hover','is-thumb-engaged');
+}
 // Navegación mobile: paneles adyacentes desplazados como una sola superficie.
 const mobileTabViewport=window.matchMedia('(max-width:700px)');
 const mobileTabMain=document.querySelector('main');
@@ -893,8 +908,9 @@ mobileTabs.forEach((tab,index)=>{
  });
 });
 function syncMobileTabViewport(){
+ positionMobilePhotoZoom();
  selectMobileTab(mobileTabMain.dataset.mobileTab||'preview');
- requestAnimationFrame(updateMobileSlideHeight);
+ requestAnimationFrame(()=>{updatePhotoStage();updateMobileSlideHeight()});
 }
 mobileTabViewport.addEventListener('change',syncMobileTabViewport);
 window.addEventListener('resize',updateMobileSlideHeight);
