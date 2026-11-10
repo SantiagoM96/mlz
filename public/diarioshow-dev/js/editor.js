@@ -660,11 +660,11 @@ mobileTextModule.querySelectorAll('[id]').forEach(node=>node.id+='Mobile');
 mobileTextModule.querySelectorAll('[for]').forEach(node=>node.setAttribute('for',node.getAttribute('for')+'Mobile'));
 mobileTextModule.querySelectorAll('[aria-controls]').forEach(node=>node.setAttribute('aria-controls',node.getAttribute('aria-controls')+'Mobile'));
 mobileTextHost.appendChild(mobileTextModule);
-// En Vista previa el módulo siempre existe, inicialmente contraído.
-// Su copia en Formato conserva su estado y comportamiento independiente.
+// En Vista previa Textos permanece desplegado por defecto y puede contraerse.
+// La copia de Formato conserva su estado y comportamiento independiente.
 const mobileTextToggle=mobileTextModule.querySelector('.ds-control-card-toggle');
-mobileTextToggle.setAttribute('aria-expanded','false');
-mobileTextModule.querySelector('#ds-texts-group-bodyMobile').hidden=true;
+mobileTextToggle.setAttribute('aria-expanded','true');
+mobileTextModule.querySelector('#ds-texts-group-bodyMobile').hidden=false;
 const mirrorId=id=>el(id+'Mobile');
 function syncMobileTextEditor(){
  if(!document.querySelector('#dsMobileTextEditor .ds-texts-group'))return;
@@ -834,33 +834,6 @@ mobileZoom.addEventListener('input',()=>{
 
 // Edición directa del titular. Sin portales, sin focos repetidos y sin
 // alterar el tamaño del teclado o los paddings del documento.
-let mobileEditorScrollTimer=null;
-let mobileEditorScrollFrame=0;
-function revealMobileHeadlineEditor(){
- const host=el('dsMobileTextEditor'),field=mirrorId('headline');
- if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview'||
-    document.activeElement!==field||!host.getClientRects().length)return;
- const viewport=window.visualViewport;
- // VisualViewport refleja la altura realmente libre tras abrir SwiftKey/Gboard.
- // No cambiar tamaños del teclado ni mover/fijar el módulo.
- const visibleBottom=viewport?viewport.offsetTop+viewport.height:window.innerHeight;
- const rect=host.getBoundingClientRect();
- const delta=rect.bottom+24-visibleBottom;
- // Solo bajar lo necesario para mostrar Textos entero y 24 px de aire.
- // Evitar movimientos inversos que vuelvan a tapar el editor o la preview.
- if(delta>3)window.scrollBy({top:Math.ceil(delta),left:0,behavior:'instant'});
-}
-function scheduleMobileHeadlineReveal(){
- clearTimeout(mobileEditorScrollTimer);
- cancelAnimationFrame(mobileEditorScrollFrame);
- // Esperar al layout del teclado; un único scroll tras estabilizarse el cambio.
- mobileEditorScrollFrame=requestAnimationFrame(()=>{
-  mobileEditorScrollTimer=setTimeout(revealMobileHeadlineEditor,110);
- });
-}
-window.visualViewport?.addEventListener('resize',()=>{
- if(document.activeElement===mirrorId('headline'))scheduleMobileHeadlineReveal();
-});
 function openMobileHeadlineEditor(){
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
  const body=mirrorId('ds-texts-group-body');
@@ -871,9 +844,8 @@ function openMobileHeadlineEditor(){
  const field=mirrorId('headline');
  // El foco se da directamente durante el click real del usuario.
  // No volver a enfocar, ocultar ni reparentar el textarea después.
- field.focus({preventScroll:true});
+ field.focus();
  field.select();
- scheduleMobileHeadlineReveal();
 }
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
 // Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
