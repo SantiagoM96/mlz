@@ -377,11 +377,11 @@
 .preview .browser-zoom-demo-preview i:last-child{position:absolute;left:12%;right:12%;bottom:12%;height:4px;background:#7749a6}
 .preview .browser-zoom-demo-percent{
  position:absolute;right:5px;top:15px;min-width:44px;height:20px;z-index:2;
- border-radius:4px;background:rgba(255,255,255,.94);box-shadow:0 1px 4px rgba(0,0,0,.12)
+ border-radius:4px;background:#E6008D;box-shadow:0 1px 4px rgba(0,0,0,.12)
 }
 .preview .browser-zoom-demo-percent span{
  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
- white-space:nowrap;font:700 11px/1 Inter,Arial,sans-serif;color:#252733;opacity:0
+ white-space:nowrap;font:700 11px/1 Inter,Arial,sans-serif;color:#FFFFFF;opacity:0
 }
 .preview .browser-zoom-demo-percent span:nth-child(1){animation:ds-browser-zoom-number-100 6s linear infinite}
 .preview .browser-zoom-demo-percent span:nth-child(2){animation:ds-browser-zoom-number-90 6s linear infinite}
