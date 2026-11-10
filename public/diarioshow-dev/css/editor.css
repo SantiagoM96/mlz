@@ -1627,3 +1627,52 @@ main > aside.editor-panel{
 .editor-panel > .ds-control-card > .ds-control-card-body{
  background:#202228;
 }
+
+
+/* Slider de tipografía, variante fina: pista de 3px y thumb circular de 15px. */
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]{
+ -webkit-appearance:none;appearance:none;
+ display:block;box-sizing:border-box;
+ height:22px;min-height:22px;padding:0!important;
+ border:0!important;border-radius:0;
+ background:transparent!important;
+ accent-color:#e6008d;cursor:pointer;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-runnable-track{
+ height:3px;border:0;border-radius:99px;
+ background:linear-gradient(to right,#e6008d 0%,#e6008d var(--ds-size-progress,44.44%),#484c55 var(--ds-size-progress,44.44%),#484c55 100%);
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-track{
+ height:3px;border:0;border-radius:99px;background:#484c55;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-progress{
+ height:3px;border:0;border-radius:99px;background:#e6008d;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb{
+ -webkit-appearance:none;appearance:none;
+ box-sizing:border-box;width:15px;height:15px;
+ margin-top:-6px;border:2px solid #f4f4f4;border-radius:50%;
+ background:#292c32;box-shadow:0 0 0 2px #202228;
+ transition:background-color .15s,box-shadow .15s;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{
+ box-sizing:border-box;width:15px;height:15px;
+ border:2px solid #f4f4f4;border-radius:50%;
+ background:#292c32;box-shadow:0 0 0 2px #202228;
+ transition:background-color .15s,box-shadow .15s;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-webkit-slider-thumb{
+ background:#f4f4f4;box-shadow:0 0 0 3px #ffffff25;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:active::-moz-range-thumb{
+ background:#f4f4f4;box-shadow:0 0 0 3px #ffffff25;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:focus-visible{
+ outline:2px solid #f4f4f4;outline-offset:5px;border-radius:4px;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb,
+ .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{transition:none}
+}
