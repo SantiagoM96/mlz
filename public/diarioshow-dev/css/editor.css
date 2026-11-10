@@ -1895,3 +1895,89 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  main > .ds-mobile-viewport,
  .ds-mobile-viewport > .ds-mobile-track{display:contents}
 }
+
+
+/* Editor de Textos duplicado solo en la vista previa mobile. */
+.ds-mobile-text-editor{display:none!important}
+.ds-zoom-label-mobile{display:none}
+@media(max-width:700px){
+ .ds-mobile-track > .preview .preview-toolbar{
+  width:100%;min-height:0;
+  flex-direction:column;align-items:stretch;gap:10px;
+  padding:12px 14px;
+ }
+ .ds-mobile-track > .preview .preview-zoom{
+  width:100%;min-width:0;flex:none;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;gap:8px 8px;
+ }
+ .ds-mobile-track > .preview .preview-zoom label{
+  grid-column:1/-1;
+  font:600 13px/19px system-ui,Arial,sans-serif;color:#f4f4f4;
+ }
+ .ds-mobile-track > .preview .preview-zoom .ds-zoom-label-desktop{display:none}
+ .ds-mobile-track > .preview .preview-zoom .ds-zoom-label-mobile{display:inline}
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]{
+  grid-column:1;display:block;width:100%;min-width:0;
+  height:22px;margin:0;padding:0!important;
+  -webkit-appearance:none;appearance:none;
+  border:0!important;background:transparent!important;cursor:pointer;
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-webkit-slider-runnable-track{
+  height:3px;border:0;border-radius:99px;
+  background:linear-gradient(to right,#f4f4f4 0%,#f4f4f4 var(--ds-zoom-progress,0%),#484c55 var(--ds-zoom-progress,0%),#484c55 100%);
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-track{
+  height:3px;border:0;border-radius:99px;background:#484c55;
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-progress{
+  height:3px;border:0;border-radius:99px;background:#f4f4f4;
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:15px;height:15px;box-sizing:border-box;margin-top:-6px;
+  background:#292c32;border:2px solid #f4f4f4;border-radius:50%;
+  box-shadow:none;transition:background-color .12s;
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-thumb{
+  width:15px;height:15px;box-sizing:border-box;
+  background:#292c32;border:2px solid #f4f4f4;border-radius:50%;
+  box-shadow:none;transition:background-color .12s;
+ }
+ .ds-mobile-track > .preview .preview-zoom.is-thumb-hover input[type="range"]::-webkit-slider-thumb,
+ .ds-mobile-track > .preview .preview-zoom.is-thumb-engaged input[type="range"]::-webkit-slider-thumb,
+ .ds-mobile-track > .preview .preview-zoom.is-thumb-hover input[type="range"]::-moz-range-thumb,
+ .ds-mobile-track > .preview .preview-zoom.is-thumb-engaged input[type="range"]::-moz-range-thumb{
+  background:#9297a1;
+ }
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]:focus-visible{
+  outline:2px solid #fff;outline-offset:4px;border-radius:4px;
+ }
+ .ds-mobile-track > .preview .preview-zoom output{
+  grid-column:2;min-width:48px;text-align:right;
+  color:#fff;font:600 12px/18px system-ui,Arial,sans-serif;
+  font-variant-numeric:tabular-nums;transform-origin:100% 50%;
+  transition:transform .14s ease;
+ }
+ .ds-mobile-track > .preview .preview-zoom.is-adjusting output{
+  color:#fff;font-weight:800;transform:scale(1.22);
+ }
+ .ds-mobile-track > .preview .preview-instructions{
+  flex:none;flex-basis:auto;width:100%;
+  margin:0!important;text-align:center;
+ }
+ .ds-mobile-track > .preview > .ds-mobile-text-editor{
+  display:block!important;
+  width:100%;min-width:0;max-width:540px;
+  background:transparent!important;border:0;border-radius:0;
+  box-shadow:none;padding:0!important;
+ }
+ .ds-mobile-track > .preview > .ds-mobile-text-editor > .ds-control-card{
+  display:block;width:100%;margin:0;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .ds-mobile-track > .preview .preview-zoom output,
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-webkit-slider-thumb,
+ .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-thumb{transition:none}
+}
