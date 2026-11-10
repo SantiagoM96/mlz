@@ -30,7 +30,7 @@ const quoteMarkImage=new Image();
 quoteMarkImage.onload=()=>render();
 quoteMarkImage.onerror=()=>console.warn('No se pudieron cargar las comillas SVG');
 quoteMarkImage.src='./logos/comillas.svg';
-const palette={quote:{bg:'#E6008D',text:'#FFFFFF',accent:'#FFFFFF'},pink:{bg:'#ffffff',text:'#7749A6',accent:'#E6008D',gradientStart:'#E6008D',gradientEnd:'#7749A6'},blue:{bg:'#ffffff',text:'#7749A6',accent:'#00A6D9',gradientStart:'#7749A6',gradientEnd:'#397FC6'}};
+const palette={quote:{bg:'#E6008D',text:'#FFFFFF',accent:'#FFFFFF'},'quote-blue':{bg:'#00A6D9',text:'#FFFFFF',accent:'#FFFFFF'},pink:{bg:'#ffffff',text:'#7749A6',accent:'#E6008D',gradientStart:'#E6008D',gradientEnd:'#7749A6'},blue:{bg:'#ffffff',text:'#7749A6',accent:'#00A6D9',gradientStart:'#7749A6',gradientEnd:'#397FC6'}};
 // Igual que en Crónica: el modo mayúsculas afecta solo la presentación.
 function syncUppercaseUI(){
  el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));
@@ -89,8 +89,9 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  // Prueba de degradé: un solo fucsia institucional, del 0 al 100 % de opacidad.
  // La mezcla de cuatro tonos anterior se conserva en el historial de GitHub.
  const gradient=ctx.createLinearGradient(0,gradientTop,0,H);
- gradient.addColorStop(0,'rgba(230,0,141,0)');
- gradient.addColorStop(1,'rgba(230,0,141,1)');
+ const isBlue=el('theme').value==='quote-blue';
+ gradient.addColorStop(0,isBlue?'rgba(0,166,217,0)':'rgba(230,0,141,0)');
+ gradient.addColorStop(1,isBlue?'rgba(0,166,217,1)':'rgba(230,0,141,1)');
  ctx.fillStyle=gradient;
  ctx.fillRect(0,gradientTop,W,H-gradientTop);
  drawBrandLogo();
@@ -141,7 +142,7 @@ const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
 const footerTop=footerBaseline-footerAscent;
-if(el('theme').value==='quote'){
+if(['quote','quote-blue'].includes(el('theme').value)){
  renderQuoteVariant(size,footerBaseline,footerTop,includeHover);
  return;
 }
@@ -224,15 +225,16 @@ const variantButtons=[...document.querySelectorAll('.ds-variant-option')];
 function setVariant(value){
  if(!palette[value])return;
  // Primera vista de la tercera variante: ejemplo sin reemplazar contenido editado.
- if(value==='quote'&&el('headline').value==='*Mauro Icardi* consiguió la *eximición de prisión* tras el escándalo con Wanda Nara'){
+ if(['quote','quote-blue'].includes(value)&&el('headline').value==='*Mauro Icardi* consiguió la *eximición de prisión* tras el escándalo con Wanda Nara'){
   el('headline').value='OJALÁ A LA GENTE LE DIERA TANTO MIEDO TENER UN HIJO GOLPEADOR COMO TENER UN HIJO GAY';
   el('quoteAuthor').value='La Joaqui';
  }
  el('theme').value=value;
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
- el('quoteAuthorField').hidden=value!=='quote';
- el('articleImportField').hidden=value==='quote';
- el('photoStage').classList.toggle('is-quote-variant',value==='quote');
+ const isQuote=['quote','quote-blue'].includes(value);
+ el('quoteAuthorField').hidden=!isQuote;
+ el('articleImportField').hidden=isQuote;
+ el('photoStage').classList.toggle('is-quote-variant',isQuote);
  photoHover=false;
  render();
 }
@@ -260,7 +262,7 @@ el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);ev
 const photoStage=el('photoStage'),photoZone=el('photoDropzone');
 const supportsPointerHover=window.matchMedia('(hover:hover) and (pointer:fine)');
 function setPhotoHover(active){
- const next=Boolean(active&&supportsPointerHover.matches&&!image&&!importingArticle&&el('theme').value==='quote');
+ const next=Boolean(active&&supportsPointerHover.matches&&!image&&!importingArticle&&['quote','quote-blue'].includes(el('theme').value));
  if(photoHover===next)return;
  photoHover=next;
  render();
