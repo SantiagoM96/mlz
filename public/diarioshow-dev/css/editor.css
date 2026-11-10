@@ -1676,3 +1676,33 @@ main > aside.editor-panel{
  .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb,
  .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{transition:none}
 }
+
+
+/* Slider sobrio: recorrido blanco, indicador sin resplandor en reposo.
+   Solo el puntero reacciona en fucsia al hover; cifra fucsia al arrastrar. */
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]{
+ accent-color:#f4f4f4;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-runnable-track{
+ background:linear-gradient(to right,
+  #f4f4f4 0%,#f4f4f4 var(--ds-size-progress,44.44%),
+  #484c55 var(--ds-size-progress,44.44%),#484c55 100%);
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-progress{
+ background:#f4f4f4;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{
+ background:#292c32;
+ box-shadow:none;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:hover::-moz-range-thumb{
+ background:#e6008d;
+ border-color:#fff;
+ box-shadow:0 0 0 3px #e6008d30,0 0 11px 3px #e6008d85;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting output,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting .ds-size-unit{
+ color:#e6008d;
+}
