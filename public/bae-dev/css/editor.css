@@ -168,3 +168,31 @@
 @media (max-width:700px){
  .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
 }
+
+/* Variantes BAE: miniaturas del módulo inferior, sin fotografía.
+   Conservan 56 × 43px y los estados accesibles del selector original. */
+.editor-panel .theme-swatches{align-items:flex-start}
+.editor-panel .theme-swatch{
+ overflow:hidden;display:flex;align-items:center;justify-content:center;
+ width:56px;height:43px;min-width:56px;flex:0 0 56px;padding:0;
+ border:2px solid #565a63;border-radius:8px
+}
+.editor-panel .theme-swatch.dark{background:#171717}
+.editor-panel .theme-swatch.white{background:#fff}
+.editor-panel .theme-swatch.red{background:#d82626}
+.editor-panel .theme-swatch-art{
+ position:absolute;inset:0;display:block;pointer-events:none;
+ --thumb-ink:#fff;--thumb-accent:#d82626;
+ background:
+  linear-gradient(var(--thumb-ink),var(--thumb-ink)) center 12px / 34px 3px no-repeat,
+  linear-gradient(var(--thumb-accent),var(--thumb-accent)) center 20px / 27px 3px no-repeat,
+  linear-gradient(var(--thumb-ink),var(--thumb-ink)) center 28px / 20px 3px no-repeat;
+}
+.editor-panel .theme-swatch.white .theme-swatch-art{
+ --thumb-ink:#171717;--thumb-accent:#d82626
+}
+.editor-panel .theme-swatch.red .theme-swatch-art{
+ --thumb-ink:#fff;--thumb-accent:#fff
+}
+.editor-panel .theme-swatch-caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.editor-panel .theme-swatch[aria-pressed="true"]{outline:2px solid #d82626;outline-offset:2px;border-color:#565a63}
