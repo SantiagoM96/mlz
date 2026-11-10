@@ -564,3 +564,18 @@
  }
 }
 
+
+/* BAE: geometría del popup sincronizada con la placa real.
+   Evita depender del soporte de anchor() + min() de este navegador.
+   Siempre es una capa fija sin espacio reservado; solo escritorio. */
+@media(min-width:701px){
+ .preview > .browser-zoom-tip:not([hidden]){
+  position:fixed!important;
+  left:var(--bae-tip-left,calc(100vw - 230px))!important;
+  top:var(--bae-tip-top,160px)!important;
+  right:auto!important;
+  width:210px;
+  transition:none!important;
+  z-index:40;
+ }
+}
