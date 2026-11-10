@@ -1556,3 +1556,38 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 @media(prefers-reduced-motion:reduce){
  .editor-panel .ds-photo-picker-surface{transition:none}
 }
+
+
+/* Selector compacto: toda la información en una sola fila, sin label superior.
+   El contorno punteado abarca zona de carga y ayuda. */
+.editor-panel .ds-photo-picker .ds-photo-picker-surface{
+ display:flex;align-items:center;justify-content:flex-start;
+ gap:6px;min-height:44px;padding:7px 12px;
+ border-color:#777c87;
+}
+.editor-panel .ds-photo-picker-clickable{
+ display:flex;flex:0 1 auto;align-items:center;justify-content:flex-start;
+ gap:6px;min-width:0;min-height:28px;margin:0!important;padding:0;
+ font:400 13px/20px system-ui,Arial,sans-serif;
+ cursor:pointer;
+}
+.editor-panel .ds-photo-picker-icon{
+ font-family:'Material Symbols Outlined';font-size:22px;line-height:1;
+ font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+}
+.editor-panel .ds-photo-picker-help{
+ display:inline-flex;align-items:center;justify-content:center;flex:none;
+ margin:0;min-width:22px;height:26px;
+}
+.editor-panel .ds-photo-picker-help .help-button{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:0;margin:0;transform:none;
+}
+.editor-panel .ds-photo-picker .ds-photo-picker-surface:hover,
+.editor-panel .ds-photo-picker.is-drag-over .ds-photo-picker-surface{
+ background:#30323a;border-color:#fff;
+}
+.editor-panel .ds-photo-picker-native:focus-visible+.ds-photo-picker-surface{
+ outline:2px solid #fff;outline-offset:2px;
+}
+.editor-panel .ds-photo-picker-surface:focus-within{border-color:#fff}
