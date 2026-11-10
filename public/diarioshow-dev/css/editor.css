@@ -1479,3 +1479,18 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   justify-self:end;
  }
 }
+
+/* Espaciado único entre submódulos internos, siguiendo Formato/Alineación → Texto principal. */
+.editor-panel{--ds-internal-module-gap:12px}
+.editor-panel .ds-texts-group .ds-headline-field{
+ margin-top:var(--ds-internal-module-gap)!important;
+}
+.editor-panel .ds-content-group #articleImportField{
+ margin-top:var(--ds-internal-module-gap)!important;
+}
+.editor-panel .ds-photo-layout-group .ds-photo-upload-area{
+ margin-top:var(--ds-internal-module-gap)!important;
+}
+.editor-panel .ds-photo-layout-group .split-photo-fields>.control-field+.control-field{
+ margin-top:var(--ds-internal-module-gap)!important;
+}
