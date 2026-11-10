@@ -2209,23 +2209,4 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .ds-mobile-track > .preview > .ds-mobile-text-editor{
   margin:0!important;
  }
- /* Cuando hay teclado, el editor pasa temporalmente a body para que el
-    transform del carril deslizante no rompa el posicionamiento fixed. */
- body > #dsMobileTextEditor.is-keyboard-docked{
-  position:fixed!important;
-  z-index:200!important;
-  box-sizing:border-box;
-  left:12px!important;right:12px!important;
-  top:auto!important;
-  width:auto!important;max-width:none!important;
-  margin:0!important;padding:0!important;
-  background:#202228!important;
-  border-radius:10px!important;
-  overflow-y:auto;overscroll-behavior:contain;
-  box-shadow:0 7px 28px rgba(0,0,0,.42);
-  display:block!important;
- }
- body > #dsMobileTextEditor.is-keyboard-docked .ds-control-card{
-  margin:0!important;
- }
 }
