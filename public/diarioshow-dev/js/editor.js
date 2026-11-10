@@ -3,6 +3,36 @@
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let photoRevision=0;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
+// Foto compartida: dos recortes independientes dentro del área fotográfica.
+let photoLayout='single',activePhotoSide='left';
+const splitPhotos={left:{image:null,zoom:1,x:0,y:0,revision:0},right:{image:null,zoom:1,x:0,y:0,revision:0}};
+function activePhoto(){return splitPhotos[activePhotoSide]}
+function syncPhotoZoom(){const current=photoLayout==='split'?activePhoto().zoom:zoom;el('photoZoom').value=Math.round(current*100);el('zoomLabel').textContent=Math.round(current*100)+' %'}
+function drawSplitPhotos(height){
+ for(const side of ['left','right']){
+  const photo=splitPhotos[side],left=side==='left'?0:W/2,width=W/2;
+  if(!photo.image)continue;
+  const img=photo.image,scale=Math.max(width/img.width,height/img.height)*photo.zoom;
+  const iw=img.width*scale,ih=img.height*scale;
+  const maxX=Math.max(0,(iw-width)/2),maxY=Math.max(0,(ih-height)/2);
+  photo.x=Math.max(-maxX,Math.min(maxX,photo.x));photo.y=Math.max(-maxY,Math.min(maxY,photo.y));
+  ctx.save();ctx.beginPath();ctx.rect(left,0,width,height);ctx.clip();
+  ctx.drawImage(img,left+(width-iw)/2+photo.x,(height-ih)/2+photo.y,iw,ih);
+  ctx.restore();
+ }
+}
+function setPhotoSide(side){if(photoLayout!=='split'||!splitPhotos[side])return;activePhotoSide=side;syncPhotoZoom();updatePhotoStage()}
+function setPhotoLayout(mode){
+ if(!['single','split'].includes(mode))return;
+ photoLayout=mode;
+ document.querySelectorAll('[data-photo-layout]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.photoLayout===mode)));
+ el('splitPhotoFields').hidden=mode!=='split';el('splitPhotoZones').hidden=mode!=='split';
+ el('file').parentElement.querySelector(':scope > input#file').hidden=mode==='split';
+ el('file').parentElement.querySelector('.help-label-row').hidden=mode==='split';
+ if(mode==='split')activePhotoSide='left';
+ syncPhotoZoom();render();
+}
+document.querySelectorAll('[data-photo-layout]').forEach(b=>b.addEventListener('click',()=>setPhotoLayout(b.dataset.photoLayout)));
 const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
@@ -74,7 +104,8 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  // La fotografía ocupa todo el lienzo; el degradé se superpone sin crear caja opaca.
  ctx.clearRect(0,0,W,H);
  ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
- if(image){
+ if(photoLayout==='split')drawSplitPhotos(H);
+ else if(image){
   const base=Math.max(W/image.width,H/image.height),scale=base*zoom;
   const iw=image.width*scale,ih=image.height*scale;
   const maxX=Math.max(0,(iw-W)/2),maxY=Math.max(0,(ih-H)/2);
@@ -126,8 +157,8 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  updatePhotoStage();
  el('dotsLabel').textContent=el('dots').value+'%';
  el('sizeLabel').textContent=size;
- el('zoomLabel').textContent=Math.round(zoom*100)+' %';
- el('photoZoom').value=Math.round(zoom*100);
+ syncPhotoZoom();
+ 
  el('status').textContent=iconY<120?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }
 
@@ -169,7 +200,8 @@ const boxTop=Math.max(80,firstBaseline-firstAscent-50);
 photoBottom=boxTop-GRADIENT_BAR_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
-if(image){
+if(photoLayout==='split')drawSplitPhotos(photoBottom);
+else if(image){
 const base=Math.max(W/image.width,photoBottom/image.height),scale=base*zoom,iw=image.width*scale,ih=image.height*scale;
 const maxX=Math.max(0,(iw-W)/2),maxY=Math.max(0,(ih-photoBottom)/2);
 offsetX=Math.max(-maxX,Math.min(maxX,offsetX));offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
@@ -196,7 +228,7 @@ for(let i=0;i<lines.length;i++){
  }
 }
 ctx.fillStyle=colors.text;ctx.font='500 30px "Inter",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
-const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
+const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;syncPhotoZoom();el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 }
 // Algunos navegadores restauran el valor anterior del slider aunque el HTML diga 5.
@@ -248,25 +280,52 @@ variantButtons.forEach(button=>button.addEventListener('click',()=>setVariant(bu
 el('theme').addEventListener('change',render);
 function updatePhotoStage(){
  const stage=el('photoStage'),zone=el('photoDropzone');if(!stage||!zone)return;
+ const split=photoLayout==='split';
+ stage.classList.toggle('split-mode',split);
  stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
  const scale=stage.getBoundingClientRect().width/W;
  stage.style.setProperty('--hover-inset',(50*scale)+'px');
  stage.style.setProperty('--hover-radius',(16*scale)+'px');
- zone.hidden=Boolean(image)||importingArticle;
- canvas.style.cursor=image?'grab':'default';
+ zone.hidden=split||Boolean(image)||importingArticle;
+ const splitZone=el('splitPhotoZones');
+ splitZone.hidden=!split;
+ for(const side of ['left','right']){
+  const node=splitZone.querySelector('[data-side="'+side+'"]');
+  node.classList.toggle('has-photo',Boolean(splitPhotos[side].image));
+  node.classList.toggle('is-active',activePhotoSide===side);
+  node.setAttribute('aria-pressed',String(activePhotoSide===side));
+ }
+ canvas.style.cursor=split?(activePhoto().image?'grab':'default'):(image?'grab':'default');
 }
 window.addEventListener('resize',updatePhotoStage);
-function loadPhoto(file){
+function loadPhoto(file,side=photoLayout==='split'?activePhotoSide:null){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
- // La fotografía seleccionada más recientemente siempre reemplaza la anterior.
+ const target=side?splitPhotos[side]:null;
  const revision=++photoRevision;
+ if(target)target.revision=revision;
  const url=URL.createObjectURL(file),img=new Image();
- img.onload=()=>{if(revision===photoRevision){image=img;zoom=1;offsetX=0;offsetY=0;render()}URL.revokeObjectURL(url)};
- img.onerror=()=>{if(revision===photoRevision)el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
+ img.onload=()=>{
+  if(target){
+   if(target.revision===revision){target.image=img;target.zoom=1;target.x=0;target.y=0;setPhotoSide(side);render()}
+  }else if(revision===photoRevision){image=img;zoom=1;offsetX=0;offsetY=0;render()}
+  URL.revokeObjectURL(url);
+ };
+ img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
  img.src=url;
 }
-el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value=''});
+el('file').addEventListener('change',event=>{loadPhoto(event.target.files[0],null);event.target.value=''});
+for(const [id,side] of [['fileLeft','left'],['fileRight','right']]){
+ el(id).addEventListener('change',event=>{loadPhoto(event.target.files[0],side);event.target.value=''});
+}
+for(const zone of el('splitPhotoZones').querySelectorAll('[data-side]')){
+ const side=zone.dataset.side;
+ zone.addEventListener('pointerenter',()=>{if(photoLayout==='split')zone.classList.add('is-hovered')});
+ zone.addEventListener('pointerleave',()=>zone.classList.remove('is-hovered'));
+ zone.addEventListener('click',()=>{setPhotoSide(side);if(!splitPhotos[side].image)el(side==='left'?'fileLeft':'fileRight').click()});
+ zone.addEventListener('dblclick',()=>{setPhotoSide(side);el(side==='left'?'fileLeft':'fileRight').click()});
+ zone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();setPhotoSide(side);el(side==='left'?'fileLeft':'fileRight').click()}});
+}
 const photoStage=el('photoStage'),photoZone=el('photoDropzone');
 const supportsPointerHover=window.matchMedia('(hover:hover) and (pointer:fine)');
 function setPhotoHover(active){
@@ -303,7 +362,7 @@ photoStage.addEventListener('drop',event=>{
  photoStage.classList.remove('is-drag-over');
  if(!isImageDrag(event)||!isOverPhoto(event))return;
  event.preventDefault();
- loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0]);
+ if(photoLayout==='split'){const r=photoStage.getBoundingClientRect();const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],side)}else loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],null);
 });
 /* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
    adentro cuando faltarían menos de 24px al borde de la pantalla. */
@@ -339,10 +398,25 @@ if(typeof ResizeObserver!=='undefined'){
 }
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 scheduleBrowserZoomTipPosition();
-el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
-canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
-canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
-canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
+el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
+canvas.addEventListener('pointerdown',event=>{
+ const r=canvas.getBoundingClientRect();
+ if((event.clientY-r.top)*H/r.height>photoBottom)return;
+ if(photoLayout==='split'){
+  const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);
+  if(!activePhoto().image)return;
+ }else if(!image)return;
+ dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);
+});
+canvas.addEventListener('pointermove',event=>{
+ if(!dragging)return;
+ const ratio=W/canvas.getBoundingClientRect().width;
+ if(photoLayout==='split'){activePhoto().x+=(event.clientX-lastX)*ratio;activePhoto().y+=(event.clientY-lastY)*ratio}
+ else{offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio}
+ lastX=event.clientX;lastY=event.clientY;render();
+});
+canvas.addEventListener('pointerup',()=>dragging=false);
+canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
@@ -350,7 +424,7 @@ el('clearAll').addEventListener('click',()=>{
  forceUppercase=false;syncUppercaseUI();
  el('size').value='70';el('dots').value='5';textAlignment='center';
  el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
- image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;photoHover=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
+ photoRevision++;image=null;zoom=1;offsetX=0;offsetY=0;for(const p of Object.values(splitPhotos)){p.image=null;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}setPhotoLayout('single');dragging=false;photoHover=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de Diario Show.';
  render();
 });
@@ -408,5 +482,5 @@ function closeHelpTooltips(){
 document.addEventListener('click',event=>{if(!event.target.closest('.help-trigger'))closeHelpTooltips()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeHelpTooltips()});
 sizeHelpTooltips();
-window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
+window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
 })();
