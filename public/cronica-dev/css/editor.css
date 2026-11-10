@@ -550,8 +550,8 @@
  --page-strap:#777c85;--page-text:#8d929b;--page-accent:#aaaeb7;
  --page-number-bg:#292d34;--page-number:#d0d3d9;
  position:relative;isolation:isolate;
- display:block;width:42px;height:56px;min-height:56px!important;
- flex:0 0 42px;aspect-ratio:3/4;
+ display:block;width:60px;height:80px;min-height:80px!important;
+ flex:0 0 60px;aspect-ratio:3/4;
  padding:0!important;border:1px solid #555a64;
  border-radius:7px;overflow:hidden;
  color:var(--page-number);background:var(--page-bg);
@@ -615,9 +615,29 @@
 }
 @media(max-width:600px){
  .editor-panel .carousel-pages .carousel-page-thumb{
-  width:42px;height:56px;min-height:56px!important;flex-basis:42px
+  width:60px;height:80px;min-height:80px!important;flex-basis:60px
  }
  .editor-panel .carousel-actions button{
   width:36px;height:36px;min-height:36px!important;flex-basis:36px
  }
+}
+
+/* El indicador de página distingue cantidad y tipo.
+   Portada/Interior tienen jerarquía visible junto al título Páginas. */
+.editor-panel .carousel-heading{align-items:center}
+.editor-panel #pageIndicator{
+ display:flex;align-items:center;justify-content:flex-end;
+ gap:7px;flex-wrap:wrap;margin:0;
+ font:600 12px/16px Inter,Arial,sans-serif;
+}
+.editor-panel .carousel-indicator-count{color:#c5cad2}
+.editor-panel .carousel-indicator-type{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:5px 9px;border-radius:6px;
+ background:#ed0000;color:#fff;
+ font:700 12px/14px Inter,Arial,sans-serif;
+ letter-spacing:.015em;
+}
+.editor-panel .carousel-indicator-type.is-internal{
+ background:#4b505a;color:#f4f4f5;
 }
