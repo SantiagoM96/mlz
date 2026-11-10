@@ -800,6 +800,29 @@ mobileZoom.addEventListener('input',()=>{
 });
 
 // Acceso directo al titular desde su posición visual en la placa (solo mobile).
+// Alinear el editor dentro del viewport visual (el área que queda encima
+// del teclado virtual) y no del layout viewport que conserva el alto completo.
+function keepMobileHeadlineAboveKeyboard(){
+ const field=mirrorId('headline');
+ if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview'||
+    document.activeElement!==field||!field.getClientRects().length)return;
+ const visual=window.visualViewport;
+ const visibleTop=visual?visual.offsetTop:0;
+ const visibleHeight=visual?visual.height:window.innerHeight;
+ const rect=field.getBoundingClientRect();
+ const targetTop=visibleTop+Math.min(75,Math.max(16,visibleHeight*.16));
+ const visibleBottom=visibleTop+visibleHeight-14;
+ // Ubicar el textarea en el sector superior; dejar espacio para el teclado.
+ if(Math.abs(rect.top-targetTop)>8||rect.bottom>visibleBottom){
+  window.scrollBy(0,Math.round(rect.top-targetTop));
+ }
+}
+window.visualViewport?.addEventListener('resize',()=>{
+ if(document.activeElement===mirrorId('headline'))requestAnimationFrame(keepMobileHeadlineAboveKeyboard);
+});
+mirrorId('headline').addEventListener('focus',()=>{
+ requestAnimationFrame(keepMobileHeadlineAboveKeyboard);
+});
 function openMobileHeadlineEditor(){
  const host=el('dsMobileTextEditor');
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
@@ -809,13 +832,16 @@ function openMobileHeadlineEditor(){
  body.hidden=false;
  syncMobileTextEditor();
  const field=mirrorId('headline');
- // Esperar la actualización del layout antes de posicionar y enfocar el campo.
+ // Foco sin demora: iOS solo abre el teclado dentro de la interacción táctil.
+ field.focus({preventScroll:true});
+ field.select();
  requestAnimationFrame(()=>{
   updateMobileSlideHeight();
-  field.focus({preventScroll:true});
-  field.select();
-  field.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  keepMobileHeadlineAboveKeyboard();
  });
+ // Algunos teclados notifican el nuevo alto después del primer frame.
+ setTimeout(keepMobileHeadlineAboveKeyboard,180);
+ setTimeout(keepMobileHeadlineAboveKeyboard,420);
 }
 // Navegación mobile: paneles adyacentes desplazados como una sola superficie.
 const mobileTabViewport=window.matchMedia('(max-width:700px)');
