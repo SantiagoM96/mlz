@@ -1610,7 +1610,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 
 /* Tarjetas flotantes: eliminar la caja gris exterior del editor.
    El ancho de cada acordeón ocupa toda la columna y mantiene sus controles. */
-main > aside.editor-panel{
+.ds-mobile-track > aside.editor-panel{
  background:transparent;
  border:0;
  border-radius:0;
@@ -1856,20 +1856,42 @@ main > aside.editor-panel{
  main > .ds-mobile-tabs .ds-mobile-tab:focus-visible{
   outline:2px solid #fff;outline-offset:-4px;z-index:1;
  }
- main > #dsMobileControlsPanel,
- main > #dsMobilePreviewPanel{min-width:0;width:100%}
- main[data-mobile-tab="preview"] > #dsMobileControlsPanel,
- main[data-mobile-tab="controls"] > #dsMobilePreviewPanel{
-  display:none!important;
+ /* Las dos pantallas permanecen montadas una al lado de la otra. */
+ main > .ds-mobile-viewport{
+  display:block;position:relative;min-width:0;width:100%;
+  overflow:hidden;
+  transition:height 240ms cubic-bezier(.22,.7,.25,1);
  }
- main[data-mobile-tab="preview"] > #dsMobilePreviewPanel,
- main[data-mobile-tab="controls"] > #dsMobileControlsPanel{
-  display:flex;
+ .ds-mobile-viewport > .ds-mobile-track{
+  display:flex;align-items:flex-start;
+  width:200%;min-width:0;
+  transform:translate3d(0,0,0);
+  transition:transform 240ms cubic-bezier(.22,.7,.25,1);
+  will-change:transform;
  }
- main[data-mobile-tab="controls"] > #dsMobileControlsPanel{
-  display:block;
+ main[data-mobile-tab="controls"] .ds-mobile-track{
+  transform:translate3d(-50%,0,0);
  }
+ .ds-mobile-track > #dsMobilePreviewPanel,
+ .ds-mobile-track > #dsMobileControlsPanel{
+  display:block!important;
+  box-sizing:border-box;
+  flex:0 0 50%;width:50%;max-width:50%;min-width:0;
+  margin:0;
+ }
+ .ds-mobile-track > #dsMobilePreviewPanel{
+  order:0;display:flex!important;
+  align-items:center;
+ }
+ .ds-mobile-track > #dsMobileControlsPanel{order:1}
+
 }
 @media(prefers-reduced-motion:reduce){
- main > .ds-mobile-tabs .ds-mobile-tab{transition:none}
+ main > .ds-mobile-tabs .ds-mobile-tab,
+ main > .ds-mobile-viewport,
+ .ds-mobile-viewport > .ds-mobile-track{transition:none!important}
+}
+@media(min-width:701px){
+ main > .ds-mobile-viewport,
+ .ds-mobile-viewport > .ds-mobile-track{display:contents}
 }
