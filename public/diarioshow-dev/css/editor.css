@@ -2207,10 +2207,3 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 
 
-/* Solo espacio de scroll mientras el teclado nativo está abierto.
-   No se modifica el teclado ni se saca Textos de su lugar en la página. */
-@media(max-width:700px){
- main:has(> .ds-mobile-tabs).ds-keyboard-text-editing{
-  padding-bottom:var(--ds-keyboard-scroll-space,24px)!important;
- }
-}
