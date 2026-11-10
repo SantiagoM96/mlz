@@ -716,3 +716,25 @@
   z-index:40
  }
 }
+
+/* La miniatura del aviso usa EXACTAMENTE el mismo markup y las mismas clases
+   que la opción del panel izquierdo. No se dibuja una versión alternativa. */
+.preview .browser-zoom-demo-preview.editor-panel{
+ box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+ flex:0 0 auto;width:60px;max-width:60px;min-width:0;
+ height:80px;min-height:0;aspect-ratio:3/4;
+ padding:0!important;margin:0 auto;background:transparent!important;
+ border:0;box-shadow:none;overflow:visible;border-radius:0;
+}
+.preview .browser-zoom-demo-preview.editor-panel > span{
+ box-sizing:border-box;display:flex;flex-direction:column;
+ width:60px;min-width:60px;flex:0 0 60px;aspect-ratio:3/4;
+ margin:0;
+}
+.preview .browser-zoom-demo-workspace{gap:3px}
+.preview .browser-zoom-demo-export{display:none!important}
+
+/* Misma miniatura rosa/violeta que la primera opción de Diario Show. */
+.preview .browser-zoom-demo-preview .ds-variant-preview{
+ --variant-contrast:#e6008d;
+}
