@@ -1418,3 +1418,64 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   flex-basis:35px;width:35px!important;
  }
 }
+
+
+/* Diario Show Dev: ubicación de logo pegada al extremo derecho.
+   Herramientas de texto cuadradas de 43 × 43 px, con alineación al final. */
+.editor-panel .ds-content-group .ds-logo-layout-row{
+ grid-template-columns:minmax(0,1fr) auto;
+}
+.editor-panel .ds-content-group .ds-logo-position-field{
+ justify-self:end;
+ width:max-content;
+}
+.editor-panel .ds-content-group .ds-logo-position-field>label{
+ text-align:left;
+}
+.editor-panel .ds-content-group .ds-logo-position-controls{
+ justify-content:flex-end;
+ width:max-content;
+ margin-left:auto;
+}
+.editor-panel .ds-texts-group .typography-row{
+ grid-template-columns:minmax(0,1fr) auto!important;
+ gap:8px!important;
+ align-items:start;
+}
+.editor-panel .ds-texts-group .typography-row .format-field{
+ min-width:0;
+}
+.editor-panel .ds-texts-group .typography-row .format-buttons{
+ display:flex;
+ flex-wrap:nowrap;
+ width:max-content;
+ max-width:none;
+ gap:0!important;
+}
+.editor-panel .ds-texts-group .typography-row .format-buttons button,
+.editor-panel .ds-texts-group .typography-row .format-buttons #formatUppercase,
+.editor-panel .ds-texts-group .typography-row .format-buttons #formatClear{
+ box-sizing:border-box;
+ flex:0 0 43px!important;
+ width:43px!important;
+ min-width:43px!important;
+ height:43px!important;
+}
+.editor-panel .ds-texts-group .typography-row .align-field{
+ justify-self:end;
+ width:max-content;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons{
+ justify-content:flex-end;
+ width:max-content;
+}
+@media(max-width:420px){
+ /* Si no entran los 5 botones cuadrados, la alineación pasa a una segunda fila. */
+ .editor-panel .ds-texts-group .typography-row{
+  grid-template-columns:minmax(0,1fr)!important;
+  row-gap:16px!important;
+ }
+ .editor-panel .ds-texts-group .typography-row .align-field{
+  justify-self:end;
+ }
+}
