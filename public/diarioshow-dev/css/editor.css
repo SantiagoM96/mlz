@@ -1541,7 +1541,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  font:400 13px/20px system-ui,Arial,sans-serif;
  transition:background-color .15s,border-color .15s,color .15s;
 }
-.editor-panel .ds-photo-picker-icon{flex:none;font-size:24px;color:#e6008d}
+.editor-panel .ds-photo-picker-icon{flex:none;font-size:24px;color:#fff}
 .editor-panel .ds-photo-picker-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .editor-panel .ds-photo-picker-action{color:#f1f2f6;font-weight:700}
 .editor-panel .ds-photo-picker-caption{color:#aeb4bf;font-weight:400}
