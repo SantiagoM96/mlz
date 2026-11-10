@@ -2245,17 +2245,29 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 
 
-/* Las dos mitades reservan siempre 24 px interiores desde el borde punteado.
-   El hover solo cambia la opacidad del borde: nunca la geometría del contenido. */
+/* Cada mitad reserva 12 px desde la línea punteada incluso sin hover.
+   El título se mantiene siempre en un renglón; la descripción puede envolver. */
 .preview .canvas-stage.split-mode .split-photo-zone{
  box-sizing:border-box;
- padding:calc(var(--hover-inset) + 24px)!important;
+ padding:calc(var(--hover-inset) + 12px)!important;
  min-width:0;
 }
-.preview .canvas-stage.split-mode .split-photo-zone-title,
+.preview .canvas-stage.split-mode .split-photo-zone-title{
+ max-width:none;
+ white-space:nowrap;
+ overflow-wrap:normal;
+ text-wrap:nowrap;
+ letter-spacing:-.3px;
+}
 .preview .canvas-stage.split-mode .split-photo-zone-description{
  max-width:100%;
  min-width:0;
- overflow-wrap:anywhere;
+ overflow-wrap:break-word;
  text-wrap:balance;
+}
+@media(max-width:700px){
+ /* Preservar el título completo en cada media foto de la placa reducida. */
+ .preview .canvas-stage.split-mode .split-photo-zone-title{
+  font-size:clamp(7px,1.9vw,15px);
+ }
 }
