@@ -1027,3 +1027,85 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 @media(prefers-reduced-motion:reduce){
  .preview .split-mode .split-photo-zone.has-photo::after{transition:none}
 }
+
+
+/* Ajuste final de referencia de miniaturas fotográficas:
+   mismo aspecto de placa 3:4, sin reglas heredadas que deformen las cajas. */
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail{
+ position:relative!important;display:flex!important;flex-direction:column!important;
+ width:60px!important;height:81px!important;
+ min-width:60px;box-sizing:border-box!important;
+ padding:4px!important;gap:0!important;
+ overflow:hidden;background:#fff!important;background-image:none!important;
+ border:2px solid #565a63;border-radius:7px;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail::before,
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail::after{content:none!important}
+.editor-panel #photoLayoutOptions .photo-layout-art{
+ display:flex!important;flex:0 0 64%!important;width:100%!important;
+ height:64%!important;min-height:0!important;
+ padding:0 0 4px!important;gap:3px!important;
+ border:0!important;position:relative!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art i{
+ position:static!important;display:block!important;
+ top:auto!important;left:auto!important;transform:none!important;
+ width:auto!important;height:auto!important;
+ flex:1 1 0!important;min-width:0!important;
+ border:0!important;border-radius:4px!important;background:#414143!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines{
+ display:flex!important;position:relative!important;
+ flex:1 1 0!important;min-height:0!important;width:100%!important;
+ flex-direction:column!important;align-items:center!important;
+ padding:8px 0 0!important;gap:4px!important;
+ background:#fff!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines::before{
+ content:''!important;position:absolute!important;
+ top:0!important;left:-4px!important;right:-4px!important;height:4px!important;
+ background:linear-gradient(90deg,var(--photo-mini-bar-start),var(--photo-mini-bar-end))!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i,
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:first-child,
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:last-child{
+ position:static!important;display:block!important;transform:none!important;
+ top:auto!important;left:auto!important;flex:none!important;
+ max-width:100%;border:0!important;border-radius:10px!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:first-child{
+ width:84%!important;height:5px!important;background:var(--photo-mini-primary)!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:last-child{
+ width:60%!important;height:3px!important;background:var(--photo-mini-accent)!important;
+}
+.editor-panel #photoLayoutOptions[data-variant^="quote"] .photo-layout-thumbnail,
+.editor-panel #photoLayoutOptions[data-variant^="quote"] .photo-layout-thumbnail-lines{
+ background:var(--photo-mini-bar-start)!important;
+}
+
+/* El borde punteado es una señal de carga: únicamente en mitades vacías,
+   con puntero encima, o foco de teclado. Nunca se muestra por selección. */
+.preview .canvas-stage.split-mode .split-photo-zone::before{opacity:0!important}
+.preview .canvas-stage.split-mode .split-photo-zone:not(.has-photo):hover::before,
+.preview .canvas-stage.split-mode .split-photo-zone:not(.has-photo):focus-visible::before,
+.preview .canvas-stage.split-mode .split-photo-zone:not(.has-photo).is-hovered::before{
+ opacity:1!important;
+}
+/* Hover oscurece 8,4% tanto la mitad vacía como la cargada:
+   aumento del 20% respecto del valor anterior de 7%. */
+.preview .canvas-stage.split-mode .split-photo-zone::after{
+ content:'';position:absolute;inset:0;pointer-events:none;
+ background:rgba(0,0,0,.084);opacity:0;
+ transition:opacity .12s ease;
+}
+.preview .canvas-stage.split-mode.hover-left .split-photo-zone[data-side="left"]::after,
+.preview .canvas-stage.split-mode.hover-right .split-photo-zone[data-side="right"]::after{
+ opacity:1;
+}
+/* En zonas vacías, el indicador permanece visible encima del oscurecimiento. */
+.preview .canvas-stage.split-mode .split-photo-zone:not(.has-photo)::before{z-index:2}
+.preview .canvas-stage.split-mode .split-photo-zone:not(.has-photo)>span{position:relative;z-index:3}
+@media(prefers-reduced-motion:reduce){
+ .preview .canvas-stage.split-mode .split-photo-zone::after{transition:none}
+}
