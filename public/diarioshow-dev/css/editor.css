@@ -345,9 +345,8 @@
  main{
   width:min(1320px,calc(100% - 40px));max-width:1320px;
   grid-template-columns:minmax(340px,430px) minmax(0,540px) minmax(170px,210px);
-  column-gap:12px
+  column-gap:24px
  }
- main>.editor-panel{margin-right:12px}
 }
 .preview{position:relative}
 .preview .browser-zoom-tip{
