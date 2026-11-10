@@ -79,7 +79,7 @@ if(photoFile&&!photoFile.closest('.modern-photo-picker')){
   const name=photoFile.files?.[0]?.name;
   photoSurface.querySelector('.modern-photo-action').textContent=name?'Cambiar':'Seleccioná';
   photoSurface.querySelector('.modern-photo-caption').textContent=name||'una fotografía';
- });
+ },true);
  $('clearAll')?.addEventListener('click',()=>queueMicrotask(()=>{
   photoSurface.querySelector('.modern-photo-action').textContent='Seleccioná';
   photoSurface.querySelector('.modern-photo-caption').textContent='una fotografía';
@@ -155,6 +155,8 @@ function trackThumb(range,host){
 }
 trackThumb(zoom,zoomBox);
 trackThumb(size,sizeField);
+const dots=$('dots');
+if(dots)trackThumb(dots,dots.closest('.control-field'));
 function updateHeight(){
  if(!narrow.matches){shell.style.height='';return}
  const current=main.dataset.mobileTab==='controls'?panel:preview;
@@ -213,7 +215,7 @@ function syncMirror(){
  }
  if(mirrorId('headline'))mirrorId('headline').classList.toggle('uppercase-preview',headline.classList.contains('uppercase-preview'));
  progress(size);if(mirrorId('size'))progress(mirrorId('size'));
- progress(zoom);
+ progress(zoom);if(dots)progress(dots);
 }
 for(const id of ['headline','size','quote','enableQuote']){
  const source=$(id),mirror=mirrorId(id);if(!source||!mirror)continue;
