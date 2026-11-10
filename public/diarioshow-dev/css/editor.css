@@ -287,3 +287,50 @@
  position:absolute;left:0;right:0;top:3px;
  color:#fff;text-align:center;font:700 30px/1 Georgia,serif;
 }
+
+/* Miniaturas editoriales: solo el módulo inferior, sin fotografía.
+   Dimensiones y estados de selección preexistentes: 56 × 43 px. */
+.editor-panel .ds-variant-preview-pink,
+.editor-panel .ds-variant-preview-blue,
+.editor-panel .ds-variant-preview-quote,
+.editor-panel .ds-variant-preview-quote-blue{
+ position:relative;overflow:hidden;background-size:auto;background-repeat:no-repeat;
+}
+/* Variantes 1 y 2: caja blanca con barra degradada a todo lo ancho. */
+.editor-panel .ds-variant-preview-pink,
+.editor-panel .ds-variant-preview-blue{background:#fff}
+.editor-panel .ds-variant-preview-pink::before,
+.editor-panel .ds-variant-preview-blue::before{
+ content:'';position:absolute;inset:0 0 auto;height:5px;
+}
+.editor-panel .ds-variant-preview-pink::before{background:linear-gradient(90deg,#e6008d,#7749a6)}
+.editor-panel .ds-variant-preview-blue::before{background:linear-gradient(90deg,#7749a6,#397fc6)}
+.editor-panel .ds-variant-preview-pink::after,
+.editor-panel .ds-variant-preview-blue::after{
+ content:'';position:absolute;left:8px;top:13px;width:33px;height:19px;
+ background:linear-gradient(#7749a6,#7749a6) left top / 33px 3px no-repeat,
+ linear-gradient(#7749a6,#7749a6) left 8px / 27px 3px no-repeat,
+ linear-gradient(#7749a6,#7749a6) left 16px / 20px 3px no-repeat;
+}
+/* Variantes 3 y 4: solo el panel degradado de citas. */
+.editor-panel .ds-variant-preview-quote{
+ background:linear-gradient(180deg,rgba(230,0,141,.15),#e6008d);
+}
+.editor-panel .ds-variant-preview-quote-blue{
+ background:linear-gradient(180deg,rgba(0,166,217,.15),#00a6d9);
+}
+.editor-panel .ds-variant-preview-quote::before,
+.editor-panel .ds-variant-preview-quote-blue::before{
+ content:'“';position:absolute;left:0;right:0;top:1px;
+ text-align:center;color:#fff;font:700 19px/1 Georgia,serif;
+}
+.editor-panel .ds-variant-preview-quote::after,
+.editor-panel .ds-variant-preview-quote-blue::after{
+ content:'';position:absolute;left:9px;top:18px;width:34px;height:16px;
+ background:linear-gradient(#fff,#fff) center top / 34px 3px no-repeat,
+ linear-gradient(#fff,#fff) center 7px / 26px 3px no-repeat,
+ linear-gradient(#fff,#fff) center 14px / 16px 2px no-repeat;
+}
+.editor-panel .ds-author-field #quoteAuthorInputField[hidden]{display:none!important}
+.editor-panel .ds-author-toggle{margin:0 0 12px!important}
+.editor-panel .ds-author-field #quoteAuthorInputField>label{display:block;margin-bottom:8px}
