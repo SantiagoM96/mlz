@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
+let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
 const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
 let selectedLogo='primary';
@@ -31,13 +31,21 @@ quoteMarkImage.onload=()=>render();
 quoteMarkImage.onerror=()=>console.warn('No se pudieron cargar las comillas SVG');
 quoteMarkImage.src='./logos/comillas.svg';
 const palette={quote:{bg:'#E6008D',text:'#FFFFFF',accent:'#FFFFFF'},pink:{bg:'#ffffff',text:'#7749A6',accent:'#E6008D',gradientStart:'#E6008D',gradientEnd:'#7749A6'},blue:{bg:'#ffffff',text:'#7749A6',accent:'#00A6D9',gradientStart:'#7749A6',gradientEnd:'#397FC6'}};
+// Igual que en Crónica: el modo mayúsculas afecta solo la presentación.
+function syncUppercaseUI(){
+ el('formatUppercase').setAttribute('aria-pressed',String(forceUppercase));
+ el('headline').classList.toggle('uppercase-preview',forceUppercase);
+}
+function headlineForPreview(){
+ return forceUppercase?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value;
+}
 function parseRich(text){const out=[];let style={accent:false,italic:false,strike:false},buffer='';const flush=()=>{if(buffer){out.push({text:buffer,...style});buffer=''}};for(const c of String(text)){const field=c==='*'?'accent':c==='_'?'italic':c==='~'?'strike':null;if(field){flush();style={...style,[field]:!style[field]}}else buffer+=c}flush();return out}
 function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+'700 '+size+'px "Poppins",Arial,sans-serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
 
 /* Variante 3: cita editorial. El degradé cubre parte de la fotografía
    y la distribución vertical mantiene márgenes reales de 80 y espacios de 50 px. */
 function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
- const main=wrapRich(el('headline').value,size);
+ const main=wrapRich(headlineForPreview(),size);
  const author=el('quoteAuthor').value.trim();
  const authorSize=36;
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
@@ -123,7 +131,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
 
 function render(includeHover=true){
 try{
-const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(el('headline').value,size),quotes=[];
+const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(headlineForPreview(),size),quotes=[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
 ctx.textBaseline='alphabetic';
@@ -193,6 +201,8 @@ const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/
 function resetDefaultHalftone(){el('dots').value='5';el('dotsLabel').textContent='5%';render()}
 resetDefaultHalftone();
 window.addEventListener('pageshow',event=>{if(event.persisted)resetDefaultHalftone()});
+syncUppercaseUI();
+el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;syncUppercaseUI();render()});
 for(const id of ['headline','size','dots','quoteAuthor'])el(id).addEventListener('input',render);for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));el('alignCenter').setAttribute('aria-pressed',String(value==='center'));render()});for(const [id,marker] of [['formatAccent','*'],['formatItalic','_'],['formatStrike','~']]){const button=el(id);button.addEventListener('mousedown',e=>e.preventDefault());button.addEventListener('click',()=>{const field=el('headline'),a=field.selectionStart,b=field.selectionEnd;if(a===b){field.focus();return}const selected=field.value.slice(a,b);field.setRangeText(marker+selected+marker,a,b,'select');field.setSelectionRange(a+1,b+1);field.focus();render()})}
 
 const clearFormatButton=el('formatClear');
@@ -293,6 +303,7 @@ el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='';el('file').value='';
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
+ forceUppercase=false;syncUppercaseUI();
  el('size').value='70';el('dots').value='5';textAlignment='center';
  el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
  image=null;zoom=1;offsetX=0;offsetY=0;dragging=false;photoHover=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
