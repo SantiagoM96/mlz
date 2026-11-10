@@ -936,3 +936,94 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .preview .canvas-stage.split-mode.hover-right .split-photo-zone[data-side="right"]::before{opacity:1}
 .preview .canvas-stage.split-mode.hover-left,
 .preview .canvas-stage.split-mode.hover-right{cursor:grab}
+
+
+/* Ajustes de miniaturas: mismo documento editorial que Diseño de la placa.
+   La distribución solo cambia la parte fotográfica; colores siguen la variante. */
+.editor-panel #photoLayoutOptions{
+ --photo-mini-primary:#7749a6;
+ --photo-mini-accent:#e6008d;
+ --photo-mini-bar-start:#e6008d;
+ --photo-mini-bar-end:#7749a6;
+}
+.editor-panel #photoLayoutOptions[data-variant="blue"]{
+ --photo-mini-accent:#00a6d9;
+ --photo-mini-bar-start:#7749a6;
+ --photo-mini-bar-end:#397fc6;
+}
+.editor-panel #photoLayoutOptions[data-variant="quote"]{
+ --photo-mini-primary:#fff;
+ --photo-mini-accent:#fff;
+ --photo-mini-bar-start:#e6008d;
+ --photo-mini-bar-end:#e6008d;
+}
+.editor-panel #photoLayoutOptions[data-variant="quote-blue"]{
+ --photo-mini-primary:#fff;
+ --photo-mini-accent:#fff;
+ --photo-mini-bar-start:#00a6d9;
+ --photo-mini-bar-end:#00a6d9;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail{
+ background:#fff;background-image:none;
+ width:60px;height:81px;padding:4px;gap:0;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art{
+ flex:0 0 65%;height:65%;gap:3px;
+ padding-bottom:3px;box-sizing:border-box;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art i{background:#4d4d50}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines{
+ position:relative;flex:1;min-height:0;
+ padding-top:6px;gap:4px;justify-content:flex-start;
+ background:#fff;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines::before{
+ content:'';position:absolute;top:0;left:0;right:0;height:4px;
+ background:linear-gradient(90deg,var(--photo-mini-bar-start),var(--photo-mini-bar-end));
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:first-child{
+ background:var(--photo-mini-primary);height:4px;width:90%;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:last-child{
+ background:var(--photo-mini-accent);height:3px;width:65%;
+}
+.editor-panel #photoLayoutOptions[data-variant^="quote"] .photo-layout-thumbnail{
+ background:var(--photo-mini-bar-start);
+}
+.editor-panel #photoLayoutOptions[data-variant^="quote"] .photo-layout-thumbnail-lines{
+ background:var(--photo-mini-bar-start);
+}
+.editor-panel #photoLayoutOptions[data-variant^="quote"] .photo-layout-art i{
+ background:rgba(40,40,45,.55);
+}
+.editor-panel .ds-photo-upload-group .photo-single-field[hidden]{display:none!important}
+.editor-panel .ds-photo-upload-group .split-photo-fields input[type="file"]{
+ width:100%;max-width:100%;box-sizing:border-box;
+}
+/* El icono se alinea con el centro de la letra, sin cambiar el alto del campo. */
+.editor-panel .ds-photo-upload-group .help-label-row{
+ display:flex;align-items:center;gap:5px;height:20px;min-height:20px;
+}
+.editor-panel .ds-photo-upload-group .help-label-row>label{line-height:20px}
+.editor-panel .ds-photo-upload-group .help-trigger{height:20px;align-items:center}
+.editor-panel .ds-photo-upload-group .help-button{transform:translateY(1px)}
+
+/* Sin borde punteado cuando ya hay fotografía. El hover solo oscurece
+   un 7% la mitad cargada: feedback independiente sin alterar el PNG. */
+.preview .split-mode .split-photo-zone.has-photo::before,
+.preview .canvas-stage.split-mode.hover-left .split-photo-zone.has-photo[data-side="left"]::before,
+.preview .canvas-stage.split-mode.hover-right .split-photo-zone.has-photo[data-side="right"]::before{
+ opacity:0!important;
+}
+.preview .split-mode .split-photo-zone.has-photo::after{
+ content:'';position:absolute;inset:0;
+ background:rgba(0,0,0,.07);
+ opacity:0;pointer-events:none;transition:opacity .12s ease;
+}
+.preview .canvas-stage.split-mode.hover-left .split-photo-zone.has-photo[data-side="left"]::after,
+.preview .canvas-stage.split-mode.hover-right .split-photo-zone.has-photo[data-side="right"]::after{
+ opacity:1;
+}
+@media(prefers-reduced-motion:reduce){
+ .preview .split-mode .split-photo-zone.has-photo::after{transition:none}
+}
