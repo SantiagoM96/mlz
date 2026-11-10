@@ -5,6 +5,8 @@ const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext(
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let photoRevision=0;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
 // Foto compartida: dos recortes independientes dentro del área fotográfica.
 let photoLayout='single',activePhotoSide='left';
+// Regiones exactas aproximadas de cada línea de titular, en coordenadas del PNG.
+let headlineHitRegions=[];
 const splitPhotos={left:{image:null,zoom:1,x:0,y:0,revision:0},right:{image:null,zoom:1,x:0,y:0,revision:0}};
 function activePhoto(){return splitPhotos[activePhotoSide]}
 function syncPhotoZoom(){const current=photoLayout==='split'?activePhoto().zoom:zoom;const slider=el('photoZoom');slider.value=Math.round(current*100);el('zoomLabel').textContent=Math.round(current*100)+' %';const min=Number(slider.min),max=Number(slider.max);slider.style.setProperty('--ds-zoom-progress',(max>min?(Number(slider.value)-min)/(max-min)*100:0)+'%')}
@@ -155,6 +157,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  for(let i=0;i<main.length;i++){
   const line=main[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
   let x=centered?(W-total)/2:80;
+  if(total>0)headlineHitRegions.push({left:x-14,right:x+total+14,top:baselines[i]-size*1.05,bottom:baselines[i]+size*.28});
   for(const part of line.parts){
    ctx.font=(part.italic?'italic ':'')+'700 '+size+'px "Poppins",Arial,sans-serif';
    ctx.textAlign='left';ctx.fillStyle='#FFFFFF';ctx.fillText(part.text,x,baselines[i]);
@@ -246,6 +249,7 @@ el('size').addEventListener('keydown',event=>{
 el('size').addEventListener('keyup',()=>setSizeAdjusting(false));
 function render(includeHover=true){
 try{
+headlineHitRegions=[];
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(headlineForPreview(),size),quotes=[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
@@ -301,6 +305,7 @@ ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
  const line=lines[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
  let x=centered?(W-total)/2:80;
+ if(!line.quote&&total>0)headlineHitRegions.push({left:x-14,right:x+total+14,top:baselines[i]-size*1.05,bottom:baselines[i]+size*.28});
  for(const part of line.parts){
   ctx.font=((line.quote||part.italic)?'italic ':'')+'700 '+size+'px "Poppins",Arial,sans-serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
@@ -522,6 +527,14 @@ scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{
  const r=canvas.getBoundingClientRect();
+ if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'){
+  const x=(event.clientX-r.left)*W/r.width,y=(event.clientY-r.top)*H/r.height;
+  if(headlineHitRegions.some(region=>x>=region.left&&x<=region.right&&y>=region.top&&y<=region.bottom)){
+   event.preventDefault();
+   openMobileHeadlineEditor();
+   return;
+  }
+ }
  if((event.clientY-r.top)*H/r.height>photoBottom)return;
  if(photoLayout==='split'){
   const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);
@@ -786,6 +799,24 @@ mobileZoom.addEventListener('input',()=>{
  ],{duration:155,easing:'ease-out'});
 });
 
+// Acceso directo al titular desde su posición visual en la placa (solo mobile).
+function openMobileHeadlineEditor(){
+ const host=el('dsMobileTextEditor');
+ const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
+ const body=mirrorId('ds-texts-group-body');
+ host.classList.add('is-open-from-preview');
+ accordion.setAttribute('aria-expanded','true');
+ body.hidden=false;
+ syncMobileTextEditor();
+ const field=mirrorId('headline');
+ // Esperar la actualización del layout antes de posicionar y enfocar el campo.
+ requestAnimationFrame(()=>{
+  updateMobileSlideHeight();
+  field.focus({preventScroll:true});
+  field.select();
+  field.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+ });
+}
 // Navegación mobile: paneles adyacentes desplazados como una sola superficie.
 const mobileTabViewport=window.matchMedia('(max-width:700px)');
 const mobileTabMain=document.querySelector('main');
