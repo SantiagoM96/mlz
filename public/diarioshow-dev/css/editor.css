@@ -2091,3 +2091,96 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .ds-mobile-text-editor #headlineMobile,
  .ds-mobile-text-editor #quoteAuthorMobile{font-size:16px}
 }
+
+
+/* Zoom lateral mobile: la placa conserva exactamente su centro.
+   El riel vive en el gutter derecho y se limita al alto de la fotografía. */
+@media(max-width:700px){
+ .ds-mobile-track > .preview .preview-toolbar{
+  display:block;width:100%;
+  min-height:0;margin:0;padding:0!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+ }
+ .ds-mobile-track > .preview .preview-instructions{
+  width:100%;margin:0!important;padding:2px 0 0;
+  text-align:center!important;line-height:1.5;
+ }
+ .ds-mobile-track > .preview .canvas-stage{
+  position:relative;
+  overflow:visible;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl{
+  position:absolute;z-index:6;
+  top:0;left:calc(100% + 5px);
+  width:36px;max-width:36px;
+  height:var(--photo-height);min-height:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:stretch;
+  gap:8px;margin:0;padding:0;
+  background:transparent;border:0;box-shadow:none;
+  touch-action:pan-y;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl label{
+  display:flex;align-items:center;justify-content:center;
+  flex:0 0 23px;width:100%;margin:0;padding:0;
+  color:#f4f4f4;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl .ds-zoom-label-desktop{display:none}
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl .ds-zoom-label-mobile{
+  display:inline-flex;align-items:center;justify-content:center;
+  font:normal 20px/1 'Material Icons';color:#f4f4f4;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom{
+  flex:1 1 auto;display:block;
+  width:26px!important;min-width:26px!important;
+  height:0;min-height:36px;
+  margin:0!important;padding:0!important;
+  writing-mode:vertical-lr;direction:rtl;
+  -webkit-appearance:none;appearance:none;
+  background:transparent!important;border:0!important;
+  border-radius:0;cursor:pointer;touch-action:none;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom::-webkit-slider-runnable-track{
+  width:3px;height:100%;border:0;border-radius:99px;
+  background:linear-gradient(to top,#f4f4f4 0%,#f4f4f4 var(--ds-zoom-progress,0%),#484c55 var(--ds-zoom-progress,0%),#484c55 100%);
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom::-moz-range-track{
+  width:3px;height:100%;border:0;border-radius:99px;background:#484c55;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom::-moz-range-progress{
+  width:3px;border:0;border-radius:99px;background:#f4f4f4;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  box-sizing:border-box;width:15px;height:15px;
+  margin:0 0 0 -6px;
+  border:2px solid #f4f4f4;border-radius:50%;
+  background:#292c32;box-shadow:none;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #photoZoom::-moz-range-thumb{
+  box-sizing:border-box;width:15px;height:15px;
+  border:2px solid #f4f4f4;border-radius:50%;
+  background:#292c32;box-shadow:none;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl.is-thumb-hover #photoZoom::-webkit-slider-thumb,
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl.is-thumb-hover #photoZoom::-moz-range-thumb{
+  background:#9297a1;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl.is-thumb-engaged #photoZoom::-webkit-slider-thumb,
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl.is-thumb-engaged #photoZoom::-moz-range-thumb{
+  background:#fff!important;border-color:#fff!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.27),0 0 10px 3px rgba(255,255,255,.48)!important;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl #zoomLabel{
+  flex:0 0 24px;width:100%;min-width:0;
+  padding:0;margin:0;text-align:center;
+  font:600 10px/20px system-ui,Arial,sans-serif;
+  color:#fff;white-space:nowrap;transform-origin:50% 50%;
+ }
+ .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl.is-adjusting #zoomLabel{
+  font-weight:800;transform:scale(1.14);
+ }
+ /* Evita los reajustes de anclaje que movían el encabezado al abrir Textos. */
+ main > .ds-mobile-viewport{overflow-anchor:none}
+ .ds-mobile-track > .preview{overflow-anchor:none}
+}
