@@ -1606,3 +1606,24 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  margin-top:0!important;
  margin-bottom:0!important;
 }
+
+
+/* Tarjetas flotantes: eliminar la caja gris exterior del editor.
+   El ancho de cada acordeón ocupa toda la columna y mantiene sus controles. */
+main > aside.editor-panel{
+ background:transparent;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ padding:0;
+ min-width:0;
+}
+.editor-panel > .ds-control-card{
+ width:100%;
+ max-width:none;
+ margin:0 0 12px;
+ background:#24262c;
+}
+.editor-panel > .ds-control-card > .ds-control-card-body{
+ background:#202228;
+}
