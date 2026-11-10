@@ -182,6 +182,15 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  el('status').textContent=iconY<120?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }
 
+function syncSizeSliderTrack(){
+ const slider=el('size');
+ if(!slider)return;
+ const min=Number(slider.min),max=Number(slider.max),value=Number(slider.value);
+ const progress=max>min?Math.max(0,Math.min(100,((value-min)/(max-min))*100)):0;
+ slider.style.setProperty('--ds-size-progress',progress+'%');
+}
+syncSizeSliderTrack();
+el('size').addEventListener('input',syncSizeSliderTrack);
 function render(includeHover=true){
 try{
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(headlineForPreview(),size),quotes=[];
@@ -489,7 +498,7 @@ el('clearAll').addEventListener('click',()=>{
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  forceUppercase=false;syncUppercaseUI();
- el('size').value='70';el('dots').value='5';textAlignment='center';
+ el('size').value='70';syncSizeSliderTrack();el('dots').value='5';textAlignment='center';
  el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
  photoRevision++;image=null;zoom=1;offsetX=0;offsetY=0;for(const p of Object.values(splitPhotos)){p.image=null;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}setPhotoLayout('single');dragging=false;photoHover=false;selectedLogo='primary';logoPosition='right';syncLogoChoices();syncLogoPosition();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de Diario Show.';
