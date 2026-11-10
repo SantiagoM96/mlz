@@ -835,21 +835,28 @@ mobileZoom.addEventListener('input',()=>{
 // Edición directa del titular. Sin portales, sin focos repetidos y sin
 // alterar el tamaño del teclado o los paddings del documento.
 let mobileEditorScrollTimer=null;
+let mobileEditorScrollFrame=0;
 function revealMobileHeadlineEditor(){
  const host=el('dsMobileTextEditor'),field=mirrorId('headline');
  if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview'||
     document.activeElement!==field||!host.getClientRects().length)return;
  const viewport=window.visualViewport;
+ // VisualViewport refleja la altura realmente libre tras abrir SwiftKey/Gboard.
+ // No cambiar tamaños del teclado ni mover/fijar el módulo.
  const visibleBottom=viewport?viewport.offsetTop+viewport.height:window.innerHeight;
  const rect=host.getBoundingClientRect();
- // Mostrar todo el acordeón si entra, con 24px adicionales debajo.
- const distance=rect.bottom+24-visibleBottom;
- if(distance>4)window.scrollBy({top:Math.ceil(distance),left:0,behavior:'instant'});
+ const delta=rect.bottom+24-visibleBottom;
+ // Solo bajar lo necesario para mostrar Textos entero y 24 px de aire.
+ // Evitar movimientos inversos que vuelvan a tapar el editor o la preview.
+ if(delta>3)window.scrollBy({top:Math.ceil(delta),left:0,behavior:'instant'});
 }
 function scheduleMobileHeadlineReveal(){
  clearTimeout(mobileEditorScrollTimer);
- // Solo después de que se estabilice el cambio de alto del viewport visual.
- mobileEditorScrollTimer=setTimeout(revealMobileHeadlineEditor,160);
+ cancelAnimationFrame(mobileEditorScrollFrame);
+ // Esperar al layout del teclado; un único scroll tras estabilizarse el cambio.
+ mobileEditorScrollFrame=requestAnimationFrame(()=>{
+  mobileEditorScrollTimer=setTimeout(revealMobileHeadlineEditor,110);
+ });
 }
 window.visualViewport?.addEventListener('resize',()=>{
  if(document.activeElement===mirrorId('headline'))scheduleMobileHeadlineReveal();
@@ -862,7 +869,8 @@ function openMobileHeadlineEditor(){
  syncMobileTextEditor();
  updateMobileSlideHeight();
  const field=mirrorId('headline');
- // En el click nativo, para que Safari/Chrome abran el teclado normalmente.
+ // El foco se da directamente durante el click real del usuario.
+ // No volver a enfocar, ocultar ni reparentar el textarea después.
  field.focus({preventScroll:true});
  field.select();
  scheduleMobileHeadlineReveal();
