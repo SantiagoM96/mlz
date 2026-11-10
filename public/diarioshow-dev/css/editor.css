@@ -490,3 +490,39 @@
 /* El indicador mantiene el contraste institucional intencionalmente. */
 .preview .browser-zoom-demo-percent{background:#E6008D}
 .preview .browser-zoom-demo-percent span{color:#fff}
+
+/* Ejemplo realista y esquemático de Diario Show, Variante 1.
+   La UI circundante es oscura; la placa mantiene exactamente sus
+   colores editoriales: fotografía gris, caja blanca, franja fucsia-violeta,
+   titulares violetas y acento fucsia. */
+.preview .browser-zoom-demo-stage{background:#191b20}
+.preview .browser-zoom-demo-controls{background:#1e2025}
+.preview .browser-zoom-demo-control-title{background:#aeb4c0}
+.preview .browser-zoom-demo-controls i{background:#292c32;border-color:#4a4e56}
+.preview .browser-zoom-demo-toolbar{background:#1e2025}
+.preview .browser-zoom-demo-photo{
+ background:
+ linear-gradient(145deg,transparent 40%,rgba(91,100,113,.24) 41%,rgba(91,100,113,.24) 68%,transparent 69%),
+ linear-gradient(155deg,#c4c8cf,#aeb4bc)
+}
+.preview .browser-zoom-demo-preview{
+ background:#aeb4bc;
+ box-shadow:0 2px 7px rgba(0,0,0,.22)
+}
+.preview .browser-zoom-demo-headline{
+ height:43%;min-height:21px;gap:3px;
+ border-top:0;background:#fff;
+ position:relative;padding-top:5px;padding-bottom:6px
+}
+.preview .browser-zoom-demo-headline::before{
+ content:'';position:absolute;top:0;left:0;right:0;height:4px;
+ background:linear-gradient(90deg,#E6008D,#7749A6)
+}
+.preview .browser-zoom-demo-headline i{background:#7749A6}
+.preview .browser-zoom-demo-headline i:nth-child(2){background:#E6008D}
+.preview .browser-zoom-demo-headline i:nth-child(3){background:#7749A6}
+.preview .browser-zoom-demo-signature{
+ position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+ width:40%;height:2px;background:#7749A6;border-radius:1px;opacity:.75
+}
+.preview .browser-zoom-demo-export{background:#E6008D}
