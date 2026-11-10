@@ -2184,3 +2184,14 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  main > .ds-mobile-viewport{overflow-anchor:none}
  .ds-mobile-track > .preview{overflow-anchor:none}
 }
+
+
+@media(max-width:700px){
+ main > .ds-mobile-viewport.is-focusing-text{
+  transition:none!important;
+ }
+ .ds-mobile-track > .preview #headlineMobile{
+  scroll-margin-top:20px;
+  scroll-margin-bottom:22px;
+ }
+}
