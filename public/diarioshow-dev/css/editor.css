@@ -1819,3 +1819,57 @@ main > aside.editor-panel{
   transition:none;will-change:auto;
  }
 }
+
+
+/* Navegación mobile del editor: pestañas de texto con subrayado de marca.
+   Mismo patrón reutilizable para los demás generadores editoriales. */
+.ds-mobile-tabs{display:none}
+@media(max-width:700px){
+ main > .ds-mobile-tabs{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0;align-items:stretch;
+  width:100%;min-width:0;
+  margin:0 0 16px;
+  border-bottom:1px solid #393d45;
+ }
+ main > .ds-mobile-tabs .ds-mobile-tab{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  min-width:0;min-height:48px;
+  margin:0;padding:12px 10px;
+  border:0;border-radius:0;
+  background:transparent;color:#aeb4bf;
+  font:600 14px/20px system-ui,Arial,sans-serif;
+  cursor:pointer;
+  transition:color .15s ease,background-color .15s ease;
+ }
+ main > .ds-mobile-tabs .ds-mobile-tab:hover{
+  color:#f4f4f4;background:#24262c;
+ }
+ main > .ds-mobile-tabs .ds-mobile-tab[aria-selected="true"]{
+  color:#fff;background:transparent;
+ }
+ main > .ds-mobile-tabs .ds-mobile-tab[aria-selected="true"]::after{
+  content:"";position:absolute;bottom:-1px;left:0;right:0;
+  height:3px;border-radius:3px 3px 0 0;
+  background:var(--ds-tabs-accent,#e6008d);
+ }
+ main > .ds-mobile-tabs .ds-mobile-tab:focus-visible{
+  outline:2px solid #fff;outline-offset:-4px;z-index:1;
+ }
+ main > #dsMobileControlsPanel,
+ main > #dsMobilePreviewPanel{min-width:0;width:100%}
+ main[data-mobile-tab="preview"] > #dsMobileControlsPanel,
+ main[data-mobile-tab="controls"] > #dsMobilePreviewPanel{
+  display:none!important;
+ }
+ main[data-mobile-tab="preview"] > #dsMobilePreviewPanel,
+ main[data-mobile-tab="controls"] > #dsMobileControlsPanel{
+  display:flex;
+ }
+ main[data-mobile-tab="controls"] > #dsMobileControlsPanel{
+  display:block;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ main > .ds-mobile-tabs .ds-mobile-tab{transition:none}
+}
