@@ -153,3 +153,44 @@
 @media(max-width:440px){
  .header-inner .dashboard-back-link{width:100%;justify-content:center;margin-left:0}
 }
+
+/* Variantes por página: dos miniaturas del módulo editorial inferior,
+   sin fotografía y con el selector en la misma escala que Diario Show. */
+.editor-panel .cronica-variant-panel{margin-top:0}
+.editor-panel .cronica-variant-panel h2{margin:0 0 12px}
+.editor-panel .cronica-variant-options{display:flex;align-items:flex-start;gap:12px}
+.editor-panel .cronica-variant-option{
+ display:flex;flex-direction:column;align-items:center;gap:8px;
+ padding:0;background:transparent;border:0;color:#d8dce4;
+ font:500 11px/16px Inter,Arial,sans-serif;cursor:pointer;
+}
+.editor-panel .cronica-variant-thumbnail{
+ position:relative;display:block;box-sizing:border-box;overflow:hidden;
+ width:56px;height:43px;border:2px solid #565a63;border-radius:8px;background:#fff;
+}
+.editor-panel .cronica-variant-thumbnail::before{
+ content:'';position:absolute;inset:0 0 auto;height:5px;background:#ed0000;
+}
+.editor-panel .cronica-variant-thumbnail::after{
+ content:'';position:absolute;left:50%;top:12px;width:35px;height:23px;
+ transform:translateX(-50%);
+ background:
+  linear-gradient(#171717,#171717) center top / 35px 3px no-repeat,
+  linear-gradient(#171717,#171717) center 8px / 27px 3px no-repeat,
+  linear-gradient(#171717,#171717) center 16px / 20px 3px no-repeat;
+}
+/* En portada hay además firma roja en la parte inferior. */
+.editor-panel .cronica-variant-thumbnail-cover{
+ background:linear-gradient(#fff,#fff) top / 100% 100% no-repeat;
+}
+.editor-panel .cronica-variant-thumbnail-cover::after{
+ background:
+  linear-gradient(#171717,#171717) center top / 35px 3px no-repeat,
+  linear-gradient(#171717,#171717) center 8px / 27px 3px no-repeat,
+  linear-gradient(#ed0000,#ed0000) center 22px / 28px 2px no-repeat;
+}
+.editor-panel .cronica-variant-option[aria-pressed="true"] .cronica-variant-thumbnail{
+ outline:2px solid #ed0000;outline-offset:2px;border-color:#565a63;
+}
+.editor-panel .cronica-variant-option:hover .cronica-variant-thumbnail{filter:brightness(.95)}
+.editor-panel .cronica-variant-option:focus-visible{outline:2px solid #a5a8b0;outline-offset:4px;border-radius:5px}
