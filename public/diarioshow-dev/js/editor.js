@@ -611,5 +611,43 @@ function closeHelpTooltips(){
 document.addEventListener('click',event=>{if(!event.target.closest('.help-trigger'))closeHelpTooltips()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeHelpTooltips()});
 sizeHelpTooltips();
+// Navegación mobile sin desmontar el editor, para conservar fotos y valores.
+const mobileTabViewport=window.matchMedia('(max-width:700px)');
+const mobileTabMain=document.querySelector('main');
+const mobileTabs=[
+ {name:'preview',button:el('dsMobilePreviewTab'),panel:el('dsMobilePreviewPanel')},
+ {name:'controls',button:el('dsMobileControlsTab'),panel:el('dsMobileControlsPanel')}
+];
+function selectMobileTab(name,focus=false){
+ const active=mobileTabs.find(tab=>tab.name===name)||mobileTabs[0];
+ mobileTabMain.dataset.mobileTab=active.name;
+ mobileTabs.forEach(tab=>{
+  const selected=tab===active;
+  tab.button.setAttribute('aria-selected',String(selected));
+  tab.button.tabIndex=selected?0:-1;
+  // En desktop las dos secciones permanecen visibles y accesibles.
+  if(mobileTabViewport.matches)tab.panel.setAttribute('role','tabpanel');
+  else tab.panel.removeAttribute('role');
+ });
+ if(focus)active.button.focus();
+ if(active.name==='preview'&&mobileTabViewport.matches){
+  requestAnimationFrame(()=>{updatePhotoStage();render()});
+ }
+}
+mobileTabs.forEach((tab,index)=>{
+ tab.button.addEventListener('click',()=>selectMobileTab(tab.name));
+ tab.button.addEventListener('keydown',event=>{
+  if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+  event.preventDefault();
+  const next=event.key==='Home'?0:event.key==='End'?mobileTabs.length-1:
+   (index+(event.key==='ArrowRight'?1:-1)+mobileTabs.length)%mobileTabs.length;
+  selectMobileTab(mobileTabs[next].name,true);
+ });
+});
+function syncMobileTabViewport(){
+ selectMobileTab(mobileTabMain.dataset.mobileTab||'preview');
+}
+mobileTabViewport.addEventListener('change',syncMobileTabViewport);
+syncMobileTabViewport();
 window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
 })();
