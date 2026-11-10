@@ -523,14 +523,14 @@
 }
 
 /* Posicionamiento nativo CSS Anchor Positioning (Chrome/Edge modernos).
-   Se ancla a la placa real, respeta un margen derecho simétrico al margen izquierdo del editor y
+   Se ancla a la placa real, respeta el tope lateral mínimo de 20px, igual que el panel izquierdo, y
    no salta por breakpoints ni interpola mediciones de JS. */
 @supports (position-anchor: --editor-poster) and (left: anchor(right)){
  .preview .canvas-stage{anchor-name:--editor-poster}
  .preview > .browser-zoom-tip:not([hidden]){
   position:fixed!important;
   position-anchor:--editor-poster;
-  left:min(calc(anchor(right) + 24px),calc(100vw - 210px - max(20px, (100vw - 1200px) / 2)))!important;
+  left:min(calc(anchor(right) + 24px),calc(100vw - 230px))!important;
   top:calc(anchor(top) + 24px)!important;
   right:auto!important;
   transition:none!important;
@@ -538,16 +538,3 @@
  }
 }
 
-/* El borde izquierdo del panel de controladores es el tope real.
-   Se usa como margen derecho del aviso, sin valores aproximados.
-   Cuando ese borde se acerca, CSS desplaza progresivamente el aviso
-   hacia la preview; nunca ocupa espacio del layout. */
-@supports (position-anchor: --editor-poster) and (left: anchor(--controls-edge left)){
- main > .editor-panel{anchor-name:--controls-edge}
- .preview > .browser-zoom-tip:not([hidden]){
-  left:min(
-    calc(anchor(--editor-poster right) + 24px),
-    calc(100vw - 210px - anchor(--controls-edge left))
-  )!important;
- }
-}
