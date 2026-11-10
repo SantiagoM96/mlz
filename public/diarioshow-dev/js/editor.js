@@ -191,6 +191,16 @@ function syncSizeSliderTrack(){
 }
 syncSizeSliderTrack();
 el('size').addEventListener('input',syncSizeSliderTrack);
+const sizeControl=el('size').closest('.ds-inline-type-size');
+const setSizeAdjusting=active=>sizeControl?.classList.toggle('is-adjusting',Boolean(active));
+el('size').addEventListener('pointerdown',()=>setSizeAdjusting(true));
+window.addEventListener('pointerup',()=>setSizeAdjusting(false));
+window.addEventListener('pointercancel',()=>setSizeAdjusting(false));
+el('size').addEventListener('blur',()=>setSizeAdjusting(false));
+el('size').addEventListener('keydown',event=>{
+ if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))setSizeAdjusting(true);
+});
+el('size').addEventListener('keyup',()=>setSizeAdjusting(false));
 function render(includeHover=true){
 try{
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(headlineForPreview(),size),quotes=[];
