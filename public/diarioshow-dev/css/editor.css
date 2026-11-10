@@ -1182,7 +1182,6 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  margin:0 0 12px;
  padding:0;
  border:1px solid #383d46;
- border-left:3px solid #515560;
  border-radius:10px;
  background:#24262c;
  overflow:visible;
@@ -1190,7 +1189,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-control-card[hidden]{display:none!important}
 .editor-panel .ds-control-card-toggle{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
- width:100%;min-height:0;margin:0;padding:5.5px 14px;
+ width:100%;min-height:45px;margin:0;padding:11px 14px;
  border:0;border-radius:9px;
  background:#2b2e35;
  color:#f1f2f6;
@@ -1209,7 +1208,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  transform:rotate(180deg)
 }
 .editor-panel .ds-control-card-body{
- min-width:0;padding:14px;
+ min-width:0;padding:18px 14px;
  border-top:0;
  background:#202228;border-radius:0 0 9px 9px;
 }
@@ -1217,7 +1216,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-control-card-body .control-field:first-child{margin-top:0}
 .editor-panel .ds-control-card-body .ds-variant-field>label{display:none}
 .editor-panel .ds-control-card-body .ds-variant-options{margin-top:0}
-.editor-panel .ds-photo-upload-area{margin-top:16px;padding-top:0;border-top:0}
+.editor-panel .ds-photo-upload-area{margin-top:22px;padding-top:0;border-top:0}
 .editor-panel .ds-photo-upload-area .split-photo-fields{margin-top:0}
 .editor-panel .ds-photo-layout-group .photo-single-field[hidden]{display:none!important}
 .editor-panel .ds-photo-layout-group .split-photo-fields[hidden]{display:none!important}
@@ -1232,8 +1231,8 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-photo-layout-group .help-button,
 .editor-panel .ds-quote-photo-group .help-button{transform:translateY(1px)}
 @media(max-width:700px){
- .editor-panel .ds-control-card-toggle{min-height:0;padding:5px 12px}
- .editor-panel .ds-control-card-body{padding:12px}
+ .editor-panel .ds-control-card-toggle{min-height:43px;padding:10px 12px}
+ .editor-panel .ds-control-card-body{padding:15px 12px}
 }
 @media(prefers-reduced-motion:reduce){
  .editor-panel .ds-control-card-chevron{transition:none}
