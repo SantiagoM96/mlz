@@ -261,7 +261,7 @@ function positionBrowserZoomTip(){
  const tipWidth=tip.getBoundingClientRect().width||210;
  // El panel izquierdo hace tope a 20px del viewport (main: calc(100% - 40px)).
  // Usamos ese tope mínimo, no el margen variable del contenedor centrado.
- const freeRight=window.innerWidth-20-tipWidth-previewRect.left;
+ const freeRight=document.documentElement.clientWidth-20-tipWidth-previewRect.left;
  const preferredLeft=stageRect.right-previewRect.left+24;
  const left=Math.min(preferredLeft,freeRight);
  const top=stageRect.top-previewRect.top+24;
