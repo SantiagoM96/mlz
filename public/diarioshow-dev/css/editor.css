@@ -452,3 +452,41 @@
  .preview .preview-actions{order:3}
  .preview .bae-credits{order:4}
 }
+
+/* Miniatura del zoom: versión oscura, ilustrativa y de bajo contraste.
+   Se mantienen las dimensiones, el marco fijo y el porcentaje destacado. */
+.preview .browser-zoom-demo-viewport{
+ border-color:#393b42;background:#17191e
+}
+.preview .browser-zoom-demo-page{background:#17191e}
+.preview .browser-zoom-demo-header{
+ background:#22242a;border-bottom:1px solid #343740
+}
+.preview .browser-zoom-demo-stage{background:#191b20}
+.preview .browser-zoom-demo-controls{background:#24262b}
+.preview .browser-zoom-demo-control-title{background:#626773}
+.preview .browser-zoom-demo-controls i{
+ background:#30343c;border-color:#3c414a
+}
+.preview .browser-zoom-demo-controls i:nth-of-type(2){
+ background:linear-gradient(90deg,#84526f 45%,#474b55 45%);border:0
+}
+.preview .browser-zoom-demo-controls i:nth-of-type(4){background:#555a65}
+.preview .browser-zoom-demo-toolbar{background:#282b32}
+.preview .browser-zoom-demo-preview{
+ background:#343943;box-shadow:0 2px 6px rgba(0,0,0,.16)
+}
+.preview .browser-zoom-demo-photo{
+ background:
+ linear-gradient(145deg,transparent 44%,rgba(21,26,34,.33) 45%,rgba(21,26,34,.33) 65%,transparent 66%),
+ linear-gradient(155deg,#565d68,#343a44)
+}
+.preview .browser-zoom-demo-headline{
+ border-top-color:#79506a;background:#33353d
+}
+.preview .browser-zoom-demo-headline i{background:#686074}
+.preview .browser-zoom-demo-headline i:nth-child(2){background:#8b5372}
+.preview .browser-zoom-demo-export{background:#87516e}
+/* El indicador mantiene el contraste institucional intencionalmente. */
+.preview .browser-zoom-demo-percent{background:#E6008D}
+.preview .browser-zoom-demo-percent span{color:#fff}
