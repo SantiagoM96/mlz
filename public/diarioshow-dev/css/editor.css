@@ -1190,7 +1190,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-control-card[hidden]{display:none!important}
 .editor-panel .ds-control-card-toggle{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
- width:100%;min-height:45px;margin:0;padding:11px 14px;
+ width:100%;min-height:0;margin:0;padding:5.5px 14px;
  border:0;border-radius:9px;
  background:#2b2e35;
  color:#f1f2f6;
@@ -1210,14 +1210,14 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 .editor-panel .ds-control-card-body{
  min-width:0;padding:14px;
- border-top:1px solid #393c44;
+ border-top:0;
  background:#202228;border-radius:0 0 9px 9px;
 }
 .editor-panel .ds-control-card-body[hidden]{display:none!important}
 .editor-panel .ds-control-card-body .control-field:first-child{margin-top:0}
 .editor-panel .ds-control-card-body .ds-variant-field>label{display:none}
 .editor-panel .ds-control-card-body .ds-variant-options{margin-top:0}
-.editor-panel .ds-photo-upload-area{margin-top:16px;padding-top:14px;border-top:1px solid #393d45}
+.editor-panel .ds-photo-upload-area{margin-top:16px;padding-top:0;border-top:0}
 .editor-panel .ds-photo-upload-area .split-photo-fields{margin-top:0}
 .editor-panel .ds-photo-layout-group .photo-single-field[hidden]{display:none!important}
 .editor-panel .ds-photo-layout-group .split-photo-fields[hidden]{display:none!important}
@@ -1232,9 +1232,36 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-photo-layout-group .help-button,
 .editor-panel .ds-quote-photo-group .help-button{transform:translateY(1px)}
 @media(max-width:700px){
- .editor-panel .ds-control-card-toggle{min-height:43px;padding:10px 12px}
+ .editor-panel .ds-control-card-toggle{min-height:0;padding:5px 12px}
  .editor-panel .ds-control-card-body{padding:12px}
 }
 @media(prefers-reduced-motion:reduce){
  .editor-panel .ds-control-card-chevron{transition:none}
+}
+
+
+/* Textos: control de tamaño junto al textarea, sin una fila de título.
+   El valor queda al extremo derecho para leerse mientras se arrastra. */
+.editor-panel .ds-texts-group .ds-headline-field{margin-top:12px}
+.editor-panel .ds-texts-group .ds-inline-type-size{
+ display:flex;align-items:center;gap:3px;
+ margin:10px 0 0!important;padding:0;min-width:0;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]{
+ flex:1 1 auto;width:auto;min-width:0;margin:0;
+ accent-color:#e6008d;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size output{
+ flex:0 0 auto;min-width:25px;text-align:right;
+ font:600 12px/18px system-ui,Arial,sans-serif;color:#eff0f3;
+ font-variant-numeric:tabular-nums;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size .ds-size-unit{
+ flex:none;color:#aeb4c0;font:500 11px/18px system-ui,Arial,sans-serif;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-webkit-slider-thumb{
+ width:19px;height:19px;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{
+ width:19px;height:19px;
 }
