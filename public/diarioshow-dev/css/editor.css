@@ -1190,12 +1190,13 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-control-card-toggle{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
  width:100%;min-height:45px;margin:0;padding:11px 14px;
- border:0;border-radius:9px;
+ border:0;border-radius:9px 9px 0 0;
  background:#2b2e35;
  color:#f1f2f6;
  font:600 13px/20px system-ui,Arial,sans-serif;
  text-align:left;cursor:pointer;
 }
+.editor-panel .ds-control-card-toggle[aria-expanded="false"]{border-radius:9px}
 .editor-panel .ds-control-card-toggle:hover{background:#33363e}
 .editor-panel .ds-control-card-toggle:focus-visible{
  outline:2px solid #e6008d;outline-offset:2px;position:relative;z-index:2
