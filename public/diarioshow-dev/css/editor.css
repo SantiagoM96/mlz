@@ -1109,3 +1109,64 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 @media(prefers-reduced-motion:reduce){
  .preview .canvas-stage.split-mode .split-photo-zone::after{transition:none}
 }
+
+
+/* Paridad estricta: las opciones fotográficas usan las mismas dimensiones,
+   separación, proporción 3:4 y anillo que Diseño de la placa.
+   Solo se sustituyen los sectores de imagen por recuadros internos. */
+.editor-panel #photoLayoutOptions.ds-variant-options{
+ display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px;
+}
+.editor-panel #photoLayoutOptions .photo-layout-option.ds-variant-option{
+ box-sizing:border-box;width:60px;min-width:60px;flex:0 0 60px;
+ padding:0;gap:8px;align-items:center;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail.ds-variant-preview{
+ box-sizing:border-box!important;width:60px!important;min-width:60px!important;
+ height:auto!important;aspect-ratio:3/4!important;
+ padding:0!important;border:2px solid #565a63!important;
+ border-radius:7px!important;overflow:hidden;
+ background:linear-gradient(to bottom,transparent 53%,#fff 53%),linear-gradient(145deg,#c3c9d0,#7e8897)!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art{
+ position:absolute!important;top:4px!important;left:4px!important;right:4px!important;
+ width:auto!important;height:calc(53% - 8px)!important;
+ display:flex!important;gap:3px!important;padding:0!important;
+ flex:none!important;box-sizing:border-box!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art i{
+ display:block!important;flex:1 1 0!important;width:auto!important;height:100%!important;
+ min-width:0!important;background:#424244!important;border-radius:4px!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines{
+ position:absolute!important;top:53%!important;left:0!important;right:0!important;
+ width:100%!important;height:47%!important;
+ display:block!important;padding:0!important;margin:0!important;
+ background:#fff!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines::before{
+ content:''!important;position:absolute!important;top:0!important;left:0!important;right:0!important;
+ height:4px!important;background:linear-gradient(90deg,var(--photo-mini-bar-start),var(--photo-mini-bar-end))!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:first-child,
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:last-child{
+ position:absolute!important;left:50%!important;transform:translateX(-50%)!important;
+ display:block!important;flex:none!important;border-radius:10px!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:first-child{
+ top:24%!important;width:84%!important;height:5px!important;background:var(--photo-mini-primary)!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines i:last-child{
+ top:52%!important;width:60%!important;height:3px!important;background:var(--photo-mini-accent)!important;
+}
+/* Mismo anillo seleccionado (4px, separado 2px), sin recuadro adicional. */
+.editor-panel #photoLayoutOptions .photo-layout-option[aria-pressed="true"] .photo-layout-thumbnail{
+ outline:4px solid #e6008d!important;outline-offset:2px!important;
+ border-color:#565a63!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-option[aria-pressed="false"] .photo-layout-thumbnail{
+ outline:none!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-option>span:last-child{
+ font-size:11px;line-height:16px;white-space:nowrap;
+}
