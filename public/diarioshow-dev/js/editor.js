@@ -415,7 +415,7 @@ canvas.addEventListener('pointermove',event=>{
   const r=canvas.getBoundingClientRect();
   const x=(event.clientX-r.left)/r.width, y=(event.clientY-r.top)/r.height;
   const hovering=y>=0&&y<photoBottom/H&&x>=0&&x<=1;
-  if(hovering&&!dragging){const side=x<.5?'left':'right';if(side!==activePhotoSide)setPhotoSide(side)}
+  // Hover no cambia la selección. Solo pointerdown/clic y teclado activan una mitad.
   photoStage.classList.toggle('hover-left',hovering&&x<.5);
   photoStage.classList.toggle('hover-right',hovering&&x>=.5);
  }
