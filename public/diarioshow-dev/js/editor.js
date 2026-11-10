@@ -527,11 +527,13 @@ scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
 // Solo un tap completo sobre el titular abre el editor: un gesto de scroll no.
 let mobileHeadlineTap=null;
+let mobileHeadlineClickAllowed=false;
 canvas.addEventListener('pointerdown',event=>{
  const r=canvas.getBoundingClientRect();
  if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'&&event.isPrimary!==false){
   const x=(event.clientX-r.left)*W/r.width,y=(event.clientY-r.top)*H/r.height;
   if(headlineHitRegions.some(region=>x>=region.left&&x<=region.right&&y>=region.top&&y<=region.bottom)){
+   mobileHeadlineClickAllowed=false;
    mobileHeadlineTap={pointerId:event.pointerId,x:event.clientX,y:event.clientY,started:performance.now()};
    return;
   }
@@ -565,15 +567,24 @@ canvas.addEventListener('pointermove',event=>{
 canvas.addEventListener('pointerleave',()=>{photoStage.classList.remove('hover-left','hover-right')});
 canvas.addEventListener('pointerup',event=>{
  if(mobileHeadlineTap&&event.pointerId===mobileHeadlineTap.pointerId){
-  const tap=mobileHeadlineTap;mobileHeadlineTap=null;
-  if(Math.hypot(event.clientX-tap.x,event.clientY-tap.y)<=9&&performance.now()-tap.started<550){
-   event.preventDefault();
-   openMobileHeadlineEditor();
-  }
+  const tap=mobileHeadlineTap;
+  mobileHeadlineClickAllowed=Math.hypot(event.clientX-tap.x,event.clientY-tap.y)<=9
+   &&performance.now()-tap.started<550;
  }
+ mobileHeadlineTap=null;
  dragging=false;
 });
-canvas.addEventListener('pointercancel',()=>{mobileHeadlineTap=null;dragging=false});
+// El foco se solicita desde el click nativo, DESPUÉS de pointerup/touchend.
+// Así el navegador no genera otro click táctil que quite el foco del textarea.
+canvas.addEventListener('click',event=>{
+ if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview')return;
+ const allowed=mobileHeadlineClickAllowed;
+ mobileHeadlineClickAllowed=false;
+ if(!allowed)return;
+ event.preventDefault();
+ openMobileHeadlineEditor();
+});
+canvas.addEventListener('pointercancel',()=>{mobileHeadlineTap=null;mobileHeadlineClickAllowed=false;dragging=false});
 el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
@@ -821,48 +832,27 @@ mobileZoom.addEventListener('input',()=>{
  ],{duration:155,easing:'ease-out'});
 });
 
-// Edición directa del titular, con el textarea en su ubicación original.
-// El teclado nativo se abre normalmente; solo desplazamos la página.
-let mobileHeadlineScrollPending=false;
+// Edición directa del titular. Sin portales, sin focos repetidos y sin
+// alterar el tamaño del teclado o los paddings del documento.
+let mobileEditorScrollTimer=null;
 function revealMobileHeadlineEditor(){
- const host=el('dsMobileTextEditor');
- const field=mirrorId('headline');
+ const host=el('dsMobileTextEditor'),field=mirrorId('headline');
  if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview'||
     document.activeElement!==field||!host.getClientRects().length)return;
- updateMobileSlideHeight();
- const visual=window.visualViewport;
- const visibleHeight=visual?visual.height:window.innerHeight;
- const visibleBottom=visual?visual.offsetTop+visibleHeight:window.innerHeight;
- const keyboardClearance=Math.max(0,window.innerHeight-visibleBottom);
- // Darle recorrido al scroll del documento para que el último borde del
- // acordeón pueda quedar sobre el teclado con 24px de aire.
- mobileTabMain.style.setProperty('--ds-keyboard-scroll-space',(keyboardClearance+24)+'px');
- mobileTabMain.classList.add('ds-keyboard-text-editing');
+ const viewport=window.visualViewport;
+ const visibleBottom=viewport?viewport.offsetTop+viewport.height:window.innerHeight;
  const rect=host.getBoundingClientRect();
- const gap=24;
- // Si el acordeón es más alto que el espacio visible, priorizar su inicio;
- // caso contrario mostrar su borde inferior completo y 24px adicionales.
- const target=rect.height+gap<=visibleHeight
-  ?rect.bottom+gap-visibleBottom
-  :rect.top-(visual?visual.offsetTop:0)-12;
- if(target>2||target< -2 && rect.top<(visual?visual.offsetTop:0)){
-  window.scrollBy({top:Math.round(target),left:0,behavior:'auto'});
- }
+ // Mostrar todo el acordeón si entra, con 24px adicionales debajo.
+ const distance=rect.bottom+24-visibleBottom;
+ if(distance>4)window.scrollBy({top:Math.ceil(distance),left:0,behavior:'instant'});
 }
 function scheduleMobileHeadlineReveal(){
- if(mobileHeadlineScrollPending)return;
- mobileHeadlineScrollPending=true;
- requestAnimationFrame(()=>{
-  mobileHeadlineScrollPending=false;
-  revealMobileHeadlineEditor();
- });
+ clearTimeout(mobileEditorScrollTimer);
+ // Solo después de que se estabilice el cambio de alto del viewport visual.
+ mobileEditorScrollTimer=setTimeout(revealMobileHeadlineEditor,160);
 }
 window.visualViewport?.addEventListener('resize',()=>{
  if(document.activeElement===mirrorId('headline'))scheduleMobileHeadlineReveal();
-});
-mirrorId('headline').addEventListener('blur',()=>{
- mobileTabMain.classList.remove('ds-keyboard-text-editing');
- mobileTabMain.style.removeProperty('--ds-keyboard-scroll-space');
 });
 function openMobileHeadlineEditor(){
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
@@ -870,17 +860,12 @@ function openMobileHeadlineEditor(){
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
- // El acordeón ya está en el flujo, solo cambia su altura y el scroll.
- mobileSlideViewport.classList.add('is-focusing-text');
  updateMobileSlideHeight();
  const field=mirrorId('headline');
+ // En el click nativo, para que Safari/Chrome abran el teclado normalmente.
  field.focus({preventScroll:true});
  field.select();
- requestAnimationFrame(()=>{
-  updateMobileSlideHeight();
-  mobileSlideViewport.classList.remove('is-focusing-text');
-  scheduleMobileHeadlineReveal();
- });
+ scheduleMobileHeadlineReveal();
 }
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
 // Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
