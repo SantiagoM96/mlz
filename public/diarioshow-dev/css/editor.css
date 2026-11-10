@@ -2195,3 +2195,37 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   scroll-margin-bottom:22px;
  }
 }
+
+
+/* Ritmo mobile: 8px entre navegación, bloque de preview y siguiente bloque.
+   Evita sumar el gap de grid del main al margen de las tabs. */
+@media(max-width:700px){
+ main:has(> .ds-mobile-tabs){row-gap:0!important;column-gap:0!important;padding-top:8px!important}
+ main > .ds-mobile-tabs{margin-bottom:8px!important}
+ .ds-mobile-track > #dsMobilePreviewPanel{gap:8px!important}
+ .ds-mobile-track > #dsMobileControlsPanel{margin-top:0!important}
+ .ds-mobile-track > .preview .preview-toolbar{margin:0!important;padding:0!important}
+ .ds-mobile-track > .preview .preview-instructions{padding:0!important}
+ .ds-mobile-track > .preview > .ds-mobile-text-editor{
+  margin:0!important;
+ }
+ /* Cuando hay teclado, el editor pasa temporalmente a body para que el
+    transform del carril deslizante no rompa el posicionamiento fixed. */
+ body > #dsMobileTextEditor.is-keyboard-docked{
+  position:fixed!important;
+  z-index:200!important;
+  box-sizing:border-box;
+  left:12px!important;right:12px!important;
+  top:auto!important;
+  width:auto!important;max-width:none!important;
+  margin:0!important;padding:0!important;
+  background:#202228!important;
+  border-radius:10px!important;
+  overflow-y:auto;overscroll-behavior:contain;
+  box-shadow:0 7px 28px rgba(0,0,0,.42);
+  display:block!important;
+ }
+ body > #dsMobileTextEditor.is-keyboard-docked .ds-control-card{
+  margin:0!important;
+ }
+}
