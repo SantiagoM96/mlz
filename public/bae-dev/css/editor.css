@@ -486,3 +486,64 @@
 @media(max-width:700px){
  .preview > .browser-zoom-tip{display:none!important}
 }
+
+
+/* Lenguaje común de miniaturas: 3:4, 52% foto gris, 48% módulo editorial,
+   dos barras de 4px redondeadas; diferencia de marca solo por color. */
+.preview .editor-mini{
+ box-sizing:border-box;width:min(100%,56px);height:auto;aspect-ratio:3/4;
+ display:flex;flex-direction:column;overflow:hidden;margin:auto;
+ background:#aeb4bc;border-radius:3px;--mini-panel:#fff;--mini-text:#171717;
+ --mini-accent:#ed0000;--mini-bar:#ed0000;
+}
+.preview .editor-mini-photo{flex:0 0 52%;background:#aeb4bc}
+.preview .editor-mini-body{
+ flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+ background:var(--mini-panel);position:relative
+}
+.preview .editor-mini-strap{
+ width:100%;height:4px;flex:0 0 4px;background:var(--mini-bar);
+}
+.preview .editor-mini-lines{
+ flex:1;min-height:0;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:5px;width:100%;
+}
+.preview .editor-mini-lines i{
+ display:block;width:84%;height:4px;flex:0 0 4px;
+ background:var(--mini-text);border-radius:10px;
+}
+.preview .editor-mini-lines i:nth-child(2){
+ width:60%;background:var(--mini-accent);
+}
+.preview .editor-mini-quote{display:none}
+.preview .editor-mini-bae-white{
+ --mini-panel:#fff;--mini-text:#171717;--mini-accent:#d82626;--mini-bar:#fff;
+}
+.preview .editor-mini-ds-pink{
+ --mini-panel:#fff;--mini-text:#7749a6;--mini-accent:#e6008d;--mini-bar:#e6008d;
+}
+.preview .editor-mini-ds-pink .editor-mini-strap{
+ background:linear-gradient(90deg,#e6008d,#7749a6)
+}
+.preview .editor-mini-cronica-cover{
+ --mini-panel:#fff;--mini-text:#171717;--mini-accent:#ed0000;--mini-bar:#ed0000;
+}
+.preview .editor-mini-cronica-cover .editor-mini-strap{
+ height:12px;flex-basis:12px;position:relative
+}
+.preview .editor-mini-cronica-cover .editor-mini-strap::after{
+ content:'';position:absolute;left:20%;right:20%;top:4px;
+ height:4px;border-radius:10px;background:#fff
+}
+.preview .browser-zoom-demo-preview{background:transparent;box-shadow:none;display:flex;align-items:center;justify-content:center}
+.preview .browser-zoom-demo-preview>.editor-mini{max-height:100%}
+
+/* BAE: foto neutra, dos líneas por placa; sin sombreado oscuro. */
+.editor-panel .theme-swatch-thumb{
+ background:linear-gradient(to bottom,#aeb4bc 52%,var(--thumb-panel) 52%)
+}
+.editor-panel .theme-swatch-thumb::before{background:var(--thumb-ink)}
+.editor-panel .theme-swatch-art i{height:4px;flex-basis:4px;border-radius:10px}
+.editor-panel .theme-swatch[aria-pressed="true"] .theme-swatch-thumb{
+ outline-width:4px
+}
