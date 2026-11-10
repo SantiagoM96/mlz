@@ -1278,3 +1278,37 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  border-bottom-left-radius:9px!important;
  border-bottom-right-radius:9px!important;
 }
+
+
+/* Diario Show Dev — respiro inferior consistente en distribución fotográfica.
+   Los laterales y el margen inferior se mantienen en 14px. */
+.editor-panel .ds-photo-layout-group .ds-control-card-body{
+ padding-bottom:14px;
+}
+/* Logo: selector horizontal a la derecha del título, sin alterar miniaturas. */
+.editor-panel .ds-logo-position-row{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ min-width:0;
+}
+.editor-panel .ds-logo-position-row>label{
+ margin:0!important;line-height:20px;flex:1 1 auto;
+}
+.editor-panel .ds-logo-position-controls{
+ display:flex;align-items:center;gap:5px;flex:none;
+}
+.editor-panel .ds-logo-position-button{
+ display:flex;align-items:center;justify-content:center;
+ width:35px;height:35px;padding:0;
+ border:1px solid #4a4e56;border-radius:7px;
+ background:#292c32;color:#f4f4f4;
+}
+.editor-panel .ds-logo-position-button[aria-pressed="true"]{
+ background:#e6008d;border-color:#e6008d;color:#fff;
+}
+.editor-panel .ds-logo-position-button:hover:not([aria-pressed="true"]){background:#343841}
+.editor-panel .ds-logo-position-button:focus-visible{outline:2px solid #f4f4f4;outline-offset:2px}
+.editor-panel .ds-logo-position-button .material-icons{font-size:21px}
+.editor-panel .ds-logo-position-row+.logo-choices{margin-top:10px}
+@media(max-width:700px){
+ .editor-panel .ds-photo-layout-group .ds-control-card-body{padding-bottom:12px}
+}
