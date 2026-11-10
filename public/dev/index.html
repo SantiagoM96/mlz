@@ -9,6 +9,14 @@
 :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:#101114;color:#f4f4f4}
+
+/* Scrollbar del menú principal, coherente con los generadores. */
+html{scrollbar-width:thin;scrollbar-color:#525864 #101114}
+html::-webkit-scrollbar{width:8px;height:8px}
+html::-webkit-scrollbar-track{background:#101114}
+html::-webkit-scrollbar-thumb{background:#525864;border:2px solid #101114;border-radius:999px}
+html::-webkit-scrollbar-thumb:hover{background:#747b88}
+
 .wrap{width:min(1100px,calc(100% - 40px));margin:0 auto}
 header{border-bottom:1px solid #34383e}
 header .wrap{min-height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px}
