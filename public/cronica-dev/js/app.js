@@ -223,7 +223,14 @@ function renderCarouselNavigation(){
   button.append(composition,number);
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
- el('pageIndicator').textContent=(activePage+1)+' de '+carouselPages.length+' · '+(pageVariant==='cover'?'Portada':'Interior');
+ const indicator=el('pageIndicator');
+ const count=document.createElement('span');
+ count.className='carousel-indicator-count';
+ count.textContent=(activePage+1)+' de '+carouselPages.length;
+ const type=document.createElement('span');
+ type.className='carousel-indicator-type '+(pageVariant==='cover'?'is-cover':'is-internal');
+ type.textContent=pageVariant==='cover'?'Portada':'Interior';
+ indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
 }
 function selectPage(index){
