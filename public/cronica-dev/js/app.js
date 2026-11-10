@@ -475,5 +475,6 @@ document.addEventListener('click',event=>{
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape')closeHelpTooltips();
 });
+el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
 })();
