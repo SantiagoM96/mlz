@@ -425,3 +425,34 @@
 .preview .browser-zoom-demo-signature{background:#ed0000}
 .preview .browser-zoom-demo-photo{background:linear-gradient(145deg,transparent 40%,rgba(69,75,86,.23) 41%,rgba(69,75,86,.23) 68%,transparent 69%),linear-gradient(155deg,#c7cbd1,#aeb4bc)}
 @media(max-width:700px){.preview .browser-zoom-tip{display:none!important}}
+
+/* Miniaturas sintéticas: foto gris neutra y dos renglones de mayor
+   grosor y puntas redondeadas, sin elementos tipográficos superfluos. */
+.editor-panel .cronica-variant-thumb-photo{background:#aeb4bc}
+.editor-panel .cronica-variant-thumb-lines{gap:5px}
+.editor-panel .cronica-variant-thumb-lines i{
+ height:4px;flex:0 0 4px;border-radius:5px
+}
+.editor-panel .cronica-variant-thumb-lines i:first-child{width:85%}
+.editor-panel .cronica-variant-thumb-lines i:nth-child(2){width:63%}
+.editor-panel .cronica-variant-thumb-lines i:nth-child(3){display:none}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines{gap:5px}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines i{
+ height:4px;flex-basis:4px
+}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap::after{
+ border-radius:5px;height:4px
+}
+.editor-panel .cronica-variant-option[aria-pressed="true"] .cronica-variant-thumbnail{
+ outline-width:4px;outline-offset:2px
+}
+/* Tarjeta flotante de ayuda: se superpone sin introducir huecos
+   ni modificar posiciones de barra de zoom y vista previa. */
+@media(min-width:701px) and (max-width:1439px){
+ .preview .browser-zoom-tip{
+  position:absolute;display:flex;top:64px;left:auto;right:0;
+  width:210px;margin:0;z-index:12;align-self:auto;order:initial
+ }
+ .preview .preview-toolbar,.preview .canvas-stage,
+ .preview .preview-actions,.preview .bae-credits{order:initial}
+}
