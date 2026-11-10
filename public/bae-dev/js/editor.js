@@ -250,23 +250,19 @@ sizeHelpTooltips();
 /* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
    adentro cuando faltarían menos de 24px al borde de la pantalla. */
 function positionBrowserZoomTip(){
- // CSS posiciona nativamente el aviso respecto del canvas cuando admite anchors.
- if(window.CSS?.supports?.('position-anchor: --editor-poster') && window.CSS?.supports?.('left: anchor(right)'))return;
  const tip=el('browserZoomTip');
- const preview=tip.closest('.preview');
  const stage=el('photoStage');
- if(!preview||!stage||tip.hidden||window.innerWidth<=700)return;
- const previewRect=preview.getBoundingClientRect();
- const stageRect=stage.getBoundingClientRect();
+ if(!tip||!stage||tip.hidden||window.innerWidth<=700)return;
+ const rect=stage.getBoundingClientRect();
  const tipWidth=tip.getBoundingClientRect().width||210;
- // El panel izquierdo hace tope a 20px del viewport (main: calc(100% - 40px)).
- // Usamos ese tope mínimo, no el margen variable del contenedor centrado.
- const freeRight=window.innerWidth-20-tipWidth-previewRect.left;
- const preferredLeft=stageRect.right-previewRect.left+24;
- const left=Math.min(preferredLeft,freeRight);
- const top=stageRect.top-previewRect.top+24;
- preview.style.setProperty('--zoom-help-left',left+'px');
- preview.style.setProperty('--zoom-help-top',top+'px');
+ // Siempre al costado mientras entre; al tocar los 20px de margen,
+ // empieza a superponerse sin desplazar el canvas.
+ const preferredLeft=rect.right+24;
+ const maxLeft=window.innerWidth-tipWidth-20;
+ const left=Math.min(preferredLeft,maxLeft);
+ const top=rect.top+24;
+ tip.style.setProperty('--bae-tip-left',left+'px');
+ tip.style.setProperty('--bae-tip-top',top+'px');
 }
 let zoomTipPositionFrame=0;
 function scheduleBrowserZoomTipPosition(){
@@ -277,6 +273,7 @@ function scheduleBrowserZoomTipPosition(){
  });
 }
 window.addEventListener('resize',scheduleBrowserZoomTipPosition);
+window.addEventListener('scroll',scheduleBrowserZoomTipPosition,{passive:true});
 if(typeof ResizeObserver!=='undefined'){
  const zoomTipResizeObserver=new ResizeObserver(scheduleBrowserZoomTipPosition);
  zoomTipResizeObserver.observe(el('photoStage'));
