@@ -1170,3 +1170,6 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel #photoLayoutOptions .photo-layout-option>span:last-child{
  font-size:11px;line-height:16px;white-space:nowrap;
 }
+
+/* Variantes 3 y 4: ocultar completamente el módulo de distribución fotográfica. */
+.editor-panel .ds-photo-layout-group[hidden]{display:none!important}
