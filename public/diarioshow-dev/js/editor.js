@@ -27,8 +27,7 @@ function setPhotoLayout(mode){
  photoLayout=mode;
  document.querySelectorAll('[data-photo-layout]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.photoLayout===mode)));
  el('splitPhotoFields').hidden=mode!=='split';el('splitPhotoZones').hidden=mode!=='split';
- el('file').parentElement.querySelector(':scope > input#file').hidden=mode==='split';
- el('file').parentElement.querySelector('.help-label-row').hidden=mode==='split';
+ el('singlePhotoField').hidden=mode==='split';
  if(mode==='split')activePhotoSide='left';
  el('photoStage').classList.remove('hover-left','hover-right');
  syncPhotoZoom();render();
@@ -259,7 +258,7 @@ clearFormatButton.addEventListener('click',()=>{
 });
 document.querySelectorAll('.texture-option').forEach(button=>button.addEventListener('click',()=>{selectedTexture=button.dataset.texture;halftone=halftoneAssets[selectedTexture]||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));render()}));
 // Selector accesible de variante, sin librerías externas.
-const variantButtons=[...document.querySelectorAll('.ds-variant-option')];
+const variantButtons=[...document.querySelectorAll('.ds-variant-option[data-variant]')];
 function setVariant(value){
  if(!palette[value])return;
  // Primera vista de la tercera variante: ejemplo sin reemplazar contenido editado.
@@ -268,6 +267,7 @@ function setVariant(value){
   el('quoteAuthor').value='La Joaqui';
  }
  el('theme').value=value;
+ el('photoLayoutOptions').dataset.variant=value;
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  const isQuote=['quote','quote-blue'].includes(value);
  el('quoteAuthorField').hidden=!isQuote;
@@ -414,6 +414,7 @@ canvas.addEventListener('pointermove',event=>{
   const r=canvas.getBoundingClientRect();
   const x=(event.clientX-r.left)/r.width, y=(event.clientY-r.top)/r.height;
   const hovering=y>=0&&y<photoBottom/H&&x>=0&&x<=1;
+  if(hovering&&!dragging){const side=x<.5?'left':'right';if(side!==activePhotoSide)setPhotoSide(side)}
   photoStage.classList.toggle('hover-left',hovering&&x<.5);
   photoStage.classList.toggle('hover-right',hovering&&x>=.5);
  }
