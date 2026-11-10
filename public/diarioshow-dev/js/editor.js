@@ -205,10 +205,41 @@ el('size').addEventListener('input',()=>{
 });
 const sizeControl=el('size').closest('.ds-inline-type-size');
 const setSizeAdjusting=active=>sizeControl?.classList.toggle('is-adjusting',Boolean(active));
-el('size').addEventListener('pointerdown',()=>setSizeAdjusting(true));
-window.addEventListener('pointerup',()=>setSizeAdjusting(false));
-window.addEventListener('pointercancel',()=>setSizeAdjusting(false));
-el('size').addEventListener('blur',()=>setSizeAdjusting(false));
+// Solo activar el thumb si el puntero cae dentro de su círculo real.
+// El input completo conserva la selección por clic y el arrastre nativos.
+const sizeSlider=el('size');
+let sizeThumbPointerId=null;
+function isPointerOnSizeThumb(event){
+ const rect=sizeSlider.getBoundingClientRect();
+ const min=Number(sizeSlider.min),max=Number(sizeSlider.max);
+ const t=max>min?(Number(sizeSlider.value)-min)/(max-min):0;
+ const radius=7.5;
+ const x=rect.left+radius+t*Math.max(0,rect.width-radius*2);
+ const y=rect.top+rect.height/2;
+ return Math.abs(event.clientX-x)<=radius+3&&Math.abs(event.clientY-y)<=radius+4;
+}
+function syncSizeThumbHover(event){
+ if(sizeThumbPointerId!==null)return;
+ sizeControl?.classList.toggle('is-thumb-hover',isPointerOnSizeThumb(event));
+}
+sizeSlider.addEventListener('pointerenter',syncSizeThumbHover);
+sizeSlider.addEventListener('pointermove',syncSizeThumbHover);
+sizeSlider.addEventListener('pointerleave',()=>{if(sizeThumbPointerId===null)sizeControl?.classList.remove('is-thumb-hover')});
+sizeSlider.addEventListener('pointerdown',event=>{
+ setSizeAdjusting(true);
+ const onThumb=isPointerOnSizeThumb(event);
+ sizeThumbPointerId=onThumb?event.pointerId:null;
+ sizeControl?.classList.toggle('is-thumb-engaged',onThumb);
+ sizeControl?.classList.toggle('is-thumb-hover',onThumb);
+});
+function stopSizeInteraction(){
+ setSizeAdjusting(false);
+ sizeThumbPointerId=null;
+ sizeControl?.classList.remove('is-thumb-engaged','is-thumb-hover');
+}
+window.addEventListener('pointerup',stopSizeInteraction);
+window.addEventListener('pointercancel',stopSizeInteraction);
+el('size').addEventListener('blur',stopSizeInteraction);
 el('size').addEventListener('keydown',event=>{
  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))setSizeAdjusting(true);
 });
