@@ -649,3 +649,23 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .preview .browser-zoom-demo-viewport{border-radius:7px}
 .preview .browser-zoom-demo-preview>.editor-mini{width:min(100%,67px)}
 .preview .browser-zoom-demo-preview{max-width:78px}
+
+/* Unificar glassmorphism y márgenes en las tarjetas de ayuda Dev.
+   Padding +80%: 12px → 21.6px. El posicionamiento mide la caja real. */
+.preview .browser-zoom-tip,
+.preview > .browser-zoom-tip:not([hidden]){
+ padding:21.6px;
+ background:rgba(22,23,30,.70);
+ -webkit-backdrop-filter:blur(18px) saturate(125%);
+ backdrop-filter:blur(18px) saturate(125%);
+ border-color:rgba(255,255,255,.22);
+ box-shadow:0 12px 36px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10);
+ color:#f2f2f6;
+}
+.preview .browser-zoom-tip-title{color:#fff}
+.preview .browser-zoom-tip-description{color:#f0eff5}
+.preview .browser-zoom-tip-description strong{font-weight:700;color:#fff}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+ .preview .browser-zoom-tip,
+ .preview > .browser-zoom-tip:not([hidden]){background:#24252d}
+}
