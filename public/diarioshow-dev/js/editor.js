@@ -819,28 +819,63 @@ mobileZoom.addEventListener('input',()=>{
 // Acceso directo al titular desde su posición visual en la placa (solo mobile).
 // Alinear el editor dentro del viewport visual (el área que queda encima
 // del teclado virtual) y no del layout viewport que conserva el alto completo.
-function keepMobileHeadlineAboveKeyboard(){
- const field=mirrorId('headline');
- if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview'||
-    document.activeElement!==field||!field.getClientRects().length)return;
+// Portar el editor por encima del teclado mientras está abierto.
+// El carril de pestañas usa transform, por eso position:fixed dentro de él
+// se anclaría al carril y no al viewport: lo movemos temporalmente a body.
+const mobileTextDockHome=el('dsMobileTextEditor').parentElement;
+const mobileTextDockAnchor=el('dsMobileTextEditor').nextSibling;
+let mobileTextDocked=false;
+function positionMobileKeyboardEditor(){
+ if(!mobileTextDocked)return;
+ const host=el('dsMobileTextEditor');
  const visual=window.visualViewport;
- if(!visual)return;
- const rect=field.getBoundingClientRect();
- const visibleBottom=visual.offsetTop+visual.height-18;
- const visibleTop=visual.offsetTop+14;
- // Corregir únicamente cuando el teclado tapa el campo; no mover la pantalla
- // si el usuario hace scroll hacia arriba para volver a ver la preview.
- if(rect.bottom>visibleBottom){
-  window.scrollBy({top:Math.ceil(rect.bottom-visibleBottom),left:0,behavior:'instant'});
- }else if(rect.top<visibleTop){
-  window.scrollBy({top:Math.floor(rect.top-visibleTop),left:0,behavior:'instant'});
+ const visualBottom=visual?visual.offsetTop+visual.height:window.innerHeight;
+ const bottom=Math.max(0,window.innerHeight-visualBottom)+16;
+ const availableHeight=visual?visual.height:window.innerHeight;
+ host.style.bottom=bottom+'px';
+ host.style.maxHeight=Math.max(160,Math.floor(availableHeight*.67))+'px';
+}
+function dockMobileKeyboardEditor(){
+ const host=el('dsMobileTextEditor');
+ if(mobileTextDocked||!mobileTabViewport.matches)return;
+ mobileTextDocked=true;
+ document.body.appendChild(host);
+ host.classList.add('is-keyboard-docked');
+ positionMobileKeyboardEditor();
+ requestAnimationFrame(updateMobileSlideHeight);
+}
+function undockMobileKeyboardEditor(){
+ if(!mobileTextDocked)return;
+ const host=el('dsMobileTextEditor');
+ mobileTextDocked=false;
+ host.classList.remove('is-keyboard-docked');
+ host.style.removeProperty('bottom');
+ host.style.removeProperty('max-height');
+ mobileTextDockHome.insertBefore(host,mobileTextDockAnchor);
+ requestAnimationFrame(updateMobileSlideHeight);
+}
+function syncMobileKeyboardEditor(){
+ const field=mirrorId('headline');
+ const visual=window.visualViewport;
+ // La altura se reduce cuando el teclado virtual aparece. Safari y Chrome
+ // disparan resize del visual viewport; no forzamos scroll de la página.
+ const keyboardOpen=Boolean(visual&&visual.height<window.innerHeight-110);
+ if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'&&
+  document.activeElement===field&&keyboardOpen){
+  dockMobileKeyboardEditor();
+  positionMobileKeyboardEditor();
+ }else if(!keyboardOpen||document.activeElement!==field){
+  undockMobileKeyboardEditor();
  }
 }
-window.visualViewport?.addEventListener('resize',()=>{
- // El resize del teclado es un evento puntual. No reposicionar con scroll normal.
- if(document.activeElement===mirrorId('headline')){
-  requestAnimationFrame(keepMobileHeadlineAboveKeyboard);
- }
+window.visualViewport?.addEventListener('resize',syncMobileKeyboardEditor);
+window.visualViewport?.addEventListener('scroll',positionMobileKeyboardEditor);
+mirrorId('headline').addEventListener('focus',()=>{
+ requestAnimationFrame(syncMobileKeyboardEditor);
+});
+mirrorId('headline').addEventListener('blur',()=>{
+ // Dejar que el navegador cierre el teclado antes de devolver el acordeón.
+ requestAnimationFrame(syncMobileKeyboardEditor);
 });
 function openMobileHeadlineEditor(){
  const host=el('dsMobileTextEditor');
@@ -850,16 +885,16 @@ function openMobileHeadlineEditor(){
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
- // Desactivar la animación de altura durante el posicionamiento del campo.
  mobileSlideViewport.classList.add('is-focusing-text');
  updateMobileSlideHeight();
  const field=mirrorId('headline');
+ // Foco inmediato dentro del tap para permitir teclado en iOS.
  field.focus({preventScroll:true});
  field.select();
  requestAnimationFrame(()=>{
   updateMobileSlideHeight();
-  field.scrollIntoView({block:'nearest',behavior:'instant'});
   mobileSlideViewport.classList.remove('is-focusing-text');
+  syncMobileKeyboardEditor();
  });
 }
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
@@ -891,6 +926,7 @@ function updateMobileSlideHeight(){
  mobileSlideViewport.style.height=active.panel.offsetHeight+'px';
 }
 function selectMobileTab(name,focus=false){
+ undockMobileKeyboardEditor();
  const active=mobileTabs.find(tab=>tab.name===name)||mobileTabs[0];
  mobileTabMain.dataset.mobileTab=active.name;
  mobileTabs.forEach(tab=>{
