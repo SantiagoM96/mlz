@@ -556,7 +556,7 @@
  .preview > .browser-zoom-tip:not([hidden]){
   position:fixed!important;
   position-anchor:--editor-poster;
-  left:min(calc(anchor(right) + 24px),calc(100vw - 230px))!important;
+  left:min(calc(anchor(right) + 24px),calc(100% - 230px))!important;
   top:calc(anchor(top) + 24px)!important;
   right:auto!important;
   transition:none!important;
