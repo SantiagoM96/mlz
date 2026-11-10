@@ -439,16 +439,18 @@
 /* Tarjeta flotante de ayuda: se superpone sin introducir huecos
    ni modificar posiciones de barra de zoom y vista previa. */
 
-/* Consejo flotante responsive: nunca participa del flex de .preview.
-   Al reducir el ancho se superpone sobre el canvas, sin dejar un hueco
-   entre la barra del zoom y la imagen. */
-@media(min-width:701px) and (max-width:1439px){
- .preview{position:relative}
- .preview > .browser-zoom-tip:not([hidden]){
-  position:absolute!important;display:flex!important;
-  top:64px;right:0;left:auto;width:210px;
-  margin:0;z-index:30;align-self:auto;order:initial;
- }
+/* El aviso se posiciona en función del canvas y del borde real del viewport.
+   La geometría se actualiza en JS, sin breakpoints ni participación en flex. */
+.preview > .browser-zoom-tip:not([hidden]){
+ position:absolute!important;
+ top:var(--zoom-help-top,88px)!important;
+ left:var(--zoom-help-left,calc(50% + 282px))!important;
+ right:auto!important;
+ width:210px;margin:0;z-index:30;align-self:auto;order:initial;
+ transition:left .14s ease-out,top .14s ease-out;
+}
+@media(prefers-reduced-motion:reduce){
+ .preview > .browser-zoom-tip{transition:none}
 }
 @media(max-width:700px){
  .preview > .browser-zoom-tip{display:none!important}
