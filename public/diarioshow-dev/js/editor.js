@@ -525,13 +525,14 @@ if(typeof ResizeObserver!=='undefined'){
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
+// Solo un tap completo sobre el titular abre el editor: un gesto de scroll no.
+let mobileHeadlineTap=null;
 canvas.addEventListener('pointerdown',event=>{
  const r=canvas.getBoundingClientRect();
- if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'){
+ if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'&&event.isPrimary!==false){
   const x=(event.clientX-r.left)*W/r.width,y=(event.clientY-r.top)*H/r.height;
   if(headlineHitRegions.some(region=>x>=region.left&&x<=region.right&&y>=region.top&&y<=region.bottom)){
-   event.preventDefault();
-   openMobileHeadlineEditor();
+   mobileHeadlineTap={pointerId:event.pointerId,x:event.clientX,y:event.clientY,started:performance.now()};
    return;
   }
  }
@@ -543,6 +544,10 @@ canvas.addEventListener('pointerdown',event=>{
  dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);
 });
 canvas.addEventListener('pointermove',event=>{
+ if(mobileHeadlineTap){
+  if(event.pointerId===mobileHeadlineTap.pointerId&&Math.hypot(event.clientX-mobileHeadlineTap.x,event.clientY-mobileHeadlineTap.y)>9)mobileHeadlineTap=null;
+  return;
+ }
  if(photoLayout==='split'){
   const r=canvas.getBoundingClientRect();
   const x=(event.clientX-r.left)/r.width, y=(event.clientY-r.top)/r.height;
@@ -558,8 +563,17 @@ canvas.addEventListener('pointermove',event=>{
  lastX=event.clientX;lastY=event.clientY;render();
 });
 canvas.addEventListener('pointerleave',()=>{photoStage.classList.remove('hover-left','hover-right')});
-canvas.addEventListener('pointerup',()=>dragging=false);
-canvas.addEventListener('pointercancel',()=>dragging=false);
+canvas.addEventListener('pointerup',event=>{
+ if(mobileHeadlineTap&&event.pointerId===mobileHeadlineTap.pointerId){
+  const tap=mobileHeadlineTap;mobileHeadlineTap=null;
+  if(Math.hypot(event.clientX-tap.x,event.clientY-tap.y)<=9&&performance.now()-tap.started<550){
+   event.preventDefault();
+   openMobileHeadlineEditor();
+  }
+ }
+ dragging=false;
+});
+canvas.addEventListener('pointercancel',()=>{mobileHeadlineTap=null;dragging=false});
 el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
