@@ -1981,3 +1981,10 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .ds-mobile-track > .preview .preview-zoom input[type="range"]::-webkit-slider-thumb,
  .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-thumb{transition:none}
 }
+
+/* Mobile: el acordeón Textos en la preview aparece al tocar el titular de la placa. */
+@media(max-width:700px){
+ .ds-mobile-track > .preview > .ds-mobile-text-editor:not(.is-open-from-preview){
+  display:none!important;
+ }
+}
