@@ -1982,12 +1982,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .ds-mobile-track > .preview .preview-zoom input[type="range"]::-moz-range-thumb{transition:none}
 }
 
-/* Mobile: el acordeón Textos en la preview aparece al tocar el titular de la placa. */
-@media(max-width:700px){
- .ds-mobile-track > .preview > .ds-mobile-text-editor:not(.is-open-from-preview){
-  display:none!important;
- }
-}
+/* Textos se muestra siempre en Vista previa, contraído inicialmente. */
 
 
 /* Mobile: calle de gestos ampliada en un 50 % (50 px => 75 px por lado). */
@@ -2197,16 +2192,16 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 
 
-/* Ritmo mobile: 8px entre navegación, bloque de preview y siguiente bloque.
-   Evita sumar el gap de grid del main al margen de las tabs. */
+/* Cinco módulos separados con 16px en mobile:
+   pestañas, placa con ayuda y zoom, Textos, acciones y firma. */
 @media(max-width:700px){
  main:has(> .ds-mobile-tabs){row-gap:0!important;column-gap:0!important;padding-top:8px!important}
- main > .ds-mobile-tabs{margin-bottom:8px!important}
- .ds-mobile-track > #dsMobilePreviewPanel{gap:8px!important}
+ main > .ds-mobile-tabs{margin-bottom:16px!important}
+ .ds-mobile-track > #dsMobilePreviewPanel{gap:16px!important}
  .ds-mobile-track > #dsMobileControlsPanel{margin-top:0!important}
  .ds-mobile-track > .preview .preview-toolbar{margin:0!important;padding:0!important}
  .ds-mobile-track > .preview .preview-instructions{padding:0!important}
- .ds-mobile-track > .preview > .ds-mobile-text-editor{
-  margin:0!important;
- }
+ .ds-mobile-track > .preview > .ds-mobile-text-editor{margin:0!important}
+ .ds-mobile-track > .preview > .preview-actions{margin:0!important}
+ .ds-mobile-track > .preview > .bae-credits{margin:0 0 16px!important}
 }
