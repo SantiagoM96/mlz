@@ -154,8 +154,8 @@
  .header-inner .dashboard-back-link{width:100%;justify-content:center;margin-left:0}
 }
 
-/* Variantes por página: dos miniaturas del módulo editorial inferior,
-   sin fotografía y con el selector en la misma escala que Diario Show. */
+/* Selector de variantes: miniaturas 3:4 como el post de Instagram.
+   Portada: volanta roja en caja. Interior: solo filete rojo fino. */
 .editor-panel .cronica-variant-panel{margin-top:0}
 .editor-panel .cronica-variant-panel h2{margin:0 0 12px}
 .editor-panel .cronica-variant-options{display:flex;align-items:flex-start;gap:12px}
@@ -165,30 +165,47 @@
  font:500 11px/16px Inter,Arial,sans-serif;cursor:pointer;
 }
 .editor-panel .cronica-variant-thumbnail{
- position:relative;display:block;box-sizing:border-box;overflow:hidden;
- width:56px;height:43px;border:2px solid #565a63;border-radius:8px;background:#fff;
+ position:relative;display:flex;flex-direction:column;box-sizing:border-box;
+ overflow:hidden;width:60px;aspect-ratio:3/4;height:auto;
+ border:2px solid #565a63;border-radius:7px;background:#fff;
 }
-.editor-panel .cronica-variant-thumbnail::before{
- content:'';position:absolute;inset:0 0 auto;height:5px;background:#ed0000;
+.editor-panel .cronica-variant-thumb-photo{
+ display:block;flex:0 0 47%;background:
+  linear-gradient(148deg,transparent 47%,rgba(55,62,73,.22) 48%,rgba(55,62,73,.22) 67%,transparent 68%),
+  linear-gradient(145deg,#c0c5cc,#848d99);
 }
-.editor-panel .cronica-variant-thumbnail::after{
- content:'';position:absolute;left:50%;top:12px;width:35px;height:23px;
- transform:translateX(-50%);
- background:
-  linear-gradient(#171717,#171717) center top / 35px 3px no-repeat,
-  linear-gradient(#171717,#171717) center 8px / 27px 3px no-repeat,
-  linear-gradient(#171717,#171717) center 16px / 20px 3px no-repeat;
+.editor-panel .cronica-variant-thumb-textbox{
+ position:relative;display:flex;flex:1;min-height:0;flex-direction:column;
+ align-items:center;padding:0 4px 4px;background:#fff;
 }
-/* En portada hay además firma roja en la parte inferior. */
-.editor-panel .cronica-variant-thumbnail-cover{
- background:linear-gradient(#fff,#fff) top / 100% 100% no-repeat;
+.editor-panel .cronica-variant-thumb-strap{
+ display:block;position:relative;flex:0 0 auto;align-self:stretch;
+ margin:0 -4px 4px;height:3px;background:#ed0000;
 }
-.editor-panel .cronica-variant-thumbnail-cover::after{
- background:
-  linear-gradient(#171717,#171717) center top / 35px 3px no-repeat,
-  linear-gradient(#171717,#171717) center 8px / 27px 3px no-repeat,
-  linear-gradient(#ed0000,#ed0000) center 22px / 28px 2px no-repeat;
+.editor-panel .cronica-variant-thumb-lines{
+ display:flex;flex:1;min-height:0;flex-direction:column;
+ align-items:center;justify-content:center;gap:3px;width:100%;
 }
+.editor-panel .cronica-variant-thumb-lines i{
+ display:block;width:90%;height:3px;flex:0 0 3px;border-radius:1px;background:#171717;
+}
+.editor-panel .cronica-variant-thumb-lines i:nth-child(2){width:75%}
+.editor-panel .cronica-variant-thumb-lines i:nth-child(3){width:55%}
+.editor-panel .cronica-variant-thumb-footer{
+ display:block;width:42%;height:2px;flex:0 0 2px;margin-top:3px;
+ border-radius:1px;background:#ed0000;
+}
+/* Caja de volanta propia de la portada: notablemente más alta,
+   con una simulación del texto blanco en su interior. */
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap{
+ height:12px;margin-bottom:4px;
+}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap::after{
+ content:'';position:absolute;left:50%;top:4px;transform:translateX(-50%);
+ width:65%;height:3px;background:#fff;border-radius:1px;
+}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines{gap:2px}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines i{height:3px;flex-basis:3px}
 .editor-panel .cronica-variant-option[aria-pressed="true"] .cronica-variant-thumbnail{
  outline:2px solid #ed0000;outline-offset:2px;border-color:#565a63;
 }
