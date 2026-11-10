@@ -30,6 +30,7 @@ function setPhotoLayout(mode){
  el('singlePhotoField').hidden=mode==='split';
  if(mode==='split')activePhotoSide='left';
  el('photoStage').classList.remove('hover-left','hover-right');
+ el('splitPhotoZones').querySelectorAll('.split-photo-zone').forEach(zone=>zone.classList.remove('is-hovered'));
  syncPhotoZoom();render();
 }
 document.querySelectorAll('[data-photo-layout]').forEach(b=>b.addEventListener('click',()=>setPhotoLayout(b.dataset.photoLayout)));
@@ -321,8 +322,8 @@ for(const [id,side] of [['fileLeft','left'],['fileRight','right']]){
 }
 for(const zone of el('splitPhotoZones').querySelectorAll('[data-side]')){
  const side=zone.dataset.side;
- zone.addEventListener('pointerenter',()=>{if(photoLayout==='split')zone.classList.add('is-hovered')});
- zone.addEventListener('pointerleave',()=>zone.classList.remove('is-hovered'));
+ zone.addEventListener('pointerenter',()=>{if(photoLayout==='split'){zone.classList.add('is-hovered');photoStage.classList.toggle('hover-left',side==='left');photoStage.classList.toggle('hover-right',side==='right')}});
+ zone.addEventListener('pointerleave',()=>{zone.classList.remove('is-hovered');photoStage.classList.remove('hover-left','hover-right')});
  zone.addEventListener('click',()=>{setPhotoSide(side);if(!splitPhotos[side].image)el(side==='left'?'fileLeft':'fileRight').click()});
  zone.addEventListener('dblclick',()=>{setPhotoSide(side);el(side==='left'?'fileLeft':'fileRight').click()});
  zone.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();setPhotoSide(side);el(side==='left'?'fileLeft':'fileRight').click()}});
