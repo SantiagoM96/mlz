@@ -549,14 +549,14 @@
 }
 
 /* Posicionamiento nativo CSS Anchor Positioning (Chrome/Edge modernos).
-   Se ancla a la placa real, respeta siempre 24px del viewport y
+   Se ancla a la placa real, respeta siempre 48px del viewport y
    no salta por breakpoints ni interpola mediciones de JS. */
 @supports (position-anchor: --editor-poster) and (left: anchor(right)){
  .preview .canvas-stage{anchor-name:--editor-poster}
  .preview > .browser-zoom-tip:not([hidden]){
   position:fixed!important;
   position-anchor:--editor-poster;
-  left:min(calc(anchor(right) + 24px),calc(100vw - 234px))!important;
+  left:min(calc(anchor(right) + 24px),calc(100vw - 258px))!important;
   top:calc(anchor(top) + 24px)!important;
   right:auto!important;
   transition:none!important;
