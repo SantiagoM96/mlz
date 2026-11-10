@@ -3,7 +3,7 @@
 'use strict';
 
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false;
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
 const logoImages={},logoSources={primary:'../cronica/logos/primario.svg',secondary:'../cronica/logos/secundario.svg',white:'../cronica/logos/blanco.svg'};
@@ -110,7 +110,7 @@ function drawPhoto(height,includeHover=true){
 }
 function render(includeHover=true){
  try{
-  const cover=activePage===0,requestedSize=Number(el('size').value);
+  const cover=pageVariant==='cover',requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
   const availableBottom=cover?footerTop-50:H-EDGE;
   const desired=forceUppercase?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value;
@@ -167,7 +167,7 @@ function render(includeHover=true){
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY};
+  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY,variant:pageVariant};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
 const COVER_STRAP="LA CLAVE DE ESTA NOTICIA";
@@ -175,10 +175,14 @@ const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato pri
 const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
 function newBlankPage(){
  return {headline:INTERNAL_HEADLINE,strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
-  image:null,zoom:1,offsetX:0,offsetY:0};
+  image:null,zoom:1,offsetX:0,offsetY:0,variant:'internal'};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
+function syncVariantUI(){
+ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pageVariant===pageVariant)));
+}
 function loadPage(page){
+ pageVariant=page.variant==='cover'?'cover':'internal';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
@@ -194,11 +198,11 @@ function renderCarouselNavigation(){
  carouselPages.forEach((page,index)=>{
   const button=document.createElement('button');button.type='button';
   button.setAttribute('aria-current',index===activePage?'page':'false');
-  button.setAttribute('aria-label',index===0?'Página 1, portada':'Página '+(index+1)+', interna');
+  button.setAttribute('aria-label','Página '+(index+1)+', '+(page.variant==='cover'?'portada':'interior'));
   button.textContent=String(index+1);
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
- el('pageIndicator').textContent=(activePage+1)+' de '+carouselPages.length+' · '+(activePage===0?'Portada':'Interna');
+ el('pageIndicator').textContent=(activePage+1)+' de '+carouselPages.length+' · '+(pageVariant==='cover'?'Portada':'Interior');
  el('removePage').disabled=activePage===0;
 }
 function selectPage(index){
@@ -218,6 +222,12 @@ function initializeCarousel(){
  });
 }
 
+document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addEventListener('click',()=>{
+ const next=button.dataset.pageVariant;
+ if(next===pageVariant)return;
+ pageVariant=next;
+ syncVariantUI();saveActivePage();renderCarouselNavigation();render();
+}));
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
 for(const id of ['headline','size'])el(id).addEventListener('input',render);
@@ -312,7 +322,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- const initial=newBlankPage();if(activePage===0){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ const initial=newBlankPage();initial.variant=pageVariant;if(activePage===0){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
  loadPage(initial);saveActivePage();
 });
 // Exportar una placa o todo el carrusel sin perder el estado de edición.
