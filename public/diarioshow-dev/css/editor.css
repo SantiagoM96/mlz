@@ -537,3 +537,54 @@
 
 /* Ayuda de espacio: no mostrarla en la versión celular. */
 @media(max-width:700px){.preview .browser-zoom-tip{display:none!important}}
+
+/* Diario Show Dev: 3:4 como Crónica en el módulo Variantes.
+   Las variantes 1 y 2 muestran foto + caja blanca inferior con la barra degradada;
+   las 3 y 4 muestran cita sobre fondo degradado, como las placas reales. */
+.editor-panel .ds-variant-options{gap:12px;align-items:flex-start}
+.editor-panel .ds-variant-option{
+ width:60px;min-width:60px;flex:0 0 60px;gap:8px
+}
+.editor-panel .ds-variant-preview{
+ position:relative;display:block;box-sizing:border-box;
+ width:60px;aspect-ratio:3/4;height:auto;overflow:hidden;
+ border:2px solid #565a63;border-radius:7px;
+}
+.editor-panel .ds-variant-preview-pink,
+.editor-panel .ds-variant-preview-blue{
+ background:
+ linear-gradient(to bottom,transparent 53%,#fff 53%),
+ linear-gradient(145deg,#c3c9d0,#7e8897);
+}
+.editor-panel .ds-variant-preview-pink::before,
+.editor-panel .ds-variant-preview-blue::before{
+ top:53%;left:0;right:0;height:4px
+}
+.editor-panel .ds-variant-preview-pink::after,
+.editor-panel .ds-variant-preview-blue::after{
+ left:50%;top:62%;height:28px;width:44px;
+ background:
+ linear-gradient(#7749a6,#7749a6) center top / 42px 3px no-repeat,
+ linear-gradient(var(--variant-contrast),var(--variant-contrast)) center 9px / 34px 3px no-repeat,
+ linear-gradient(#7749a6,#7749a6) center 18px / 26px 3px no-repeat,
+ linear-gradient(#7749a6,#7749a6) center 27px / 18px 2px no-repeat;
+}
+.editor-panel .ds-variant-preview-quote{
+ background:linear-gradient(to bottom,rgba(45,42,54,.2),rgba(230,0,141,.17) 32%,#a30065 72%,#e6008d 100%),
+ linear-gradient(145deg,#aeb4bc,#777a82);
+}
+.editor-panel .ds-variant-preview-quote-blue{
+ background:linear-gradient(to bottom,rgba(45,42,54,.18),rgba(0,166,217,.2) 32%,#3584c0 76%,#00a6d9 100%),
+ linear-gradient(145deg,#aeb4bc,#777a82);
+}
+.editor-panel .ds-variant-preview-quote::before,
+.editor-panel .ds-variant-preview-quote-blue::before{
+ content:'';position:absolute;inset:auto 7px 12px;height:18px;
+ background:linear-gradient(#fff,#fff) center 5px / 90% 3px no-repeat,
+ linear-gradient(#fff,#fff) center 12px / 64% 3px no-repeat;
+ opacity:.85
+}
+.editor-panel .ds-variant-preview-quote::after,
+.editor-panel .ds-variant-preview-quote-blue::after{
+ top:25px;font-size:32px;line-height:1
+}

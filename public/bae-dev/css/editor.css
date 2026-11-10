@@ -410,3 +410,47 @@
 .preview .browser-zoom-demo-headline i:nth-child(3){background:#fff}
 .preview .browser-zoom-demo-signature{background:#fff}
 @media(max-width:700px){.preview .browser-zoom-tip{display:none!important}}
+
+/* Variantes de BAE: mismo selector vertical 3:4 que Crónica.
+   Foto superior esquemática + módulo tipográfico inferior de cada color. */
+.editor-panel .theme-swatches{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.editor-panel .theme-swatch{
+ position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+ width:60px;min-width:60px;flex:0 0 60px;height:auto;min-height:0;gap:8px;
+ padding:0;border:0;border-radius:0;background:transparent!important;
+ font:500 11px/16px Inter,Arial,sans-serif;color:#d8dce4;overflow:visible
+}
+.editor-panel .theme-swatch-thumb{
+ position:relative;display:block;box-sizing:border-box;overflow:hidden;
+ width:60px;aspect-ratio:3/4;height:auto;border:2px solid #565a63;border-radius:7px;
+ background:linear-gradient(to bottom,transparent 52%,var(--thumb-panel) 52%),
+ linear-gradient(145deg,#a8b0b9 0%,#606b7a 48%,#3e4754 100%);
+ --thumb-panel:#171717;--thumb-ink:#fff;--thumb-accent:#d82626;
+}
+.editor-panel .theme-swatch.white .theme-swatch-thumb{
+ --thumb-panel:#fff;--thumb-ink:#171717;--thumb-accent:#d82626;
+}
+.editor-panel .theme-swatch.red .theme-swatch-thumb{
+ --thumb-panel:#d82626;--thumb-ink:#fff;--thumb-accent:#fff;
+}
+.editor-panel .theme-swatch-thumb::before{
+ content:'';position:absolute;top:51%;left:0;right:0;height:3px;background:#fff;z-index:1
+}
+.editor-panel .theme-swatch-art{
+ position:absolute;inset:55% 5px 5px;display:block;pointer-events:none;
+ background:
+ linear-gradient(var(--thumb-ink),var(--thumb-ink)) center 5px / 88% 3px no-repeat,
+ linear-gradient(var(--thumb-accent),var(--thumb-accent)) center 13px / 73% 3px no-repeat,
+ linear-gradient(var(--thumb-ink),var(--thumb-ink)) center 21px / 58% 3px no-repeat;
+}
+.editor-panel .theme-swatch-caption{
+ position:static;display:block;clip-path:none;width:auto;height:auto;
+ overflow:visible;white-space:nowrap;color:#d8dce4;
+ font:500 11px/16px Inter,Arial,sans-serif
+}
+.editor-panel .theme-swatch[aria-pressed="true"]{outline:0;border:0}
+.editor-panel .theme-swatch[aria-pressed="true"] .theme-swatch-thumb{
+ outline:2px solid #d82626;outline-offset:2px;border-color:#565a63
+}
+.editor-panel .theme-swatch:hover .theme-swatch-thumb{filter:brightness(.95)}
+.editor-panel .theme-swatch:focus-visible{outline:2px solid #a5a8b0;outline-offset:4px;border-radius:5px}
