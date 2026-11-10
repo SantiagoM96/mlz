@@ -487,7 +487,8 @@ function positionBrowserZoomTip(){
  const previewRect=preview.getBoundingClientRect();
  const stageRect=stage.getBoundingClientRect();
  const tipWidth=tip.getBoundingClientRect().width||210;
- const freeRight=window.innerWidth-48-tipWidth-previewRect.left;
+ const controlsLeft=document.querySelector('main > .editor-panel')?.getBoundingClientRect().left ?? 20;
+ const freeRight=window.innerWidth-controlsLeft-tipWidth-previewRect.left;
  const preferredLeft=stageRect.right-previewRect.left+24;
  const left=Math.min(preferredLeft,freeRight);
  const top=stageRect.top-previewRect.top+24;
