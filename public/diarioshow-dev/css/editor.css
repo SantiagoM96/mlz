@@ -2205,3 +2205,12 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .ds-mobile-track > .preview > .preview-actions{margin:0!important}
  .ds-mobile-track > .preview > .bae-credits{margin:0 0 16px!important}
 }
+
+
+/* Solo espacio de scroll mientras el teclado nativo está abierto.
+   No se modifica el teclado ni se saca Textos de su lugar en la página. */
+@media(max-width:700px){
+ main:has(> .ds-mobile-tabs).ds-keyboard-text-editing{
+  padding-bottom:var(--ds-keyboard-scroll-space,24px)!important;
+ }
+}
