@@ -2057,3 +2057,37 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   transition:none!important;
  }
 }
+
+
+/* La copia mobile usa IDs con sufijo Mobile. Reproducir los mismos estilos
+   de los botones individuales del módulo Textos original de Formato. */
+@media(max-width:700px){
+ .ds-mobile-text-editor .ds-texts-group .typography-row .format-buttons #formatUppercaseMobile,
+ .ds-mobile-text-editor .ds-texts-group .typography-row .format-buttons #formatClearMobile{
+  position:static;
+  box-sizing:border-box;
+  display:flex;align-items:center;justify-content:center;
+  flex:0 0 43px!important;
+  width:43px!important;min-width:43px!important;height:43px!important;
+  margin-left:7px!important;
+  border:1px solid #4a4e56!important;
+  border-radius:7px!important;
+ }
+ .ds-mobile-text-editor .ds-texts-group .typography-row #formatUppercaseMobile[aria-pressed="true"]{
+  background:#e6008d;border-color:#e6008d!important;color:#fff;
+ }
+ .ds-mobile-text-editor .ds-texts-group .typography-row #formatUppercaseMobile .material-symbols-outlined{
+  font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;
+  font-size:22px;line-height:1;letter-spacing:normal;text-transform:none;
+  white-space:nowrap;direction:ltr;font-feature-settings:'liga';
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;
+ }
+ .ds-mobile-text-editor #headlineMobile.uppercase-preview{text-transform:uppercase}
+ .ds-mobile-text-editor .ds-texts-group .typography-row .format-buttons #formatUppercaseMobile:hover:not([aria-pressed="true"]),
+ .ds-mobile-text-editor .ds-texts-group .typography-row .format-buttons #formatClearMobile:hover{
+  background:var(--ds-control-hover,#393d45)!important;
+ }
+ /* 16 px evita el zoom involuntario de Safari al mostrar el teclado. */
+ .ds-mobile-text-editor #headlineMobile,
+ .ds-mobile-text-editor #quoteAuthorMobile{font-size:16px}
+}
