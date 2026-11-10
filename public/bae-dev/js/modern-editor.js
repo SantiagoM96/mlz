@@ -254,30 +254,48 @@ function syncAfterRender(){syncMirror();updateHeight()}
 window.addEventListener('modern:render',syncAfterRender);
 document.addEventListener('click',()=>requestAnimationFrame(syncAfterRender));
 syncMirror();
-// Tap on headline area, never on scroll or long-press; native click opens keyboard.
+// A transparent hit surface lets the user scroll over the TEXT portion
+// of the canvas (touch-action:pan-y), while the photo keeps native reframe drag.
+const textHit=document.createElement('div');
+textHit.className='modern-text-hit';
+textHit.setAttribute('role','button');textHit.setAttribute('tabindex','0');
+textHit.setAttribute('aria-label','Editar texto principal');
+stage.append(textHit);
 let tap=null,allowClick=false;
-canvas.addEventListener('pointerdown',e=>{
+function onTextPointerDown(e){
  if(!narrow.matches||main.dataset.mobileTab!=='preview'||e.isPrimary===false)return;
  const rect=canvas.getBoundingClientRect();
  const y=(e.clientY-rect.top)/rect.height;
  const photo=parseFloat(stage.style.getPropertyValue('--photo-height'))||60;
  if(y<photo/100)return;
  allowClick=false;tap={id:e.pointerId,x:e.clientX,y:e.clientY,time:performance.now()};
-});
-canvas.addEventListener('pointermove',e=>{
+}
+function onTextPointerMove(e){
  if(tap&&e.pointerId===tap.id&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)>9)tap=null;
-});
-canvas.addEventListener('pointerup',e=>{
+}
+function onTextPointerUp(e){
  allowClick=Boolean(tap&&tap.id===e.pointerId&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)<9
   &&performance.now()-tap.time<550);
  tap=null;
-});
-canvas.addEventListener('pointercancel',()=>{tap=null;allowClick=false});
-canvas.addEventListener('click',e=>{
+}
+function onTextClick(e){
  if(!allowClick||!narrow.matches||main.dataset.mobileTab!=='preview')return;
  allowClick=false;e.preventDefault();
  if(mirrorBody.hidden){mirrorToggle.setAttribute('aria-expanded','true');mirrorBody.hidden=false;updateHeight()}
- syncMirror();
- mirrorHeadline.focus();mirrorHeadline.select();
+ syncMirror();mirrorHeadline.focus();mirrorHeadline.select();
+}
+for(const target of [canvas,textHit]){
+ target.addEventListener('pointerdown',onTextPointerDown);
+ target.addEventListener('pointermove',onTextPointerMove);
+ target.addEventListener('pointerup',onTextPointerUp);
+ target.addEventListener('pointercancel',()=>{tap=null;allowClick=false});
+ target.addEventListener('click',onTextClick);
+}
+textHit.addEventListener('keydown',e=>{
+ if(e.key==='Enter'||e.key===' '){
+  e.preventDefault();
+  if(mirrorBody.hidden){mirrorToggle.setAttribute('aria-expanded','true');mirrorBody.hidden=false;updateHeight()}
+  mirrorHeadline.focus();mirrorHeadline.select();
+ }
 });
 })();
