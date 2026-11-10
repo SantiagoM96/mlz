@@ -1591,3 +1591,18 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  outline:2px solid #fff;outline-offset:2px;
 }
 .editor-panel .ds-photo-picker-surface:focus-within{border-color:#fff}
+
+/* Distribución fotográfica: misma separación de submódulos que Contenido.
+   Evitar que margin-top y gap del flex se sumen entre fotos izquierda/derecha. */
+.editor-panel .ds-photo-layout-group .ds-photo-upload-area{
+ margin-top:var(--ds-internal-module-gap)!important;
+}
+.editor-panel .ds-photo-layout-group .split-photo-fields{
+ display:flex;flex-direction:column;
+ gap:var(--ds-internal-module-gap)!important;
+}
+.editor-panel .ds-photo-layout-group .split-photo-fields>.control-field,
+.editor-panel .ds-photo-layout-group .split-photo-fields>.control-field+.control-field{
+ margin-top:0!important;
+ margin-bottom:0!important;
+}
