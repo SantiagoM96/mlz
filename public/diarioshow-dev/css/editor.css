@@ -930,3 +930,9 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .preview .split-photo-zone-title{font-size:10px}
  .preview .split-photo-zone-description{font-size:9px}
 }
+
+/* Borde punteado por mitad también cuando ya existe foto y se arrastra sobre el Canvas. */
+.preview .canvas-stage.split-mode.hover-left .split-photo-zone[data-side="left"]::before,
+.preview .canvas-stage.split-mode.hover-right .split-photo-zone[data-side="right"]::before{opacity:1}
+.preview .canvas-stage.split-mode.hover-left,
+.preview .canvas-stage.split-mode.hover-right{cursor:grab}
