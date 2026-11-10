@@ -48,7 +48,7 @@ document.querySelectorAll('.ds-control-card-toggle').forEach(button=>{
 
 const GRADIENT_BAR_HEIGHT=24;
 const LOGO_MARGIN=80,LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*275/253;
-let selectedLogo='primary';
+let selectedLogo='primary',logoPosition='right';
 const logoImages={},logoSources={primary:'./logos/primario.svg'};
 for(const [key,src] of Object.entries(logoSources)){
  const img=new Image();logoImages[key]=img;
@@ -60,7 +60,7 @@ function drawBrandLogo(){
  if(selectedLogo==='none')return;
  const img=logoImages[selectedLogo];
  if(!img||!img.complete||!img.naturalWidth)return;
- ctx.drawImage(img,W-LOGO_MARGIN-LOGO_WIDTH,LOGO_MARGIN,LOGO_WIDTH,LOGO_HEIGHT);
+ ctx.drawImage(img,logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH,LOGO_MARGIN,LOGO_WIDTH,LOGO_HEIGHT);
 }
 function syncLogoChoices(){
  document.querySelectorAll('.logo-choice').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.logo===selectedLogo)));
@@ -69,6 +69,13 @@ document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListene
  selectedLogo=button.dataset.logo;syncLogoChoices();render();
 }));
 syncLogoChoices();
+function syncLogoPosition(){
+ document.querySelectorAll('[data-logo-position]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.logoPosition===logoPosition)));
+}
+document.querySelectorAll('[data-logo-position]').forEach(button=>button.addEventListener('click',()=>{
+ logoPosition=button.dataset.logoPosition;syncLogoPosition();render();
+}));
+syncLogoPosition();
 const quoteMarkImage=new Image();
 quoteMarkImage.onload=()=>render();
 quoteMarkImage.onerror=()=>console.warn('No se pudieron cargar las comillas SVG');
@@ -459,7 +466,7 @@ el('clearAll').addEventListener('click',()=>{
  forceUppercase=false;syncUppercaseUI();
  el('size').value='70';el('dots').value='5';textAlignment='center';
  el('alignLeft').setAttribute('aria-pressed','false');el('alignCenter').setAttribute('aria-pressed','true');
- photoRevision++;image=null;zoom=1;offsetX=0;offsetY=0;for(const p of Object.values(splitPhotos)){p.image=null;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}setPhotoLayout('single');dragging=false;photoHover=false;selectedLogo='primary';syncLogoChoices();photoStage.classList.remove('is-drag-over');
+ photoRevision++;image=null;zoom=1;offsetX=0;offsetY=0;for(const p of Object.values(splitPhotos)){p.image=null;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}setPhotoLayout('single');dragging=false;photoHover=false;selectedLogo='primary';logoPosition='right';syncLogoChoices();syncLogoPosition();photoStage.classList.remove('is-drag-over');
  el('importStatus').textContent='Pegá una URL de Diario Show.';
  render();
 });
