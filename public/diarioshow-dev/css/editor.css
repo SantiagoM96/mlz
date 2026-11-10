@@ -526,3 +526,11 @@
  width:40%;height:2px;background:#7749A6;border-radius:1px;opacity:.75
 }
 .preview .browser-zoom-demo-export{background:#E6008D}
+
+/* Icono Google Material Icons: misma lupa de zoom en los tres generadores. */
+.preview .browser-zoom-demo-percent{min-width:67px;height:23px}
+.preview .browser-zoom-demo-percent span{gap:3px;font-size:11px}
+.preview .browser-zoom-demo-percent .material-icons{
+ font-family:"Material Icons";font-size:14px;font-weight:normal;line-height:1;
+ display:inline-block;flex:none;letter-spacing:normal;font-feature-settings:"liga";
+}
