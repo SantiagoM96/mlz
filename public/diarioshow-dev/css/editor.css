@@ -307,11 +307,14 @@
 .editor-panel .ds-variant-preview-blue::before{background:linear-gradient(90deg,#7749a6,#397fc6)}
 .editor-panel .ds-variant-preview-pink::after,
 .editor-panel .ds-variant-preview-blue::after{
- content:'';position:absolute;left:8px;top:13px;width:33px;height:19px;
- background:linear-gradient(#7749a6,#7749a6) left top / 33px 3px no-repeat,
- linear-gradient(#7749a6,#7749a6) left 8px / 27px 3px no-repeat,
- linear-gradient(#7749a6,#7749a6) left 16px / 20px 3px no-repeat;
+ content:'';position:absolute;left:50%;top:13px;width:33px;height:19px;
+ transform:translateX(-50%);
+ background:linear-gradient(#7749a6,#7749a6) center top / 33px 3px no-repeat,
+ linear-gradient(var(--variant-contrast),var(--variant-contrast)) center 8px / 27px 3px no-repeat,
+ linear-gradient(#7749a6,#7749a6) center 16px / 20px 3px no-repeat;
 }
+.editor-panel .ds-variant-preview-pink{--variant-contrast:#E6008D}
+.editor-panel .ds-variant-preview-blue{--variant-contrast:#00A6D9}
 /* Variantes 3 y 4: solo el panel degradado de citas. */
 .editor-panel .ds-variant-preview-quote{
  background:linear-gradient(180deg,rgba(230,0,141,.15),#e6008d);
