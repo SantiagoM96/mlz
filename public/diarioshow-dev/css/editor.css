@@ -534,3 +534,6 @@
  font-family:"Material Icons";font-size:14px;font-weight:normal;line-height:1;
  display:inline-block;flex:none;letter-spacing:normal;font-feature-settings:"liga";
 }
+
+/* Ayuda de espacio: no mostrarla en la versión celular. */
+@media(max-width:700px){.preview .browser-zoom-tip{display:none!important}}
