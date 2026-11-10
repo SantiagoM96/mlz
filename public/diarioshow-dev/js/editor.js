@@ -46,14 +46,15 @@ function wrapRich(text,size,quote=false){const result=[];for(const paragraph of 
    y la distribución vertical mantiene márgenes reales de 80 y espacios de 50 px. */
 function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  const main=wrapRich(headlineForPreview(),size);
- const author=el('quoteAuthor').value.trim();
+ const author=el('showQuoteAuthor').checked?el('quoteAuthor').value.trim():'';
+ const hasAuthor=Boolean(author);
  const authorSize=36;
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
  const authorMetrics=ctx.measureText(author||' ');
  const authorAscent=authorMetrics.actualBoundingBoxAscent||authorSize;
  const authorDescent=authorMetrics.actualBoundingBoxDescent||8;
  const authorBaseline=footerTop-50-authorDescent;
- const authorTop=authorBaseline-authorAscent;
+ const authorTop=hasAuthor?authorBaseline-authorAscent:footerTop;
  const lineHeight=Math.round(size*1.12*0.8*1.10);
  const lineMetrics=main.map(line=>{
   ctx.font='700 '+size+'px "Poppins",Arial,sans-serif';
@@ -116,7 +117,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  }
  ctx.fillStyle='#FFFFFF';ctx.textAlign='center';
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
- if(author)ctx.fillText(author,W/2,authorBaseline);
+ if(hasAuthor)ctx.fillText(author,W/2,authorBaseline);
  ctx.font='500 30px "Inter",Arial,sans-serif';
  ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);
  ctx.textAlign='left';
@@ -204,6 +205,10 @@ resetDefaultHalftone();
 window.addEventListener('pageshow',event=>{if(event.persisted)resetDefaultHalftone()});
 syncUppercaseUI();
 el('formatUppercase').addEventListener('click',()=>{forceUppercase=!forceUppercase;syncUppercaseUI();render()});
+el('showQuoteAuthor').addEventListener('change',()=>{
+ el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
+ render();
+});
 for(const id of ['headline','size','dots','quoteAuthor'])el(id).addEventListener('input',render);for(const [id,value] of [['alignLeft','left'],['alignCenter','center']])el(id).addEventListener('click',()=>{textAlignment=value;el('alignLeft').setAttribute('aria-pressed',String(value==='left'));el('alignCenter').setAttribute('aria-pressed',String(value==='center'));render()});for(const [id,marker] of [['formatAccent','*'],['formatItalic','_'],['formatStrike','~']]){const button=el(id);button.addEventListener('mousedown',e=>e.preventDefault());button.addEventListener('click',()=>{const field=el('headline'),a=field.selectionStart,b=field.selectionEnd;if(a===b){field.focus();return}const selected=field.value.slice(a,b);field.setRangeText(marker+selected+marker,a,b,'select');field.setSelectionRange(a+1,b+1);field.focus();render()})}
 
 const clearFormatButton=el('formatClear');
@@ -233,6 +238,7 @@ function setVariant(value){
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  const isQuote=['quote','quote-blue'].includes(value);
  el('quoteAuthorField').hidden=!isQuote;
+ el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
  el('articleImportField').hidden=isQuote;
  el('photoStage').classList.toggle('is-quote-variant',isQuote);
  photoHover=false;
@@ -302,7 +308,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='';el('file').value='';
+ el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  forceUppercase=false;syncUppercaseUI();
