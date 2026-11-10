@@ -821,9 +821,8 @@ mobileZoom.addEventListener('input',()=>{
  ],{duration:155,easing:'ease-out'});
 });
 
-// Edición directa del titular: el módulo permanece en el flujo natural.
- // Nunca se mueve el textarea a body: reparentar un input enfocado puede
- // cerrar el teclado virtual, especialmente en Safari iOS.
+// Edición directa del titular, con el textarea en su ubicación original.
+// El teclado nativo se abre normalmente; solo desplazamos la página.
 let mobileHeadlineScrollPending=false;
 function revealMobileHeadlineEditor(){
  const host=el('dsMobileTextEditor');
@@ -832,11 +831,23 @@ function revealMobileHeadlineEditor(){
     document.activeElement!==field||!host.getClientRects().length)return;
  updateMobileSlideHeight();
  const visual=window.visualViewport;
- const visibleBottom=visual?visual.offsetTop+visual.height:window.innerHeight;
+ const visibleHeight=visual?visual.height:window.innerHeight;
+ const visibleBottom=visual?visual.offsetTop+visibleHeight:window.innerHeight;
+ const keyboardClearance=Math.max(0,window.innerHeight-visibleBottom);
+ // Darle recorrido al scroll del documento para que el último borde del
+ // acordeón pueda quedar sobre el teclado con 24px de aire.
+ mobileTabMain.style.setProperty('--ds-keyboard-scroll-space',(keyboardClearance+24)+'px');
+ mobileTabMain.classList.add('ds-keyboard-text-editing');
  const rect=host.getBoundingClientRect();
- // Se muestra el bloque completo y 24 px por debajo, sin sobrepasar el teclado.
- const delta=rect.bottom+24-visibleBottom;
- if(delta>2)window.scrollBy({top:Math.ceil(delta),left:0,behavior:'instant'});
+ const gap=24;
+ // Si el acordeón es más alto que el espacio visible, priorizar su inicio;
+ // caso contrario mostrar su borde inferior completo y 24px adicionales.
+ const target=rect.height+gap<=visibleHeight
+  ?rect.bottom+gap-visibleBottom
+  :rect.top-(visual?visual.offsetTop:0)-12;
+ if(target>2||target< -2 && rect.top<(visual?visual.offsetTop:0)){
+  window.scrollBy({top:Math.round(target),left:0,behavior:'auto'});
+ }
 }
 function scheduleMobileHeadlineReveal(){
  if(mobileHeadlineScrollPending)return;
@@ -849,14 +860,17 @@ function scheduleMobileHeadlineReveal(){
 window.visualViewport?.addEventListener('resize',()=>{
  if(document.activeElement===mirrorId('headline'))scheduleMobileHeadlineReveal();
 });
+mirrorId('headline').addEventListener('blur',()=>{
+ mobileTabMain.classList.remove('ds-keyboard-text-editing');
+ mobileTabMain.style.removeProperty('--ds-keyboard-scroll-space');
+});
 function openMobileHeadlineEditor(){
- const host=el('dsMobileTextEditor');
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
  const body=mirrorId('ds-texts-group-body');
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
- // La altura debe ajustarse antes del foco: evita que el carril recorte el editor.
+ // El acordeón ya está en el flujo, solo cambia su altura y el scroll.
  mobileSlideViewport.classList.add('is-focusing-text');
  updateMobileSlideHeight();
  const field=mirrorId('headline');
