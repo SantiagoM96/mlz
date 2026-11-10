@@ -1265,3 +1265,16 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]::-moz-range-thumb{
  width:19px;height:19px;
 }
+
+/* Estado exacto del encabezado gris claro (NO del contorno exterior).
+   Abierto: esquinas inferiores a 0. Cerrado: las cuatro a 9px. */
+.editor-panel .ds-control-card > .ds-control-card-toggle[aria-expanded="true"]{
+ border-radius:9px 9px 0 0!important;
+ border-bottom-left-radius:0!important;
+ border-bottom-right-radius:0!important;
+}
+.editor-panel .ds-control-card > .ds-control-card-toggle[aria-expanded="false"]{
+ border-radius:9px!important;
+ border-bottom-left-radius:9px!important;
+ border-bottom-right-radius:9px!important;
+}
