@@ -2094,7 +2094,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 
 
 /* Zoom lateral mobile: la placa conserva exactamente su centro.
-   El riel vive en el gutter derecho y se limita al alto de la fotografía. */
+   El riel vive en el gutter izquierdo y se limita al alto de la fotografía. */
 @media(max-width:700px){
  .ds-mobile-track > .preview .preview-toolbar{
   display:block;width:100%;
@@ -2112,7 +2112,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  }
  .ds-mobile-track > .preview .canvas-stage > #dsPhotoZoomControl{
   position:absolute;z-index:6;
-  top:0;left:calc(100% + 5px);
+  top:0;left:auto;right:calc(100% + 5px);
   width:36px;max-width:36px;
   height:var(--photo-height);min-height:0;
   display:flex;flex-direction:column;align-items:center;justify-content:stretch;
