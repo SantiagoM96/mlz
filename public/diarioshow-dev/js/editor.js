@@ -24,6 +24,8 @@ function drawSplitPhotos(height){
 function setPhotoSide(side){if(photoLayout!=='split'||!splitPhotos[side])return;activePhotoSide=side;syncPhotoZoom();updatePhotoStage()}
 function setPhotoLayout(mode){
  if(!['single','split'].includes(mode))return;
+ // Las variantes editoriales 3 y 4 admiten exclusivamente una fotografía.
+ if(mode==='split'&&['quote','quote-blue'].includes(el('theme').value))return;
  photoLayout=mode;
  document.querySelectorAll('[data-photo-layout]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.photoLayout===mode)));
  el('splitPhotoFields').hidden=mode!=='split';el('splitPhotoZones').hidden=mode!=='split';
@@ -271,6 +273,10 @@ function setVariant(value){
  el('photoLayoutOptions').dataset.variant=value;
  variantButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.variant===value)));
  const isQuote=['quote','quote-blue'].includes(value);
+ // La distribución compartida solo existe para las variantes 1 y 2.
+ // En 3 y 4 vuelve el módulo original de una fotografía y su preview completa.
+ el('photoLayoutOptions').closest('.ds-photo-layout-group').hidden=isQuote;
+ if(isQuote&&photoLayout!=='single')setPhotoLayout('single');
  el('quoteAuthorField').hidden=!isQuote;
  el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
  el('articleImportField').hidden=isQuote;
