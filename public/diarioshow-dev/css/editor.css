@@ -1173,3 +1173,67 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 
 /* Variantes 3 y 4: ocultar completamente el módulo de distribución fotográfica. */
 .editor-panel .ds-photo-layout-group[hidden]{display:none!important}
+
+
+/* Panel de Diario Show Dev: módulos plegables con las miniaturas originales.
+   Reorganización de contenedores, sin cambiar tamaños ni reglas de cada control. */
+.editor-panel .ds-control-card{
+ display:block;
+ margin:0 0 12px;
+ padding:0;
+ border:1px solid #383d46;
+ border-radius:10px;
+ background:#24262c;
+ overflow:visible;
+}
+.editor-panel .ds-control-card[hidden]{display:none!important}
+.editor-panel .ds-control-card-toggle{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ width:100%;min-height:45px;margin:0;padding:11px 14px;
+ border:0;border-radius:9px;
+ background:#2b2e35;
+ color:#f1f2f6;
+ font:600 13px/20px system-ui,Arial,sans-serif;
+ text-align:left;cursor:pointer;
+}
+.editor-panel .ds-control-card-toggle:hover{background:#33363e}
+.editor-panel .ds-control-card-toggle:focus-visible{
+ outline:2px solid #e6008d;outline-offset:2px;position:relative;z-index:2
+}
+.editor-panel .ds-control-card-chevron{
+ font-size:21px;line-height:1;flex:none;color:#c7c9d0;
+ transition:transform .15s ease;
+}
+.editor-panel .ds-control-card-toggle[aria-expanded="false"] .ds-control-card-chevron{
+ transform:rotate(180deg)
+}
+.editor-panel .ds-control-card-body{
+ min-width:0;padding:14px;
+ border-top:1px solid #393c44;
+ background:#202228;border-radius:0 0 9px 9px;
+}
+.editor-panel .ds-control-card-body[hidden]{display:none!important}
+.editor-panel .ds-control-card-body .control-field:first-child{margin-top:0}
+.editor-panel .ds-control-card-body .ds-variant-field>label{display:none}
+.editor-panel .ds-control-card-body .ds-variant-options{margin-top:0}
+.editor-panel .ds-photo-upload-area{margin-top:16px;padding-top:14px;border-top:1px solid #393d45}
+.editor-panel .ds-photo-upload-area .split-photo-fields{margin-top:0}
+.editor-panel .ds-photo-layout-group .photo-single-field[hidden]{display:none!important}
+.editor-panel .ds-photo-layout-group .split-photo-fields[hidden]{display:none!important}
+.editor-panel .ds-photo-layout-group .help-label-row,
+.editor-panel .ds-quote-photo-group .help-label-row{
+ display:flex;align-items:center;gap:5px;height:20px;min-height:20px;
+}
+.editor-panel .ds-photo-layout-group .help-label-row>label,
+.editor-panel .ds-quote-photo-group .help-label-row>label{line-height:20px}
+.editor-panel .ds-photo-layout-group .help-trigger,
+.editor-panel .ds-quote-photo-group .help-trigger{height:20px;align-items:center}
+.editor-panel .ds-photo-layout-group .help-button,
+.editor-panel .ds-quote-photo-group .help-button{transform:translateY(1px)}
+@media(max-width:700px){
+ .editor-panel .ds-control-card-toggle{min-height:43px;padding:10px 12px}
+ .editor-panel .ds-control-card-body{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .ds-control-card-chevron{transition:none}
+}
