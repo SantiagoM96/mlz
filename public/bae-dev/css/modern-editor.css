@@ -263,3 +263,15 @@ body[data-editor-brand="bae"]{--editor-accent:#d82626}
   outline:2px solid var(--editor-accent);outline-offset:3px;
  }
 }
+
+
+/* iOS: text focus must not enlarge the page or disturb the keyboard. */
+@media(max-width:700px){
+ .modern-track>.preview .modern-preview-text-editor #headlineMobile,
+ .modern-track>.preview .modern-preview-text-editor #quoteMobile{
+  font-size:16px!important;
+ }
+ .modern-track>.preview .modern-preview-text-editor textarea{
+  scroll-margin-top:16px;scroll-margin-bottom:24px;
+ }
+}
