@@ -30,6 +30,7 @@ function setPhotoLayout(mode){
  el('file').parentElement.querySelector(':scope > input#file').hidden=mode==='split';
  el('file').parentElement.querySelector('.help-label-row').hidden=mode==='split';
  if(mode==='split')activePhotoSide='left';
+ el('photoStage').classList.remove('hover-left','hover-right');
  syncPhotoZoom();render();
 }
 document.querySelectorAll('[data-photo-layout]').forEach(b=>b.addEventListener('click',()=>setPhotoLayout(b.dataset.photoLayout)));
@@ -409,12 +410,20 @@ canvas.addEventListener('pointerdown',event=>{
  dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);
 });
 canvas.addEventListener('pointermove',event=>{
+ if(photoLayout==='split'){
+  const r=canvas.getBoundingClientRect();
+  const x=(event.clientX-r.left)/r.width, y=(event.clientY-r.top)/r.height;
+  const hovering=y>=0&&y<photoBottom/H&&x>=0&&x<=1;
+  photoStage.classList.toggle('hover-left',hovering&&x<.5);
+  photoStage.classList.toggle('hover-right',hovering&&x>=.5);
+ }
  if(!dragging)return;
  const ratio=W/canvas.getBoundingClientRect().width;
  if(photoLayout==='split'){activePhoto().x+=(event.clientX-lastX)*ratio;activePhoto().y+=(event.clientY-lastY)*ratio}
  else{offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio}
  lastX=event.clientX;lastY=event.clientY;render();
 });
+canvas.addEventListener('pointerleave',()=>{photoStage.classList.remove('hover-left','hover-right')});
 canvas.addEventListener('pointerup',()=>dragging=false);
 canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
