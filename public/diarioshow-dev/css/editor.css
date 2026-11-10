@@ -1182,6 +1182,7 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  margin:0 0 12px;
  padding:0;
  border:1px solid #383d46;
+ border-left:3px solid #515560;
  border-radius:10px;
  background:#24262c;
  overflow:visible;
