@@ -191,6 +191,18 @@ function syncSizeSliderTrack(){
 }
 syncSizeSliderTrack();
 el('size').addEventListener('input',syncSizeSliderTrack);
+// Pequeño rebote visual al modificar el número, sin desplazar el layout.
+let sizeValueBounce;
+el('size').addEventListener('input',()=>{
+ const output=el('sizeLabel');
+ if(!sizeControl?.classList.contains('is-adjusting')||window.matchMedia('(prefers-reduced-motion: reduce)').matches||!output.animate)return;
+ sizeValueBounce?.cancel();
+ sizeValueBounce=output.animate([
+  {transform:'translateY(0) scale(1.22)',offset:0},
+  {transform:'translateY(-3px) scale(1.29)',offset:.42},
+  {transform:'translateY(0) scale(1.22)',offset:1}
+ ],{duration:155,easing:'ease-out'});
+});
 const sizeControl=el('size').closest('.ds-inline-type-size');
 const setSizeAdjusting=active=>sizeControl?.classList.toggle('is-adjusting',Boolean(active));
 el('size').addEventListener('pointerdown',()=>setSizeAdjusting(true));
