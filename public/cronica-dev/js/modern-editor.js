@@ -64,6 +64,27 @@ for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]
  makeCard(section,title,section===textPanel);
 }
 if(!textPanel)return;
+// Photo input card: native file input and its existing image loader remain intact.
+const photoFile=$('file');
+if(photoFile&&!photoFile.closest('.modern-photo-picker')){
+ const photoField=photoFile.closest('.control-field');
+ const photoPicker=document.createElement('div');photoPicker.className='modern-photo-picker';
+ const photoSurface=document.createElement('label');
+ photoSurface.className='modern-photo-surface';photoSurface.setAttribute('for','file');
+ photoSurface.innerHTML='<span class="material-symbols-outlined modern-photo-icon" aria-hidden="true">add_photo_alternate</span><span class="modern-photo-text"><strong class="modern-photo-action">Seleccioná</strong> <span class="modern-photo-caption">una fotografía</span></span>';
+ photoFile.classList.add('modern-photo-input');
+ photoFile.parentNode.insertBefore(photoPicker,photoFile);
+ photoPicker.append(photoFile,photoSurface);
+ photoFile.addEventListener('change',()=>{
+  const name=photoFile.files?.[0]?.name;
+  photoSurface.querySelector('.modern-photo-action').textContent=name?'Cambiar':'Seleccioná';
+  photoSurface.querySelector('.modern-photo-caption').textContent=name||'una fotografía';
+ });
+ $('clearAll')?.addEventListener('click',()=>queueMicrotask(()=>{
+  photoSurface.querySelector('.modern-photo-action').textContent='Seleccioná';
+  photoSurface.querySelector('.modern-photo-caption').textContent='una fotografía';
+ }));
+}
 // Keep icon buttons in separate blocks just like Diario Show.
 for(const id of ['formatUppercase','formatClear']){
  const button=$(id);if(button)button.classList.add('modern-independent');
