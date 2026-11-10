@@ -314,7 +314,7 @@ function positionBrowserZoomTip(){
  const stageRect=stage.getBoundingClientRect();
  const tipWidth=tip.getBoundingClientRect().width||210;
  const freeRight=window.innerWidth-24-tipWidth-previewRect.left;
- const preferredLeft=stageRect.right-previewRect.left+12;
+ const preferredLeft=stageRect.right-previewRect.left+24;
  const left=Math.min(preferredLeft,freeRight);
  const top=stageRect.top-previewRect.top+24;
  preview.style.setProperty('--zoom-help-left',left+'px');
