@@ -623,7 +623,7 @@ mobileTextModule.querySelectorAll('[aria-controls]').forEach(node=>node.setAttri
 mobileTextHost.appendChild(mobileTextModule);
 const mirrorId=id=>el(id+'Mobile');
 function syncMobileTextEditor(){
- if(!mobileTextModule?.isConnected)return;
+ if(!document.querySelector('#dsMobileTextEditor .ds-texts-group'))return;
  for(const id of ['headline','quoteAuthor']){
   const source=el(id),mirror=mirrorId(id);
   if(document.activeElement!==mirror&&mirror.value!==source.value)mirror.value=source.value;
