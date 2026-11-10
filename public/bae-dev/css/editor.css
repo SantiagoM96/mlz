@@ -454,3 +454,36 @@
 }
 .editor-panel .theme-swatch:hover .theme-swatch-thumb{filter:brightness(.95)}
 .editor-panel .theme-swatch:focus-visible{outline:2px solid #a5a8b0;outline-offset:4px;border-radius:5px}
+
+/* Variantes editoriales: síntesis en 3:4, dos trazos redondeados por placa. */
+.editor-panel .theme-swatch-thumb{
+ background:linear-gradient(to bottom,transparent 52%,var(--thumb-panel) 52%),#aeb4bc
+}
+.editor-panel .theme-swatch-thumb::before{
+ background:var(--thumb-ink);height:3px;top:51%;
+}
+.editor-panel .theme-swatch-art{
+ position:absolute;inset:57% 5px 6px;display:flex;
+ flex-direction:column;align-items:center;justify-content:center;gap:5px;
+ background:none!important
+}
+.editor-panel .theme-swatch-art i{
+ display:block;width:91%;height:4px;flex:0 0 4px;
+ border-radius:5px;background:var(--thumb-ink)
+}
+.editor-panel .theme-swatch-art i:nth-child(2){
+ width:68%;background:var(--thumb-accent)
+}
+.editor-panel .theme-swatch[aria-pressed="true"] .theme-swatch-thumb{
+ outline:4px solid #d82626;outline-offset:2px
+}
+
+/* El consejo nunca ocupa sitio ni cambia el orden del zoom y la preview. */
+@media(min-width:701px) and (max-width:1439px){
+ .preview .browser-zoom-tip{
+  display:flex;position:absolute;top:64px;left:auto;right:0;
+  width:210px;margin:0;z-index:12;align-self:auto;order:initial
+ }
+ .preview .preview-toolbar,.preview .canvas-stage,
+ .preview .preview-actions,.preview .bae-credits{order:initial}
+}
