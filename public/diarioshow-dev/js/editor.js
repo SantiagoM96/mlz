@@ -580,10 +580,11 @@ el('download').addEventListener('click',()=>{
 });
 // Tooltips: ajustar ancho dentro del panel; hover, teclado, toque y Escape.
 function sizeHelpTooltips(){
- const panel=document.querySelector('.editor-panel');if(!panel)return;
- const rightLimit=panel.getBoundingClientRect().right-12;
  document.querySelectorAll('.help-trigger').forEach(trigger=>{
+  const panel=trigger.closest('.editor-panel');
   const button=trigger.querySelector('.help-button');
+  if(!panel||!button)return;
+  const rightLimit=panel.getBoundingClientRect().right-12;
   const space=Math.floor(rightLimit-button.getBoundingClientRect().right-12);
   trigger.style.setProperty('--help-available-width',Math.max(85,space)+'px');
  });
@@ -655,7 +656,7 @@ mirrorId('showQuoteAuthor').addEventListener('change',event=>{
 });
 for(const id of ['alignLeft','alignCenter','formatUppercase']){
  mirrorId(id).addEventListener('click',()=>{
-  el(id).click();
+  el(id).dispatchEvent(new MouseEvent('click',{bubbles:true}));
   syncMobileTextEditor();
  });
 }
@@ -667,7 +668,7 @@ for(const id of ['formatAccent','formatItalic','formatStrike','formatClear']){
   original.value=mirror.value;
   const start=mirror.selectionStart,end=mirror.selectionEnd;
   original.setSelectionRange(start,end);
-  el(id).click();
+  el(id).dispatchEvent(new MouseEvent('click',{bubbles:true}));
   syncMobileTextEditor();
   mirror.value=original.value;
   mirror.setSelectionRange(original.selectionStart,original.selectionEnd);
