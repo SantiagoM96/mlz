@@ -316,16 +316,6 @@
 .preview .browser-zoom-tip-close:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
 /* Cuando la tercera columna no cabe, conservar el aviso separado
    del zoom y en el flujo del editor, sin crear scroll horizontal. */
-@media(max-width:1439px){
- .preview .browser-zoom-tip{
-  position:static;align-self:flex-end;width:min(100%,260px);
-  margin:0;order:1
- }
- .preview .preview-toolbar{order:0}
- .preview .canvas-stage{order:2}
- .preview .preview-actions{order:3}
- .preview .bae-credits{order:4}
-}
 
 /* Miniatura del zoom: versión oscura, ilustrativa y de bajo contraste.
    Se mantienen las dimensiones, el marco fijo y el porcentaje destacado. */
@@ -448,11 +438,18 @@
 }
 /* Tarjeta flotante de ayuda: se superpone sin introducir huecos
    ni modificar posiciones de barra de zoom y vista previa. */
+
+/* Consejo flotante responsive: nunca participa del flex de .preview.
+   Al reducir el ancho se superpone sobre el canvas, sin dejar un hueco
+   entre la barra del zoom y la imagen. */
 @media(min-width:701px) and (max-width:1439px){
- .preview .browser-zoom-tip{
-  position:absolute;display:flex;top:64px;left:auto;right:0;
-  width:210px;margin:0;z-index:12;align-self:auto;order:initial
+ .preview{position:relative}
+ .preview > .browser-zoom-tip:not([hidden]){
+  position:absolute!important;display:flex!important;
+  top:64px;right:0;left:auto;width:210px;
+  margin:0;z-index:30;align-self:auto;order:initial;
  }
- .preview .preview-toolbar,.preview .canvas-stage,
- .preview .preview-actions,.preview .bae-credits{order:initial}
+}
+@media(max-width:700px){
+ .preview > .browser-zoom-tip{display:none!important}
 }
