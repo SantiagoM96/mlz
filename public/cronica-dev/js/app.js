@@ -475,6 +475,39 @@ document.addEventListener('click',event=>{
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape')closeHelpTooltips();
 });
+/* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
+   adentro cuando faltarían menos de 24px al borde de la pantalla. */
+function positionBrowserZoomTip(){
+ const tip=el('browserZoomTip');
+ const preview=tip.closest('.preview');
+ const stage=el('photoStage');
+ if(!preview||!stage||tip.hidden||window.innerWidth<=700)return;
+ const previewRect=preview.getBoundingClientRect();
+ const stageRect=stage.getBoundingClientRect();
+ const tipWidth=tip.getBoundingClientRect().width||210;
+ const freeRight=window.innerWidth-24-tipWidth-previewRect.left;
+ const preferredLeft=stageRect.right-previewRect.left+12;
+ const left=Math.min(preferredLeft,freeRight);
+ const top=stageRect.top-previewRect.top+24;
+ preview.style.setProperty('--zoom-help-left',left+'px');
+ preview.style.setProperty('--zoom-help-top',top+'px');
+}
+let zoomTipPositionFrame=0;
+function scheduleBrowserZoomTipPosition(){
+ if(zoomTipPositionFrame)return;
+ zoomTipPositionFrame=window.requestAnimationFrame(()=>{
+  zoomTipPositionFrame=0;
+  positionBrowserZoomTip();
+ });
+}
+window.addEventListener('resize',scheduleBrowserZoomTipPosition);
+if(typeof ResizeObserver!=='undefined'){
+ const zoomTipResizeObserver=new ResizeObserver(scheduleBrowserZoomTipPosition);
+ zoomTipResizeObserver.observe(el('photoStage'));
+ zoomTipResizeObserver.observe(el('browserZoomTip'));
+ zoomTipResizeObserver.observe(el('browserZoomTip').closest('.preview'));
+}
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
+scheduleBrowserZoomTipPosition();
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
 })();
