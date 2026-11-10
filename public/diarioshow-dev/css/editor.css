@@ -1772,3 +1772,38 @@ main > aside.editor-panel{
 .editor-panel .ds-photo-picker.is-drag-over .ds-photo-picker-surface{
  border-color:#fff!important;
 }
+
+
+/* Microinteracción del valor: sin alterar la geometría del panel. */
+.editor-panel .ds-texts-group .ds-inline-type-size output{
+ display:inline-block;transform-origin:100% 50%;
+ color:#eff0f3;font-weight:600;
+ transition:color .12s ease,font-weight .12s ease,transform .14s ease;
+ will-change:transform;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting output{
+ color:#e6008d;font-weight:800;
+ transform:scale(1.22);
+}
+.editor-panel .ds-texts-group .ds-inline-type-size:not(.is-adjusting) output{
+ color:#eff0f3;
+ transform:scale(1);
+}
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting .ds-size-unit{
+ color:#e6008d;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:is(:hover,:active)::-webkit-slider-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting input[type="range"]::-webkit-slider-thumb{
+ background-color:#e6008d!important;border-color:#fff!important;
+ box-shadow:0 0 0 2px #e6008d35,0 0 8px 2px #e6008d90!important;
+}
+.editor-panel .ds-texts-group .ds-inline-type-size input[type="range"]:is(:hover,:active)::-moz-range-thumb,
+.editor-panel .ds-texts-group .ds-inline-type-size.is-adjusting input[type="range"]::-moz-range-thumb{
+ background-color:#e6008d!important;border-color:#fff!important;
+ box-shadow:0 0 0 2px #e6008d35,0 0 8px 2px #e6008d90!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .ds-texts-group .ds-inline-type-size output{
+  transition:none;will-change:auto;
+ }
+}
