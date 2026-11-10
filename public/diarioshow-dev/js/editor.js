@@ -649,6 +649,11 @@ mobileTextModule.querySelectorAll('[id]').forEach(node=>node.id+='Mobile');
 mobileTextModule.querySelectorAll('[for]').forEach(node=>node.setAttribute('for',node.getAttribute('for')+'Mobile'));
 mobileTextModule.querySelectorAll('[aria-controls]').forEach(node=>node.setAttribute('aria-controls',node.getAttribute('aria-controls')+'Mobile'));
 mobileTextHost.appendChild(mobileTextModule);
+// En Vista previa el módulo siempre existe, inicialmente contraído.
+// Su copia en Formato conserva su estado y comportamiento independiente.
+const mobileTextToggle=mobileTextModule.querySelector('.ds-control-card-toggle');
+mobileTextToggle.setAttribute('aria-expanded','false');
+mobileTextModule.querySelector('#ds-texts-group-bodyMobile').hidden=true;
 const mirrorId=id=>el(id+'Mobile');
 function syncMobileTextEditor(){
  if(!document.querySelector('#dsMobileTextEditor .ds-texts-group'))return;
@@ -848,7 +853,6 @@ function openMobileHeadlineEditor(){
  const host=el('dsMobileTextEditor');
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
  const body=mirrorId('ds-texts-group-body');
- host.classList.add('is-open-from-preview');
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
