@@ -611,13 +611,22 @@ function closeHelpTooltips(){
 document.addEventListener('click',event=>{if(!event.target.closest('.help-trigger'))closeHelpTooltips()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeHelpTooltips()});
 sizeHelpTooltips();
-// Navegación mobile sin desmontar el editor, para conservar fotos y valores.
+// Navegación mobile: paneles adyacentes desplazados como una sola superficie.
 const mobileTabViewport=window.matchMedia('(max-width:700px)');
 const mobileTabMain=document.querySelector('main');
+const mobileSlideViewport=el('dsMobileViewport');
 const mobileTabs=[
  {name:'preview',button:el('dsMobilePreviewTab'),panel:el('dsMobilePreviewPanel')},
  {name:'controls',button:el('dsMobileControlsTab'),panel:el('dsMobileControlsPanel')}
 ];
+function updateMobileSlideHeight(){
+ if(!mobileTabViewport.matches){
+  mobileSlideViewport.style.height='';
+  return;
+ }
+ const active=mobileTabs.find(tab=>tab.name===mobileTabMain.dataset.mobileTab)||mobileTabs[0];
+ mobileSlideViewport.style.height=active.panel.offsetHeight+'px';
+}
 function selectMobileTab(name,focus=false){
  const active=mobileTabs.find(tab=>tab.name===name)||mobileTabs[0];
  mobileTabMain.dataset.mobileTab=active.name;
@@ -625,13 +634,20 @@ function selectMobileTab(name,focus=false){
   const selected=tab===active;
   tab.button.setAttribute('aria-selected',String(selected));
   tab.button.tabIndex=selected?0:-1;
-  // En desktop las dos secciones permanecen visibles y accesibles.
-  if(mobileTabViewport.matches)tab.panel.setAttribute('role','tabpanel');
-  else tab.panel.removeAttribute('role');
+  if(mobileTabViewport.matches){
+   tab.panel.setAttribute('role','tabpanel');
+   tab.panel.inert=!selected;
+  }else{
+   tab.panel.removeAttribute('role');
+   tab.panel.inert=false;
+  }
  });
  if(focus)active.button.focus();
+ // El canvas nunca se desmonta, y sigue dibujándose al editar.
  if(active.name==='preview'&&mobileTabViewport.matches){
-  requestAnimationFrame(()=>{updatePhotoStage();render()});
+  requestAnimationFrame(()=>{updatePhotoStage();render();updateMobileSlideHeight()});
+ }else{
+  requestAnimationFrame(updateMobileSlideHeight);
  }
 }
 mobileTabs.forEach((tab,index)=>{
@@ -646,8 +662,14 @@ mobileTabs.forEach((tab,index)=>{
 });
 function syncMobileTabViewport(){
  selectMobileTab(mobileTabMain.dataset.mobileTab||'preview');
+ requestAnimationFrame(updateMobileSlideHeight);
 }
 mobileTabViewport.addEventListener('change',syncMobileTabViewport);
+window.addEventListener('resize',updateMobileSlideHeight);
+if(typeof ResizeObserver!=='undefined'){
+ const slideResizeObserver=new ResizeObserver(updateMobileSlideHeight);
+ mobileTabs.forEach(tab=>slideResizeObserver.observe(tab.panel));
+}
 syncMobileTabViewport();
 window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
 })();
