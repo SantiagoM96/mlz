@@ -859,12 +859,12 @@ function syncMobileKeyboardEditor(){
  const visual=window.visualViewport;
  // La altura se reduce cuando el teclado virtual aparece. Safari y Chrome
  // disparan resize del visual viewport; no forzamos scroll de la página.
- const keyboardOpen=Boolean(visual&&visual.height<window.innerHeight-110);
  if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'&&
-  document.activeElement===field&&keyboardOpen){
-  dockMobileKeyboardEditor();
-  positionMobileKeyboardEditor();
- }else if(!keyboardOpen||document.activeElement!==field){
+  document.activeElement===field){
+  // Ya se montó antes de enfocar; no volver a mover un textarea enfocado,
+  // porque en iOS moverlo de contenedor cierra el teclado.
+  if(mobileTextDocked)positionMobileKeyboardEditor();
+ }else if(document.activeElement!==field){
   undockMobileKeyboardEditor();
  }
 }
@@ -887,6 +887,9 @@ function openMobileHeadlineEditor(){
  syncMobileTextEditor();
  mobileSlideViewport.classList.add('is-focusing-text');
  updateMobileSlideHeight();
+ // Mover el nodo ANTES del focus: reparentar después suele cerrar
+ // el teclado virtual y perder la selección en Safari iOS.
+ dockMobileKeyboardEditor();
  const field=mirrorId('headline');
  // Foco inmediato dentro del tap para permitir teclado en iOS.
  field.focus({preventScroll:true});
