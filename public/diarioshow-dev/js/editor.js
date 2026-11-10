@@ -303,7 +303,40 @@ photoStage.addEventListener('drop',event=>{
  event.preventDefault();
  loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0]);
 });
+/* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
+   adentro cuando faltarían menos de 24px al borde de la pantalla. */
+function positionBrowserZoomTip(){
+ const tip=el('browserZoomTip');
+ const preview=tip.closest('.preview');
+ const stage=el('photoStage');
+ if(!preview||!stage||tip.hidden||window.innerWidth<=700)return;
+ const previewRect=preview.getBoundingClientRect();
+ const stageRect=stage.getBoundingClientRect();
+ const tipWidth=tip.getBoundingClientRect().width||210;
+ const freeRight=window.innerWidth-24-tipWidth-previewRect.left;
+ const preferredLeft=stageRect.right-previewRect.left+12;
+ const left=Math.min(preferredLeft,freeRight);
+ const top=stageRect.top-previewRect.top+24;
+ preview.style.setProperty('--zoom-help-left',left+'px');
+ preview.style.setProperty('--zoom-help-top',top+'px');
+}
+let zoomTipPositionFrame=0;
+function scheduleBrowserZoomTipPosition(){
+ if(zoomTipPositionFrame)return;
+ zoomTipPositionFrame=window.requestAnimationFrame(()=>{
+  zoomTipPositionFrame=0;
+  positionBrowserZoomTip();
+ });
+}
+window.addEventListener('resize',scheduleBrowserZoomTipPosition);
+if(typeof ResizeObserver!=='undefined'){
+ const zoomTipResizeObserver=new ResizeObserver(scheduleBrowserZoomTipPosition);
+ zoomTipResizeObserver.observe(el('photoStage'));
+ zoomTipResizeObserver.observe(el('browserZoomTip'));
+ zoomTipResizeObserver.observe(el('browserZoomTip').closest('.preview'));
+}
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
+scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
