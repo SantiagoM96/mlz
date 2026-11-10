@@ -600,3 +600,30 @@
   margin-left:auto!important;
  }
 }
+
+/* Consejo flotante: geometría real del canvas, la caja y el viewport útil.
+   JS lo mantiene al costado mientras entre; el límite derecho es 20px. */
+@media(min-width:701px){
+ .preview > .browser-zoom-tip:not([hidden]){
+  position:fixed!important;
+  position-anchor:auto!important;
+  left:var(--zoom-tip-x,calc(100vw - 230px))!important;
+  top:var(--zoom-tip-y,90px)!important;
+  right:auto!important;
+  margin:0!important;
+  transition:none!important;
+  z-index:40;
+ }
+}
+
+/* Scrollbar exterior uniforme, fina y discreta en todos los productos Dev. */
+html{
+ scrollbar-width:thin;
+ scrollbar-color:#525864 #101114;
+}
+html::-webkit-scrollbar{width:8px;height:8px}
+html::-webkit-scrollbar-track{background:#101114}
+html::-webkit-scrollbar-thumb{
+ background:#525864;border:2px solid #101114;border-radius:999px;
+}
+html::-webkit-scrollbar-thumb:hover{background:#747b88}
