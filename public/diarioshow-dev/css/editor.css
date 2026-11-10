@@ -337,3 +337,32 @@
 .editor-panel .ds-author-field #quoteAuthorInputField[hidden]{display:none!important}
 .editor-panel .ds-author-toggle{margin:0 0 12px!important}
 .editor-panel .ds-author-field #quoteAuthorInputField>label{display:block;margin-bottom:8px}
+
+/* Consejo visible, descartable y pegado al control del zoom fotográfico.
+   Solo orienta sobre el zoom del navegador; no modifica el zoom del canvas. */
+.preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])){
+ justify-content:flex-start;flex-wrap:wrap;column-gap:8px;row-gap:6px
+}
+.preview .browser-zoom-tip{
+ display:flex;align-items:center;gap:7px;flex:1 1 175px;min-width:0;
+ padding:7px 8px;border:1px solid #55505a;border-radius:7px;
+ background:#302b36;color:#efedf3;font:500 11px/1.35 Inter,Arial,sans-serif
+}
+.preview .browser-zoom-tip[hidden]{display:none!important}
+.preview .browser-zoom-tip-icon{flex:0 0 auto;font-size:18px;color:#f09bd0}
+.preview .browser-zoom-tip-copy{min-width:0}
+.preview .browser-zoom-tip-copy strong{font-weight:700;color:#fff}
+.preview .browser-zoom-tip-close{
+ display:inline-flex;align-items:center;justify-content:center;
+ width:24px;height:24px;flex:0 0 24px;padding:0;margin-left:auto;
+ color:#d6d2db;background:transparent;border:0;border-radius:5px;cursor:pointer
+}
+.preview .browser-zoom-tip-close .material-icons{font-size:16px}
+.preview .browser-zoom-tip-close:hover{background:#4a424f;color:#fff}
+.preview .browser-zoom-tip-close:focus-visible{outline:2px solid #E6008D;outline-offset:2px}
+.preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])) .preview-instructions{
+ flex:1 0 100%;text-align:left
+}
+@media(max-width:520px){
+ .preview .preview-toolbar:has(.browser-zoom-tip:not([hidden])) .browser-zoom-tip{flex-basis:100%}
+}
