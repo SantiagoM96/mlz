@@ -353,8 +353,9 @@ function updatePhotoPicker(id,filename){
  if(!picker)return;
  picker.classList.toggle('has-photo',Boolean(filename));
  picker.querySelector('.ds-photo-picker-action').textContent=filename?'Cambiar':'Seleccioná';
- picker.querySelector('.ds-photo-picker-caption').textContent=filename?filename:'una fotografía';
- picker.querySelector('.ds-photo-picker-clickable').title=filename||'Seleccioná una fotografía';
+ const defaultCaption=id==='fileLeft'?'una foto izquierda':id==='fileRight'?'una foto derecha':'una fotografía';
+ picker.querySelector('.ds-photo-picker-caption').textContent=filename?filename:defaultCaption;
+ picker.querySelector('.ds-photo-picker-clickable').title=filename||'Seleccioná '+defaultCaption;
 }
 for(const id of ['file','fileLeft','fileRight']){
  const input=el(id),picker=input.closest('.ds-photo-picker');
