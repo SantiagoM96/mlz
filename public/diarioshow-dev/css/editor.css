@@ -1346,3 +1346,75 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .editor-panel .ds-content-group .ds-logo-position-button{width:35px}
  .editor-panel .ds-content-group .ds-logo-position-controls{gap:5px}
 }
+
+
+/* Diseño coherente de herramientas: etiquetas y controles a 43px,
+   tomando como referencia la miniatura de Logo Diario Show. */
+.editor-panel .ds-texts-group .typography-row .help-label-row>label,
+.editor-panel .ds-content-group .ds-logo-layout-row>.control-field>label{
+ font-size:14px!important;
+ font-weight:600;
+ line-height:20px;
+}
+.editor-panel .ds-texts-group .typography-row .help-label-row{
+ height:20px;min-height:20px;margin-bottom:9px!important;
+}
+.editor-panel .ds-texts-group .typography-row .format-buttons button,
+.editor-panel .ds-texts-group .typography-row .align-buttons button,
+.editor-panel .ds-content-group .ds-logo-position-button{
+ height:43px!important;
+}
+/* Botonera de alineación de texto y de objetos: una misma pieza segmentada.
+   El realce seleccionado se pinta *dentro* del botón, para preservar
+   los cuatro lados incluso en el segundo segmento (línea central). */
+.editor-panel .ds-texts-group .typography-row .align-buttons,
+.editor-panel .ds-content-group .ds-logo-position-controls{
+ display:inline-flex;
+ align-items:stretch;
+ gap:0!important;
+ height:43px;
+ border-radius:7px;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons button,
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button{
+ display:flex;align-items:center;justify-content:center;
+ position:relative;
+ flex:0 0 39px;
+ width:39px!important;min-width:0;
+ padding:0;
+ border:1px solid #4a4e56!important;
+ border-radius:0!important;
+ background:#292c32!important;
+ color:#f4f4f4!important;
+ box-shadow:none;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons button:first-child,
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button:first-child{
+ border-radius:7px 0 0 7px!important;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons button:last-child,
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button:last-child{
+ border-radius:0 7px 7px 0!important;
+ border-left:0!important;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons button[aria-pressed="true"],
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button[aria-pressed="true"]{
+ background:#3b3f46!important;
+ color:#fff!important;
+ box-shadow:inset 0 0 0 1.5px #f4f4f4!important;
+ z-index:1;
+}
+.editor-panel .ds-texts-group .typography-row .align-buttons button:hover:not([aria-pressed="true"]),
+.editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button:hover:not([aria-pressed="true"]){
+ background:#343841!important;
+}
+.editor-panel .ds-content-group .ds-logo-position-controls{
+ margin:0;min-height:43px;
+}
+/* El conjunto se adapta al espacio disponible sin perder la altura estándar. */
+@media(max-width:440px){
+ .editor-panel .ds-texts-group .typography-row .align-buttons button,
+ .editor-panel .ds-content-group .ds-logo-position-controls .ds-logo-position-button{
+  flex-basis:35px;width:35px!important;
+ }
+}
