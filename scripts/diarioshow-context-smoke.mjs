@@ -139,6 +139,27 @@ try{
  await desktop.locator('#dsMobileControlsPanel .ds-design-group .ds-control-card-toggle').count().catch(()=>0);
  await desktop.evaluate(()=>document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:42})));
  requireState(!(await desktop.locator('#dsHeadlineHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected'))),'CLICK OUTSIDE MUST REMOVE HOTSPOT DASH');
+ // Left-panel accordions must each receive the exact same fading pulse
+ // only on expansion. Switching one to another transfers the pulse.
+ for(const selector of [
+  '#dsMobileControlsPanel .ds-plate-design-group',
+  '#dsMobileControlsPanel .ds-photo-layout-group'
+ ]){
+  const toggle=desktop.locator(selector+' .ds-control-card-toggle');
+  if((await toggle.getAttribute('aria-expanded'))==='true')await toggle.click();
+  await toggle.click();
+  requireState(await desktop.locator(selector).evaluate(el=>el.classList.contains('is-preview-context-target')),
+   'EXPANDED CONTROL CARD DID NOT PULSE '+selector);
+  const count=await desktop.locator('#dsMobileControlsPanel .ds-control-card.is-preview-context-target').count();
+  requireState(count===1,'PULSE MUST TRANSFER EXCLUSIVELY: '+count);
+  const animation=await desktop.locator(selector).evaluate(el=>getComputedStyle(el).animationName);
+  requireState(animation.includes('ds-context-card-flash'),'MISSING FADING PULSE '+selector+' '+animation);
+ }
+ const activeCard=desktop.locator('#dsMobileControlsPanel .ds-photo-layout-group');
+ await desktop.waitForTimeout(2400);
+ const pulseAfter=await activeCard.evaluate(el=>getComputedStyle(el).boxShadow);
+ requireState(pulseAfter==='none'||pulseAfter==='rgba(230, 0, 141, 0) 0px 0px 0px 0px',
+  'PULSE SHOULD FADE BACK TO NORMAL '+pulseAfter);
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
  await desktop.close();
