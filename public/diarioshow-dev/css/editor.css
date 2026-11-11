@@ -2346,14 +2346,28 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 /* Desktop conserva la misma pista vertical de Zoom que mobile.
    La barra Vista previa queda sola y centrada encima del canvas. */
 @media(min-width:701px){
+ /* Mismo mensaje liviano que mobile: sin caja, fondo, borde ni sombra. */
  .preview .preview-toolbar{
+  display:block!important;
   justify-content:center!important;
   text-align:center;
   width:min(100%,540px);
-  padding:10px 14px;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
  }
  .preview .preview-toolbar .preview-instructions{
-  width:100%;flex:1;text-align:center!important;
+  display:block;
+  width:100%;
+  flex:none;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  line-height:1.5;
  }
  .preview .canvas-stage{overflow:visible!important}
  .preview .canvas-stage > #dsPhotoZoomControl{
