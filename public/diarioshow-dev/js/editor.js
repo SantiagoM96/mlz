@@ -513,40 +513,6 @@ photoStage.addEventListener('drop',event=>{
  event.preventDefault();
  if(photoLayout==='split'){const r=photoStage.getBoundingClientRect();const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],side)}else loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],null);
 });
-/* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
-   adentro cuando faltarían menos de 24px al borde de la pantalla. */
-function positionBrowserZoomTip(){
- const tip=el('browserZoomTip');
- const stage=el('photoStage');
- if(!tip||!stage||tip.hidden||document.documentElement.clientWidth<=700)return;
- const stageRect=stage.getBoundingClientRect();
- const tipWidth=tip.getBoundingClientRect().width;
- const viewportWidth=document.documentElement.clientWidth;
- // A la derecha de la placa (+24px), hasta que toca el límite de 20px.
- // Al reducir el viewport se superpone a la placa, sin cambiar el layout.
- const left=Math.min(stageRect.right+24,viewportWidth-tipWidth-20);
- const top=stageRect.top+24;
- tip.style.setProperty('--zoom-tip-x',left+'px');
- tip.style.setProperty('--zoom-tip-y',top+'px');
-}
-let zoomTipPositionFrame=0;
-function scheduleBrowserZoomTipPosition(){
- if(zoomTipPositionFrame)return;
- zoomTipPositionFrame=window.requestAnimationFrame(()=>{
-  zoomTipPositionFrame=0;
-  positionBrowserZoomTip();
- });
-}
-window.addEventListener('resize',scheduleBrowserZoomTipPosition);
-window.addEventListener('scroll',scheduleBrowserZoomTipPosition,{passive:true});
-if(typeof ResizeObserver!=='undefined'){
- const zoomTipResizeObserver=new ResizeObserver(scheduleBrowserZoomTipPosition);
- zoomTipResizeObserver.observe(el('photoStage'));
- zoomTipResizeObserver.observe(el('browserZoomTip'));
- zoomTipResizeObserver.observe(el('browserZoomTip').closest('.preview'));
-}
-el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
-scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
 // Los botones visibles del logo y del titular viven SOBRE el canvas.
  // El gesto sobre fotografía permanece exclusivamente en el canvas.
