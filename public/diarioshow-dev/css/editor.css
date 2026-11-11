@@ -2462,11 +2462,12 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  outline:0!important;
  box-shadow:none!important;
 }
-/* Pulso de acento: encendido instantáneo, sostén de ~0,9 s
-   y apagado muy corto (~0,15 s). Sin desvanecimiento progresivo largo. */
+/* Pulso uniforme de 2px: 1px del borde original + 1px de anillo exterior.
+   Ningún cambio de grosor del borde en el box model: el interior no se mueve.
+   Se ilumina de inmediato, permanece 0,9s y se apaga en 0,15s. */
 @keyframes ds-context-card-flash{
- 0%,85%{border-color:#e6008d;box-shadow:0 0 0 3px rgba(230,0,141,.92)}
- 100%{border-color:#383d46;box-shadow:0 0 0 0 rgba(230,0,141,0)}
+ 0%,85%{border-color:#e6008d;box-shadow:0 0 0 1px #e6008d}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
 }
 .editor-panel .ds-control-card.is-preview-context-target{
  animation:ds-context-card-flash 1.05s linear both;
