@@ -282,6 +282,29 @@ try{
  // Tanto la apertura como el cierre activan el mismo pulso de Diario Show.
  const pulsePage=await browser.newPage({viewport:{width:1440,height:900}});
  await pulsePage.goto(url+'?onboarding=off',{waitUntil:'load'});
+ // Icono y título no cambian de posición relativa al botón.
+ // Medir coordenadas locales evita confundir el plegado con scroll del documento.
+ for(const name of ['ds-plate-design-group','ds-photo-layout-group','ds-content-group','ds-texts-group']){
+  const card=pulsePage.locator('#dsMobileControlsPanel .'+name);
+  const toggle=card.locator('.ds-control-card-toggle');
+  const read=()=>toggle.evaluate(node=>{
+   const parent=node.getBoundingClientRect();
+   const items=[node.querySelector('.ds-section-icon'),node.querySelector('.ds-control-card-title')];
+   return {height:parent.height,parts:items.map(el=>{
+    const r=el.getBoundingClientRect();
+    return {left:r.left-parent.left,top:r.top-parent.top,width:r.width,height:r.height}
+   })};
+  });
+  const original=await read();
+  for(let i=0;i<2;i++){
+   await toggle.click();
+   const actual=await read();
+   requireState(Math.abs(actual.height-original.height)<.5&&
+    actual.parts.every((part,j)=>Math.abs(part.left-original.parts[j].left)<.5&&Math.abs(part.top-original.parts[j].top)<.5),
+    'DIARIO SHOW HEADER SHIFTS ON TOGGLE '+name+' '+JSON.stringify({original,actual}));
+  }
+ }
+ console.log('PASS: cabeceras Diario Show sin saltos de icono y título al abrir/cerrar');
  const pulseCard=pulsePage.locator('#dsMobileControlsPanel .ds-plate-design-group');
  const pulseToggle=pulseCard.locator('.ds-control-card-toggle');
  const originalBounds=await pulseToggle.boundingBox();
