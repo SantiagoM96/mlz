@@ -198,7 +198,7 @@ try{
   triggerPosition.background==='rgb(255, 255, 255)',
   'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
  const flagColors=await tour.locator('#dsOnboardingTrigger').evaluate(e=>({outer:getComputedStyle(e).backgroundColor,inner:getComputedStyle(e,'::before').backgroundColor,inset:getComputedStyle(e,'::before').top,shape:getComputedStyle(e,'::before').clipPath}));
- requireState(flagColors.outer==='rgb(255, 255, 255)'&&flagColors.inner==='rgb(230, 0, 141)'&&flagColors.inset==='1.3px'&&flagColors.shape.includes('14.3px 50%'),'FLAG MUST HAVE PINK FILL AND DOUBLE WHITE STROKE '+JSON.stringify(flagColors));
+ requireState(flagColors.outer==='rgb(255, 255, 255)'&&flagColors.inner==='rgb(230, 0, 141)'&&flagColors.inset==='2px'&&flagColors.shape.includes('15px 50%'),'FLAG MUST HAVE PINK FILL AND DOUBLE WHITE STROKE '+JSON.stringify(flagColors));
  const names=[
   'Elegí el diseño de tu placa',
   'Definí la distribución fotográfica',
