@@ -47,6 +47,9 @@ for(const [brand,config] of Object.entries(tests)){
    }
    const card=page.locator('aside.editor-panel > .modern-card').first();
    const toggle=card.locator(':scope > .modern-toggle');
+   // La ayuda anterior puede haber desplazado el scroll; medir la cabecera
+   // únicamente después de centrarla en el viewport.
+   await toggle.scrollIntoViewIfNeeded();
    const original=await toggle.locator('span:nth-child(2)').boundingBox();
    await toggle.click();
    const closed=await toggle.locator('span:nth-child(2)').boundingBox();
