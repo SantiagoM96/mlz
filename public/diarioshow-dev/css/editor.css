@@ -2271,3 +2271,17 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   font-size:clamp(7px,1.9vw,15px);
  }
 }
+
+
+/* Diario Show mobile: pestañas persistentes al recorrer cualquiera de los paneles.
+   Se detienen a 24px del borde superior y dejan pasar el scroll por debajo.
+   El fondo opaco evita que los controles se transparenten sobre las pestañas. */
+@media(max-width:700px){
+ main > .ds-mobile-tabs{
+  position:sticky;
+  top:24px;
+  z-index:80;
+  isolation:isolate;
+  background:#101114;
+ }
+}
