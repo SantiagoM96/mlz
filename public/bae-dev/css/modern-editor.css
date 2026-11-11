@@ -501,3 +501,24 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
  border-radius:6px!important;background:transparent!important;
  box-shadow:none!important;outline:0!important;
 }
+
+
+/* Sin estado blanco de transición: desde el primer frame, color institucional. */
+.preview .canvas-stage>.modern-logo-hit,
+.preview .canvas-stage>.modern-text-hit{
+ border:2px dashed transparent!important;border-radius:6px!important;
+ transition:none!important;animation:none!important;cursor:pointer!important;
+}
+.preview .canvas-stage>.modern-logo-hit:hover,
+.preview .canvas-stage>.modern-logo-hit:focus-visible,
+.preview .canvas-stage>.modern-logo-hit.is-hotspot-selected,
+.preview .canvas-stage>.modern-text-hit:hover,
+.preview .canvas-stage>.modern-text-hit:focus-visible,
+.preview .canvas-stage>.modern-text-hit.is-hotspot-selected{
+ border:2px dashed var(--editor-accent)!important;
+ transition:none!important;animation:none!important;
+}
+.preview .canvas-stage:has(>.modern-logo-hit:hover) .photo-hover-border,
+.preview .canvas-stage:has(>.modern-text-hit:hover) .photo-hover-border{
+ opacity:0!important;transition:none!important;
+}
