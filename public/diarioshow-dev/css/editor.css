@@ -2518,3 +2518,12 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  border-width:1px!important;box-sizing:border-box!important;
  animation:ds-context-card-flash 1.05s linear both!important;
 }
+
+
+/* Hover de los hotspots igual al resto de los editores; selección persistente al clic. */
+@media (hover:hover) and (pointer:fine){
+ .preview #photoStage>.ds-preview-hit-button:hover{
+  border:2px dashed #e6008d!important;border-radius:6px!important;
+  background:transparent!important;box-shadow:none!important;outline:0!important;
+ }
+}
