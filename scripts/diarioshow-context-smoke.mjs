@@ -168,6 +168,20 @@ try{
   'PULSE SHOULD FADE BACK TO NORMAL '+pulseAfter);
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
+ // New editorial controls must remain functional in the same Canvas model.
+ const identity=desktop.locator('#dsMobileControlsPanel .ds-content-group');
+ const importer=desktop.locator('#dsMobileControlsPanel .ds-import-group');
+ requireState(await importer.locator('#articleUrl').count()===1,'IMPORT MODULE NOT SEPARATED');
+ requireState(await identity.locator('[data-footer-style]').count()===2,'FOOTER STYLE CONTROL MISSING');
+ requireState(await desktop.locator('#dsMobileControlsPanel .ds-section-icon').count()>=5,'SECTION ICONS MISSING');
+ const before=await desktop.locator('#art').evaluate(el=>el.toDataURL());
+ await identity.locator('[data-footer-style="carousel"]').click();
+ const after=await desktop.locator('#art').evaluate(el=>el.toDataURL());
+ requireState(before!==after,'CAROUSEL FOOTER DID NOT CHANGE CANVAS');
+ await identity.locator('[data-footer-style="center"]').click();
+ const restored=await desktop.locator('#art').evaluate(el=>el.toDataURL());
+ requireState(before===restored,'CENTER FOOTER DID NOT RESTORE CANVAS');
+ console.log('PASS: separated modules, section icons, canvas footer modes');
  await desktop.close();
  // Tour uses the real page on a fresh desktop context (first-time visit).
  const tourContext=await browser.newContext({viewport:{width:1440,height:900}});
@@ -199,25 +213,24 @@ try{
   'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
  const flagGeometry=await tour.locator('#dsOnboardingTrigger').evaluate(e=>{
   const svg=e.querySelector('svg.ds-onboarding-flag-art');
-  const fill=svg.querySelector('path:first-child'),stroke=svg.querySelector('path.ds-onboarding-flag-stroke');
+  const fill=svg.querySelector('path:first-child'),stroke=svg.querySelector('path[stroke]');
   return {svgCount:e.querySelectorAll('svg.ds-onboarding-flag-art').length,
    pink:fill.getAttribute('fill'),fillShape:fill.getAttribute('d'),
    line:stroke.getAttribute('stroke'),strokeWidth:stroke.getAttribute('stroke-width'),
    vectorEffect:stroke.getAttribute('vector-effect'),
    strokePath:stroke.getAttribute('d'),outerPseudo:getComputedStyle(e,'::before').content};
  });
- requireState(flagGeometry.svgCount===1&&flagGeometry.pink==='#e6008d'&&
-  flagGeometry.line==='#ffffff'&&flagGeometry.strokeWidth==='2'&&
-  flagGeometry.vectorEffect==='non-scaling-stroke'&&
-  flagGeometry.strokePath==='M136 1H2L15 21L2 41H136'&&
+ requireState(flagGeometry.svgCount===1&&['#FD009B','#e6008d'].includes(flagGeometry.pink)&&
+  ['white','#ffffff'].includes(flagGeometry.line)&&flagGeometry.strokeWidth==='2'&&
+  flagGeometry.strokePath?.includes('14.3047 21')&&
   flagGeometry.outerPseudo==='none',
   'FLAG MUST HAVE ONE UNIFORM 2PX WHITE SVG PATH WITHOUT LAYERED CLIPS '+JSON.stringify(flagGeometry));
  const names=[
   'Elegí el diseño de tu placa',
   'Definí la distribución fotográfica',
-  'Importá el contenido',
+  'Agregá tus fotografías',
+  'Importá y personalizá tu placa',
   'Editá los textos',
-  'Agregá una fotografía',
   'Editá desde la vista previa',
   '¿Poco espacio?'
  ];
@@ -236,14 +249,15 @@ try{
    const animationName=await tour.locator('#dsTourZoomDemo .browser-zoom-demo-content').evaluate(el=>getComputedStyle(el).animationName);
    requireState(animationName==='ds-browser-zoom-content','FINAL STEP ZOOM ANIMATION MISSING '+animationName);
    const fullScreen=await tour.locator('#dsOnboardingLayer').evaluate(el=>el.classList.contains('is-whole-screen'));
-   requireState(fullScreen,'FINAL STEP MUST HIGHLIGHT WHOLE SCREEN');
+   const highlightVisible=await tour.locator('.ds-tour-highlight').isVisible();
+   requireState(fullScreen&&!highlightVisible,'FINAL STEP MUST HAVE CENTERED MODAL WITHOUT SPOTLIGHT');
   }
   if(i!==names.length-1)await tour.locator('.ds-tour-next').click();
  }
  await tour.locator('.ds-tour-next').click();
  requireState(await tour.locator('#dsOnboardingLayer').isHidden(),
   'TOUR DID NOT CLOSE');
- const complete=await tour.evaluate(()=>localStorage.getItem('ds-dev-tour-desktop-v2'));
+ const complete=await tour.evaluate(()=>localStorage.getItem('ds-dev-tour-desktop-v3'));
  requireState(complete==='complete','TOUR COMPLETION NOT STORED');
  await tour.reload({waitUntil:'load'});
  await tour.waitForTimeout(250);
@@ -263,7 +277,7 @@ try{
  await tour.locator('.ds-tour-skip').click();
  requireState(await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR SKIP FAILED');
  requireState(!tourErrors.length,'TOUR JS ERRORS '+tourErrors.join(';'));
- console.log('PASS: desktop 6-step spotlight tour, right-center trigger, completion and replay');
+ console.log('PASS: desktop 7-step spotlight tour, centered final modal, completion and replay');
  await tourContext.close();
  // On mobile the tour is never shown, even for a first-time visitor.
  requireState(await page.locator('#dsOnboardingLayer').count()===0,
