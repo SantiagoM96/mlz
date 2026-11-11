@@ -930,8 +930,7 @@ function showMobileContentEditor(){
  syncPreviewContentEditor();
  updateMobileSlideHeight();
 }
-// Estado inicial: Textos abierto. Solo se alterna desde las zonas amarillas.
-setPreviewContext('text');
+// Estado inicial: Textos abierto. El estado se aplica al montar las pestañas.
 // Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
 const hitLayer=el('photoStage');
 function makePreviewHit(id,label,handler){
@@ -1029,5 +1028,6 @@ if(typeof ResizeObserver!=='undefined'){
  mobileTabs.forEach(tab=>slideResizeObserver.observe(tab.panel));
 }
 syncMobileTabViewport();
+setPreviewContext('text');
 window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
 })();
