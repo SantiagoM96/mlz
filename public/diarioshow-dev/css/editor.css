@@ -2273,24 +2273,20 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 
 
-/* Diario Show mobile: pestañas pegadas al borde superior del viewport.
-   La franja opaca de 24px queda debajo y oculta el contenido al desplazarse. */
+/* Mobile: el espacio inferior pertenece al flujo real de las pestañas.
+   Así el contenido inicial empieza debajo de los 24px y no queda tapado. */
 @media(max-width:700px){
  main > .ds-mobile-tabs{
   position:sticky;
   top:0;
   z-index:80;
   isolation:isolate;
+  box-sizing:border-box;
+  padding-bottom:24px;
+  border-bottom:0;
   background:#101114;
  }
- main > .ds-mobile-tabs::after{
-  content:'';
-  position:absolute;
-  top:100%;
-  left:0;
-  right:0;
-  height:24px;
-  background:#101114;
-  pointer-events:none;
+ main > .ds-mobile-tabs .ds-mobile-tab[aria-selected="true"]::after{
+  bottom:0;
  }
 }
