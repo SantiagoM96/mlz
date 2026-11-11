@@ -2,23 +2,52 @@
 .ds-onboarding-trigger{display:none}
 .ds-onboarding-layer[hidden]{display:none!important}
 @media(min-width:701px){
- .preview #photoStage{overflow:visible}
- .preview #photoStage>.ds-onboarding-trigger{
-  position:absolute;top:50%;right:-57px;transform:translateY(-50%);
-  z-index:20;display:flex;flex-direction:column;
-  justify-content:center;align-items:center;gap:4px;
-  width:46px;min-width:46px;height:66px;min-height:66px;
-  border:1px solid #4a4e58;border-radius:10px;
-  padding:6px 2px;margin:0;background:#292c33;color:#f4f4f5;
-  box-shadow:0 3px 10px rgba(0,0,0,.18);
-  font:600 11px/1.1 system-ui,Arial,sans-serif;
-  cursor:pointer;touch-action:manipulation;
+ /* Banderín flotante anclado al borde real del viewport (no a la placa).
+    Se muestra una pestaña de 36px y se despliega en hover/focus. */
+ body > #dsOnboardingTrigger.ds-onboarding-trigger{
+  position:fixed!important;
+  inset:auto 0 auto auto!important;
+  top:50%!important;
+  z-index:1200!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:9px!important;
+  width:168px!important;
+  min-width:168px!important;
+  height:52px!important;
+  min-height:52px!important;
+  margin:0!important;
+  padding:0 12px 0 20px!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#e6008d!important;
+  color:#fff!important;
+  box-shadow:-5px 5px 19px rgba(0,0,0,.24)!important;
+  clip-path:polygon(0 50%,16px 0,100% 0,100% 100%,16px 100%);
+  transform:translate(132px,-50%)!important;
+  transition:transform .25s cubic-bezier(.2,.75,.2,1),filter .2s ease!important;
+  font:650 13px/1 Inter,Arial,sans-serif!important;
+  white-space:nowrap!important;
+  cursor:pointer!important;
+  touch-action:manipulation;
  }
- .preview #photoStage>.ds-onboarding-trigger .material-icons{font-size:22px;line-height:1}
- .preview #photoStage>.ds-onboarding-trigger:hover{
-  background:#3a3d47;border-color:#e6008d;color:#fff;
+ body > #dsOnboardingTrigger.ds-onboarding-trigger .material-icons{
+  font-size:21px!important;
+  line-height:1!important;
+  flex:none;
  }
- .preview #photoStage>.ds-onboarding-trigger:focus-visible{outline:2px solid #e6008d;outline-offset:3px}
+ body > #dsOnboardingTrigger.ds-onboarding-trigger:hover,
+ body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
+  transform:translate(0,-50%)!important;
+  filter:brightness(1.07);
+ }
+ body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
+  outline:2px solid #fff!important;
+  outline-offset:-3px;
+ }
  .ds-onboarding-layer{position:fixed;inset:0;z-index:2147482000;pointer-events:none;font-family:system-ui,-apple-system,Arial,sans-serif}
  .ds-tour-shade{position:fixed;background:rgba(9,10,14,.77);pointer-events:auto}
  .ds-tour-highlight{
