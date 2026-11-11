@@ -317,7 +317,7 @@ for(let i=0;i<lines.length;i++){
 ctx.fillStyle=colors.text;ctx.font='500 30px "Inter",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;syncPhotoZoom();el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
-finally{syncMobileTextEditor();updatePreviewHitOverlays();if(typeof syncPreviewContentEditor==='function')syncPreviewContentEditor()}
+finally{syncMobileTextEditor();updatePreviewHitOverlays();if(document.getElementById('dsMobileContentEditor'))syncPreviewContentEditor()}
 }
 // Algunos navegadores restauran el valor anterior del slider aunque el HTML diga 5.
 function resetDefaultHalftone(){el('dots').value='5';el('dotsLabel').textContent='5%';render()}
