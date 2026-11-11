@@ -22,6 +22,24 @@ for(const [brand,config] of Object.entries(tests)){
    assert(await page.locator('.modern-photo-group').count()===1,brand+': fotografía no separada');
    if(brand==='bae')assert(await page.locator('.modern-import-group #articleUrl').count()===1,'BAE: falta importar noticia');
    if(brand==='cronica')assert(await page.locator('.carousel-panel').count()===1,'Crónica: falta páginas');
+   // Paridad visual: no hay pop-up lateral, el zoom vive junto al Canvas.
+   assert(await page.locator('#browserZoomTip').isHidden(),brand+': pop-up de zoom todavía visible');
+   assert(await page.locator('#photoStage > .modern-photo-zoom #photoZoom').count()===1,brand+': zoom no está al costado de la placa');
+   assert(await page.locator('.modern-import-group').count()===(brand==='bae'?1:0),brand+': módulo importar no corresponde a esta variante');
+   if(brand==='bae'){
+    assert((await page.locator('.header-brand img').first().getAttribute('src')).includes('bae-negocios-logo-color.svg'),'BAE: header no usa el logo bicolor');
+   }
+   const card=page.locator('aside.editor-panel > .modern-card').first();
+   const toggle=card.locator(':scope > .modern-toggle');
+   const original=await toggle.locator('span:nth-child(2)').boundingBox();
+   await toggle.click();
+   const closed=await toggle.locator('span:nth-child(2)').boundingBox();
+   assert(original&&closed&&Math.abs(original.x-closed.x)<0.6&&Math.abs(original.y-closed.y)<0.6,brand+': saltó el texto del acordeón');
+   assert(await card.evaluate(el=>el.classList.contains('modern-card-flash')),brand+': falta destello al desplegar');
+   await toggle.click();
+   const opened=await toggle.locator('span:nth-child(2)').boundingBox();
+   assert(opened&&Math.abs(original.x-opened.x)<0.6&&Math.abs(original.y-opened.y)<0.6,brand+': saltó la cabecera al abrir');
+   assert(await page.locator('aside.editor-panel').first().evaluate(el=>getComputedStyle(el).backgroundColor)==='rgba(0, 0, 0, 0)',brand+': sigue la caja contenedora exterior');
    if(mobile)await page.locator('#modernTabcontrols').click();
    const identity=page.locator('aside.editor-panel .modern-identity-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
