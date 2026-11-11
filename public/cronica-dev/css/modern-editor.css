@@ -437,3 +437,39 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
  flex:0 0 24px;width:100%;min-width:0;
  color:#fff;font:600 10px/20px system-ui,Arial,sans-serif;text-align:center;
 }
+
+
+/* Hotspots: misma caja punteada de Diario Show, 2px, radio 6px,
+   rosa uniforme y cero desplazamiento del contenido del Canvas. */
+.preview .canvas-stage>.modern-logo-hit,
+.preview .canvas-stage>.modern-text-hit{
+ box-sizing:border-box!important;
+ border:2px dashed transparent!important;border-radius:6px!important;
+ background:transparent!important;box-shadow:none!important;outline:0!important;
+ transition:none!important;
+}
+.preview .canvas-stage>.modern-logo-hit:hover,
+.preview .canvas-stage>.modern-logo-hit:focus-visible,
+.preview .canvas-stage>.modern-logo-hit.is-hotspot-selected,
+.preview .canvas-stage>.modern-text-hit:hover,
+.preview .canvas-stage>.modern-text-hit:focus-visible,
+.preview .canvas-stage>.modern-text-hit.is-hotspot-selected{
+ border:2px dashed #e6008d!important;border-radius:6px!important;
+ box-shadow:none!important;background:transparent!important;
+}
+/* El pulso de Diario Show: borde de 1px que NO cambia de tamaño
+   más anillo exterior de 1px, durante 1.05s (0.9s + fade .15s). */
+@keyframes editorial-card-pulse {
+ 0%,85%{border-color:var(--editor-accent);box-shadow:0 0 0 1px var(--editor-accent)}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
+}
+.editor-panel>.modern-card.modern-card-flash,
+.editor-panel .modern-card.modern-context-target{
+ animation:editorial-card-pulse 1.05s linear both!important;
+ border-width:1px!important;box-sizing:border-box!important;
+ position:relative;z-index:3;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel>.modern-card.modern-card-flash,
+ .editor-panel .modern-card.modern-context-target{animation-duration:.01ms!important}
+}
