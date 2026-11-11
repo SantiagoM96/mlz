@@ -182,11 +182,16 @@ try{
  requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 7','TOUR DID NOT START AT 1/7');
  requireState(await tour.locator('#dsTourTitle').innerText()==='Elegí el diseño de tu placa','TOUR FIRST STEP WRONG');
  const triggerPosition=await tour.locator('#dsOnboardingTrigger').evaluate(e=>{
-  const r=e.getBoundingClientRect(),p=document.getElementById('photoStage').getBoundingClientRect();
-  return {hidden:getComputedStyle(e).display==='none',rightOfPreview:r.left>=p.right,centerDifference:Math.abs((r.top+r.height/2)-(p.top+p.height/2))};
+  const r=e.getBoundingClientRect(),c=getComputedStyle(e);
+  return {hidden:c.display==='none',fixed:c.position==='fixed',
+   visibleWidth:Math.max(0,window.innerWidth-r.left),
+   centerDifference:Math.abs((r.top+r.height/2)-window.innerHeight/2),
+   label:e.textContent.trim()};
  });
- requireState(!triggerPosition.hidden&&triggerPosition.rightOfPreview&&triggerPosition.centerDifference<2,
-  'TOUR TRIGGER NOT CENTERED RIGHT OF PREVIEW '+JSON.stringify(triggerPosition));
+ requireState(!triggerPosition.hidden&&triggerPosition.fixed&&
+  triggerPosition.visibleWidth>=30&&triggerPosition.visibleWidth<=40&&
+  triggerPosition.centerDifference<2&&triggerPosition.label.includes('Onboarding'),
+  'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
  const names=[
   'Elegí el diseño de tu placa',
   'Definí la distribución fotográfica',
@@ -224,6 +229,14 @@ try{
  await tour.waitForTimeout(250);
  requireState(await tour.locator('#dsOnboardingLayer').count()===0||
   await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR REOPENED DESPITE PRIOR COMPLETION');
+ await tour.locator('#dsOnboardingTrigger').hover();
+ await tour.waitForTimeout(350);
+ const expandedFlag=await tour.locator('#dsOnboardingTrigger').evaluate(el=>{
+  const r=el.getBoundingClientRect();
+  return {left:r.left,right:r.right,width:r.width,viewport:window.innerWidth};
+ });
+ requireState(Math.abs(expandedFlag.right-expandedFlag.viewport)<2&&expandedFlag.width>150,
+  'TOUR FLAG MUST EXPAND ON HOVER '+JSON.stringify(expandedFlag));
  await tour.locator('#dsOnboardingTrigger').click();
  requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 7','TOUR REPLAY FAILED');
  await tour.locator('.ds-tour-skip').click();
