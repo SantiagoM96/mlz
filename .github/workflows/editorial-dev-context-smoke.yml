@@ -1,0 +1,37 @@
+name: Crónica y BAE DEV — módulos y onboarding
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/cronica-dev/**'
+      - 'public/bae-dev/**'
+      - 'scripts/editorial-dev-context-smoke.mjs'
+      - '.github/workflows/editorial-dev-context-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  editorial-context:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci --no-audit --no-fund
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Servir editores DEV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public > /tmp/editorial-dev.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null &&
+               curl -fsS http://127.0.0.1:8765/bae-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Probar módulos, firmas, onboarding y preview contextual
+        run: node scripts/editorial-dev-context-smoke.mjs
