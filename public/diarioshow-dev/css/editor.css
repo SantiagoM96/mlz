@@ -2294,3 +2294,49 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
   bottom:0;
  }
 }
+
+
+/* Zona de depuración visible SIEMPRE: botones amarillos sobre el canvas.
+   Las fotos y sus dropzones quedan debajo, sin recibir el clic de estos botones.
+   La posición se calcula a partir de los píxeles del PNG y escala con la placa. */
+.preview #photoStage>.ds-preview-hit-button{
+ position:absolute!important;
+ display:block!important;
+ z-index:9999!important;
+ box-sizing:border-box;
+ min-width:0;min-height:0;
+ border:2px solid #ffe500!important;
+ border-radius:5px!important;
+ background:rgba(255,235,0,.43)!important;
+ outline:0!important;
+ box-shadow:inset 0 0 0 1px rgba(255,235,0,.6)!important;
+ padding:0!important;margin:0!important;
+ opacity:1!important;visibility:visible!important;
+ cursor:pointer!important;
+ pointer-events:auto!important;
+ touch-action:pan-y;
+ -webkit-tap-highlight-color:transparent;
+}
+.preview #photoStage>.ds-preview-hit-button:hover,
+.preview #photoStage>.ds-preview-hit-button:focus-visible{
+ background:rgba(255,235,0,.58)!important;
+ border-color:#fff000!important;
+}
+.preview #photoStage>#dsLogoHitButton{z-index:10001!important}
+.preview #photoStage>#dsHeadlineHitButton{z-index:10000!important}
+.ds-mobile-content-editor{display:none!important}
+@media(max-width:700px){
+ .ds-mobile-track>.preview>.ds-mobile-content-editor{
+  display:block!important;
+  width:100%;min-width:0;max-width:540px;
+  background:transparent!important;border:0;border-radius:0;
+  box-shadow:none;padding:0!important;margin:0!important;
+ }
+ .ds-mobile-track>.preview>.ds-mobile-content-editor>.ds-control-card{
+  display:block;width:100%;margin:0;
+ }
+ .ds-mobile-track>.preview>.ds-mobile-content-editor[hidden],
+ .ds-mobile-track>.preview>.ds-mobile-text-editor[hidden]{
+  display:none!important;
+ }
+}
