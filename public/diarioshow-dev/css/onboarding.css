@@ -39,16 +39,16 @@
   cursor:pointer!important;
   touch-action:manipulation;
  }
- /* Banderín rosa con stroke blanco de 1,3px (doble del 0,65px anterior).
+ /* Banderín rosa con trazo blanco uniforme de 2px.
     Sigue la muesca y las dos puntas; sin línea en el borde derecho. */
  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{
   content:"";
   position:absolute;
-  inset:1.3px 0 1.3px 1.3px;
+  inset:2px 0 2px 2px;
   z-index:0;
   pointer-events:none;
   background:#e6008d;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14.3px 50%);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,15px 50%);
   transition:background .3s ease;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger > span{
