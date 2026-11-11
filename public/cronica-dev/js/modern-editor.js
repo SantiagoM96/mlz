@@ -27,7 +27,15 @@ function makeCard(section,title,isText=false){
  const chev=document.createElement('span');
  chev.className='material-icons modern-chevron';chev.setAttribute('aria-hidden','true');
  chev.textContent='expand_less';
- toggle.append(label,chev);
+ const icon=document.createElement('span');
+ icon.className='material-symbols-outlined modern-section-icon';
+ icon.setAttribute('aria-hidden','true');
+ icon.textContent=({
+  'Páginas':'view_carousel','Diseño de placas':'palette',
+  'Importar noticia':'link','Identidad gráfica':'shapes',
+  'Fotografía':'photo_library','Textos':'text_fields','Diseño':'tune'
+ })[title]||'settings';
+ toggle.append(icon,label,chev);
  section.append(toggle,body);
  toggle.addEventListener('click',()=>{
   const expanded=toggle.getAttribute('aria-expanded')!=='true';
@@ -56,10 +64,40 @@ if(isCronica){
  const headline=textPanel?.querySelector('#headline')?.closest('.control-field');
  if(size&&headline)headline.after(size);
 }
+
+// Controles originales: solo mover nodos, sin reconstruir sus listeners.
+const originalContent=sections.find(s=>s.querySelector('.logo-choices'));
+if(originalContent){
+ originalContent.classList.add('modern-identity-group');
+ const photoField=$('file')?.closest('.control-field');
+ if(photoField){
+  const photoSection=document.createElement('section');
+  photoSection.className='panel-group modern-photo-group';
+  photoSection.append(photoField);
+  originalContent.before(photoSection);
+ }
+ if(isCronica){
+  for(const sel of ['#showStrap','#strapText']){
+   const field=$(sel)?.closest('.control-field');
+   if(field)textPanel.prepend(field);
+  }
+ }else{
+  const urlField=$('articleUrl')?.closest('.control-field');
+  if(urlField){
+   const importSection=document.createElement('section');
+   importSection.className='panel-group modern-import-group';
+   importSection.append(urlField);
+   originalContent.before(importSection);
+  }
+ }
+}
 for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]){
  let title=section.querySelector(':scope > h2')?.textContent?.trim()||
   (section===textPanel?'Textos':section.classList.contains('carousel-panel')?'Páginas':'Diseño de la placa');
  if(section.classList.contains('cronica-variant-panel'))title='Diseño de placas';
+ if(section.classList.contains('modern-identity-group'))title='Identidad gráfica';
+ if(section.classList.contains('modern-photo-group'))title='Fotografía';
+ if(section.classList.contains('modern-import-group'))title='Importar noticia';
  if(section===textPanel)title='Textos';
  makeCard(section,title,section===textPanel);
 }
@@ -179,6 +217,35 @@ if(typeof ResizeObserver!=='undefined'){
  const observer=new ResizeObserver(updateHeight);observer.observe(preview);observer.observe(panel);
 }
 handleBreakpoint();
+
+/* Tooltip en el lado con espacio disponible, respetando los paneles y el viewport. */
+function placeHelpTips(){
+ document.querySelectorAll('.help-trigger').forEach(trigger=>{
+  const bubble=trigger.querySelector('.help-tooltip'),btn=trigger.querySelector('.help-button');
+  if(!bubble||!btn)return;
+  const br=btn.getBoundingClientRect(),panelRect=trigger.closest('.editor-panel')?.getBoundingClientRect();
+  const leftBound=Math.max(16,(panelRect?.left??0)+12);
+  const rightBound=Math.min(innerWidth-16,(panelRect?.right??innerWidth)-12);
+  const right=rightBound-br.right-12,left=br.left-leftBound-12;
+  const toLeft=right<220&&left>right;
+  const room=toLeft?left:right;
+  bubble.classList.toggle('modern-tip-left',toLeft);
+  bubble.style.width=Math.min(260,Math.max(160,Math.min(240,room)))+'px';
+  bubble.style.left=toLeft?'auto':'calc(100% + 12px)';
+  bubble.style.right=toLeft?'calc(100% + 12px)':'auto';
+  bubble.style.transform='translateY(-50%)';
+  const rect=bubble.getBoundingClientRect();
+  const offset=rect.top<16?16-rect.top:rect.bottom>innerHeight-16?innerHeight-16-rect.bottom:0;
+  if(offset)bubble.style.transform='translateY(calc(-50% + '+Math.round(offset)+'px))';
+ });
+}
+window.addEventListener('resize',placeHelpTips);
+document.querySelectorAll('.help-trigger').forEach(t=>{
+ t.addEventListener('pointerenter',placeHelpTips);
+ t.addEventListener('focusin',placeHelpTips);
+});
+placeHelpTips();
+
 // Inline preview editor: separate markup, same authoritative product state.
 const clone=textPanel.cloneNode(true);
 clone.removeAttribute('aria-label');clone.classList.add('modern-mirror-card');
