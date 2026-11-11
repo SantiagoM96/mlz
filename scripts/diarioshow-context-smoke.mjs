@@ -279,6 +279,17 @@ try{
  requireState(!tourErrors.length,'TOUR JS ERRORS '+tourErrors.join(';'));
  console.log('PASS: desktop 7-step spotlight tour, centered final modal, completion and replay');
  await tourContext.close();
+ // Los módulos sin función no deben dejar tarjetas vacías en ninguna variante.
+ const variantPage=await browser.newPage({viewport:{width:1440,height:900}});
+ await variantPage.goto(url+'?onboarding=off',{waitUntil:'load'});
+ for(const [variant,expectedVisible] of [['pink',true],['blue',true],['quote',false],['quote-blue',false],['pink',true]]){
+  await variantPage.locator('.ds-variant-option[data-variant="'+variant+'"]').click();
+  const isVisible=await variantPage.locator('.ds-import-group').isVisible();
+  requireState(isVisible===expectedVisible,
+   'IMPORT MODULE INCORRECT FOR '+variant+': expected visible '+expectedVisible+', got '+isVisible);
+ }
+ console.log('PASS: importar noticia visible solo en variantes 1 y 2, sin tarjetas vacías');
+ await variantPage.close();
  // On mobile the tour is never shown, even for a first-time visitor.
  requireState(await page.locator('#dsOnboardingLayer').count()===0,
   'MOBILE TOUR MUST NOT BE MOUNTED');
