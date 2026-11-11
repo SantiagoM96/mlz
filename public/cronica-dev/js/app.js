@@ -148,6 +148,17 @@ function render(includeHover=true){
   ctx.fillStyle=RED;ctx.fillRect(0,panelTop-6.5,W,13);
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
+  // Ubicaciones en píxeles reales de la placa, usadas solo por el overlay HTML.
+  // La unión de renglones evita seleccionar toda la caja blanca.
+  const richWidths=lines.map(line=>line.reduce((total,part)=>total+part.width,0));
+  const left=textAlignment==='center'?Math.min(...richWidths.map(w=>(W-w)/2)):EDGE;
+  const right=textAlignment==='center'?Math.max(...richWidths.map(w=>(W+w)/2)):Math.max(...richWidths.map(w=>EDGE+w));
+  const textRect={left:Math.max(0,left-12),top:Math.max(panelTop+8,(baselines[0]??availableBottom)-size-10),
+   right:Math.min(W,right+12),bottom:Math.min(H,(baselines.at(-1)??availableBottom)+Math.round(size*.18)+10)};
+  const logoRect={left:W-EDGE-LOGO_WIDTH-54,top:EDGE-54,
+   right:W-EDGE+54,bottom:EDGE+LOGO_HEIGHT+54};
+  window.__editorialHotspotBounds={text:textRect,logo:logoRect};
+
   if(cover){
    // Pie: texto en caja baja y flecha alineados por su centro vertical.
    const footerCenterY=H-EDGE-16;
