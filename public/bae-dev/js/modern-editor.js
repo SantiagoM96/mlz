@@ -468,6 +468,15 @@ logoHit.addEventListener('click',event=>{
 textHit.addEventListener('click',event=>{
  if(!narrow.matches){event.preventDefault();showPreviewContext('text')}
 });
+// Igual que Diario Show: seleccionar logo/titular solo mantiene el punteado
+// hasta el siguiente clic fuera de sus zonas. El módulo abierto no se cierra.
+document.addEventListener('pointerdown',event=>{
+ if(event.target.closest?.('.modern-logo-hit,.modern-text-hit'))return;
+ for(const hotspot of [logoHit,textHit]){
+  hotspot.classList.remove('is-hotspot-selected');
+  hotspot.setAttribute('aria-pressed','false');
+ }
+});
 // Mismas medidas que Diario Show: rectángulos en 1080 × 1440,
  // convertidos a porcentajes relativos a la placa. No cubren la caja blanca.
 function positionPreviewHotspots(){
