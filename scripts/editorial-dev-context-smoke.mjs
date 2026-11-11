@@ -30,6 +30,21 @@ for(const [brand,config] of Object.entries(tests)){
     assert((await page.locator('.header-brand img').first().getAttribute('src')).includes('bae-negocios-logo-color.svg'),'BAE: header no usa el logo bicolor');
    }
    if(mobile){await page.locator('#modernTabcontrols').click();await page.waitForTimeout(350)}
+   // El tooltip debe permanecer junto al icono, sin correrse al borde del panel.
+   const tipSource=page.locator('aside.editor-panel .help-trigger:visible').first();
+   if(await tipSource.count()){
+    const help=tipSource.locator('.help-button'),bubble=tipSource.locator('.help-tooltip');
+    await help.hover();
+    const rects=await help.evaluate(el=>{
+     const tip=el.closest('.help-trigger').querySelector('.help-tooltip');
+     const a=el.getBoundingClientRect(),b=tip.getBoundingClientRect();
+     return {iconRight:a.right,iconLeft:a.left,bubbleLeft:b.left,bubbleRight:b.right,viewWidth:innerWidth,side:tip.classList.contains('modern-tip-left')};
+    });
+    assert(rects.bubbleRight<=rects.viewWidth-15&&rects.bubbleLeft>=15,
+     brand+': tooltip fuera del viewport '+JSON.stringify(rects));
+    assert(rects.side?rects.bubbleRight<rects.iconLeft:rects.bubbleLeft>rects.iconRight,
+     brand+': tooltip no está al lado del ítem '+JSON.stringify(rects));
+   }
    const card=page.locator('aside.editor-panel > .modern-card').first();
    const toggle=card.locator(':scope > .modern-toggle');
    const original=await toggle.locator('span:nth-child(2)').boundingBox();
