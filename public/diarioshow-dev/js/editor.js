@@ -317,7 +317,7 @@ for(let i=0;i<lines.length;i++){
 ctx.fillStyle=colors.text;ctx.font='500 30px "Inter",Arial,sans-serif';ctx.textAlign='center';ctx.fillText('diarioshow.com.ar',W/2,footerBaseline);ctx.textAlign='left';
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;syncPhotoZoom();el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
-finally{syncMobileTextEditor()}
+finally{syncMobileTextEditor();updatePreviewHitOverlays();if(typeof syncPreviewContentEditor==='function')syncPreviewContentEditor()}
 }
 // Algunos navegadores restauran el valor anterior del slider aunque el HTML diga 5.
 function resetDefaultHalftone(){el('dots').value='5';el('dotsLabel').textContent='5%';render()}
@@ -379,6 +379,29 @@ function setVariant(value){
 }
 variantButtons.forEach(button=>button.addEventListener('click',()=>setVariant(button.dataset.variant)));
 el('theme').addEventListener('change',render);
+// Posición exacta de los dos botones amarillos en coordenadas del canvas.
+// No dependen de hover, carga fotográfica ni cambios de pestaña.
+function updatePreviewHitOverlays(){
+ const logoHit=document.getElementById('dsLogoHitButton');
+ const textHit=document.getElementById('dsHeadlineHitButton');
+ if(!logoHit||!textHit)return;
+ function place(node,l,t,r,b){
+  node.style.left=(Math.max(0,l)/W*100)+'%';
+  node.style.top=(Math.max(0,t)/H*100)+'%';
+  node.style.width=(Math.min(W,r)-Math.max(0,l))/W*100+'%';
+  node.style.height=(Math.min(H,b)-Math.max(0,t))/H*100+'%';
+ }
+ const logoX=logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH;
+ const halo=54;
+ place(logoHit,logoX-halo,LOGO_MARGIN-halo,logoX+LOGO_WIDTH+halo,LOGO_MARGIN+LOGO_HEIGHT+halo);
+ logoHit.setAttribute('aria-label','Editar módulo Contenido y logo Diario Show');
+ const regions=headlineHitRegions;
+ const l=regions.length?Math.min(...regions.map(x=>x.left)):80;
+ const r=regions.length?Math.max(...regions.map(x=>x.right)):W-80;
+ const t=regions.length?Math.min(...regions.map(x=>x.top)):H-420;
+ const b=regions.length?Math.max(...regions.map(x=>x.bottom)):H-200;
+ place(textHit,Math.max(0,l-12),Math.max(0,t-10),Math.min(W,r+12),Math.min(H,b+10));
+}
 function updatePhotoStage(){
  const stage=el('photoStage'),zone=el('photoDropzone');if(!stage||!zone)return;
  const split=photoLayout==='split';
@@ -525,66 +548,34 @@ if(typeof ResizeObserver!=='undefined'){
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 scheduleBrowserZoomTipPosition();
 el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
-// Solo un tap completo sobre el titular abre el editor: un gesto de scroll no.
-let mobileHeadlineTap=null;
-let mobileHeadlineClickAllowed=false;
-canvas.addEventListener('pointerdown',event=>{
- const r=canvas.getBoundingClientRect();
- if(mobileTabViewport.matches&&mobileTabMain.dataset.mobileTab==='preview'&&event.isPrimary!==false){
-  const x=(event.clientX-r.left)*W/r.width,y=(event.clientY-r.top)*H/r.height;
-  if(headlineHitRegions.some(region=>x>=region.left&&x<=region.right&&y>=region.top&&y<=region.bottom)){
-   mobileHeadlineClickAllowed=false;
-   mobileHeadlineTap={pointerId:event.pointerId,x:event.clientX,y:event.clientY,started:performance.now()};
-   return;
-  }
- }
- if((event.clientY-r.top)*H/r.height>photoBottom)return;
- if(photoLayout==='split'){
-  const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);
-  if(!activePhoto().image)return;
- }else if(!image)return;
- dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);
-});
-canvas.addEventListener('pointermove',event=>{
- if(mobileHeadlineTap){
-  if(event.pointerId===mobileHeadlineTap.pointerId&&Math.hypot(event.clientX-mobileHeadlineTap.x,event.clientY-mobileHeadlineTap.y)>9)mobileHeadlineTap=null;
-  return;
- }
- if(photoLayout==='split'){
+// Los botones visibles del logo y del titular viven SOBRE el canvas.
+ // El gesto sobre fotografía permanece exclusivamente en el canvas.
+ canvas.addEventListener('pointerdown',event=>{
   const r=canvas.getBoundingClientRect();
-  const x=(event.clientX-r.left)/r.width, y=(event.clientY-r.top)/r.height;
-  const hovering=y>=0&&y<photoBottom/H&&x>=0&&x<=1;
-  // Hover no cambia la selección. Solo pointerdown/clic y teclado activan una mitad.
-  photoStage.classList.toggle('hover-left',hovering&&x<.5);
-  photoStage.classList.toggle('hover-right',hovering&&x>=.5);
- }
- if(!dragging)return;
- const ratio=W/canvas.getBoundingClientRect().width;
- if(photoLayout==='split'){activePhoto().x+=(event.clientX-lastX)*ratio;activePhoto().y+=(event.clientY-lastY)*ratio}
- else{offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio}
- lastX=event.clientX;lastY=event.clientY;render();
-});
-canvas.addEventListener('pointerleave',()=>{photoStage.classList.remove('hover-left','hover-right')});
-canvas.addEventListener('pointerup',event=>{
- if(mobileHeadlineTap&&event.pointerId===mobileHeadlineTap.pointerId){
-  const tap=mobileHeadlineTap;
-  mobileHeadlineClickAllowed=Math.hypot(event.clientX-tap.x,event.clientY-tap.y)<=9
-   &&performance.now()-tap.started<550;
- }
- mobileHeadlineTap=null;
- dragging=false;
-});
-// El foco se solicita desde el click nativo, DESPUÉS de pointerup/touchend.
-// Así el navegador no genera otro click táctil que quite el foco del textarea.
-canvas.addEventListener('click',event=>{
- if(!mobileTabViewport.matches||mobileTabMain.dataset.mobileTab!=='preview')return;
- const allowed=mobileHeadlineClickAllowed;
- mobileHeadlineClickAllowed=false;
- if(!allowed)return;
- event.preventDefault();
- openMobileHeadlineEditor();
-});
-canvas.addEventListener('pointercancel',()=>{mobileHeadlineTap=null;mobileHeadlineClickAllowed=false;dragging=false});
+  if((event.clientY-r.top)*H/r.height>photoBottom)return;
+  if(photoLayout==='split'){
+   const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);
+   if(!activePhoto().image)return;
+  }else if(!image)return;
+  dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId);
+ });
+ canvas.addEventListener('pointermove',event=>{
+  if(photoLayout==='split'){
+   const r=canvas.getBoundingClientRect();
+   const x=(event.clientX-r.left)/r.width,y=(event.clientY-r.top)/r.height;
+   const hovering=y>=0&&y<photoBottom/H&&x>=0&&x<=1;
+   photoStage.classList.toggle('hover-left',hovering&&x<.5);
+   photoStage.classList.toggle('hover-right',hovering&&x>=.5);
+  }
+  if(!dragging)return;
+  const ratio=W/canvas.getBoundingClientRect().width;
+  if(photoLayout==='split'){activePhoto().x+=(event.clientX-lastX)*ratio;activePhoto().y+=(event.clientY-lastY)*ratio}
+  else{offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio}
+  lastX=event.clientX;lastY=event.clientY;render();
+ });
+ canvas.addEventListener('pointerleave',()=>photoStage.classList.remove('hover-left','hover-right'));
+ canvas.addEventListener('pointerup',()=>{dragging=false});
+ canvas.addEventListener('pointercancel',()=>{dragging=false});
 el('clearAll').addEventListener('click',()=>{
  el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
@@ -847,6 +838,106 @@ function openMobileHeadlineEditor(){
  field.focus();
  field.select();
 }
+// Módulo Contenido reflejado en Vista previa. Conserva los handlers originales
+// mediante proxy, mientras el módulo fuente sigue siempre disponible en Formato.
+const previewContentHost=document.createElement('div');
+previewContentHost.id='dsMobileContentEditor';
+previewContentHost.className='ds-mobile-content-editor editor-panel';
+previewContentHost.hidden=true;
+previewContentHost.setAttribute('aria-label','Contenido de la placa');
+const sourceContent=document.querySelector('#dsMobileControlsPanel .ds-content-group');
+const previewContentCard=sourceContent.cloneNode(true);
+previewContentCard.querySelectorAll('[id]').forEach(node=>node.id+='Preview');
+previewContentCard.querySelectorAll('[for]').forEach(node=>node.setAttribute('for',node.getAttribute('for')+'Preview'));
+previewContentCard.querySelectorAll('[aria-controls]').forEach(node=>node.setAttribute('aria-controls',node.getAttribute('aria-controls')+'Preview'));
+previewContentHost.appendChild(previewContentCard);
+mobileTextHost.after(previewContentHost);
+const previewContentToggle=previewContentCard.querySelector('.ds-control-card-toggle');
+const previewContentBody=previewContentCard.querySelector('.ds-control-card-body');
+previewContentToggle.addEventListener('click',()=>{
+ const expanded=previewContentToggle.getAttribute('aria-expanded')!=='true';
+ previewContentToggle.setAttribute('aria-expanded',String(expanded));
+ previewContentBody.hidden=!expanded;
+ requestAnimationFrame(updateMobileSlideHeight);
+});
+previewContentCard.addEventListener('click',event=>{
+ const choice=event.target.closest('[data-logo],[data-logo-position]');
+ if(choice){
+  const source=choice.dataset.logo!==undefined?
+   sourceContent.querySelector('[data-logo="'+choice.dataset.logo+'"]'):
+   sourceContent.querySelector('[data-logo-position="'+choice.dataset.logoPosition+'"]');
+  source?.click();syncPreviewContentEditor();
+  return;
+ }
+ const importButton=event.target.closest('#importArticlePreview');
+ if(importButton){
+  const input=previewContentCard.querySelector('#articleUrlPreview');
+  const original=el('articleUrl');
+  if(input&&original){original.value=input.value;original.dispatchEvent(new Event('input',{bubbles:true}))}
+  el('importArticle')?.click();
+ }
+});
+const previewArticleUrl=previewContentCard.querySelector('#articleUrlPreview');
+previewArticleUrl?.addEventListener('input',()=>{
+ const original=el('articleUrl');original.value=previewArticleUrl.value;
+ original.dispatchEvent(new Event('input',{bubbles:true}));
+});
+function syncPreviewContentEditor(){
+ if(!previewContentHost.isConnected)return;
+ for(const button of previewContentCard.querySelectorAll('[data-logo],[data-logo-position]')){
+  const selector=button.dataset.logo!==undefined?
+   '[data-logo="'+button.dataset.logo+'"]':'[data-logo-position="'+button.dataset.logoPosition+'"]';
+  const source=sourceContent.querySelector(selector);
+  if(source)button.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
+ }
+ if(previewArticleUrl&&document.activeElement!==previewArticleUrl)previewArticleUrl.value=el('articleUrl').value;
+}
+function showMobileContentEditor(){
+ if(!mobileTabViewport.matches){
+  const accordion=sourceContent.querySelector('.ds-control-card-toggle');
+  const body=sourceContent.querySelector('.ds-control-card-body');
+  accordion.setAttribute('aria-expanded','true');body.hidden=false;
+  accordion.scrollIntoView({block:'nearest',behavior:'smooth'});
+  return;
+ }
+ mobileTextHost.hidden=true;
+ previewContentHost.hidden=false;
+ previewContentHost.classList.add('is-selected-preview-module');
+ previewContentToggle.setAttribute('aria-expanded','true');
+ previewContentBody.hidden=false;
+ syncPreviewContentEditor();
+ updateMobileSlideHeight();
+}
+const originalHeadlineEditor=openMobileHeadlineEditor;
+openMobileHeadlineEditor=function(){
+ previewContentHost.hidden=true;
+ mobileTextHost.hidden=false;
+ originalHeadlineEditor();
+};
+// Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
+const hitLayer=el('photoStage');
+function makePreviewHit(id,label,handler){
+ const button=document.createElement('button');
+ button.type='button';button.id=id;button.className='ds-preview-hit-button';
+ button.setAttribute('aria-label',label);button.title=label;
+ button.addEventListener('pointerdown',event=>event.stopPropagation());
+ button.addEventListener('pointerup',event=>event.stopPropagation());
+ button.addEventListener('click',event=>{
+  event.preventDefault();event.stopPropagation();handler();
+ });
+ hitLayer.appendChild(button);
+ return button;
+}
+makePreviewHit('dsLogoHitButton','Editar logo y Contenido',showMobileContentEditor);
+makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
+ if(mobileTabViewport.matches)openMobileHeadlineEditor();
+ else{
+  const field=el('headline');
+  field.focus();field.select();
+ }
+});
+updatePreviewHitOverlays();
+
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
 // Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
 const zoomControl=el('dsPhotoZoomControl');
