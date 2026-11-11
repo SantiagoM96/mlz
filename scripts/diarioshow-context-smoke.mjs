@@ -305,6 +305,21 @@ try{
   }
  }
  console.log('PASS: cabeceras Diario Show sin saltos de icono y título al abrir/cerrar');
+ // Shift + clic controla todos los módulos visibles de Formato.
+ const allCards=pulsePage.locator('#dsMobileControlsPanel > .ds-control-card:visible');
+ const allStates=()=>allCards.locator(':scope > .ds-control-card-toggle').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('aria-expanded')));
+ const firstCardToggle=pulsePage.locator('#dsMobileControlsPanel > .ds-plate-design-group > .ds-control-card-toggle');
+ requireState((await allStates()).every(x=>x==='true'),'INITIAL FORMAT CARDS NOT OPEN');
+ await firstCardToggle.click({modifiers:['Shift']});
+ requireState((await allStates()).every(x=>x==='false'),'SHIFT + CLICK DID NOT CLOSE ALL FORMAT CARDS');
+ await firstCardToggle.click({modifiers:['Shift']});
+ requireState((await allStates()).every(x=>x==='true'),'SHIFT + CLICK DID NOT OPEN ALL FORMAT CARDS');
+ await firstCardToggle.click();
+ const normalStates=await allStates();
+ requireState(normalStates[0]==='false'&&normalStates.slice(1).every(x=>x==='true'),
+  'NORMAL CLICK CHANGED MORE THAN ONE FORMAT CARD '+JSON.stringify(normalStates));
+ await firstCardToggle.click();
+ console.log('PASS: Shift+clic global y clic normal local en Diario Show');
  const pulseCard=pulsePage.locator('#dsMobileControlsPanel .ds-plate-design-group');
  const pulseToggle=pulseCard.locator('.ds-control-card-toggle');
  const originalBounds=await pulseToggle.boundingBox();
