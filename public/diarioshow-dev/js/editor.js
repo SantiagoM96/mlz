@@ -56,6 +56,10 @@ document.addEventListener('click',event=>{
   body.hidden=!expand;
  });
  flashContextCard(toggle.closest('.ds-control-card'));
+ // Shift se interpreta como navegación por teclado y puede activar :focus-visible
+ // aunque el gesto haya sido con mouse: evitar ese segundo marco rosa.
+ // Mantener el foco para activaciones reales de teclado (click.detail === 0).
+ if(event.detail>0)toggle.blur();
  if(typeof updateMobileSlideHeight==='function')requestAnimationFrame(updateMobileSlideHeight);
 },true);
 // Secciones plegables: solo se oculta el contenido, sin reiniciar controles.
