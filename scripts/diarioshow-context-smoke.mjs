@@ -158,7 +158,7 @@ try{
   });
   requireState(appearance.animation.includes('ds-context-card-flash'),
    'MISSING FADING PULSE '+selector+' '+JSON.stringify(appearance));
-  requireState(appearance.border==='1px'&&appearance.shadow.includes('0px 0px 0px 1px'),
+  requireState(appearance.border==='1px'&&appearance.shadow.includes('0px 0px 0px 2px'),
    'PULSE MUST HAVE UNIFORM 2PX RING WITHOUT LAYOUT SHIFT '+JSON.stringify(appearance));
  }
  const activeCard=desktop.locator('#dsMobileControlsPanel .ds-photo-layout-group');
