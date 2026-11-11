@@ -3,6 +3,8 @@
 (()=>{
  'use strict';
  const mq=window.matchMedia('(min-width:701px)');
+ // QA y vista convencional pueden desactivar el recorrido con ?onboarding=off.
+ if(new URLSearchParams(location.search).get('onboarding')==='off')return;
  const storageKey='ds-dev-tour-desktop-v1';
  const qs=s=>document.querySelector(s);
  const steps=[
