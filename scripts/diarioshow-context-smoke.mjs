@@ -16,7 +16,8 @@ async function state(label){
   const targetAt=(r)=>r?document.elementFromPoint(r.left+r.width/2,r.top+r.height/2):null;
   const host=document.getElementById('dsMobileTextEditor');
   const content=document.getElementById('dsMobileContentEditor');
-  return {label,context:document.querySelector('main')?.dataset.previewContext,
+  return {label,scrollX:window.scrollX,scrollY:window.scrollY,
+   context:document.querySelector('main')?.dataset.previewContext,
    textHidden:host?.hidden,logoHidden:content?.hidden,
    textCSS:host?getComputedStyle(host).display:null,
    logoCSS:content?getComputedStyle(content).display:null,
@@ -40,8 +41,13 @@ try{
  const actual=[];
  actual.push(await state('initial'));
  for(const [i,hit] of ['#dsLogoHitButton','#dsHeadlineHitButton','#dsLogoHitButton','#dsHeadlineHitButton'].entries()){
-  await page.locator(hit).click({timeout:10000});
-  actual.push(await state('tap-'+(i+1)));
+  const rect=await page.locator(hit).boundingBox();
+  if(!rect)throw Error('HIT BUTTON HIDDEN '+hit);
+  const x=rect.x+rect.width/2,y=rect.y+rect.height/2;
+  // Real finger tap, not Playwright locator.click and not synthetic JS events.
+  await page.touchscreen.tap(x,y);
+  await page.waitForTimeout(130);
+  actual.push(await state('finger-tap-'+(i+1)));
  }
  for(let i=0;i<expected.length;i++){
   const a=actual[i],e=expected[i];
@@ -53,8 +59,11 @@ try{
  const afterTabs=await state('after-tab-roundtrip');
  requireState(afterTabs.context==='text'&&afterTabs.textHidden===false&&afterTabs.logoHidden===true,
   'TAB ROUNDTRIP FAIL '+JSON.stringify(afterTabs));
- await page.locator('#dsLogoHitButton').click();
- await page.locator('#dsHeadlineHitButton').click();
+ for(const id of ['dsLogoHitButton','dsHeadlineHitButton']){
+  const box=await page.locator('#'+id).boundingBox();
+  await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);
+  await page.waitForTimeout(130);
+ }
  const final=await state('after-roundtrip-clicks');
  requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
  console.log('CONTEXT DIAGNOSTIC',JSON.stringify({actual,afterTabs,final,issues},null,2));
