@@ -2450,14 +2450,34 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 /* El desplazamiento programático usa alturas estables, sin anclaje lateral. */
 main:has(#dsMobileViewport){overflow-anchor:none}
 
-/* Desktop: el clic sobre la placa señala el módulo correspondiente,
-   sin mover ni seleccionar el texto del campo. Solo una tarjeta activa. */
-@media(min-width:701px){
- #dsMobileControlsPanel .ds-control-card.ds-content-group.is-preview-context-target,
- #dsMobileControlsPanel .ds-control-card.ds-texts-group.is-preview-context-target{
-  border-color:#e6008d!important;
-  box-shadow:0 0 0 2px #e6008d!important;
-  position:relative;
-  z-index:3;
+/* El borde de la zona táctil queda visible solo mientras está seleccionada.
+   No altera la foto ni se exporta al PNG. El fondo sigue transparente. */
+.preview #photoStage>.ds-preview-hit-button.is-hotspot-selected,
+.preview #photoStage>.ds-preview-hit-button.is-hotspot-selected:hover,
+.preview #photoStage>.ds-preview-hit-button.is-hotspot-selected:focus-visible,
+.preview #photoStage>.ds-preview-hit-button.is-hotspot-selected:active{
+ border:2px dashed #e6008d!important;
+ border-radius:6px!important;
+ background:transparent!important;
+ outline:0!important;
+ box-shadow:none!important;
+}
+/* El contorno de la tarjeta es una señal temporal: se enciende en fucsia,
+   desvanece durante 2,2 segundos y queda en su estado normal. */
+@keyframes ds-context-card-flash{
+ 0%{border-color:#e6008d;box-shadow:0 0 0 3px rgba(230,0,141,.92)}
+ 18%{border-color:#e6008d;box-shadow:0 0 0 2px rgba(230,0,141,.78)}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 rgba(230,0,141,0)}
+}
+#dsMobileControlsPanel .ds-control-card.is-preview-context-target,
+#dsMobilePreviewPanel .ds-control-card.is-preview-context-target{
+ animation:ds-context-card-flash 2.2s ease-out both;
+ position:relative;
+ z-index:3;
+}
+@media(prefers-reduced-motion:reduce){
+ #dsMobileControlsPanel .ds-control-card.is-preview-context-target,
+ #dsMobilePreviewPanel .ds-control-card.is-preview-context-target{
+  animation-duration:.01ms;
  }
 }
