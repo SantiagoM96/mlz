@@ -2569,3 +2569,21 @@ main:has(#dsMobileViewport){overflow-anchor:none}
   padding:0 12px!important;
  }
 }
+
+
+/* Hotspots instantáneos: nunca mostrar un contorno intermedio blanco.
+   El hover de fotografía no puede dibujar su línea sobre logo/titular. */
+.preview #photoStage>.ds-preview-hit-button{
+ border:2px dashed transparent!important;border-radius:6px!important;
+ transition:none!important;animation:none!important;
+}
+.preview #photoStage>.ds-preview-hit-button:hover,
+.preview #photoStage>.ds-preview-hit-button:focus-visible,
+.preview #photoStage>.ds-preview-hit-button.is-hotspot-selected{
+ border:2px dashed #e6008d!important;
+ transition:none!important;animation:none!important;
+}
+.preview #photoStage:has(>.ds-preview-hit-button:hover) .photo-hover-border,
+.preview #photoStage:has(>.ds-preview-hit-button:focus-visible) .photo-hover-border{
+ opacity:0!important;transition:none!important;
+}
