@@ -468,8 +468,24 @@ logoHit.addEventListener('click',event=>{
 textHit.addEventListener('click',event=>{
  if(!narrow.matches){event.preventDefault();showPreviewContext('text')}
 });
-window.addEventListener('modern:render',syncIdentityMirror);
+// Mismas medidas que Diario Show: rectángulos en 1080 × 1440,
+ // convertidos a porcentajes relativos a la placa. No cubren la caja blanca.
+function positionPreviewHotspots(){
+ const bounds=window.__editorialHotspotBounds;
+ if(!bounds)return;
+ for(const [node,area] of [[logoHit,bounds.logo],[textHit,bounds.text]]){
+  if(!area||!Number.isFinite(area.left)||!Number.isFinite(area.top)||!Number.isFinite(area.right)||!Number.isFinite(area.bottom))continue;
+  node.style.left=Math.max(0,area.left)/1080*100+'%';
+  node.style.top=Math.max(0,area.top)/1440*100+'%';
+  node.style.width=Math.max(0,Math.min(1080,area.right)-Math.max(0,area.left))/1080*100+'%';
+  node.style.height=Math.max(0,Math.min(1440,area.bottom)-Math.max(0,area.top))/1440*100+'%';
+  node.style.right='auto';
+  node.style.bottom='auto';
+ }
+}
+window.addEventListener('modern:render',()=>{syncIdentityMirror();positionPreviewHotspots()});
 syncIdentityMirror();
+positionPreviewHotspots();
 textHit.addEventListener('keydown',e=>{
  if(e.key==='Enter'||e.key===' '){
   e.preventDefault();
