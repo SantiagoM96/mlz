@@ -22,6 +22,7 @@ for(const [brand,config] of Object.entries(tests)){
    assert(await page.locator('.modern-photo-group').count()===1,brand+': fotografía no separada');
    if(brand==='bae')assert(await page.locator('.modern-import-group #articleUrl').count()===1,'BAE: falta importar noticia');
    if(brand==='cronica')assert(await page.locator('.carousel-panel').count()===1,'Crónica: falta páginas');
+   if(mobile)await page.locator('#modernTabcontrols').click();
    const identity=page.locator('aside.editor-panel .modern-identity-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
    const target=brand==='cronica'?'center':'carousel';
@@ -30,6 +31,7 @@ for(const [brand,config] of Object.entries(tests)){
    assert(before!==after,brand+': cambio de firma no redibuja Canvas');
    await identity.locator('[data-footer-style="'+(brand==='cronica'?'carousel':'center')+'"]').click();
    assert(await page.locator('#art').evaluate(c=>c.toDataURL())===before,brand+': no restaura firma original');
+   if(mobile)await page.locator('#modernTabpreview').click();
    await page.locator('.modern-logo-hit').click({force:true});
    assert(await page.locator('.modern-logo-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': logo sin selección');
    if(mobile){
