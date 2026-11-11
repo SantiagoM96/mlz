@@ -325,3 +325,10 @@ body[data-editor-brand="bae"]{--editor-accent:#d82626}
   display:block;z-index:8;top:var(--photo-height,60%);bottom:0
  }
 }
+
+/* Selección persistente hasta elegir otra zona en la vista previa. */
+.preview .canvas-stage>.modern-logo-hit.is-hotspot-selected,
+.preview .canvas-stage>.modern-text-hit.is-hotspot-selected{
+ border-color:var(--editor-accent)!important;
+ box-shadow:0 0 0 1px rgba(255,255,255,.28);
+}
