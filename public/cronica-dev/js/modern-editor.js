@@ -54,7 +54,11 @@ function makeCard(section,title,isText=false){
    toggle.setAttribute('aria-expanded',String(expanded));
    body.hidden=!expanded;
   }
-  // Pulso en la cabecera activada, sin cambiar su geometría.
+  // Shift + clic con mouse no debe añadir un marco de foco sobre
+  // la cabecera. El pulso pertenece al borde exterior de la tarjeta.
+  // Con teclado (detail === 0) se conserva el foco accesible.
+  if(event.shiftKey&&event.detail>0)toggle.blur();
+  // Pulso en el borde exterior, sin cambiar su geometría.
   section.classList.remove('modern-card-flash');
   void section.offsetWidth;
   section.classList.add('modern-card-flash');
