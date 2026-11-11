@@ -194,7 +194,7 @@ try{
   triggerPosition.centerDifference<2&&triggerPosition.label.includes('Onboarding')&&
   triggerPosition.width===136&&triggerPosition.height===42&&
   triggerPosition.notch.includes('13px 50%')&&
-  triggerPosition.glass.includes('blur(18px)')&&
+  (triggerPosition.glass==='none'||triggerPosition.glass==='')&&
   triggerPosition.background.startsWith('rgba('),
   'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
  const names=[
