@@ -116,6 +116,16 @@ for(const [brand,config] of Object.entries(tests)){
     assert(await page.locator('.modern-preview-text-editor').isVisible(),brand+': no se abre Textos en mobile');
     assert(await page.locator('.modern-preview-identity-editor').isHidden(),brand+': Identidad no se oculta');
    }else assert(await page.locator('.modern-text-card').first().evaluate(el=>el.classList.contains('modern-context-target')),brand+': Textos no se resalta');
+   // El clic fuera elimina solamente el punteado de la preview.
+   await page.locator('header').first().click();
+   assert(await page.locator('.modern-logo-hit.is-hotspot-selected,.modern-text-hit.is-hotspot-selected').count()===0,
+    brand+': la selección sigue visible después de tocar fuera');
+   await page.locator('.modern-logo-hit').click();
+   assert(await page.locator('.modern-logo-hit.is-hotspot-selected').count()===1,
+    brand+': el logo no se vuelve a seleccionar');
+   await page.locator('header').first().click();
+   assert(await page.locator('.modern-logo-hit.is-hotspot-selected,.modern-text-hit.is-hotspot-selected').count()===0,
+    brand+': el logo sigue resaltado después de tocar fuera');
    assert(errors.length===0,brand+': errores de JavaScript: '+errors.join('; '));
    console.log('PASS '+brand+' '+(mobile?'mobile':'desktop')+': módulos, iconos, firma Canvas, hotspots y contexto');
   }catch(e){failures.push(e.message);console.error('FAIL '+brand+' '+viewport.width+': '+e.stack)}
