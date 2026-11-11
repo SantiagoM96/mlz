@@ -242,22 +242,28 @@ handleBreakpoint();
 /* Tooltip en el lado con espacio disponible, respetando los paneles y el viewport. */
 function placeHelpTips(){
  document.querySelectorAll('.help-trigger').forEach(trigger=>{
-  const bubble=trigger.querySelector('.help-tooltip'),btn=trigger.querySelector('.help-button');
-  if(!bubble||!btn)return;
-  const br=btn.getBoundingClientRect(),panelRect=trigger.closest('.editor-panel')?.getBoundingClientRect();
-  const leftBound=Math.max(16,(panelRect?.left??0)+12);
-  const rightBound=Math.min(innerWidth-16,(panelRect?.right??innerWidth)-12);
-  const right=rightBound-br.right-12,left=br.left-leftBound-12;
-  const toLeft=right<220&&left>right;
-  const room=toLeft?left:right;
-  bubble.classList.toggle('modern-tip-left',toLeft);
-  bubble.style.width=Math.min(260,Math.max(160,Math.min(240,room)))+'px';
-  bubble.style.left=toLeft?'auto':'calc(100% + 12px)';
-  bubble.style.right=toLeft?'calc(100% + 12px)':'auto';
+  const bubble=trigger.querySelector('.help-tooltip'),button=trigger.querySelector('.help-button');
+  if(!bubble||!button)return;
+  // Alinear el globo al ícono que lo invoca, no al borde del módulo.
+  // La dirección se decide usando el viewport real, no el ancho del panel.
+  const icon=button.getBoundingClientRect(),gap=12,edge=16;
+  const rightSpace=window.innerWidth-edge-icon.right-gap;
+  const leftSpace=icon.left-edge-gap;
+  const openLeft=rightSpace<220&&leftSpace>rightSpace;
+  const available=Math.max(0,openLeft?leftSpace:rightSpace);
+  const width=Math.min(260,Math.max(160,Math.min(240,available)));
+  bubble.classList.toggle('modern-tip-left',openLeft);
+  bubble.style.width=width+'px';
+  bubble.style.minWidth=Math.min(160,available)+'px';
+  bubble.style.left=openLeft?'auto':'calc(100% + '+gap+'px)';
+  bubble.style.right=openLeft?'calc(100% + '+gap+'px)':'auto';
+  bubble.style.top='50%';
   bubble.style.transform='translateY(-50%)';
-  const rect=bubble.getBoundingClientRect();
-  const offset=rect.top<16?16-rect.top:rect.bottom>innerHeight-16?innerHeight-16-rect.bottom:0;
-  if(offset)bubble.style.transform='translateY(calc(-50% + '+Math.round(offset)+'px))';
+  // Mantenerlo visible verticalmente sin cambiar la alineación horizontal.
+  const bounds=bubble.getBoundingClientRect();
+  const adjustment=bounds.top<edge?edge-bounds.top:bounds.bottom>window.innerHeight-edge
+   ?window.innerHeight-edge-bounds.bottom:0;
+  if(adjustment)bubble.style.transform='translateY(calc(-50% + '+Math.round(adjustment)+'px))';
  });
 }
 window.addEventListener('resize',placeHelpTips);
