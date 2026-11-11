@@ -912,6 +912,11 @@ function scrollToPreviewContext(context){
    requestAnimationFrame(center);
   });
  });
+ // El viewport móvil anima su altura durante 240 ms. Al finalizar,
+ // volver a centrar en función del tamaño definitivo, sin activar inputs.
+ if(mobileTabViewport.matches)window.setTimeout(()=>{
+  if(mobileTabMain.dataset.previewContext===context)center();
+ },300);
 }
 // El área inferior de Vista previa funciona como un SOLO módulo contextual.
 // Únicamente los botones visibles sobre el logo y el titular cambian su contenido;
