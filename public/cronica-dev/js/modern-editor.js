@@ -41,6 +41,10 @@ function makeCard(section,title,isText=false){
   const expanded=toggle.getAttribute('aria-expanded')!=='true';
   toggle.setAttribute('aria-expanded',String(expanded));
   body.hidden=!expanded;
+  // Un resplandor en el borde (sin cambiar grosor, padding ni geometría).
+  section.classList.remove('modern-card-flash');
+  void section.offsetWidth;
+  section.classList.add('modern-card-flash');
   requestAnimationFrame(updateHeight);
  });
  return section;
@@ -105,6 +109,10 @@ if(originalContent){
  }
 }
 for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]){
+ // Nunca mostrar un acordeón sin controles aplicables a este producto.
+ if(!section.querySelector('input,textarea,select,button:not(.modern-toggle),.logo-choices,.carousel-pages,.texture-options,.cronica-variant-options,.theme-swatches')){
+  section.remove();continue;
+ }
  let title=section.querySelector(':scope > h2')?.textContent?.trim()||
   (section===textPanel?'Textos':section.classList.contains('carousel-panel')?'Páginas':'Diseño de la placa');
  if(section.classList.contains('cronica-variant-panel')||section.querySelector('.theme-swatches'))title='Diseño de placas';
@@ -187,8 +195,8 @@ if(zoomBox){
 }
 function positionZoom(){
  if(!zoomBox)return;
- if(narrow.matches){if(zoomBox.parentElement!==stage)stage.appendChild(zoomBox)}
- else if(zoomBox.parentElement!==toolbar)toolbar.insertBefore(zoomBox,$('status'));
+ if(narrow.matches&&zoomBox.parentElement!==stage)stage.appendChild(zoomBox)
+ else if(zoomBox.parentElement!==stage)stage.appendChild(zoomBox);
 }
 function progress(range){
  const min=Number(range.min)||0,max=Number(range.max)||100,v=Number(range.value);
