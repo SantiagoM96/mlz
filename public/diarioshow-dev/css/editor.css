@@ -2462,15 +2462,14 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  outline:0!important;
  box-shadow:none!important;
 }
-/* El contorno de la tarjeta es una señal temporal: se enciende en fucsia,
-   desvanece durante 2,2 segundos y queda en su estado normal. */
+/* Pulso de acento: encendido instantáneo, sostén de ~0,9 s
+   y apagado muy corto (~0,15 s). Sin desvanecimiento progresivo largo. */
 @keyframes ds-context-card-flash{
- 0%{border-color:#e6008d;box-shadow:0 0 0 3px rgba(230,0,141,.92)}
- 18%{border-color:#e6008d;box-shadow:0 0 0 2px rgba(230,0,141,.78)}
+ 0%,85%{border-color:#e6008d;box-shadow:0 0 0 3px rgba(230,0,141,.92)}
  100%{border-color:#383d46;box-shadow:0 0 0 0 rgba(230,0,141,0)}
 }
 .editor-panel .ds-control-card.is-preview-context-target{
- animation:ds-context-card-flash 2.2s ease-out both;
+ animation:ds-context-card-flash 1.05s linear both;
  position:relative;
  z-index:3;
 }
