@@ -21,7 +21,7 @@ async function state(label){
    textHidden:host?.hidden,logoHidden:content?.hidden,
    textCSS:host?getComputedStyle(host).display:null,
    logoCSS:content?getComputedStyle(content).display:null,
-   logoHit:logo?{rect:[l.x,l.y,l.width,l.height],top:targetAt(l)?.id}:null,
+   logoHit:logo?{rect:[l.x,l.y,l.width,l.height],top:targetAt(l)?.id,topTag:targetAt(l)?.tagName,topClass:targetAt(l)?.className,topHtml:targetAt(l)?.outerHTML?.slice(0,220)}:null,
    textHit:text?{rect:[t.x,t.y,t.width,t.height],top:targetAt(t)?.id}:null,
    textInert:host?.inert,logoInert:content?.inert,
    active:document.activeElement?.id,
@@ -31,6 +31,8 @@ async function state(label){
 try{
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:25000});
  await page.waitForSelector('#dsHeadlineHitButton',{timeout:15000});
+ await page.evaluate(()=>document.fonts.ready);
+ await page.waitForTimeout(500);
  const expected=[
   {key:'text',textHidden:false,logoHidden:true},
   {key:'logo',textHidden:true,logoHidden:false},
