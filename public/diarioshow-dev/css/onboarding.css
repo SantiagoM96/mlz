@@ -25,7 +25,7 @@
      hasta el extremo derecho: ese lado queda sin línea visible. */
   border:0!important;
   border-radius:0!important;
-  background:rgba(198,204,217,.50)!important;
+  background:#ffffff!important;
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
   color:#f2f2f6!important;
@@ -39,16 +39,16 @@
   cursor:pointer!important;
   touch-action:manipulation;
  }
- /* El mismo gris de los encabezados, con trazo exterior fino de 0,65px.
-    Las dos puntas sí tienen trazo; el lado derecho no. */
+ /* Banderín rosa con stroke blanco de 1,3px (doble del 0,65px anterior).
+    Sigue la muesca y las dos puntas; sin línea en el borde derecho. */
  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{
   content:"";
   position:absolute;
-  inset:.65px 0 .65px .65px;
+  inset:1.3px 0 1.3px 1.3px;
   z-index:0;
   pointer-events:none;
-  background:#2b2e35;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,13.65px 50%);
+  background:#e6008d;
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14.3px 50%);
   transition:background .3s ease;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger > span{
@@ -66,14 +66,14 @@
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:hover::before,
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible::before{
-  background:#33363e;
+  background:#e6008d;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
   outline:2px solid #fff!important;
   outline-offset:-3px;
  }
  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{background:#2b2e35!important}
+  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{background:#e6008d!important}
  }
  @media(prefers-reduced-motion:reduce){
   body > #dsOnboardingTrigger.ds-onboarding-trigger{transition:none!important}
