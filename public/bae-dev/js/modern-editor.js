@@ -37,11 +37,24 @@ function makeCard(section,title,isText=false){
  })[title]||'settings';
  toggle.append(icon,label,chev);
  section.append(toggle,body);
- toggle.addEventListener('click',()=>{
+ toggle.addEventListener('click',event=>{
   const expanded=toggle.getAttribute('aria-expanded')!=='true';
-  toggle.setAttribute('aria-expanded',String(expanded));
-  body.hidden=!expanded;
-  // Un resplandor en el borde (sin cambiar grosor, padding ni geometría).
+  if(event.shiftKey){
+   // Solo tarjetas de Formato visibles en la variante actual.
+   // Shift + clic sobre abierto cierra todas; sobre cerrado abre todas.
+   for(const card of panel.querySelectorAll(':scope > .modern-card')){
+    if(card.hidden||getComputedStyle(card).display==='none')continue;
+    const button=card.querySelector(':scope > .modern-toggle');
+    const content=card.querySelector(':scope > .modern-body');
+    if(!button||!content)continue;
+    button.setAttribute('aria-expanded',String(expanded));
+    content.hidden=!expanded;
+   }
+  }else{
+   toggle.setAttribute('aria-expanded',String(expanded));
+   body.hidden=!expanded;
+  }
+  // Pulso en la cabecera activada, sin cambiar su geometría.
   section.classList.remove('modern-card-flash');
   void section.offsetWidth;
   section.classList.add('modern-card-flash');
