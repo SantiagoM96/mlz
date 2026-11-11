@@ -67,6 +67,19 @@ for(const [brand,config] of Object.entries(tests)){
    assert((await allStates()).every(x=>x==='true'),brand+': acordeones iniciales no abiertos');
    await firstToggle.click({modifiers:['Shift']});
    assert((await allStates()).every(x=>x==='false'),brand+': Shift + clic no cierra todos');
+   const focusAfterShift=await firstToggle.evaluate(node=>({
+    focused:document.activeElement===node,focusVisible:node.matches(':focus-visible')
+   }));
+   assert(!focusAfterShift.focused&&!focusAfterShift.focusVisible,
+    brand+': Shift + clic dejó contorno adicional en la cabecera '+JSON.stringify(focusAfterShift));
+   const cardPulse=await card.evaluate(el=>({
+    animation:getComputedStyle(el).animationName,
+    border:getComputedStyle(el).borderTopWidth,
+    shadow:getComputedStyle(el).boxShadow
+   }));
+   assert(cardPulse.animation==='editorial-card-pulse'&&cardPulse.border==='1px'&&
+    cardPulse.shadow.includes('0px 0px 0px 2px'),
+    brand+': resaltado incorrecto de tarjeta '+JSON.stringify(cardPulse));
    await firstToggle.click({modifiers:['Shift']});
    assert((await allStates()).every(x=>x==='true'),brand+': Shift + clic no abre todos');
    await firstToggle.click();
