@@ -38,6 +38,26 @@ function setPhotoLayout(mode){
  syncPhotoZoom();render();
 }
 document.querySelectorAll('[data-photo-layout]').forEach(b=>b.addEventListener('click',()=>setPhotoLayout(b.dataset.photoLayout)));
+// Shift + clic en la cabecera de Formato: cerrar todos si la cabecera
+// estaba abierta, abrir todos si estaba cerrada. No altera módulos ocultos
+// por la variante ni reconstruye los controles editoriales.
+document.addEventListener('click',event=>{
+ if(!event.shiftKey)return;
+ const toggle=event.target.closest?.('#dsMobileControlsPanel > .ds-control-card > .ds-control-card-toggle');
+ if(!toggle)return;
+ event.preventDefault();
+ event.stopImmediatePropagation();
+ const expand=toggle.getAttribute('aria-expanded')!=='true';
+ document.querySelectorAll('#dsMobileControlsPanel > .ds-control-card:not([hidden])').forEach(card=>{
+  const button=card.querySelector(':scope > .ds-control-card-toggle');
+  const body=card.querySelector(':scope > .ds-control-card-body');
+  if(!button||!body)return;
+  button.setAttribute('aria-expanded',String(expand));
+  body.hidden=!expand;
+ });
+ flashContextCard(toggle.closest('.ds-control-card'));
+ if(typeof updateMobileSlideHeight==='function')requestAnimationFrame(updateMobileSlideHeight);
+},true);
 // Secciones plegables: solo se oculta el contenido, sin reiniciar controles.
 document.querySelectorAll('.ds-control-card-toggle').forEach(button=>{
  button.addEventListener('click',()=>{
