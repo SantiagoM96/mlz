@@ -2469,15 +2469,13 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  18%{border-color:#e6008d;box-shadow:0 0 0 2px rgba(230,0,141,.78)}
  100%{border-color:#383d46;box-shadow:0 0 0 0 rgba(230,0,141,0)}
 }
-#dsMobileControlsPanel .ds-control-card.is-preview-context-target,
-#dsMobilePreviewPanel .ds-control-card.is-preview-context-target{
+.editor-panel .ds-control-card.is-preview-context-target{
  animation:ds-context-card-flash 2.2s ease-out both;
  position:relative;
  z-index:3;
 }
 @media(prefers-reduced-motion:reduce){
- #dsMobileControlsPanel .ds-control-card.is-preview-context-target,
- #dsMobilePreviewPanel .ds-control-card.is-preview-context-target{
+ .editor-panel .ds-control-card.is-preview-context-target{
   animation-duration:.01ms;
  }
 }
