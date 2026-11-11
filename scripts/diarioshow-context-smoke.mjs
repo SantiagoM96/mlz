@@ -116,9 +116,21 @@ try{
  await desktop.locator('#dsLogoHitButton').click();
  const contentVisible=await desktop.locator('#dsMobileControlsPanel .ds-content-group .ds-control-card-toggle').getAttribute('aria-expanded');
  requireState(contentVisible==='true','DESKTOP LOGO MUST OPEN CONTENT');
+ const logoMarked=await desktop.evaluate(()=>({
+  logo:document.querySelector('#dsMobileControlsPanel .ds-content-group').classList.contains('is-preview-context-target'),
+  text:document.querySelector('#dsMobileControlsPanel .ds-texts-group').classList.contains('is-preview-context-target')
+ }));
+ requireState(logoMarked.logo&&!logoMarked.text,'DESKTOP LOGO OUTLINE STATE WRONG '+JSON.stringify(logoMarked));
  await desktop.locator('#dsHeadlineHitButton').click();
  const txt=await desktop.locator('#dsMobileControlsPanel .ds-texts-group .ds-control-card-toggle').getAttribute('aria-expanded');
  const focused=await desktop.evaluate(()=>document.activeElement.id);
+ const textMarked=await desktop.evaluate(()=>({
+  logo:document.querySelector('#dsMobileControlsPanel .ds-content-group').classList.contains('is-preview-context-target'),
+  text:document.querySelector('#dsMobileControlsPanel .ds-texts-group').classList.contains('is-preview-context-target'),
+  border:getComputedStyle(document.querySelector('#dsMobileControlsPanel .ds-texts-group')).borderTopColor
+ }));
+ requireState(!textMarked.logo&&textMarked.text&&textMarked.border==='rgb(230, 0, 141)',
+  'DESKTOP TEXT OUTLINE STATE WRONG '+JSON.stringify(textMarked));
  requireState(txt==='true'&&focused!=='headline','DESKTOP HEADLINE MUST OPEN TEXT MODULE WITHOUT FOCUS '+focused);
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
