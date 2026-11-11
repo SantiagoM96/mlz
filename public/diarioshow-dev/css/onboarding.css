@@ -25,9 +25,9 @@
      hasta el extremo derecho: ese lado queda sin línea visible. */
   border:0!important;
   border-radius:0!important;
-  background:rgba(255,255,255,.55)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(125%);
-  backdrop-filter:blur(18px) saturate(125%);
+  background:rgba(198,204,217,.50)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
   color:#f2f2f6!important;
   box-shadow:-5px 5px 19px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10)!important;
   /* Dos puntas a la izquierda y una muesca central hacia adentro. */
@@ -39,16 +39,16 @@
   cursor:pointer!important;
   touch-action:manipulation;
  }
- /* Capa rosada: inset de 1px por arriba/abajo y sobre la forma
-    de dos puntas; inset derecho 0 => NO hay trazo en el borde del viewport. */
+ /* El mismo gris de los encabezados, con trazo exterior fino de 0,65px.
+    Las dos puntas sí tienen trazo; el lado derecho no. */
  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{
   content:"";
   position:absolute;
-  inset:1px 0 1px 1px;
+  inset:.65px 0 .65px .65px;
   z-index:0;
   pointer-events:none;
-  background:rgba(230,0,141,.79);
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14px 50%);
+  background:#2b2e35;
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,13.65px 50%);
   transition:background .3s ease;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger > span{
@@ -66,14 +66,14 @@
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:hover::before,
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible::before{
-  background:rgba(230,0,141,.93);
+  background:#33363e;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
   outline:2px solid #fff!important;
   outline-offset:-3px;
  }
  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{background:#e6008d!important}
+  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{background:#2b2e35!important}
  }
  @media(prefers-reduced-motion:reduce){
   body > #dsOnboardingTrigger.ds-onboarding-trigger{transition:none!important}
