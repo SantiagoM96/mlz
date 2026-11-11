@@ -17,6 +17,8 @@ async function state(label){
   const host=document.getElementById('dsMobileTextEditor');
   const content=document.getElementById('dsMobileContentEditor');
   return {label,scrollX:window.scrollX,scrollY:window.scrollY,
+   maxScrollY:Math.max(0,document.scrollingElement.scrollHeight-window.innerHeight),
+   selectionLength:window.getSelection()?.toString()?.length||0,
    context:document.querySelector('main')?.dataset.previewContext,
    textHidden:host?.hidden,logoHidden:content?.hidden,
    textCSS:host?getComputedStyle(host).display:null,
@@ -43,13 +45,21 @@ try{
  const actual=[];
  actual.push(await state('initial'));
  for(const [i,hit] of ['#dsLogoHitButton','#dsHeadlineHitButton','#dsLogoHitButton','#dsHeadlineHitButton'].entries()){
+  // Scrolling back to preview simulates the next contextual selection.
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+  await page.waitForTimeout(80);
   const rect=await page.locator(hit).boundingBox();
   if(!rect)throw Error('HIT BUTTON HIDDEN '+hit);
   const x=rect.x+rect.width/2,y=rect.y+rect.height/2;
   // Real finger tap, not Playwright locator.click and not synthetic JS events.
   await page.touchscreen.tap(x,y);
-  await page.waitForTimeout(130);
-  actual.push(await state('finger-tap-'+(i+1)));
+  await page.waitForTimeout(700);
+  const result=await state('finger-tap-'+(i+1));
+  requireState(result.active!=='headlineMobile',
+    'HEADLINE FOCUSED AUTOMATICALLY on '+result.label);
+  requireState(Math.abs(result.maxScrollY-result.scrollY)<=8,
+    'DID NOT SCROLL TO PAGE BOTTOM after '+result.label+' '+JSON.stringify(result));
+  actual.push(result);
  }
  for(let i=0;i<expected.length;i++){
   const a=actual[i],e=expected[i];
@@ -62,9 +72,11 @@ try{
  requireState(afterTabs.context==='text'&&afterTabs.textHidden===false&&afterTabs.logoHidden===true,
   'TAB ROUNDTRIP FAIL '+JSON.stringify(afterTabs));
  for(const id of ['dsLogoHitButton','dsHeadlineHitButton']){
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+  await page.waitForTimeout(80);
   const box=await page.locator('#'+id).boundingBox();
   await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);
-  await page.waitForTimeout(130);
+  await page.waitForTimeout(650);
  }
  const final=await state('after-roundtrip-clicks');
  requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
