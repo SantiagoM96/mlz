@@ -5,6 +5,8 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
+let footerStyle='carousel';
+document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
 const logoImages={},logoSources={primary:'../cronica/logos/primario.svg',secondary:'../cronica/logos/secundario.svg',white:'../cronica/logos/blanco.svg'};
 const logosReady=Promise.all(Object.entries(logoSources).map(([key,src])=>new Promise(resolve=>{
@@ -152,9 +154,12 @@ function render(includeHover=true){
    ctx.save();
    ctx.fillStyle=RED;ctx.textBaseline='middle';
    ctx.font='500 30px Inter,Arial,sans-serif';
-   ctx.textAlign='left';ctx.fillText('cronica.com.ar',EDGE,footerCenterY);
-   ctx.font='54px "Material Icons"';ctx.textAlign='right';
-   ctx.fillText('arrow_forward',W-EDGE,footerCenterY);
+   ctx.textAlign=footerStyle==='center'?'center':'left';
+   ctx.fillText('cronica.com.ar',footerStyle==='center'?W/2:EDGE,footerCenterY);
+   if(footerStyle==='carousel'){
+    ctx.font='54px "Material Icons"';ctx.textAlign='right';
+    ctx.fillText('arrow_forward',W-EDGE,footerCenterY);
+   }
    ctx.restore();
   }
   updatePhotoDropzone();
