@@ -176,7 +176,10 @@ try{
  tour.on('pageerror',e=>tourErrors.push(e.message));
  await tour.goto(url,{waitUntil:'load'});
  await tour.waitForSelector('#dsOnboardingLayer:not([hidden])',{timeout:10000});
- requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 6','TOUR DID NOT START AT 1/6');
+ requireState(await tour.locator('#browserZoomTip').count()===0,'OLD FLOATING POCO ESPACIO TIP STILL PRESENT');
+ const outline=await tour.locator('.ds-tour-highlight').evaluate(el=>getComputedStyle(el).borderTopWidth);
+ requireState(outline==='0px','SPOTLIGHT MUST HAVE NO PINK OUTLINE '+outline);
+ requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 7','TOUR DID NOT START AT 1/7');
  requireState(await tour.locator('#dsTourTitle').innerText()==='Elegí el diseño de tu placa','TOUR FIRST STEP WRONG');
  const triggerPosition=await tour.locator('#dsOnboardingTrigger').evaluate(e=>{
   const r=e.getBoundingClientRect(),p=document.getElementById('photoStage').getBoundingClientRect();
@@ -190,26 +193,39 @@ try{
   'Importá el contenido',
   'Editá los textos',
   'Agregá una fotografía',
-  'Editá desde la vista previa'
+  'Editá desde la vista previa',
+  '¿Poco espacio?'
  ];
  for(let i=0;i<names.length;i++){
   requireState(await tour.locator('#dsTourTitle').innerText()===names[i],
    'WRONG TOUR STEP '+i);
-  requireState(await tour.locator('#dsTourProgress').innerText()===(i+1)+' de 6',
+  requireState(await tour.locator('#dsTourProgress').innerText()===(i+1)+' de 7',
    'WRONG TOUR PROGRESS '+i);
+  if(i===5){
+   const overlays=await tour.locator('#photoStage>.ds-preview-hit-button').evaluateAll(nodes=>nodes.map(n=>getComputedStyle(n).borderTopStyle));
+   requireState(overlays.length===2&&overlays.every(v=>v==='dashed'),'PREVIEW STEP MUST SHOW TWO DASHED HOTSPOTS '+JSON.stringify(overlays));
+  }
+  if(i===6){
+   requireState(await tour.locator('#dsTourZoomDemo .browser-zoom-demo').count()===1,
+    'FINAL STEP MUST INCLUDE ZOOM ANIMATION');
+   const animationName=await tour.locator('#dsTourZoomDemo .browser-zoom-demo-content').evaluate(el=>getComputedStyle(el).animationName);
+   requireState(animationName==='ds-browser-zoom-content','FINAL STEP ZOOM ANIMATION MISSING '+animationName);
+   const fullScreen=await tour.locator('#dsOnboardingLayer').evaluate(el=>el.classList.contains('is-whole-screen'));
+   requireState(fullScreen,'FINAL STEP MUST HIGHLIGHT WHOLE SCREEN');
+  }
   if(i!==names.length-1)await tour.locator('.ds-tour-next').click();
  }
  await tour.locator('.ds-tour-next').click();
  requireState(await tour.locator('#dsOnboardingLayer').isHidden(),
   'TOUR DID NOT CLOSE');
- const complete=await tour.evaluate(()=>localStorage.getItem('ds-dev-tour-desktop-v1'));
+ const complete=await tour.evaluate(()=>localStorage.getItem('ds-dev-tour-desktop-v2'));
  requireState(complete==='complete','TOUR COMPLETION NOT STORED');
  await tour.reload({waitUntil:'load'});
  await tour.waitForTimeout(250);
  requireState(await tour.locator('#dsOnboardingLayer').count()===0||
   await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR REOPENED DESPITE PRIOR COMPLETION');
  await tour.locator('#dsOnboardingTrigger').click();
- requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 6','TOUR REPLAY FAILED');
+ requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 7','TOUR REPLAY FAILED');
  await tour.locator('.ds-tour-skip').click();
  requireState(await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR SKIP FAILED');
  requireState(!tourErrors.length,'TOUR JS ERRORS '+tourErrors.join(';'));
