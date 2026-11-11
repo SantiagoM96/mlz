@@ -72,6 +72,23 @@ for(const [brand,config] of Object.entries(tests)){
     await page.waitForTimeout(350);
     await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
    }
+   const geometry=await page.evaluate(()=>{
+    const stage=document.querySelector('#photoStage').getBoundingClientRect();
+    const logo=document.querySelector('.modern-logo-hit').getBoundingClientRect();
+    const text=document.querySelector('.modern-text-hit').getBoundingClientRect();
+    const [logoBounds,textBounds]=[window.__editorialHotspotBounds?.logo,window.__editorialHotspotBounds?.text];
+    const coordinate=(r)=>({x:(r.left-stage.left)/stage.width*1080,y:(r.top-stage.top)/stage.height*1440,
+     w:r.width/stage.width*1080,h:r.height/stage.height*1440});
+    return {logo:coordinate(logo),text:coordinate(text),logoBounds,textBounds};
+   });
+   const checkBounds=(actual,expected,name)=>{
+    assert(expected&&Math.abs(actual.x-expected.left)<2&&Math.abs(actual.y-expected.top)<2&&
+      Math.abs(actual.w-(expected.right-expected.left))<2&&
+      Math.abs(actual.h-(expected.bottom-expected.top))<2,brand+': '+name+' no sigue geometría Canvas '+JSON.stringify({actual,expected}));
+   };
+   checkBounds(geometry.logo,geometry.logoBounds,'logo');
+   checkBounds(geometry.text,geometry.textBounds,'titular');
+   assert(geometry.text.h<370&&geometry.text.w<1050,brand+': el hotspot cubre toda la caja blanca');
    await page.locator('.modern-logo-hit').click();
    assert(await page.locator('.modern-logo-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': logo sin selección');
    if(mobile){
