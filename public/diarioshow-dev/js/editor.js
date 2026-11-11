@@ -826,18 +826,15 @@ mobileZoom.addEventListener('input',()=>{
 // Edición directa del titular. Sin portales, sin focos repetidos y sin
 // alterar el tamaño del teclado o los paddings del documento.
 function openMobileHeadlineEditor(){
- // Solo el toque del titular puede seleccionar Textos como módulo contextual.
+ // El primer toque sobre el titular solo muestra Textos y baja hasta el módulo.
+ // El textarea se enfoca recién cuando el usuario toca el campo para editar.
  setPreviewContext('text');
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
  const body=mirrorId('ds-texts-group-body');
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
- updateMobileSlideHeight();
- const field=mirrorId('headline');
- // Un único foco durante el clic táctil, sin reubicar el input ni el teclado.
- field.focus();
- field.select();
+ scrollToPreviewContext();
 }
 // Módulo Contenido reflejado en Vista previa. Conserva los handlers originales
 // mediante proxy, mientras el módulo fuente sigue siempre disponible en Formato.
@@ -893,6 +890,20 @@ function syncPreviewContentEditor(){
  }
  if(previewArticleUrl&&document.activeElement!==previewArticleUrl)previewArticleUrl.value=el('articleUrl').value;
 }
+// Desplazar hasta el pie DESPUÉS de actualizar el alto del carrusel móvil.
+// El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
+function scrollToPreviewContext(){
+ if(!mobileTabViewport.matches)return;
+ requestAnimationFrame(()=>{
+  updateMobileSlideHeight();
+  requestAnimationFrame(()=>{
+   const bottom=Math.max(
+    document.documentElement.scrollHeight,document.body.scrollHeight
+   );
+   window.scrollTo({top:bottom,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  });
+ });
+}
 // El área inferior de Vista previa funciona como un SOLO módulo contextual.
 // Únicamente los botones visibles sobre el logo y el titular cambian su contenido;
 // abrir/cerrar un acordeón o cambiar de pestaña no altera la selección.
@@ -933,7 +944,7 @@ function showMobileContentEditor(){
  previewContentToggle.setAttribute('aria-expanded','true');
  previewContentBody.hidden=false;
  syncPreviewContentEditor();
- updateMobileSlideHeight();
+ scrollToPreviewContext();
 }
 // Estado inicial: Textos abierto. El estado se aplica al montar las pestañas.
 // Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
@@ -958,8 +969,8 @@ function makePreviewHit(id,label,handler,context){
   const valid=Math.hypot(event.clientX-touchStart.x,event.clientY-touchStart.y)<=9
    &&performance.now()-touchStart.started<550;
   touchStart=null;
-  // Alternar la sección antes del click táctil. El click posterior activa
-  // el textarea/teclado sin volver a mover ni recrear el módulo.
+  // Actualizar el contexto con el tap; el click posterior desplaza al módulo,
+  // sin abrir el teclado ni seleccionar el texto.
   if(valid&&mobileTabViewport.matches)setPreviewContext(context);
  });
  button.addEventListener('click',event=>{
