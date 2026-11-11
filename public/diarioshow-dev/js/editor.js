@@ -56,8 +56,12 @@ function drawFooter(color,baseline){
  ctx.textAlign=footerStyle==='center'?'center':'left';
  ctx.fillText('diarioshow.com.ar',footerStyle==='center'?W/2:80,baseline);
  if(footerStyle==='carousel'){
-  ctx.strokeStyle=color;ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';
-  ctx.beginPath();ctx.moveTo(W-112,baseline-29);ctx.lineTo(W-80,baseline-14);ctx.lineTo(W-112,baseline+1);ctx.stroke();
+  // Igual que la portada de Crónica: Material Icons arrow_forward de 54px,
+  // alineado al margen derecho de 80px y centrado verticalmente en el pie.
+  ctx.font='54px "Material Icons"';
+  ctx.textAlign='right';
+  ctx.textBaseline='middle';
+  ctx.fillText('arrow_forward',W-80,H-80-16);
  }
  ctx.restore();
 }
