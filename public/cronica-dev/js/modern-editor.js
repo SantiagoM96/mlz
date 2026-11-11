@@ -107,7 +107,7 @@ if(originalContent){
 for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]){
  let title=section.querySelector(':scope > h2')?.textContent?.trim()||
   (section===textPanel?'Textos':section.classList.contains('carousel-panel')?'Páginas':'Diseño de la placa');
- if(section.classList.contains('cronica-variant-panel'))title='Diseño de placas';
+ if(section.classList.contains('cronica-variant-panel')||section.querySelector('.theme-swatches'))title='Diseño de placas';
  if(section.classList.contains('modern-identity-group'))title='Identidad gráfica';
  if(section.classList.contains('modern-photo-group'))title='Fotografía';
  if(section.classList.contains('modern-import-group'))title='Importar noticia';
@@ -349,6 +349,8 @@ function syncIdentityMirror(){
 }
 function showPreviewContext(which){
  const isLogo=which==='logo';
+ stage.querySelector('.modern-logo-hit')?.classList.toggle('is-hotspot-selected',isLogo);
+ stage.querySelector('.modern-text-hit')?.classList.toggle('is-hotspot-selected',!isLogo);
  const source=isLogo?identitySource:textPanel;
  const mirrored=isLogo?identityMirror:clone;
  if(!source||!mirrored)return;
