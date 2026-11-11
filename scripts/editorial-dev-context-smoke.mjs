@@ -31,14 +31,18 @@ for(const [brand,config] of Object.entries(tests)){
    assert(before!==after,brand+': cambio de firma no redibuja Canvas');
    await identity.locator('[data-footer-style="'+(brand==='cronica'?'carousel':'center')+'"]').click();
    assert(await page.locator('#art').evaluate(c=>c.toDataURL())===before,brand+': no restaura firma original');
-   if(mobile)await page.locator('#modernTabpreview').click();
-   await page.locator('.modern-logo-hit').click({force:true});
+   if(mobile){
+    await page.locator('#modernTabpreview').click();
+    await page.waitForTimeout(350);
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+   }
+   await page.locator('.modern-logo-hit').click();
    assert(await page.locator('.modern-logo-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': logo sin selección');
    if(mobile){
     assert(await page.locator('.modern-preview-identity-editor').isVisible(),brand+': no se abre identidad en mobile');
     assert(await page.locator('.modern-preview-text-editor').isHidden(),brand+': Textos no se oculta');
    }else assert(await identity.evaluate(el=>el.classList.contains('modern-context-target')),brand+': identidad no se resalta en desktop');
-   await page.locator('.modern-text-hit').click({force:true});
+   await page.locator('.modern-text-hit').click();
    assert(await page.locator('.modern-text-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': titular sin selección');
    if(mobile){
     assert(await page.locator('.modern-preview-text-editor').isVisible(),brand+': no se abre Textos en mobile');
