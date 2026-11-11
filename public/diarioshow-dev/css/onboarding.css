@@ -13,40 +13,49 @@
   flex-direction:row!important;
   align-items:center!important;
   justify-content:center!important;
-  gap:9px!important;
-  width:168px!important;
-  min-width:168px!important;
-  height:52px!important;
-  min-height:52px!important;
+  gap:7px!important;
+  width:136px!important;
+  min-width:136px!important;
+  height:42px!important;
+  min-height:42px!important;
   margin:0!important;
-  padding:0 12px 0 20px!important;
+  padding:0 8px 0 17px!important;
   box-sizing:border-box!important;
-  border:0!important;
+  border:1px solid rgba(255,255,255,.22)!important;
   border-radius:0!important;
-  background:#e6008d!important;
-  color:#fff!important;
-  box-shadow:-5px 5px 19px rgba(0,0,0,.24)!important;
-  clip-path:polygon(0 50%,16px 0,100% 0,100% 100%,16px 100%);
-  transform:translate(132px,-50%)!important;
-  transition:transform .25s cubic-bezier(.2,.75,.2,1),filter .2s ease!important;
-  font:650 13px/1 Inter,Arial,sans-serif!important;
+  background:rgba(22,23,30,.70)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  backdrop-filter:blur(18px) saturate(125%);
+  color:#f2f2f6!important;
+  box-shadow:-5px 5px 19px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10)!important;
+  /* Dos puntas a la izquierda y una muesca central hacia adentro. */
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,13px 50%);
+  transform:translate(106px,-50%)!important;
+  transition:transform .46s cubic-bezier(.22,1,.36,1),background .3s ease!important;
+  font:650 10.5px/1 Inter,Arial,sans-serif!important;
   white-space:nowrap!important;
   cursor:pointer!important;
   touch-action:manipulation;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger .material-icons{
-  font-size:21px!important;
+  font-size:17px!important;
   line-height:1!important;
   flex:none;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:hover,
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
   transform:translate(0,-50%)!important;
-  filter:brightness(1.07);
+  background:rgba(36,37,47,.87)!important;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
   outline:2px solid #fff!important;
   outline-offset:-3px;
+ }
+ @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  body > #dsOnboardingTrigger.ds-onboarding-trigger{background:#24252d!important}
+ }
+ @media(prefers-reduced-motion:reduce){
+  body > #dsOnboardingTrigger.ds-onboarding-trigger{transition:none!important}
  }
  .ds-onboarding-layer{position:fixed;inset:0;z-index:2147482000;pointer-events:none;font-family:system-ui,-apple-system,Arial,sans-serif}
  .ds-tour-shade{position:fixed;background:rgba(9,10,14,.77);pointer-events:auto}
