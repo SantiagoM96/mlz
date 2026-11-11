@@ -18,7 +18,7 @@ for(const [brand,config] of Object.entries(tests)){
    await page.waitForSelector('.modern-logo-hit',{timeout:10000});
    await page.waitForTimeout(150);
    assert(await page.locator('.modern-card .modern-section-icon').count()>=(brand==='cronica'?5:5),brand+': falta iconografía');
-   assert(await page.locator('.modern-identity-group').count()===1,brand+': identidad no separada');
+   assert(await page.locator('aside.editor-panel .modern-identity-group').count()===1,brand+': identidad no separada');
    assert(await page.locator('.modern-photo-group').count()===1,brand+': fotografía no separada');
    if(brand==='bae')assert(await page.locator('.modern-import-group #articleUrl').count()===1,'BAE: falta importar noticia');
    if(brand==='cronica')assert(await page.locator('.carousel-panel').count()===1,'Crónica: falta páginas');
