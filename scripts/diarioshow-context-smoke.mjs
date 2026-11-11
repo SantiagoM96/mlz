@@ -193,12 +193,25 @@ try{
   triggerPosition.visibleWidth>=30&&triggerPosition.visibleWidth<=40&&
   triggerPosition.centerDifference<2&&triggerPosition.label.includes('Onboarding')&&
   triggerPosition.width===136&&triggerPosition.height===42&&
-  triggerPosition.notch.includes('13px 50%')&&
+  triggerPosition.notch==='none'&&
   (triggerPosition.glass==='none'||triggerPosition.glass==='')&&
-  triggerPosition.background==='rgb(255, 255, 255)',
+  triggerPosition.background==='rgba(0, 0, 0, 0)',
   'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
- const flagColors=await tour.locator('#dsOnboardingTrigger').evaluate(e=>({outer:getComputedStyle(e).backgroundColor,inner:getComputedStyle(e,'::before').backgroundColor,inset:getComputedStyle(e,'::before').top,shape:getComputedStyle(e,'::before').clipPath}));
- requireState(flagColors.outer==='rgb(255, 255, 255)'&&flagColors.inner==='rgb(230, 0, 141)'&&flagColors.inset==='2px'&&flagColors.shape.includes('15px 50%'),'FLAG MUST HAVE PINK FILL AND DOUBLE WHITE STROKE '+JSON.stringify(flagColors));
+ const flagGeometry=await tour.locator('#dsOnboardingTrigger').evaluate(e=>{
+  const svg=e.querySelector('svg.ds-onboarding-flag-art');
+  const fill=svg.querySelector('path:first-child'),stroke=svg.querySelector('path.ds-onboarding-flag-stroke');
+  return {svgCount:e.querySelectorAll('svg.ds-onboarding-flag-art').length,
+   pink:fill.getAttribute('fill'),fillShape:fill.getAttribute('d'),
+   line:stroke.getAttribute('stroke'),strokeWidth:stroke.getAttribute('stroke-width'),
+   vectorEffect:stroke.getAttribute('vector-effect'),
+   strokePath:stroke.getAttribute('d'),outerPseudo:getComputedStyle(e,'::before').content};
+ });
+ requireState(flagGeometry.svgCount===1&&flagGeometry.pink==='#e6008d'&&
+  flagGeometry.line==='#ffffff'&&flagGeometry.strokeWidth==='2'&&
+  flagGeometry.vectorEffect==='non-scaling-stroke'&&
+  flagGeometry.strokePath==='M136 1H2L15 21L2 41H136'&&
+  flagGeometry.outerPseudo==='none',
+  'FLAG MUST HAVE ONE UNIFORM 2PX WHITE SVG PATH WITHOUT LAYERED CLIPS '+JSON.stringify(flagGeometry));
  const names=[
   'Elegí el diseño de tu placa',
   'Definí la distribución fotográfica',
