@@ -473,3 +473,16 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
  .editor-panel>.modern-card.modern-card-flash,
  .editor-panel .modern-card.modern-context-target{animation-duration:.01ms!important}
 }
+
+
+/* Mismo pulso que Diario Show: borde fijo de 1px + halo externo de 2px.
+   El box model permanece idéntico tanto al abrir como al cerrar. */
+@keyframes editorial-card-pulse{
+ 0%,85%{border-color:var(--editor-accent);box-shadow:0 0 0 2px var(--editor-accent)}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
+}
+.editor-panel>.modern-card.modern-card-flash,
+.editor-panel .modern-card.modern-context-target{
+ border-width:1px!important;box-sizing:border-box!important;
+ animation:editorial-card-pulse 1.05s linear both!important;
+}
