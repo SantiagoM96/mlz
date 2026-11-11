@@ -21,17 +21,14 @@
   margin:0!important;
   padding:0 8px 0 17px!important;
   box-sizing:border-box!important;
-  /* La silueta exterior es el trazo claro. El relleno se dibuja adentro,
-     hasta el extremo derecho: ese lado queda sin línea visible. */
   border:0!important;
   border-radius:0!important;
-  background:#ffffff!important;
+  background:transparent!important;
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
   color:#f2f2f6!important;
-  box-shadow:-5px 5px 19px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10)!important;
-  /* Dos puntas a la izquierda y una muesca central hacia adentro. */
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,13px 50%);
+  box-shadow:none!important;
+  clip-path:none!important;
   transform:translate(106px,-50%)!important;
   transition:transform .46s cubic-bezier(.22,1,.36,1)!important;
   font:650 10.5px/1 Inter,Arial,sans-serif!important;
@@ -39,17 +36,17 @@
   cursor:pointer!important;
   touch-action:manipulation;
  }
- /* Banderín rosa con trazo blanco uniforme de 2px.
-    Sigue la muesca y las dos puntas; sin línea en el borde derecho. */
- body > #dsOnboardingTrigger.ds-onboarding-trigger::before{
-  content:"";
+ /* Un solo trazado SVG vectorial, de 2px uniformes en todo el perímetro
+    visible. El lado derecho no lleva línea. No hay polígonos superpuestos. */
+ body > #dsOnboardingTrigger.ds-onboarding-trigger .ds-onboarding-flag-art{
   position:absolute;
-  inset:2px 0 2px 2px;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible;
   z-index:0;
   pointer-events:none;
-  background:#e6008d;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%,15px 50%);
-  transition:background .3s ease;
  }
  body > #dsOnboardingTrigger.ds-onboarding-trigger > span{
   position:relative;
@@ -64,16 +61,9 @@
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
   transform:translate(0,-50%)!important;
  }
- body > #dsOnboardingTrigger.ds-onboarding-trigger:hover::before,
- body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible::before{
-  background:#e6008d;
- }
  body > #dsOnboardingTrigger.ds-onboarding-trigger:focus-visible{
-  outline:2px solid #fff!important;
-  outline-offset:-3px;
- }
- @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  body > #dsOnboardingTrigger.ds-onboarding-trigger::before{background:#e6008d!important}
+  outline:2px solid #ffffff!important;
+  outline-offset:2px;
  }
  @media(prefers-reduced-motion:reduce){
   body > #dsOnboardingTrigger.ds-onboarding-trigger{transition:none!important}
