@@ -1,0 +1,32 @@
+name: Diario Show DEV — context switching smoke
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/diarioshow-dev/**'
+      - 'scripts/diarioshow-context-smoke.mjs'
+      - '.github/workflows/diarioshow-context-smoke.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  context-mobile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install packages
+        run: npm ci --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start static DEV server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public > /tmp/diarioshow-server.log 2>&1 &
+          for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8765/diarioshow-dev/ >/dev/null; then exit 0; fi; sleep 1; done
+          exit 1
+      - name: Test tap logo / tap headline repeatedly
+        run: node scripts/diarioshow-context-smoke.mjs
