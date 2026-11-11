@@ -894,13 +894,15 @@ function syncPreviewContentEditor(){
 // El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
 function scrollToPreviewContext(){
  if(!mobileTabViewport.matches)return;
+ // El alto se modifica mientras el acordeón aparece. No dejar el scroll
+ // a mitad de camino si ResizeObserver recalcula la altura después del toque.
+ const bottom=()=>Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
+ const move=()=>window.scrollTo({top:bottom(),behavior:'instant'});
  requestAnimationFrame(()=>{
   updateMobileSlideHeight();
   requestAnimationFrame(()=>{
-   const bottom=Math.max(
-    document.documentElement.scrollHeight,document.body.scrollHeight
-   );
-   window.scrollTo({top:bottom,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+   move();
+   requestAnimationFrame(move);
   });
  });
 }
