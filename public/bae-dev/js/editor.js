@@ -116,6 +116,17 @@ if(footerStyle==='carousel'){
  ctx.fillText('arrow_forward',W-80,H-80-16);ctx.textBaseline='alphabetic';
 }
 ctx.textAlign='left';
+// Los rectángulos interactivos siguen los glifos medidos, no la caja de diseño.
+const widths=lines.map(line=>line.parts.reduce((sum,p)=>sum+p.width,0));
+const minX=centered?Math.min(...widths.map(w=>(W-w)/2)):80;
+const maxX=centered?Math.max(...widths.map(w=>(W+w)/2)):Math.max(...widths.map(w=>80+w));
+window.__editorialHotspotBounds={
+ text:{left:Math.max(0,minX-12),right:Math.min(W,maxX+12),
+  top:Math.max(boxTop+8,(baselines[0]??footerTop)-((lineMetrics[0]?.ascent)||size)-10),
+  bottom:Math.min(H,(baselines.at(-1)??footerTop)+((lineMetrics.at(-1)?.descent)||10)+10)},
+ logo:{left:W-LOGO_MARGIN-LOGO_WIDTH-54,top:LOGO_MARGIN-54,
+  right:W-LOGO_MARGIN+54,bottom:LOGO_MARGIN+LOGO_HEIGHT+54}
+};
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 finally{window.dispatchEvent(new Event('modern:render'))}
