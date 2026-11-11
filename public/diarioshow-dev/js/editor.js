@@ -892,11 +892,20 @@ function syncPreviewContentEditor(){
 }
 // Desplazar hasta el pie DESPUÉS de actualizar el alto del carrusel móvil.
 // El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
-// En desktop, un solo módulo seleccionado a la vez, resaltado en rosa.
+// Contorno rosa temporal sobre el módulo que recibió el clic en la placa.
+// El CSS lo desvanece; cada nuevo toque reinicia la animación desde cero.
+function flashPreviewContextCard(context){
+ const card=mobileTabViewport.matches
+  ?(context==='logo'?previewContentCard:mobileTextModule)
+  :(context==='logo'?sourceContent:originalTextModule);
+ const cards=[sourceContent,originalTextModule,previewContentCard,mobileTextModule];
+ cards.forEach(node=>node.classList.remove('is-preview-context-target'));
+ // Reiniciar la animación aunque se toque dos veces seguidas el mismo elemento.
+ void card.offsetWidth;
+ card.classList.add('is-preview-context-target');
+}
 function markDesktopContext(context){
- if(mobileTabViewport.matches)return;
- sourceContent.classList.toggle('is-preview-context-target',context==='logo');
- originalTextModule.classList.toggle('is-preview-context-target',context==='text');
+ if(!mobileTabViewport.matches)flashPreviewContextCard(context);
 }
 function scrollToPreviewContext(context){
  const target=mobileTabViewport.matches
@@ -948,8 +957,7 @@ function setPreviewContext(next){
  mobileTextHost.setAttribute('aria-hidden',String(!isText));
  previewContentHost.setAttribute('aria-hidden',String(isText));
  mobileTabMain.dataset.previewContext=next;
- document.getElementById('dsLogoHitButton')?.setAttribute('aria-pressed',String(!isText));
- document.getElementById('dsHeadlineHitButton')?.setAttribute('aria-pressed',String(isText));
+ // La selección visual de la placa solo cambia por clic en sus zonas.
  updateMobileSlideHeight();
 }
 function showMobileContentEditor(){
@@ -995,7 +1003,16 @@ function makePreviewHit(id,label,handler,context){
   if(valid&&mobileTabViewport.matches)setPreviewContext(context);
  });
  button.addEventListener('click',event=>{
-  event.preventDefault();event.stopPropagation();handler();
+  event.preventDefault();event.stopPropagation();
+  // Selección persistente SOLO sobre la placa, independiente del módulo
+  // inferior. Un clic fuera de las dos zonas elimina el punteado.
+  document.querySelectorAll('#photoStage>.ds-preview-hit-button').forEach(node=>{
+   const selected=node===button;
+   node.classList.toggle('is-hotspot-selected',selected);
+   node.setAttribute('aria-pressed',String(selected));
+  });
+  handler();
+  flashPreviewContextCard(context);
  });
  hitLayer.appendChild(button);
  return button;
@@ -1012,6 +1029,15 @@ makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
  }
 },'text');
 updatePreviewHitOverlays();
+// El punteado de la placa termina al tocar cualquier área que no sea
+// una de sus dos zonas táctiles (incluido el fondo oscuro entre ellas).
+document.addEventListener('pointerdown',event=>{
+ if(event.target.closest?.('#photoStage>.ds-preview-hit-button'))return;
+ document.querySelectorAll('#photoStage>.ds-preview-hit-button').forEach(button=>{
+  button.classList.remove('is-hotspot-selected');
+  button.setAttribute('aria-pressed','false');
+ });
+});
 
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
 // Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
