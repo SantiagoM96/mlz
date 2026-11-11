@@ -905,14 +905,14 @@ function flashPreviewContextCard(context){
 function markDesktopContext(context){
  if(!mobileTabViewport.matches)flashPreviewContextCard(context);
 }
-// El acordeón actualiza aria-expanded en su propio listener de click.
-// En la fase de burbujeo se detecta solo la acción de EXPANDIR y se
-// desplaza el pulso al nuevo módulo sin cambiar los contextos de preview.
+// El pulso se activa al ABRIR y al CERRAR: el listener de cada
+// acordeón ya actualizó aria-expanded cuando llega el evento delegado.
+// Mantener fijo el borde evita desplazamientos del contenido.
 document.addEventListener('click',event=>{
  const toggle=event.target.closest?.('.ds-control-card-toggle');
  if(!toggle)return;
  const card=toggle.closest('.ds-control-card');
- if(!card||toggle.getAttribute('aria-expanded')!=='true')return;
+ if(!card)return;
  flashContextCard(card);
 });
 function scrollToPreviewContext(context){
