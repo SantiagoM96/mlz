@@ -296,6 +296,77 @@ for(const id of ['alignLeft','alignCenter','formatUppercase']){
  const mirror=mirrorId(id),source=$(id);if(!mirror||!source)continue;
  mirror.addEventListener('click',()=>{source.click();syncMirror()});
 }
+// Editor contextual de identidad: solo clona la interfaz; el estado sigue en el motor original.
+const identitySource=panel.querySelector('.modern-identity-group');
+const identityMirror=identitySource?.cloneNode(true);
+let identityHost=null;
+if(identityMirror){
+ identityMirror.classList.add('modern-mirror-card');
+ identityMirror.querySelectorAll('[id]').forEach(n=>n.id+='IdentityPreview');
+ identityMirror.querySelectorAll('[for]').forEach(n=>n.setAttribute('for',n.getAttribute('for')+'IdentityPreview'));
+ identityHost=document.createElement('div');
+ identityHost.className='editor-panel modern-preview-identity-editor';
+ identityHost.setAttribute('aria-label','Identidad gráfica desde Vista previa');
+ identityHost.hidden=true;identityHost.append(identityMirror);host.after(identityHost);
+ const toggle=identityMirror.querySelector('.modern-toggle'),body=identityMirror.querySelector('.modern-body');
+ toggle.addEventListener('click',()=>{
+  const expanded=toggle.getAttribute('aria-expanded')!=='true';
+  toggle.setAttribute('aria-expanded',String(expanded));body.hidden=!expanded;
+  requestAnimationFrame(updateHeight);
+ });
+ identityMirror.addEventListener('click',event=>{
+  const choice=event.target.closest('[data-logo],[data-footer-style]');
+  if(!choice)return;
+  const selector=choice.dataset.logo!==undefined
+   ?'[data-logo="'+choice.dataset.logo+'"]'
+   :'[data-footer-style="'+choice.dataset.footerStyle+'"]';
+  identitySource.querySelector(selector)?.click();
+  syncIdentityMirror();
+ });
+}
+function syncIdentityMirror(){
+ if(!identityMirror||!identitySource)return;
+ for(const option of identityMirror.querySelectorAll('[data-logo],[data-footer-style]')){
+  const selector=option.dataset.logo!==undefined
+   ?'[data-logo="'+option.dataset.logo+'"]'
+   :'[data-footer-style="'+option.dataset.footerStyle+'"]';
+  const source=identitySource.querySelector(selector);
+  if(source)option.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
+ }
+}
+function showPreviewContext(which){
+ const isLogo=which==='logo';
+ const source=isLogo?identitySource:textPanel;
+ const mirrored=isLogo?identityMirror:clone;
+ if(!source||!mirrored)return;
+ if(narrow.matches){
+  host.hidden=isLogo;
+  if(identityHost)identityHost.hidden=!isLogo;
+  main.dataset.previewContext=which;
+  const toggle=mirrored.querySelector('.modern-toggle'),body=mirrored.querySelector('.modern-body');
+  toggle.setAttribute('aria-expanded','true');body.hidden=false;
+  if(isLogo)syncIdentityMirror();else syncMirror();
+  updateHeight();
+ }else{
+  const toggle=source.querySelector('.modern-toggle'),body=source.querySelector('.modern-body');
+  if(toggle&&body){toggle.setAttribute('aria-expanded','true');body.hidden=false}
+ }
+ const card=narrow.matches?mirrored:source;
+ document.querySelectorAll('.modern-context-target').forEach(c=>c.classList.remove('modern-context-target'));
+ void card.offsetWidth;card.classList.add('modern-context-target');
+ const scrollTarget=narrow.matches?(isLogo?identityHost:host):source;
+ if(scrollTarget){
+  const center=()=>{
+   const rect=scrollTarget.getBoundingClientRect();
+   const top=scrollY+rect.top+rect.height/2-innerHeight/2;
+   const max=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+   window.scrollTo({top:Math.max(0,Math.min(max,top)),behavior:'instant'});
+  };
+  requestAnimationFrame(()=>{updateHeight();requestAnimationFrame(center)});
+  if(narrow.matches)setTimeout(center,320);
+ }
+}
+
 const mirrorHeadline=mirrorId('headline');
 for(const [id,marker] of [['formatAccent','*'],['formatItalic','_'],['formatStrike','~'],['formatClear',null]]){
  const btn=mirrorId(id);if(!btn||!mirrorHeadline)continue;
@@ -347,9 +418,7 @@ function onTextPointerUp(e){
 }
 function onTextClick(e){
  if(!allowClick||!narrow.matches||main.dataset.mobileTab!=='preview')return;
- allowClick=false;e.preventDefault();
- if(mirrorBody.hidden){mirrorToggle.setAttribute('aria-expanded','true');mirrorBody.hidden=false;updateHeight()}
- syncMirror();mirrorHeadline.focus();mirrorHeadline.select();
+ allowClick=false;e.preventDefault();showPreviewContext('text');
 }
 for(const target of [canvas,textHit]){
  target.addEventListener('pointerdown',onTextPointerDown);
@@ -358,11 +427,24 @@ for(const target of [canvas,textHit]){
  target.addEventListener('pointercancel',()=>{tap=null;allowClick=false});
  target.addEventListener('click',onTextClick);
 }
+// La zona del logo está por encima del Canvas y de la carga de fotos.
+const logoHit=document.createElement('button');
+logoHit.type='button';logoHit.className='modern-logo-hit';
+logoHit.setAttribute('aria-label','Editar Identidad gráfica y logo');
+stage.append(logoHit);
+logoHit.addEventListener('click',event=>{
+ event.preventDefault();event.stopPropagation();showPreviewContext('logo');
+});
+// En desktop el titular abre Textos, sin poner el foco en el textarea.
+textHit.addEventListener('click',event=>{
+ if(!narrow.matches){event.preventDefault();showPreviewContext('text')}
+});
+window.addEventListener('modern:render',syncIdentityMirror);
+syncIdentityMirror();
 textHit.addEventListener('keydown',e=>{
  if(e.key==='Enter'||e.key===' '){
   e.preventDefault();
-  if(mirrorBody.hidden){mirrorToggle.setAttribute('aria-expanded','true');mirrorBody.hidden=false;updateHeight()}
-  mirrorHeadline.focus();mirrorHeadline.select();
+  showPreviewContext('text');
  }
 });
 })();
