@@ -4,7 +4,8 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-2.svg?v=1');loadTexture('2','./textures/punteado-grises-ajustados.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const LOGO_MARGIN=80,LOGO_WIDTH=123.75*1.15,LOGO_HEIGHT=LOGO_WIDTH*192/358;
-let selectedLogo='primary';
+let selectedLogo='primary',footerStyle='center';
+document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const logoImages={},logoSources={primary:'./logos/primario.svg',white:'./logos/blanco.svg'};
 for(const [key,src] of Object.entries(logoSources)){
  const img=new Image();logoImages[key]=img;
@@ -107,7 +108,14 @@ for(let i=0;i<lines.length;i++){
   x+=part.width;
  }
 }
-ctx.fillStyle=colors.text;ctx.font='30px Arial';ctx.textAlign='center';ctx.fillText('baenegocios.com',W/2,footerBaseline);ctx.textAlign='left';
+ctx.fillStyle=colors.text;ctx.font='30px Arial';
+ctx.textAlign=footerStyle==='center'?'center':'left';
+ctx.fillText('baenegocios.com',footerStyle==='center'?W/2:80,footerBaseline);
+if(footerStyle==='carousel'){
+ ctx.font='54px "Material Icons"';ctx.textAlign='right';ctx.textBaseline='middle';
+ ctx.fillText('arrow_forward',W-80,H-80-16);ctx.textBaseline='alphabetic';
+}
+ctx.textAlign='left';
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
 finally{window.dispatchEvent(new Event('modern:render'))}
