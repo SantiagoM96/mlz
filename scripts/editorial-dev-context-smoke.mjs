@@ -59,6 +59,22 @@ for(const [brand,config] of Object.entries(tests)){
    const opened=await toggle.locator('span:nth-child(2)').boundingBox();
    assert(opened&&Math.abs(original.x-opened.x)<0.6&&Math.abs(original.y-opened.y)<0.6,brand+': saltó la cabecera al abrir');
    assert(await page.locator('aside.editor-panel').first().evaluate(el=>getComputedStyle(el).backgroundColor)==='rgba(0, 0, 0, 0)',brand+': sigue la caja contenedora exterior');
+   // Shift + clic debe afectar TODOS los acordeones visibles de Formato.
+   // El clic normal debe continuar alterando un único módulo.
+   const allToggles=page.locator('aside.editor-panel > .modern-card:visible > .modern-toggle');
+   const allStates=()=>allToggles.evaluateAll(nodes=>nodes.map(n=>n.getAttribute('aria-expanded')));
+   const firstToggle=allToggles.first();
+   assert((await allStates()).every(x=>x==='true'),brand+': acordeones iniciales no abiertos');
+   await firstToggle.click({modifiers:['Shift']});
+   assert((await allStates()).every(x=>x==='false'),brand+': Shift + clic no cierra todos');
+   await firstToggle.click({modifiers:['Shift']});
+   assert((await allStates()).every(x=>x==='true'),brand+': Shift + clic no abre todos');
+   await firstToggle.click();
+   const normalStates=await allStates();
+   assert(normalStates[0]==='false'&&normalStates.slice(1).every(x=>x==='true'),
+    brand+': clic normal afectó más de un módulo');
+   await firstToggle.click();
+   console.log('PASS '+brand+' '+(mobile?'mobile':'desktop')+': Shift + clic global y clic normal local');
    const identity=page.locator('aside.editor-panel .modern-identity-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
    const target=brand==='cronica'?'center':'carousel';
