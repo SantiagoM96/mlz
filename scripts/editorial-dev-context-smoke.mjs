@@ -89,6 +89,21 @@ for(const [brand,config] of Object.entries(tests)){
    checkBounds(geometry.logo,geometry.logoBounds,'logo');
    checkBounds(geometry.text,geometry.textBounds,'titular');
    assert(geometry.text.h<370&&geometry.text.w<1050,brand+': el hotspot cubre toda la caja blanca');
+   // Hover y punteado usan el color institucional (no el fucsia global).
+   const accent=brand==='cronica'?'rgb(237, 0, 0)':'rgb(216, 38, 38)';
+   const selectedCursor=await page.locator('.modern-text-hit').evaluate(node=>{
+    const css=getComputedStyle(node);
+    return {cursor:css.cursor,borderColor:css.borderTopColor};
+   });
+   assert(selectedCursor.cursor==='pointer',brand+': cursor del titular no es mano '+JSON.stringify(selectedCursor));
+   const hotspot=page.locator('.modern-text-hit');
+   await hotspot.hover();
+   const hoverStyle=await hotspot.evaluate(node=>{
+    const css=getComputedStyle(node);
+    return {cursor:css.cursor,borderColor:css.borderTopColor,borderWidth:css.borderTopWidth};
+   });
+   assert(hoverStyle.cursor==='pointer'&&hoverStyle.borderColor===accent&&hoverStyle.borderWidth==='2px',
+    brand+': hover del titular no coincide con la marca '+JSON.stringify(hoverStyle));
    await page.locator('.modern-logo-hit').click();
    assert(await page.locator('.modern-logo-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': logo sin selección');
    if(mobile){
