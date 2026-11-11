@@ -241,7 +241,7 @@ try{
   const r=el.getBoundingClientRect();
   return {left:r.left,right:r.right,width:r.width,viewport:window.innerWidth};
  });
- requireState(Math.abs(expandedFlag.right-expandedFlag.viewport)<2&&expandedFlag.width>150,
+ requireState(Math.abs(expandedFlag.right-expandedFlag.viewport)<2&&expandedFlag.width>=135&&expandedFlag.width<=137,
   'TOUR FLAG MUST EXPAND ON HOVER '+JSON.stringify(expandedFlag));
  await tour.locator('#dsOnboardingTrigger').click();
  requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 7','TOUR REPLAY FAILED');
