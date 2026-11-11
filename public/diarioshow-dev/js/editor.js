@@ -892,6 +892,12 @@ function syncPreviewContentEditor(){
 }
 // Desplazar hasta el pie DESPUÉS de actualizar el alto del carrusel móvil.
 // El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
+// En desktop, un solo módulo seleccionado a la vez, resaltado en rosa.
+function markDesktopContext(context){
+ if(mobileTabViewport.matches)return;
+ sourceContent.classList.toggle('is-preview-context-target',context==='logo');
+ originalTextModule.classList.toggle('is-preview-context-target',context==='text');
+}
 function scrollToPreviewContext(context){
  const target=mobileTabViewport.matches
   ?(context==='logo'?previewContentHost:mobileTextHost)
@@ -951,6 +957,7 @@ function showMobileContentEditor(){
   const accordion=sourceContent.querySelector('.ds-control-card-toggle');
   const body=sourceContent.querySelector('.ds-control-card-body');
   accordion.setAttribute('aria-expanded','true');body.hidden=false;
+  markDesktopContext('logo');
   scrollToPreviewContext('logo');
   return;
  }
@@ -1000,6 +1007,7 @@ makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
   const accordion=originalTextModule.querySelector('.ds-control-card-toggle');
   const body=originalTextModule.querySelector('.ds-control-card-body');
   accordion.setAttribute('aria-expanded','true');body.hidden=false;
+  markDesktopContext('text');
   scrollToPreviewContext('text');
  }
 },'text');
