@@ -2449,3 +2449,15 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 /* El desplazamiento programático usa alturas estables, sin anclaje lateral. */
 main:has(#dsMobileViewport){overflow-anchor:none}
+
+/* Desktop: el clic sobre la placa señala el módulo correspondiente,
+   sin mover ni seleccionar el texto del campo. Solo una tarjeta activa. */
+@media(min-width:701px){
+ #dsMobileControlsPanel .ds-control-card.ds-content-group.is-preview-context-target,
+ #dsMobileControlsPanel .ds-control-card.ds-texts-group.is-preview-context-target{
+  border-color:#e6008d!important;
+  box-shadow:0 0 0 2px #e6008d!important;
+  position:relative;
+  z-index:3;
+ }
+}
