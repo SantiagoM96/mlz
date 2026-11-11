@@ -50,7 +50,7 @@ for(const [brand,config] of Object.entries(tests)){
    const original=await toggle.locator('span:nth-child(2)').boundingBox();
    await toggle.click();
    const closed=await toggle.locator('span:nth-child(2)').boundingBox();
-   assert(original&&closed&&Math.abs(original.x-closed.x)<0.6&&Math.abs(original.y-closed.y)<0.6,brand+': saltó el texto del acordeón');
+   assert(original&&closed&&Math.abs(original.x-closed.x)<0.6&&Math.abs(original.y-closed.y)<0.6,brand+': saltó el texto del acordeón '+JSON.stringify({original,closed}));
    assert(await card.evaluate(el=>el.classList.contains('modern-card-flash')),brand+': falta destello al desplegar');
    await toggle.click();
    const opened=await toggle.locator('span:nth-child(2)').boundingBox();
