@@ -19,6 +19,17 @@ async function state(label){
   return {label,scrollX:window.scrollX,scrollY:window.scrollY,
    maxScrollY:Math.max(0,document.scrollingElement.scrollHeight-window.innerHeight),
    selectionLength:window.getSelection()?.toString()?.length||0,
+   targetCenterError:(()=>{
+    const active=label==='initial'?document.getElementById('dsMobileTextEditor'):
+     document.querySelector('main')?.dataset.previewContext==='logo'
+      ?document.getElementById('dsMobileContentEditor')
+      :document.getElementById('dsMobileTextEditor');
+    const r=active?.getBoundingClientRect();
+    if(!r)return null;
+    const desired=window.scrollY+r.top+r.height/2-window.innerHeight/2;
+    const max=Math.max(0,document.scrollingElement.scrollHeight-window.innerHeight);
+    return Math.abs(window.scrollY-Math.max(0,Math.min(max,desired)));
+   })(),
    context:document.querySelector('main')?.dataset.previewContext,
    textHidden:host?.hidden,logoHidden:content?.hidden,
    textCSS:host?getComputedStyle(host).display:null,
@@ -57,8 +68,8 @@ try{
   const result=await state('finger-tap-'+(i+1));
   requireState(result.active!=='headlineMobile',
     'HEADLINE FOCUSED AUTOMATICALLY on '+result.label);
-  requireState(Math.abs(result.maxScrollY-result.scrollY)<=8,
-    'DID NOT SCROLL TO PAGE BOTTOM after '+result.label+' '+JSON.stringify(result));
+  requireState(result.targetCenterError<=10,
+    'DID NOT CENTER CONTEXT MODULE after '+result.label+' '+JSON.stringify(result));
   actual.push(result);
  }
  for(let i=0;i<expected.length;i++){
@@ -82,7 +93,36 @@ try{
  requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
  console.log('CONTEXT DIAGNOSTIC',JSON.stringify({actual,afterTabs,final,issues},null,2));
  requireState(issues.length===0,'JS errors: '+issues.join('; '));
- console.log('PASS: mobile logo/text context switches 5 times + after tab roundtrip');
+ console.log('PASS: mobile logo/text context switches 5 times + after tab roundtrip, centered panels, no auto-focus');
+ // Desktop: same vertical slider must sit to the left of the canvas;
+ // both hit areas must lead to their original modules, without focusing text.
+ const desktop=await browser.newPage({viewport:{width:1440,height:900}});
+ const desktopErrors=[];
+ desktop.on('pageerror',e=>desktopErrors.push(e.message));
+ await desktop.goto(url,{waitUntil:'domcontentloaded'});
+ await desktop.waitForSelector('#dsLogoHitButton');
+ await desktop.evaluate(()=>document.fonts.ready);
+ await desktop.waitForTimeout(220);
+ const desktopZoom=await desktop.evaluate(()=>{
+  const z=document.getElementById('dsPhotoZoomControl');
+  const stage=document.getElementById('photoStage');
+  const r=z.getBoundingClientRect(),c=stage.getBoundingClientRect();
+  return {parent:z.parentElement?.id,left:r.left,right:r.right,canvasLeft:c.left,desktopToolbarChildren:document.querySelector('.preview-toolbar')?.children.length,
+   writingMode:getComputedStyle(document.getElementById('photoZoom')).writingMode};
+ });
+ requireState(desktopZoom.parent==='photoStage'&&desktopZoom.right<=desktopZoom.canvasLeft+1,
+  'DESKTOP ZOOM NOT AT LEFT '+JSON.stringify(desktopZoom));
+ requireState(desktopZoom.writingMode==='vertical-lr','DESKTOP ZOOM NOT VERTICAL '+JSON.stringify(desktopZoom));
+ await desktop.locator('#dsLogoHitButton').click();
+ const contentVisible=await desktop.locator('#dsMobileControlsPanel .ds-content-group .ds-control-card-toggle').getAttribute('aria-expanded');
+ requireState(contentVisible==='true','DESKTOP LOGO MUST OPEN CONTENT');
+ await desktop.locator('#dsHeadlineHitButton').click();
+ const txt=await desktop.locator('#dsMobileControlsPanel .ds-texts-group .ds-control-card-toggle').getAttribute('aria-expanded');
+ const focused=await desktop.evaluate(()=>document.activeElement.id);
+ requireState(txt==='true'&&focused!=='headline','DESKTOP HEADLINE MUST OPEN TEXT MODULE WITHOUT FOCUS '+focused);
+ requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
+ console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
+ await desktop.close();
 }catch(err){
  console.error('FAIL: '+err.stack);
  console.error('LAST STATE',JSON.stringify(await state('failure').catch(()=>null),null,2));
