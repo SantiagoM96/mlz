@@ -99,7 +99,7 @@ try{
  const desktop=await browser.newPage({viewport:{width:1440,height:900}});
  const desktopErrors=[];
  desktop.on('pageerror',e=>desktopErrors.push(e.message));
- await desktop.goto(url,{waitUntil:'domcontentloaded'});
+ await desktop.goto(url+'?onboarding=off',{waitUntil:'domcontentloaded'});
  await desktop.waitForSelector('#dsLogoHitButton');
  await desktop.evaluate(()=>document.fonts.ready);
  await desktop.waitForTimeout(220);
@@ -169,6 +169,58 @@ try{
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
  await desktop.close();
+ // Tour uses the real page on a fresh desktop context (first-time visit).
+ const tourContext=await browser.newContext({viewport:{width:1440,height:900}});
+ const tour=await tourContext.newPage();
+ const tourErrors=[];
+ tour.on('pageerror',e=>tourErrors.push(e.message));
+ await tour.goto(url,{waitUntil:'load'});
+ await tour.waitForSelector('#dsOnboardingLayer:not([hidden])',{timeout:10000});
+ requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 6','TOUR DID NOT START AT 1/6');
+ requireState(await tour.locator('#dsTourTitle').innerText()==='Elegí el diseño de tu placa','TOUR FIRST STEP WRONG');
+ const triggerPosition=await tour.locator('#dsOnboardingTrigger').evaluate(e=>{
+  const r=e.getBoundingClientRect(),p=document.getElementById('photoStage').getBoundingClientRect();
+  return {hidden:getComputedStyle(e).display==='none',rightOfPreview:r.left>=p.right,centerDifference:Math.abs((r.top+r.height/2)-(p.top+p.height/2))};
+ });
+ requireState(!triggerPosition.hidden&&triggerPosition.rightOfPreview&&triggerPosition.centerDifference<2,
+  'TOUR TRIGGER NOT CENTERED RIGHT OF PREVIEW '+JSON.stringify(triggerPosition));
+ const names=[
+  'Elegí el diseño de tu placa',
+  'Definí la distribución fotográfica',
+  'Importá el contenido',
+  'Editá los textos',
+  'Agregá una fotografía',
+  'Editá desde la vista previa'
+ ];
+ for(let i=0;i<names.length;i++){
+  requireState(await tour.locator('#dsTourTitle').innerText()===names[i],
+   'WRONG TOUR STEP '+i);
+  requireState(await tour.locator('#dsTourProgress').innerText()===(i+1)+' de 6',
+   'WRONG TOUR PROGRESS '+i);
+  if(i!==names.length-1)await tour.locator('.ds-tour-next').click();
+ }
+ await tour.locator('.ds-tour-next').click();
+ requireState(await tour.locator('#dsOnboardingLayer').isHidden(),
+  'TOUR DID NOT CLOSE');
+ const complete=await tour.evaluate(()=>localStorage.getItem('ds-dev-tour-desktop-v1'));
+ requireState(complete==='complete','TOUR COMPLETION NOT STORED');
+ await tour.reload({waitUntil:'load'});
+ await tour.waitForTimeout(250);
+ requireState(await tour.locator('#dsOnboardingLayer').count()===0||
+  await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR REOPENED DESPITE PRIOR COMPLETION');
+ await tour.locator('#dsOnboardingTrigger').click();
+ requireState(await tour.locator('#dsTourProgress').innerText()==='1 de 6','TOUR REPLAY FAILED');
+ await tour.locator('.ds-tour-skip').click();
+ requireState(await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR SKIP FAILED');
+ requireState(!tourErrors.length,'TOUR JS ERRORS '+tourErrors.join(';'));
+ console.log('PASS: desktop 6-step spotlight tour, right-center trigger, completion and replay');
+ await tourContext.close();
+ // On mobile the tour is never shown, even for a first-time visitor.
+ requireState(await page.locator('#dsOnboardingLayer').count()===0,
+  'MOBILE TOUR MUST NOT BE MOUNTED');
+ requireState(await page.locator('#dsOnboardingTrigger').isHidden(),
+  'MOBILE TOUR BUTTON MUST BE HIDDEN');
+ console.log('PASS: onboarding disabled on mobile');
 }catch(err){
  console.error('FAIL: '+err.stack);
  console.error('LAST STATE',JSON.stringify(await state('failure').catch(()=>null),null,2));
