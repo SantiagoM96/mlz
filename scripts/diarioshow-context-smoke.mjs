@@ -312,6 +312,12 @@ try{
  requireState((await allStates()).every(x=>x==='true'),'INITIAL FORMAT CARDS NOT OPEN');
  await firstCardToggle.click({modifiers:['Shift']});
  requireState((await allStates()).every(x=>x==='false'),'SHIFT + CLICK DID NOT CLOSE ALL FORMAT CARDS');
+ const focusAfterShift=await firstCardToggle.evaluate(node=>({
+  focused:document.activeElement===node,
+  focusVisible:node.matches(':focus-visible')
+ }));
+ requireState(!focusAfterShift.focusVisible&&!focusAfterShift.focused,
+  'SHIFT + CLICK LEFT AN EXTRA PINK FOCUS RECTANGLE '+JSON.stringify(focusAfterShift));
  await firstCardToggle.click({modifiers:['Shift']});
  requireState((await allStates()).every(x=>x==='true'),'SHIFT + CLICK DID NOT OPEN ALL FORMAT CARDS');
  await firstCardToggle.click();
