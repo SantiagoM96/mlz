@@ -235,7 +235,7 @@ try{
  requireState(await tour.locator('#dsOnboardingLayer').count()===0||
   await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR REOPENED DESPITE PRIOR COMPLETION');
  // Hover into the exposed 36px tab, not the clipped/offscreen center.
- await tour.mouse.move(1440-18,450);
+ await tour.mouse.move(1440-7,450);
  await tour.waitForTimeout(550);
  const expandedFlag=await tour.locator('#dsOnboardingTrigger').evaluate(el=>{
   const r=el.getBoundingClientRect();
