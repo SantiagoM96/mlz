@@ -153,8 +153,10 @@ function render(includeHover=true){
   const richWidths=lines.map(line=>line.reduce((total,part)=>total+part.width,0));
   const left=textAlignment==='center'?Math.min(...richWidths.map(w=>(W-w)/2)):EDGE;
   const right=textAlignment==='center'?Math.max(...richWidths.map(w=>(W+w)/2)):Math.max(...richWidths.map(w=>EDGE+w));
-  const textRect={left:Math.max(0,left-12),top:Math.max(panelTop+8,(baselines[0]??availableBottom)-size-10),
-   right:Math.min(W,right+12),bottom:Math.min(H,(baselines.at(-1)??availableBottom)+Math.round(size*.18)+10)};
+  // Mismo padding que Diario Show: 14 px internos + 12 px externos,
+  // 1.05x del cuerpo arriba y .28x debajo de la línea base, más 10 px.
+  const textRect={left:Math.max(0,left-26),top:Math.max(0,(baselines[0]??availableBottom)-size*1.05-10),
+   right:Math.min(W,right+26),bottom:Math.min(H,(baselines.at(-1)??availableBottom)+size*.28+10)};
   const logoRect={left:W-EDGE-LOGO_WIDTH-54,top:EDGE-54,
    right:W-EDGE+54,bottom:EDGE+LOGO_HEIGHT+54};
   window.__editorialHotspotBounds={text:textRect,logo:logoRect};
