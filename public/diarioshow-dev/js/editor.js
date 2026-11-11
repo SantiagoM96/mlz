@@ -892,21 +892,36 @@ function syncPreviewContentEditor(){
 }
 // Desplazar hasta el pie DESPUÉS de actualizar el alto del carrusel móvil.
 // El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
-// Contorno rosa temporal sobre el módulo que recibió el clic en la placa.
-// El CSS lo desvanece; cada nuevo toque reinicia la animación desde cero.
-function flashPreviewContextCard(context){
- const card=mobileTabViewport.matches
-  ?(context==='logo'?previewContentCard:mobileTextModule)
-  :(context==='logo'?sourceContent:originalTextModule);
- const cards=[sourceContent,originalTextModule,previewContentCard,mobileTextModule];
- cards.forEach(node=>node.classList.remove('is-preview-context-target'));
- // Reiniciar la animación aunque se toque dos veces seguidas el mismo elemento.
+// Un único pulso fucsia para todos los módulos del editor.
+// Cada despliegue cambia el destino, incluso cuando se abre desde el panel
+// lateral; el resaltado dura solo su animación y vuelve al gris normal.
+function flashContextCard(card){
+ if(!card)return;
+ document.querySelectorAll('.ds-control-card.is-preview-context-target').forEach(node=>{
+  node.classList.remove('is-preview-context-target');
+  node.getAnimations().forEach(animation=>animation.cancel());
+ });
  void card.offsetWidth;
  card.classList.add('is-preview-context-target');
+}
+function flashPreviewContextCard(context){
+ flashContextCard(mobileTabViewport.matches
+  ?(context==='logo'?previewContentCard:mobileTextModule)
+  :(context==='logo'?sourceContent:originalTextModule));
 }
 function markDesktopContext(context){
  if(!mobileTabViewport.matches)flashPreviewContextCard(context);
 }
+// El acordeón actualiza aria-expanded en su propio listener de click.
+// En la fase de burbujeo se detecta solo la acción de EXPANDIR y se
+// desplaza el pulso al nuevo módulo sin cambiar los contextos de preview.
+document.addEventListener('click',event=>{
+ const toggle=event.target.closest?.('.ds-control-card-toggle');
+ if(!toggle)return;
+ const card=toggle.closest('.ds-control-card');
+ if(!card||toggle.getAttribute('aria-expanded')!=='true')return;
+ flashContextCard(card);
+});
 function scrollToPreviewContext(context){
  const target=mobileTabViewport.matches
   ?(context==='logo'?previewContentHost:mobileTextHost)
