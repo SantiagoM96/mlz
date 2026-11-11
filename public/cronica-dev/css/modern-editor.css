@@ -332,3 +332,108 @@ body[data-editor-brand="bae"]{--editor-accent:#d82626}
  border-color:var(--editor-accent)!important;
  box-shadow:0 0 0 1px rgba(255,255,255,.28);
 }
+
+/* Paridad con Diario Show: panel sin caja contenedora exterior. */
+main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-preview-identity-editor){
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ padding:0!important;border-radius:0!important;
+}
+.editor-panel>.modern-card{
+ margin:0 0 12px!important;padding:0!important;border:1px solid #383d46!important;
+ border-radius:10px!important;box-shadow:none;
+}
+/* Cabeceras con geometría fija: evitar saltos al abrir/cerrar. */
+.editor-panel .modern-card>.modern-toggle{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;
+ justify-content:flex-start!important;gap:12px!important;
+ height:46px!important;min-height:46px!important;max-height:46px!important;
+ padding:0 14px!important;margin:0!important;border:0!important;
+ font:600 13px/20px system-ui,Arial,sans-serif!important;
+ letter-spacing:normal!important;transform:none!important;transition:background-color .15s!important;
+}
+.editor-panel .modern-card>.modern-toggle[aria-expanded="true"]{border-radius:9px 9px 0 0!important}
+.editor-panel .modern-card>.modern-toggle[aria-expanded="false"]{border-radius:9px!important}
+.editor-panel .modern-card>.modern-toggle>.modern-section-icon{
+ flex:0 0 20px!important;width:20px;height:20px;line-height:20px!important;
+ font-size:20px!important;transform:none!important;
+}
+.editor-panel .modern-card>.modern-toggle>span:nth-child(2){
+ display:block;align-self:center;flex:1;line-height:20px!important;
+ padding:0!important;margin:0!important;transform:none!important;
+}
+.editor-panel .modern-card>.modern-toggle>.modern-chevron{
+ width:21px;height:21px;line-height:21px!important;flex:0 0 21px;
+ transform:none!important;transition:none!important;
+}
+.editor-panel .modern-card>.modern-toggle[aria-expanded="false"]>.modern-chevron{
+ transform:rotate(180deg)!important;
+}
+/* Resplandor de un anillo de 2px: el borde del control no cambia de ancho. */
+@keyframes modern-card-flash{
+ 0%,85%{border-color:var(--editor-accent);box-shadow:0 0 0 1px var(--editor-accent)}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
+}
+.editor-panel>.modern-card.modern-card-flash{
+ animation:modern-card-flash 1.05s linear both;position:relative;z-index:3;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel>.modern-card.modern-card-flash{animation-duration:.01ms}
+}
+@media(max-width:700px){
+ .modern-track>.editor-panel .modern-card>.modern-toggle{
+  height:44px!important;min-height:44px!important;max-height:44px!important;
+  padding:0 12px!important;
+ }
+}
+/* Zoom lateral a la izquierda de la fotografía también en desktop. */
+.preview>.browser-zoom-tip{display:none!important}
+.preview .canvas-stage{overflow:visible!important}
+.preview .canvas-stage>.modern-photo-zoom{
+ position:absolute!important;z-index:6;
+ top:0!important;right:calc(100% + 5px)!important;left:auto!important;
+ width:36px!important;max-width:36px!important;
+ height:var(--photo-height,60%)!important;min-height:0!important;
+ display:flex!important;flex-direction:column!important;
+ align-items:center!important;gap:8px!important;
+ margin:0!important;padding:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+.preview .canvas-stage>.modern-photo-zoom label{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;flex:0 0 23px!important;margin:0!important;padding:0!important;
+}
+.preview .canvas-stage>.modern-photo-zoom .modern-zoom-desktop{display:none!important}
+.preview .canvas-stage>.modern-photo-zoom .modern-zoom-icon{
+ display:inline-flex!important;font:normal 20px/1 'Material Icons'!important;
+ color:#f4f4f4!important;
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]{
+ display:block!important;flex:1 1 auto!important;width:26px!important;
+ min-width:26px!important;height:0!important;min-height:36px!important;
+ margin:0!important;padding:0!important;
+ writing-mode:vertical-lr!important;direction:rtl!important;
+ appearance:none!important;-webkit-appearance:none!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ touch-action:none!important;
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]::-webkit-slider-runnable-track{
+ width:3px;height:100%;border-radius:99px;
+ background:linear-gradient(to top,#f4f4f4 0%,#f4f4f4 var(--modern-progress,0%),#484c55 var(--modern-progress,0%),#484c55 100%);
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]::-moz-range-track{
+ width:3px;height:100%;border-radius:99px;background:#484c55;
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]::-moz-range-progress{
+ width:3px;background:#f4f4f4;
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]::-webkit-slider-thumb{
+ -webkit-appearance:none;appearance:none;width:15px;height:15px;
+ margin:0 0 0 -6px;border:2px solid #f4f4f4;border-radius:50%;background:#292c32;
+}
+.preview .canvas-stage>.modern-photo-zoom input[type=range]::-moz-range-thumb{
+ width:15px;height:15px;border:2px solid #f4f4f4;border-radius:50%;background:#292c32;
+}
+.preview .canvas-stage>.modern-photo-zoom output{
+ flex:0 0 24px;width:100%;min-width:0;
+ color:#fff;font:600 10px/20px system-ui,Arial,sans-serif;text-align:center;
+}
