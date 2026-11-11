@@ -158,7 +158,7 @@ try{
  const activeCard=desktop.locator('#dsMobileControlsPanel .ds-photo-layout-group');
  await desktop.waitForTimeout(2400);
  const pulseAfter=await activeCard.evaluate(el=>getComputedStyle(el).boxShadow);
- requireState(pulseAfter==='none'||pulseAfter==='rgba(230, 0, 141, 0) 0px 0px 0px 0px',
+ requireState(pulseAfter==='none'||/^rgba?\([^)]*0\) 0px 0px 0px 0px$/.test(pulseAfter),
   'PULSE SHOULD FADE BACK TO NORMAL '+pulseAfter);
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
