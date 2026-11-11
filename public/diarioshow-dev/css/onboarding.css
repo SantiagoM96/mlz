@@ -65,3 +65,70 @@
 @media(prefers-reduced-motion:reduce){
  .ds-tour-highlight{transition:none!important}
 }
+
+/* Onboarding V2 — misma tarjeta de vidrio oscuro que “¿Poco espacio?”.
+   El spotlight se define SOLO por oscurecimiento; no hay marco rosa. */
+@media(min-width:701px){
+ .ds-tour-highlight{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+ }
+ .ds-onboarding-layer .ds-tour-card{
+  width:325px;
+  padding:17.28px!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  border-radius:11px!important;
+  background:rgba(22,23,30,.70)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  backdrop-filter:blur(18px) saturate(125%);
+  box-shadow:0 12px 36px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10)!important;
+  color:#f2f2f6;
+  font-family:Inter,Arial,sans-serif!important;
+ }
+ .ds-onboarding-layer .ds-tour-card h2{
+  font:700 22.31px/1.2 Inter,Arial,sans-serif!important;
+  color:#fff!important;margin-bottom:12px;
+ }
+ .ds-onboarding-layer .ds-tour-card p{
+  font:500 13.2px/1.45 Inter,Arial,sans-serif!important;
+  color:#f0eff5!important;
+ }
+ .ds-onboarding-layer .ds-tour-progress{
+  padding:6px 10px!important;
+  background:#e6008d!important;
+  color:#fff!important;
+  font:700 12px/1 Inter,Arial,sans-serif!important;
+ }
+ .ds-onboarding-layer .ds-tour-close{
+  color:#dad7df!important;
+ }
+ .ds-onboarding-layer .ds-tour-close:hover{background:rgba(255,255,255,.12)!important;color:#fff!important}
+ .ds-onboarding-layer .ds-tour-skip{color:#d2ced8!important;font-family:Inter,Arial,sans-serif!important}
+ .ds-onboarding-layer .ds-tour-back{
+  background:#32343d!important;border-color:#5b5d67!important;color:#fff!important;
+  font-family:Inter,Arial,sans-serif!important;
+ }
+ .ds-onboarding-layer .ds-tour-next{font-family:Inter,Arial,sans-serif!important}
+ .ds-onboarding-layer .ds-tour-dots span:not(.is-current){background:#777984!important}
+ .ds-onboarding-layer .ds-tour-zoom-demo[hidden]{display:none!important}
+ .ds-onboarding-layer .ds-tour-zoom-demo.preview{
+  width:100%;max-width:100%;margin:0 0 15px;
+  display:flex;flex-direction:column;align-items:stretch;
+ }
+ .ds-onboarding-layer .ds-tour-zoom-demo .browser-zoom-demo{
+  display:block;width:100%;margin:0;
+ }
+ .ds-onboarding-layer.is-whole-screen .ds-tour-highlight{display:none}
+ /* El paso de la preview revela exclusivamente sus zonas táctiles sin
+    seleccionarlas ni interferir con su comportamiento habitual. */
+ body.ds-tour-preview-step .preview #photoStage>.ds-preview-hit-button,
+ body.ds-tour-preview-step .preview #photoStage>.ds-preview-hit-button:hover,
+ body.ds-tour-preview-step .preview #photoStage>.ds-preview-hit-button:focus-visible{
+  border:2px dashed #e6008d!important;
+  border-radius:6px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0!important;
+ }
+}
