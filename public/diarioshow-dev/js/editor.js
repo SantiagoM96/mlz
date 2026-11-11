@@ -826,6 +826,8 @@ mobileZoom.addEventListener('input',()=>{
 // Edición directa del titular. Sin portales, sin focos repetidos y sin
 // alterar el tamaño del teclado o los paddings del documento.
 function openMobileHeadlineEditor(){
+ // Solo el toque del titular puede seleccionar Textos como módulo contextual.
+ setPreviewContext('text');
  const accordion=mobileTextModule.querySelector('.ds-control-card-toggle');
  const body=mirrorId('ds-texts-group-body');
  accordion.setAttribute('aria-expanded','true');
@@ -833,8 +835,7 @@ function openMobileHeadlineEditor(){
  syncMobileTextEditor();
  updateMobileSlideHeight();
  const field=mirrorId('headline');
- // El foco se da directamente durante el click real del usuario.
- // No volver a enfocar, ocultar ni reparentar el textarea después.
+ // Un único foco durante el clic táctil, sin reubicar el input ni el teclado.
  field.focus();
  field.select();
 }
@@ -892,6 +893,29 @@ function syncPreviewContentEditor(){
  }
  if(previewArticleUrl&&document.activeElement!==previewArticleUrl)previewArticleUrl.value=el('articleUrl').value;
 }
+// El área inferior de Vista previa funciona como un SOLO módulo contextual.
+// Únicamente los botones visibles sobre el logo y el titular cambian su contenido;
+// abrir/cerrar un acordeón o cambiar de pestaña no altera la selección.
+let selectedPreviewContext='text';
+function setPreviewContext(next){
+ if(next!=='logo'&&next!=='text')return;
+ selectedPreviewContext=next;
+ const isText=next==='text';
+ mobileTextHost.hidden=!isText;
+ previewContentHost.hidden=isText;
+ mobileTextHost.classList.toggle('is-selected-preview-module',isText);
+ previewContentHost.classList.toggle('is-selected-preview-module',!isText);
+ mobileTextHost.setAttribute('aria-hidden',String(!isText));
+ previewContentHost.setAttribute('aria-hidden',String(isText));
+ const activeHost=isText?mobileTextHost:previewContentHost;
+ // No cambiar al módulo por eventos de teclado, navegación ni renderizado.
+ if(!isText&&mobileTextHost.contains(document.activeElement))
+  document.activeElement.blur();
+ activeHost.removeAttribute('inert');
+ (isText?previewContentHost:mobileTextHost).inert=true;
+ mobileTabMain.dataset.previewContext=next;
+ requestAnimationFrame(updateMobileSlideHeight);
+}
 function showMobileContentEditor(){
  if(!mobileTabViewport.matches){
   const accordion=sourceContent.querySelector('.ds-control-card-toggle');
@@ -900,20 +924,14 @@ function showMobileContentEditor(){
   accordion.scrollIntoView({block:'nearest',behavior:'smooth'});
   return;
  }
- mobileTextHost.hidden=true;
- previewContentHost.hidden=false;
- previewContentHost.classList.add('is-selected-preview-module');
+ setPreviewContext('logo');
  previewContentToggle.setAttribute('aria-expanded','true');
  previewContentBody.hidden=false;
  syncPreviewContentEditor();
  updateMobileSlideHeight();
 }
-const originalHeadlineEditor=openMobileHeadlineEditor;
-openMobileHeadlineEditor=function(){
- previewContentHost.hidden=true;
- mobileTextHost.hidden=false;
- originalHeadlineEditor();
-};
+// Estado inicial: Textos abierto. Solo se alterna desde las zonas amarillas.
+setPreviewContext('text');
 // Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
 const hitLayer=el('photoStage');
 function makePreviewHit(id,label,handler){
