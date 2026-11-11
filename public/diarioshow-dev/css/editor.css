@@ -2273,16 +2273,20 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 
 
-/* Mobile: el espacio inferior pertenece al flujo real de las pestañas.
-   Así el contenido inicial empieza debajo de los 24px y no queda tapado. */
+/* Mobile: pestañas adheridas al borde SUPERIOR del viewport.
+   La línea activa queda bajo el texto de la pestaña; los 24px están
+   DEBAJO de esa línea y empujan el contenido desde su posición inicial. */
 @media(max-width:700px){
+ main:has(> .ds-mobile-tabs){overflow:visible!important}
  main > .ds-mobile-tabs{
   position:sticky;
   top:0;
   z-index:80;
+  align-self:start;
   isolation:isolate;
   box-sizing:border-box;
-  padding-bottom:24px;
+  margin:0!important;
+  padding:0 0 24px;
   border-bottom:0;
   background:#101114;
  }
