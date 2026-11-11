@@ -29,6 +29,7 @@ for(const [brand,config] of Object.entries(tests)){
    if(brand==='bae'){
     assert((await page.locator('.header-brand img').first().getAttribute('src')).includes('bae-negocios-logo-color.svg'),'BAE: header no usa el logo bicolor');
    }
+   if(mobile){await page.locator('#modernTabcontrols').click();await page.waitForTimeout(350)}
    const card=page.locator('aside.editor-panel > .modern-card').first();
    const toggle=card.locator(':scope > .modern-toggle');
    const original=await toggle.locator('span:nth-child(2)').boundingBox();
@@ -40,7 +41,6 @@ for(const [brand,config] of Object.entries(tests)){
    const opened=await toggle.locator('span:nth-child(2)').boundingBox();
    assert(opened&&Math.abs(original.x-opened.x)<0.6&&Math.abs(original.y-opened.y)<0.6,brand+': saltó la cabecera al abrir');
    assert(await page.locator('aside.editor-panel').first().evaluate(el=>getComputedStyle(el).backgroundColor)==='rgba(0, 0, 0, 0)',brand+': sigue la caja contenedora exterior');
-   if(mobile)await page.locator('#modernTabcontrols').click();
    const identity=page.locator('aside.editor-panel .modern-identity-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
    const target=brand==='cronica'?'center':'carousel';
