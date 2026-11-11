@@ -186,11 +186,16 @@ try{
   return {hidden:c.display==='none',fixed:c.position==='fixed',
    visibleWidth:Math.max(0,window.innerWidth-r.left),
    centerDifference:Math.abs((r.top+r.height/2)-window.innerHeight/2),
-   label:e.textContent.trim()};
+   label:e.textContent.trim(),width:r.width,height:r.height,
+   notch:c.clipPath,glass:c.backdropFilter,background:c.backgroundColor};
  });
  requireState(!triggerPosition.hidden&&triggerPosition.fixed&&
   triggerPosition.visibleWidth>=30&&triggerPosition.visibleWidth<=40&&
-  triggerPosition.centerDifference<2&&triggerPosition.label.includes('Onboarding'),
+  triggerPosition.centerDifference<2&&triggerPosition.label.includes('Onboarding')&&
+  triggerPosition.width===136&&triggerPosition.height===42&&
+  triggerPosition.notch.includes('13px 50%')&&
+  triggerPosition.glass.includes('blur(18px)')&&
+  triggerPosition.background.startsWith('rgba('),
   'TOUR FLAG MUST PEEK OUT AT CENTER-RIGHT VIEWPORT '+JSON.stringify(triggerPosition));
  const names=[
   'Elegí el diseño de tu placa',
@@ -231,7 +236,7 @@ try{
   await tour.locator('#dsOnboardingLayer').isHidden(),'TOUR REOPENED DESPITE PRIOR COMPLETION');
  // Hover into the exposed 36px tab, not the clipped/offscreen center.
  await tour.mouse.move(1440-18,450);
- await tour.waitForTimeout(350);
+ await tour.waitForTimeout(550);
  const expandedFlag=await tour.locator('#dsOnboardingTrigger').evaluate(el=>{
   const r=el.getBoundingClientRect();
   return {left:r.left,right:r.right,width:r.width,viewport:window.innerWidth};
