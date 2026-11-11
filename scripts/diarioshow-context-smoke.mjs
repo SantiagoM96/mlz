@@ -152,8 +152,14 @@ try{
    'EXPANDED CONTROL CARD DID NOT PULSE '+selector);
   const count=await desktop.locator('#dsMobileControlsPanel .ds-control-card.is-preview-context-target').count();
   requireState(count===1,'PULSE MUST TRANSFER EXCLUSIVELY: '+count);
-  const animation=await desktop.locator(selector).evaluate(el=>getComputedStyle(el).animationName);
-  requireState(animation.includes('ds-context-card-flash'),'MISSING FADING PULSE '+selector+' '+animation);
+  const appearance=await desktop.locator(selector).evaluate(el=>{
+   const css=getComputedStyle(el);
+   return {animation:css.animationName,border:css.borderTopWidth,shadow:css.boxShadow};
+  });
+  requireState(appearance.animation.includes('ds-context-card-flash'),
+   'MISSING FADING PULSE '+selector+' '+JSON.stringify(appearance));
+  requireState(appearance.border==='1px'&&appearance.shadow.includes('0px 0px 0px 1px'),
+   'PULSE MUST HAVE UNIFORM 2PX RING WITHOUT LAYOUT SHIFT '+JSON.stringify(appearance));
  }
  const activeCard=desktop.locator('#dsMobileControlsPanel .ds-photo-layout-group');
  await desktop.waitForTimeout(2400);
