@@ -279,6 +279,30 @@ try{
  requireState(!tourErrors.length,'TOUR JS ERRORS '+tourErrors.join(';'));
  console.log('PASS: desktop 7-step spotlight tour, centered final modal, completion and replay');
  await tourContext.close();
+ // Tanto la apertura como el cierre activan el mismo pulso de Diario Show.
+ const pulsePage=await browser.newPage({viewport:{width:1440,height:900}});
+ await pulsePage.goto(url+'?onboarding=off',{waitUntil:'load'});
+ const pulseCard=pulsePage.locator('#dsMobileControlsPanel .ds-plate-design-group');
+ const pulseToggle=pulseCard.locator('.ds-control-card-toggle');
+ const originalBounds=await pulseToggle.boundingBox();
+ for(const expanded of [false,true]){
+  await pulseToggle.click();
+  requireState((await pulseToggle.getAttribute('aria-expanded'))===String(expanded),
+   'TOGGLE DID NOT '+(expanded?'OPEN':'CLOSE'));
+  const pulse=await pulseCard.evaluate(node=>({
+   active:node.classList.contains('is-preview-context-target'),
+   animation:getComputedStyle(node).animationName,
+   duration:getComputedStyle(node).animationDuration,
+   width:getComputedStyle(node).borderTopWidth
+  }));
+  requireState(pulse.active&&pulse.animation==='ds-context-card-flash'&&pulse.duration==='1.05s'&&pulse.width==='1px',
+   'CARD PULSE NOT UNIFIED ON '+(expanded?'OPEN':'CLOSE')+': '+JSON.stringify(pulse));
+  const bounds=await pulseToggle.boundingBox();
+  requireState(Math.abs(bounds.x-originalBounds.x)<1&&Math.abs(bounds.width-originalBounds.width)<1,
+   'CARD WIDTH MOVED DURING TOGGLE');
+ }
+ console.log('PASS: Diario Show opens/closes with 1.05s pulse, fixed border, stable width');
+ await pulsePage.close();
  // Los módulos sin función no deben dejar tarjetas vacías en ninguna variante.
  const variantPage=await browser.newPage({viewport:{width:1440,height:900}});
  await variantPage.goto(url+'?onboarding=off',{waitUntil:'load'});
