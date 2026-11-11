@@ -69,6 +69,19 @@ if(isCronica){
 const originalContent=sections.find(s=>s.querySelector('.logo-choices'));
 if(originalContent){
  originalContent.classList.add('modern-identity-group');
+ // Firma inferior: dos presentaciones, sin alterar su diseño inicial.
+ const footerField=document.createElement('div');
+ footerField.className='control-field modern-footer-field';
+ footerField.innerHTML='<label>Firma inferior</label><div class="modern-footer-options" role="group" aria-label="Firma inferior"><button type="button" data-footer-style="center" aria-pressed="'+String(!isCronica)+'">Centrada</button><button type="button" data-footer-style="carousel" aria-pressed="'+String(isCronica)+'">Carrusel</button></div>';
+ originalContent.append(footerField);
+ footerField.addEventListener('click',event=>{
+  const button=event.target.closest('[data-footer-style]');
+  if(!button)return;
+  document.dispatchEvent(new CustomEvent('editorial:footer-style',{detail:{style:button.dataset.footerStyle}}));
+  document.querySelectorAll('[data-footer-style]').forEach(b=>{
+   b.setAttribute('aria-pressed',String(b.dataset.footerStyle===button.dataset.footerStyle));
+  });
+ });
  const photoField=$('file')?.closest('.control-field');
  if(photoField){
   const photoSection=document.createElement('section');
