@@ -785,7 +785,7 @@ function mobileZoomHit(event){
  const rect=mobileZoom.getBoundingClientRect(),min=Number(mobileZoom.min),max=Number(mobileZoom.max);
  const t=max>min?(Number(mobileZoom.value)-min)/(max-min):0;
  // Mobile: valor mínimo abajo, máximo arriba. Desktop conserva el rango horizontal.
- const vertical=mobileTabViewport.matches;
+ const vertical=zoomControl.parentElement===el('photoStage');
  const x=vertical?rect.left+rect.width/2:rect.left+7.5+t*Math.max(0,rect.width-15);
  const y=vertical?rect.bottom-7.5-t*Math.max(0,rect.height-15):rect.top+rect.height/2;
  return Math.abs(event.clientX-x)<=10.5&&Math.abs(event.clientY-y)<=11.5;
@@ -834,7 +834,7 @@ function openMobileHeadlineEditor(){
  accordion.setAttribute('aria-expanded','true');
  body.hidden=false;
  syncMobileTextEditor();
- scrollToPreviewContext();
+ scrollToPreviewContext('text');
 }
 // Módulo Contenido reflejado en Vista previa. Conserva los handlers originales
 // mediante proxy, mientras el módulo fuente sigue siempre disponible en Formato.
@@ -892,17 +892,24 @@ function syncPreviewContentEditor(){
 }
 // Desplazar hasta el pie DESPUÉS de actualizar el alto del carrusel móvil.
 // El contenido contextual permanece en el DOM, sin enfocar ni seleccionar texto.
-function scrollToPreviewContext(){
- if(!mobileTabViewport.matches)return;
- // El alto se modifica mientras el acordeón aparece. No dejar el scroll
- // a mitad de camino si ResizeObserver recalcula la altura después del toque.
- const bottom=()=>Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
- const move=()=>window.scrollTo({top:bottom(),behavior:'instant'});
+function scrollToPreviewContext(context){
+ const target=mobileTabViewport.matches
+  ?(context==='logo'?previewContentHost:mobileTextHost)
+  :(context==='logo'?sourceContent:originalTextModule);
+ if(!target||target.hidden)return;
+ // Centrar el módulo activo en el viewport, no forzar scroll hasta el pie.
+ // El alto del slider mobile se sincroniza antes de medir el módulo.
+ const center=()=>{
+  const rect=target.getBoundingClientRect();
+  const intended=window.scrollY+rect.top+rect.height/2-window.innerHeight/2;
+  const limit=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+  window.scrollTo({top:Math.max(0,Math.min(limit,intended)),behavior:'instant'});
+ };
  requestAnimationFrame(()=>{
   updateMobileSlideHeight();
   requestAnimationFrame(()=>{
-   move();
-   requestAnimationFrame(move);
+   center();
+   requestAnimationFrame(center);
   });
  });
 }
@@ -939,14 +946,14 @@ function showMobileContentEditor(){
   const accordion=sourceContent.querySelector('.ds-control-card-toggle');
   const body=sourceContent.querySelector('.ds-control-card-body');
   accordion.setAttribute('aria-expanded','true');body.hidden=false;
-  accordion.scrollIntoView({block:'nearest',behavior:'smooth'});
+  scrollToPreviewContext('logo');
   return;
  }
  setPreviewContext('logo');
  previewContentToggle.setAttribute('aria-expanded','true');
  previewContentBody.hidden=false;
  syncPreviewContentEditor();
- scrollToPreviewContext();
+ scrollToPreviewContext('logo');
 }
 // Estado inicial: Textos abierto. El estado se aplica al montar las pestañas.
 // Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
@@ -985,8 +992,10 @@ makePreviewHit('dsLogoHitButton','Editar logo y Contenido',showMobileContentEdit
 makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
  if(mobileTabViewport.matches)openMobileHeadlineEditor();
  else{
-  const field=el('headline');
-  field.focus();field.select();
+  const accordion=originalTextModule.querySelector('.ds-control-card-toggle');
+  const body=originalTextModule.querySelector('.ds-control-card-body');
+  accordion.setAttribute('aria-expanded','true');body.hidden=false;
+  scrollToPreviewContext('text');
  }
 },'text');
 updatePreviewHitOverlays();
@@ -994,13 +1003,10 @@ updatePreviewHitOverlays();
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
 // Reubicar el mismo control (sin duplicarlo) conserva el valor y los listeners.
 const zoomControl=el('dsPhotoZoomControl');
-const desktopZoomToolbar=document.querySelector('.preview-toolbar');
 function positionMobilePhotoZoom(){
- if(mobileTabViewport.matches){
-  if(zoomControl.parentElement!==el('photoStage'))el('photoStage').appendChild(zoomControl);
- }else if(zoomControl.parentElement!==desktopZoomToolbar){
-  desktopZoomToolbar.insertBefore(zoomControl,el('status'));
- }
+ // Una única instancia de Zoom, situada a la izquierda de la placa tanto
+ // en escritorio como en mobile. La toolbar solo contiene el mensaje.
+ if(zoomControl.parentElement!==el('photoStage'))el('photoStage').appendChild(zoomControl);
  mobileZoomBox.classList.remove('is-thumb-hover','is-thumb-engaged');
 }
 // Navegación mobile: paneles adyacentes desplazados como una sola superficie.
