@@ -114,6 +114,8 @@ try{
   'DESKTOP ZOOM NOT AT LEFT '+JSON.stringify(desktopZoom));
  requireState(desktopZoom.writingMode==='vertical-lr','DESKTOP ZOOM NOT VERTICAL '+JSON.stringify(desktopZoom));
  await desktop.locator('#dsLogoHitButton').click();
+ requireState(await desktop.locator('#dsLogoHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected')),'LOGO DASHED HOTSPOT NOT SELECTED');
+ requireState(!(await desktop.locator('#dsHeadlineHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected'))),'TEXT HOTSPOT MUST NOT REMAIN ACTIVE');
  const contentVisible=await desktop.locator('#dsMobileControlsPanel .ds-content-group .ds-control-card-toggle').getAttribute('aria-expanded');
  requireState(contentVisible==='true','DESKTOP LOGO MUST OPEN CONTENT');
  const logoMarked=await desktop.evaluate(()=>({
@@ -122,6 +124,8 @@ try{
  }));
  requireState(logoMarked.logo&&!logoMarked.text,'DESKTOP LOGO OUTLINE STATE WRONG '+JSON.stringify(logoMarked));
  await desktop.locator('#dsHeadlineHitButton').click();
+ requireState(await desktop.locator('#dsHeadlineHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected')),'TEXT DASHED HOTSPOT NOT SELECTED');
+ requireState(!(await desktop.locator('#dsLogoHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected'))),'LOGO HOTSPOT MUST DESELECT');
  const txt=await desktop.locator('#dsMobileControlsPanel .ds-texts-group .ds-control-card-toggle').getAttribute('aria-expanded');
  const focused=await desktop.evaluate(()=>document.activeElement.id);
  const textMarked=await desktop.evaluate(()=>({
@@ -132,6 +136,9 @@ try{
  requireState(!textMarked.logo&&textMarked.text&&textMarked.border==='rgb(230, 0, 141)',
   'DESKTOP TEXT OUTLINE STATE WRONG '+JSON.stringify(textMarked));
  requireState(txt==='true'&&focused!=='headline','DESKTOP HEADLINE MUST OPEN TEXT MODULE WITHOUT FOCUS '+focused);
+ await desktop.locator('#dsMobileControlsPanel .ds-design-group .ds-control-card-toggle').count().catch(()=>0);
+ await desktop.evaluate(()=>document.body.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:42})));
+ requireState(!(await desktop.locator('#dsHeadlineHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected'))),'CLICK OUTSIDE MUST REMOVE HOTSPOT DASH');
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
  await desktop.close();
