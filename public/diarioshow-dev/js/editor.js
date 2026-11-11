@@ -899,22 +899,27 @@ function syncPreviewContentEditor(){
 let selectedPreviewContext='text';
 function setPreviewContext(next){
  if(next!=='logo'&&next!=='text')return;
+ // Solo las dos zonas activas cambian el contexto. Se conservan ambos
+ // módulos montados; hidden controla cuál ocupa el único espacio inferior.
  selectedPreviewContext=next;
  const isText=next==='text';
+ if(!isText&&mobileTextHost.contains(document.activeElement)){
+  // Soltar foco antes de ocultar el input, sin trasladar el editor ni el teclado.
+  document.activeElement.blur();
+ }
  mobileTextHost.hidden=!isText;
  previewContentHost.hidden=isText;
  mobileTextHost.classList.toggle('is-selected-preview-module',isText);
  previewContentHost.classList.toggle('is-selected-preview-module',!isText);
+ // Evitar estados inert persistentes que impiden volver a pulsar Textos.
+ mobileTextHost.inert=false;
+ previewContentHost.inert=false;
  mobileTextHost.setAttribute('aria-hidden',String(!isText));
  previewContentHost.setAttribute('aria-hidden',String(isText));
- const activeHost=isText?mobileTextHost:previewContentHost;
- // No cambiar al módulo por eventos de teclado, navegación ni renderizado.
- if(!isText&&mobileTextHost.contains(document.activeElement))
-  document.activeElement.blur();
- activeHost.removeAttribute('inert');
- (isText?previewContentHost:mobileTextHost).inert=true;
  mobileTabMain.dataset.previewContext=next;
- requestAnimationFrame(updateMobileSlideHeight);
+ document.getElementById('dsLogoHitButton')?.setAttribute('aria-pressed',String(!isText));
+ document.getElementById('dsHeadlineHitButton')?.setAttribute('aria-pressed',String(isText));
+ updateMobileSlideHeight();
 }
 function showMobileContentEditor(){
  if(!mobileTabViewport.matches){
@@ -933,26 +938,44 @@ function showMobileContentEditor(){
 // Estado inicial: Textos abierto. El estado se aplica al montar las pestañas.
 // Dos botones DOM permanentes, por encima de adjuntar fotos y del canvas.
 const hitLayer=el('photoStage');
-function makePreviewHit(id,label,handler){
+function makePreviewHit(id,label,handler,context){
  const button=document.createElement('button');
  button.type='button';button.id=id;button.className='ds-preview-hit-button';
  button.setAttribute('aria-label',label);button.title=label;
- button.addEventListener('pointerdown',event=>event.stopPropagation());
- button.addEventListener('pointerup',event=>event.stopPropagation());
+ let touchStart=null;
+ button.addEventListener('pointerdown',event=>{
+  event.stopPropagation();
+  touchStart={id:event.pointerId,x:event.clientX,y:event.clientY,started:performance.now()};
+ });
+ button.addEventListener('pointermove',event=>{
+  if(touchStart&&event.pointerId===touchStart.id&&
+     Math.hypot(event.clientX-touchStart.x,event.clientY-touchStart.y)>9)touchStart=null;
+ });
+ button.addEventListener('pointercancel',event=>{touchStart=null;event.stopPropagation()});
+ button.addEventListener('pointerup',event=>{
+  event.stopPropagation();
+  if(!touchStart||event.pointerId!==touchStart.id)return;
+  const valid=Math.hypot(event.clientX-touchStart.x,event.clientY-touchStart.y)<=9
+   &&performance.now()-touchStart.started<550;
+  touchStart=null;
+  // Alternar la sección antes del click táctil. El click posterior activa
+  // el textarea/teclado sin volver a mover ni recrear el módulo.
+  if(valid&&mobileTabViewport.matches)setPreviewContext(context);
+ });
  button.addEventListener('click',event=>{
   event.preventDefault();event.stopPropagation();handler();
  });
  hitLayer.appendChild(button);
  return button;
 }
-makePreviewHit('dsLogoHitButton','Editar logo y Contenido',showMobileContentEditor);
+makePreviewHit('dsLogoHitButton','Editar logo y Contenido',showMobileContentEditor,'logo');
 makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
  if(mobileTabViewport.matches)openMobileHeadlineEditor();
  else{
   const field=el('headline');
   field.focus();field.select();
  }
-});
+},'text');
 updatePreviewHitOverlays();
 
 // En mobile el zoom se monta junto a la placa, no en la barra superior.
