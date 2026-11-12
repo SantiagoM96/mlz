@@ -179,3 +179,43 @@ html[data-editor-plate-variant=blank] #splitPhotoZones{display:none!important}
 .editor-slide-thumb .editor-blank-thumb::after{content:none!important;display:none!important}
 .editor-blank-option .editor-blank-thumb>*,
 .editor-slide-thumb .editor-blank-thumb>*{display:none!important}
+
+/* Cambio 15 — una única transformación de 60 × 80 a 48 × 64. */
+.editor-slide-nav .editor-slide-thumb{
+ position:relative!important;display:block!important;flex:0 0 48px!important;
+ width:48px!important;height:64px!important;min-width:48px!important;
+ min-height:64px!important;padding:0!important;border:0!important;
+ overflow:hidden!important;
+}
+.editor-slide-nav .editor-slide-thumb[aria-current=true]{overflow:visible!important}
+.editor-slide-nav .editor-slide-thumb>.editor-slide-native{
+ position:absolute!important;inset:0!important;display:block!important;
+ width:48px!important;height:64px!important;padding:0!important;
+ margin:0!important;overflow:hidden!important;
+}
+.editor-slide-nav .editor-slide-thumb .editor-slide-native-option{
+ position:absolute!important;left:0!important;top:0!important;
+ display:block!important;box-sizing:border-box!important;
+ width:60px!important;height:80px!important;min-width:60px!important;
+ min-height:80px!important;max-width:none!important;
+ flex:none!important;gap:0!important;align-items:initial!important;
+ justify-content:initial!important;margin:0!important;padding:0!important;
+ border:0!important;box-shadow:none!important;outline:0!important;
+ transform:scale(.8)!important;transform-origin:top left!important;
+ overflow:visible!important;
+}
+.editor-slide-nav .editor-slide-thumb .editor-slide-native-option>.theme-swatch-thumb,
+.editor-slide-nav .editor-slide-thumb .editor-slide-native-option>.ds-variant-preview{
+ position:absolute!important;left:0!important;top:0!important;
+ box-sizing:border-box!important;display:block!important;
+ width:60px!important;height:80px!important;min-width:60px!important;
+ min-height:80px!important;max-width:none!important;aspect-ratio:3/4!important;
+ transform:none!important;transform-origin:top left!important;
+ margin:0!important;padding:0!important;flex:none!important;
+ outline:0!important;
+}
+.editor-slide-nav .editor-slide-thumb .editor-slide-number{
+ position:absolute!important;left:50%!important;top:4px!important;
+ transform:translateX(-50%)!important;z-index:5!important;
+ margin:0!important;pointer-events:none!important;
+}
