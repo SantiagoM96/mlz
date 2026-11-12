@@ -5,6 +5,16 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/'+slug+'/?onboarding=force',{waitUntil:'load'});
  await page.locator('.ds-tour-card:not([hidden])').waitFor({timeout:12000});
+ if(slug!=='diarioshow-dev'){
+  const mask=await page.locator('.ds-tour-highlight').evaluate(el=>{
+   const s=getComputedStyle(el),shade=getComputedStyle(document.querySelector('.ds-tour-shade'));
+   return {transition:s.transitionDuration,shadow:s.boxShadow,shadeBackground:shade.backgroundColor,shadeTransition:shade.transitionDuration};
+  });
+  if(mask.transition!=='0s'||mask.shadeTransition!=='0s'||mask.shadow!=='none'||
+    mask.shadeBackground!=='rgba(9, 10, 14, 0.77)')
+   throw Error(slug+': máscara no igualada a Diario Show '+JSON.stringify(mask));
+  console.log('PASS máscara instantánea',slug);
+ }
  let found=false;
  for(let i=0;i<13;i++){
   const title=await page.locator('#dsTourTitle').textContent();
