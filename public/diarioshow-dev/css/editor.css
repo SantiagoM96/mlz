@@ -2795,3 +2795,15 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  .header-inner:has(.editor-platform-switcher) .dashboard-back-link{flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;height:40px!important;padding:0!important;margin-left:auto!important;justify-content:center!important}
  .header-inner:has(.editor-platform-switcher) .dashboard-back-link .back-link-text{display:none!important}
 }
+
+/* Cambio 44 — miniaturas V3/V4 con el mismo degradé que el canvas real.
+   renderQuoteVariant() pasa de alfa 0 a alfa 1 con #E6008D / #00A6D9;
+   las diapositivas clonan estos previews de Diseño de placas. */
+.editor-panel .ds-variant-preview-quote{
+ background-color:#aeb4bc!important;
+ background-image:linear-gradient(180deg,rgba(230,0,141,0) 0%,rgba(230,0,141,1) 100%)!important;
+}
+.editor-panel .ds-variant-preview-quote-blue{
+ background-color:#aeb4bc!important;
+ background-image:linear-gradient(180deg,rgba(0,166,217,0) 0%,rgba(0,166,217,1) 100%)!important;
+}
