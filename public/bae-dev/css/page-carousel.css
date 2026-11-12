@@ -118,3 +118,11 @@ html[data-editor-plate-variant=blank] #dsMobileContentEditor .ds-control-card:no
 .editor-panel .cronica-rich-headline [data-strike=true]{text-decoration:line-through}
 .editor-panel .cronica-rich-headline::selection,.editor-panel .cronica-rich-headline *::selection{background:#bb3a4f;color:white}
 body:has(.ds-mobile-tabs) .editor-slide-export-card button[data-export=all]{background:#e6008d}
+
+
+/* La información de navegación reemplaza el mensaje de ayuda de la preview. */
+.preview .preview-toolbar .preview-instructions{display:none!important}
+html[data-editor-plate-variant=blank] .preview #splitPhotoZones,
+html[data-editor-plate-variant=blank] .preview .ds-split-photo-zone,
+html[data-editor-plate-variant=blank] .preview .ds-photo-hit{display:none!important}
+.editor-slide-nav .editor-slide-thumb:hover{filter:brightness(1.12)}
