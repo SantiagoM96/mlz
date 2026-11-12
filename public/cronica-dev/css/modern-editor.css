@@ -964,3 +964,35 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .preview>.cronica-preview-pages .carousel-actions #removePage{
  grid-row:2;grid-column:1;margin:0!important;
 }
+
+
+/* CRÓNICA DEV — cambio 07: diseño neutro y pista desplazable sin barra. */
+.editor-panel .cronica-variant-thumbnail-blank{
+ background:#aeb4bc!important;border:2px solid #565a63!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[data-variant="blank"]{
+ --page-bg:#aeb4bc;--page-number-bg:#343a43;--page-number:#f1f2f6;
+ background:#aeb4bc!important;border-color:#565a63!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[data-variant="blank"] .carousel-page-art{
+ display:none!important;
+}
+.preview>.cronica-preview-pages .carousel-indicator-type.is-blank{
+ background:#555a64;color:#f4f4f5;
+}
+.preview>.cronica-preview-pages .carousel-pages{
+ scrollbar-width:none!important;
+ -ms-overflow-style:none;
+ cursor:grab;
+ touch-action:pan-x pan-y;
+}
+.preview>.cronica-preview-pages .carousel-pages::-webkit-scrollbar{
+ display:none!important;width:0!important;height:0!important;
+}
+.preview>.cronica-preview-pages .carousel-pages.is-dragging{
+ cursor:grabbing;scroll-behavior:auto!important;
+}
+.preview>.cronica-preview-pages .carousel-pages.is-dragging .carousel-page-thumb,
+.preview>.cronica-preview-pages .carousel-pages.is-dragging .carousel-add-placeholder{
+ pointer-events:none;
+}
