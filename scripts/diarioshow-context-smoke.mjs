@@ -351,7 +351,7 @@ try{
  const variantPage=await browser.newPage({viewport:{width:1440,height:900}});
  await variantPage.goto(url+'?onboarding=off',{waitUntil:'load'});
  for(const [variant,expectedVisible] of [['pink',true],['blue',true],['quote',false],['quote-blue',false],['pink',true]]){
-  await variantPage.locator('.ds-variant-option[data-variant="'+variant+'"]').click();
+  await variantPage.locator('#dsMobileControlsPanel .ds-variant-option[data-variant="'+variant+'"]').click();
   const isVisible=await variantPage.locator('.ds-import-group').isVisible();
   requireState(isVisible===expectedVisible,
    'IMPORT MODULE INCORRECT FOR '+variant+': expected visible '+expectedVisible+', got '+isVisible);
