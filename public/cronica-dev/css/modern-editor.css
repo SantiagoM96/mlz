@@ -1068,3 +1068,37 @@ html[data-cronica-variant="blank"] .modern-design-group .control-field:has(#show
 html[data-cronica-variant="blank"] .modern-design-group .control-field:has(#strapText),
 html[data-cronica-variant="blank"] .modern-preview-identity-editor .control-field:has(#showStrapIdentityPreview),
 html[data-cronica-variant="blank"] .modern-preview-identity-editor .control-field:has(#strapTextIdentityPreview){display:none!important;}
+
+/* Cambio 14: la miniatura de Diapositivas es la del selector original. */
+.preview>.cronica-preview-pages .carousel-page-thumb,
+.preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page]{
+ background:transparent!important;
+ border:0!important;
+ --page-number-bg:#292d34;--page-number:#d0d3d9;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page]{
+ outline:2px solid #ed0000!important;
+}
+.preview>.cronica-preview-pages .carousel-design-copy{
+ display:block;position:absolute;inset:0;pointer-events:none;
+ overflow:hidden;border-radius:6px;
+}
+.preview>.cronica-preview-pages .carousel-design-source{
+ display:block!important;width:60px;height:80px;
+ padding:0!important;margin:0!important;border:0!important;
+ transform:scale(.8);transform-origin:0 0;
+}
+.preview>.cronica-preview-pages .carousel-design-copy .cronica-variant-thumbnail{
+ display:flex!important;width:60px!important;height:80px!important;
+ aspect-ratio:3/4;border:2px solid #565a63!important;
+ border-radius:7px!important;outline:0!important;
+}
+.preview>.cronica-preview-pages .carousel-design-copy .cronica-variant-thumbnail-blank{
+ display:block!important;background:#aeb4bc!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb .carousel-page-number{
+ background:#292d34!important;color:#f2f2f5!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page] .carousel-page-number{
+ background:#ed0000!important;color:white!important;
+}
