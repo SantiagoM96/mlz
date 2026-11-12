@@ -429,3 +429,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - El cursor parte del lado derecho, avanza hasta el chevrón del primer acordeón (x=293, y=40), hace un pequeño clic con halo mientras Shift permanece iluminado; a partir de ese clic se abren simultáneamente las tres secciones, permanecen abiertas brevemente y se cierran para reiniciar el ciclo.
 - Se conserva la iluminación gris azulada de Shift, con texto/icono contrastado. El SVG y sus referencias tienen nuevos parámetros de caché, sin alterar los otros pasos del onboarding.
 **Registro acumulativo: 40 cambios.**
+
+## Cambio 41 — Radio 8 px en ventanas del tour y mayor separación de tarjeta del titular (2026-11-12)
+- Todas las ventanas iluminadas del onboarding de **Crónica, BAE y Diario Show DEV** se recortan ahora con esquinas de **8 px de radio**, tanto las ventanas únicas como las tres ventanas simultáneas del tutorial de logo (logo/ubicación/firma). El recorte usa un camino SVG `fill-rule:evenodd` con curvas cuadráticas para preservar las esquinas reales, no solo el contorno decorativo.
+- Únicamente en el paso **«Editá el texto desde la vista previa»**, se incrementa un **30 %** la separación de la tarjeta del tooltip respecto del foco: **18 → 23,4 px** en posición horizontal, y **12 → 15,6 px** cuando se posiciona arriba/abajo por falta de espacio.
+- Los demás pasos conservan sus separaciones, la máscara salta instantáneamente y ningún cambio altera las interacciones del editor.
+**Registro acumulativo: 41 cambios.**
