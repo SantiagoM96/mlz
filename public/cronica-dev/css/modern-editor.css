@@ -865,3 +865,61 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 @media(prefers-reduced-motion:reduce){
  .preview>.cronica-preview-pages.modern-card-flash{animation-duration:.01ms!important}
 }
+
+
+/* CRÓNICA 04: jerarquía del título y navegación progresiva.
+   El botón punteado se desplaza junto con las páginas; el botón + fijo
+   se habilita cuando la fila necesita scroll horizontal. */
+.preview>.cronica-preview-pages .carousel-heading{
+ justify-content:space-between!important;gap:10px;
+ min-height:22px;margin-bottom:10px;
+}
+.preview>.cronica-preview-pages .carousel-heading>h2{
+ display:block!important;margin:0!important;padding:0!important;
+ color:#f5f5f7;font:700 13px/20px Inter,Arial,sans-serif!important;
+ white-space:nowrap;
+}
+.preview>.cronica-preview-pages #pageIndicator{
+ margin-left:auto!important;justify-content:flex-end!important;
+ flex:0 0 auto;white-space:nowrap;gap:7px;
+}
+.preview>.cronica-preview-pages .carousel-pages .carousel-add-placeholder{
+ box-sizing:border-box!important;
+ display:flex;align-items:center;justify-content:center;
+ position:relative;isolation:isolate;
+ flex:0 0 48px;width:48px!important;height:64px!important;
+ min-height:64px!important;
+ margin:0;padding:0!important;
+ border:2px dashed #777c87!important;border-radius:6px!important;
+ outline:none;background:rgba(255,255,255,.025)!important;
+ color:#c9cbd2!important;cursor:pointer;
+ transition:background-color .15s,border-color .15s,color .15s;
+}
+.preview>.cronica-preview-pages .carousel-pages .carousel-add-placeholder>.material-icons{
+ font-size:25px;line-height:1;color:inherit;
+}
+.preview>.cronica-preview-pages .carousel-pages .carousel-add-placeholder:hover{
+ border-color:#ed0000!important;background:rgba(237,0,0,.1)!important;
+ color:#fff!important;
+}
+.preview>.cronica-preview-pages .carousel-pages .carousel-add-placeholder:focus-visible{
+ outline:2px solid #ed0000!important;outline-offset:2px;
+}
+.preview>.cronica-preview-pages .carousel-actions #addPage{
+ display:none!important;
+}
+.preview>.cronica-preview-pages.carousel-is-overflowing .carousel-actions #addPage{
+ display:flex!important;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ position:relative;z-index:2;
+ background:#24262c;
+}
+@media(max-width:700px){
+ .modern-track>.preview>.cronica-preview-pages .carousel-heading>h2{
+  font-size:13px!important;
+ }
+ .modern-track>.preview>.cronica-preview-pages .carousel-pages .carousel-add-placeholder{
+  flex-basis:48px;width:48px!important;height:64px!important;min-height:64px!important;
+ }
+}
