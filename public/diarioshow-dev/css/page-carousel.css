@@ -143,3 +143,39 @@ html[data-editor-plate-variant=blank] .preview .ds-photo-hit{display:none!import
 html[data-editor-plate-variant=blank] #dsLogoHitButton,
 html[data-editor-plate-variant=blank] #dsHeadlineHitButton,
 html[data-editor-plate-variant=blank] #splitPhotoZones{display:none!important}
+
+/* Cambio 14: se reutiliza el mismo árbol visual que Diseño de placa. */
+.editor-slide-thumb{background:transparent!important;border:0!important}
+.editor-slide-thumb[aria-current=true]{outline:2px solid var(--slide-accent)!important}
+.editor-slide-thumb .editor-slide-native{
+ display:block;position:absolute;inset:0;overflow:hidden;pointer-events:none;
+ border-radius:6px;
+}
+.editor-slide-thumb .editor-slide-native-option{
+ display:block!important;border:0!important;outline:0!important;
+ box-shadow:none!important;margin:0!important;padding:0!important;
+}
+.editor-slide-thumb .theme-swatch-thumb{
+ display:block!important;position:relative;
+ width:60px!important;height:80px!important;aspect-ratio:3/4;
+ transform:scale(.8);transform-origin:0 0;
+ border-color:#565a63!important;outline:none!important;
+}
+.editor-slide-thumb .ds-variant-preview{
+ display:block!important;width:48px!important;height:64px!important;
+ box-sizing:border-box;border-color:#565a63!important;
+ outline:none!important;border-radius:6px!important;
+}
+.editor-slide-thumb .editor-slide-number{z-index:1}
+.editor-blank-option .editor-blank-thumb,
+.editor-slide-thumb .editor-blank-thumb{
+ display:block!important;position:relative;box-sizing:border-box;
+ background:#aeb4bc!important;background-image:none!important;
+ border:2px solid #565a63!important;overflow:hidden;
+}
+.editor-blank-option .editor-blank-thumb::before,
+.editor-blank-option .editor-blank-thumb::after,
+.editor-slide-thumb .editor-blank-thumb::before,
+.editor-slide-thumb .editor-blank-thumb::after{content:none!important;display:none!important}
+.editor-blank-option .editor-blank-thumb>*,
+.editor-slide-thumb .editor-blank-thumb>*{display:none!important}
