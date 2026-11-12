@@ -165,6 +165,42 @@ for(const [brand,config] of Object.entries(tests)){
     assert(await page.locator('.modern-preview-text-editor').isVisible(),brand+': no se abre Textos en mobile');
     assert(await page.locator('.modern-preview-identity-editor').isHidden(),brand+': Identidad no se oculta');
    }else assert(await page.locator('.modern-text-card').first().evaluate(el=>el.classList.contains('modern-context-target')),brand+': Textos no se resalta');
+   if(mobile){
+    // La tarjeta reflejada debe contener TODO el halo, con margen por ambos
+    // lados, misma cabecera y cuerpo que el módulo original de Formato.
+    const mirrored=page.locator('.modern-preview-text-editor .modern-card');
+    const reference=page.locator('aside.editor-panel .modern-text-card').first();
+    const actual=await mirrored.evaluate(node=>{
+     const card=getComputedStyle(node),rect=node.getBoundingClientRect(),parent=node.parentElement.getBoundingClientRect();
+     return {animation:card.animationName,duration:card.animationDuration,
+      border:card.borderTopWidth,radius:card.borderTopLeftRadius,shadow:card.boxShadow,
+      left:rect.left-parent.left,right:parent.right-rect.right,
+      head:getComputedStyle(node.querySelector('.modern-toggle')).backgroundColor,
+      body:getComputedStyle(node.querySelector('.modern-body')).backgroundColor};
+    });
+    const native=await reference.evaluate(node=>({
+     head:getComputedStyle(node.querySelector('.modern-toggle')).backgroundColor,
+     body:getComputedStyle(node.querySelector('.modern-body')).backgroundColor
+    }));
+    assert(actual.animation==='editorial-card-pulse'&&actual.duration==='1.05s'&&
+     actual.border==='1px'&&actual.radius==='10px'&&
+     actual.left>=3&&actual.right>=3&&actual.shadow.includes('0px 0px 0px 2px')&&
+     actual.head===native.head&&actual.body===native.body,
+     brand+': mobile Textos no coincide con desktop '+JSON.stringify({actual,native}));
+    await page.locator('.modern-logo-hit').click();
+    const logoCard=page.locator('.modern-preview-identity-editor .modern-card');
+    const logoCss=await logoCard.evaluate(node=>{
+     const cs=getComputedStyle(node),r=node.getBoundingClientRect(),parent=node.parentElement.getBoundingClientRect();
+     return {animation:cs.animationName,duration:cs.animationDuration,
+      left:r.left-parent.left,right:parent.right-r.right,
+      border:cs.borderTopWidth,shadow:cs.boxShadow,
+      background:getComputedStyle(node.querySelector('.modern-body')).backgroundColor};
+    });
+    assert(logoCss.animation==='editorial-card-pulse'&&logoCss.duration==='1.05s'&&
+     logoCss.left>=3&&logoCss.right>=3&&logoCss.border==='1px'&&
+     logoCss.shadow.includes('0px 0px 0px 2px')&&logoCss.background===native.body,
+     brand+': mobile Diseño de placas está recortado '+JSON.stringify(logoCss));
+   }
    // El clic fuera elimina solamente el punteado de la preview.
    await page.locator('header').first().click();
    assert(await page.locator('.modern-logo-hit.is-hotspot-selected,.modern-text-hit.is-hotspot-selected').count()===0,
