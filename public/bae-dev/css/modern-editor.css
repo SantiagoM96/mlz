@@ -674,3 +674,47 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
  .editor-panel .modern-card.modern-context-target,
  .editor-panel .modern-card.modern-card-flash{animation-duration:.01ms!important}
 }
+
+
+/* Paridad con Diario Show mobile: margen interior real para el halo de
+   los acordeones de Formato. La pista horizontal puede seguir recortando
+   al cambiar de pestaña sin cortar los cuatro lados del resplandor. */
+@media(max-width:700px){
+ .modern-track > .editor-panel:not(.modern-preview-text-editor):not(.modern-preview-identity-editor){
+  box-sizing:border-box!important;
+  padding:6px 6px 10px!important;
+  background:transparent!important;border:0!important;
+  box-shadow:none!important;overflow:visible!important;
+ }
+ .modern-track > .editor-panel > .modern-card{
+  box-sizing:border-box!important;
+  width:100%!important;max-width:100%!important;
+  margin:0 0 12px!important;
+  border:1px solid #383d46!important;
+  border-radius:10px!important;
+  overflow:visible!important;
+  background:#24262c!important;
+ }
+ .modern-track>.preview>.modern-preview-text-editor,
+ .modern-track>.preview>.modern-preview-identity-editor{
+  padding:6px!important;
+ }
+}
+/* Plegado: cabecera con las cuatro esquinas redondeadas.
+   Desplegado: la cabecera redondea arriba y el cuerpo completa abajo. */
+.editor-panel .modern-card > .modern-toggle[aria-expanded="false"]{
+ border-radius:9px!important;
+}
+.editor-panel .modern-card > .modern-toggle[aria-expanded="true"]{
+ border-radius:9px 9px 0 0!important;
+}
+.editor-panel .modern-card > .modern-body:not([hidden]){
+ border-radius:0 0 9px 9px!important;
+ background:#202228!important;
+}
+@media(max-width:700px){
+ .modern-track>.preview>.modern-preview-text-editor>.modern-card>.modern-toggle[aria-expanded="false"],
+ .modern-track>.preview>.modern-preview-identity-editor>.modern-card>.modern-toggle[aria-expanded="false"]{
+  border-radius:9px!important;
+ }
+}
