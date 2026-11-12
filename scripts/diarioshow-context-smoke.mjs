@@ -116,10 +116,10 @@ try{
  await desktop.locator('#dsLogoHitButton').click();
  requireState(await desktop.locator('#dsLogoHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected')),'LOGO DASHED HOTSPOT NOT SELECTED');
  requireState(!(await desktop.locator('#dsHeadlineHitButton').evaluate(e=>e.classList.contains('is-hotspot-selected'))),'TEXT HOTSPOT MUST NOT REMAIN ACTIVE');
- const contentVisible=await desktop.locator('#dsMobileControlsPanel .ds-content-group .ds-control-card-toggle').getAttribute('aria-expanded');
+ const contentVisible=await desktop.locator('#dsMobileControlsPanel .ds-plate-design-group .ds-control-card-toggle').getAttribute('aria-expanded');
  requireState(contentVisible==='true','DESKTOP LOGO MUST OPEN CONTENT');
  const logoMarked=await desktop.evaluate(()=>({
-  logo:document.querySelector('#dsMobileControlsPanel .ds-content-group').classList.contains('is-preview-context-target'),
+  logo:document.querySelector('#dsMobileControlsPanel .ds-plate-design-group').classList.contains('is-preview-context-target'),
   text:document.querySelector('#dsMobileControlsPanel .ds-texts-group').classList.contains('is-preview-context-target')
  }));
  requireState(logoMarked.logo&&!logoMarked.text,'DESKTOP LOGO OUTLINE STATE WRONG '+JSON.stringify(logoMarked));
@@ -129,7 +129,7 @@ try{
  const txt=await desktop.locator('#dsMobileControlsPanel .ds-texts-group .ds-control-card-toggle').getAttribute('aria-expanded');
  const focused=await desktop.evaluate(()=>document.activeElement.id);
  const textMarked=await desktop.evaluate(()=>({
-  logo:document.querySelector('#dsMobileControlsPanel .ds-content-group').classList.contains('is-preview-context-target'),
+  logo:document.querySelector('#dsMobileControlsPanel .ds-plate-design-group').classList.contains('is-preview-context-target'),
   text:document.querySelector('#dsMobileControlsPanel .ds-texts-group').classList.contains('is-preview-context-target'),
   border:getComputedStyle(document.querySelector('#dsMobileControlsPanel .ds-texts-group')).borderTopColor
  }));
@@ -169,7 +169,7 @@ try{
  requireState(!desktopErrors.length,'DESKTOP JS ERRORS '+desktopErrors.join(';'));
  console.log('PASS: desktop vertical side zoom and contextual headline/logo module interactions',JSON.stringify(desktopZoom));
  // New editorial controls must remain functional in the same Canvas model.
- const identity=desktop.locator('#dsMobileControlsPanel .ds-content-group');
+ const identity=desktop.locator('#dsMobileControlsPanel .ds-plate-design-group');
  const importer=desktop.locator('#dsMobileControlsPanel .ds-import-group');
  requireState(await importer.locator('#articleUrl').count()===1,'IMPORT MODULE NOT SEPARATED');
  requireState(await identity.locator('[data-footer-style]').count()===2,'FOOTER STYLE CONTROL MISSING');
