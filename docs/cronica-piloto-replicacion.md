@@ -91,3 +91,15 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se conserva el scroll horizontal, la selección y la lógica original de agregar/eliminar.
 
 **Archivos:** `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+
+## Cambio 07 — Todas las placas pueden ser Portada, Interior o Sin diseño (2026-11-12)
+**Estado:** implementado solo en Crónica DEV, pendiente de validación final.
+
+- Las tres variantes están disponibles para cualquier diapositiva, independientemente de la posición. La primera sigue siendo la única que no se puede eliminar, pero su diseño es modificable.
+- Se añadió `Sin diseño` como primera opción: miniatura gris uniforme con borde gris oscuro; lienzo exportado gris uniforme, sin textos, fotografía, logo ni franja.
+- Las nuevas páginas se crean con variante `blank` y cada página mantiene el diseño que selecciona el editor.
+- Miniaturas e indicador reflejan el estado real; Portada e Interior conservan sus formatos.
+- Se oculta la barra de scroll horizontal; se navega arrastrando con el mouse en escritorio y deslizando con el dedo en mobile. Se evita activar una miniatura al terminar un arrastre.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+**Pendiente de replicación:** BAE y Diario Show, solo con autorización expresa.
