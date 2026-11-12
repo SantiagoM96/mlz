@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { argentinaTodayISO } from '../../data/agenda';
-import { agendaV2PreviewActivities } from '../../data/agenda-v2-previews';
+import { publicAgendaShowcase } from '../../features/agenda/utils/publicAgendaShowcase';
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { filterAgendaActivities } from '../../features/agenda/utils/filterAgendaActivities';
 import { isAgendaActivityVisible } from '../../features/agenda/utils/activitySchedules';
-import { getPublicActivityList } from '../../features/agenda/utils/publicActivityViews';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaToolbar } from '../../components/agenda/AgendaToolbar';
@@ -12,25 +11,6 @@ import { AgendaSortDropdown } from '../../features/agenda/components/filters/Age
 import type { AgendaSortValue } from '../../features/agenda/model/sort';
 import { AgendaPromo } from '../../components/agenda/AgendaPromo';
 import { emptyFilters, type SelectedFilters } from '../../features/agenda/model/filterState';
-
-/**
- * 10 tarjetas públicas para revisión visual de Agenda V2.
- * Una actividad puede generar dos tarjetas por sede o encuentro.
- * No se borran datos: los demás casos siguen disponibles en la consola
- * y las fichas pueden abrirse directamente por su URL.
- */
-const showcaseIds = new Set([
-  'preview-v2-yoga-dos-sedes', // 2 sedes
-  'preview-v2-folklore',       // 2 encuentros con artistas distintos
-  'preview-v2-futbol',         // 2 sedes
-  'preview-v2-reciclaje',      // fecha puntual
-  'preview-v2-muestra',        // período
-  'preview-v2-compostaje',     // recurrencia e inscripción online
-  'preview-v2-huerta',         // inscripción presencial
-]);
-const publicActivities = getPublicActivityList(
-  agendaV2PreviewActivities.filter(activity => showcaseIds.has(activity.id)),
-);
 
 /** Buscador/listado de actividades; separado de la Home de la Agenda. */
 export function AgendaPage() {
@@ -48,7 +28,7 @@ export function AgendaPage() {
       filters,
       sort,
       argentinaTodayISO(),
-      publicActivities,
+      publicAgendaShowcase,
     ).filter(activity =>
       activity.id.startsWith('preview-v2-') || isAgendaActivityVisible(activity),
     );
