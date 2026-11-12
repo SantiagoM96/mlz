@@ -69,7 +69,7 @@ function wrappedLines(text,size){
 function drawStrap(y,isCover){
  if(!el('showStrap').checked)return;
  const content=el('strapText').value.replace(/\s+/g,' ').trim().toLocaleUpperCase('es-AR'),maxWidth=W-EDGE*2;
- let size=isCover?37:35;
+ let size=isCover?40:38;
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
  const textWidth=ctx.measureText(content).width,barHeight=isCover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT;
@@ -204,7 +204,7 @@ function readCurrentPage(){
   size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY,variant:pageVariant};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
-const COVER_STRAP="ESCRIBÍ ACÁ UNA FRASE BREVE QUE PRESENTE LA NOTICIA";
+const COVER_STRAP="RESUMÍ ACÁ EL TEMA";
 // Ejemplo común para una nueva diapositiva: funciona tanto en Portada como en Interior.
 const DEFAULT_STRAP=COVER_STRAP;
 const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato principal* y dejá los detalles para las siguientes placas.";
@@ -215,6 +215,8 @@ function newBlankPage(){
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
 function syncVariantUI(){
+ // La variante controla también el DOM de Formato y sus espejos mobile.
+ document.documentElement.dataset.cronicaVariant=pageVariant;
  document.querySelectorAll('.cronica-variant-option').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pageVariant===pageVariant)));
 }
 function loadPage(page){
