@@ -319,3 +319,12 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se conservan las etiquetas, estados seleccionados, tamaño de los botones y el comportamiento del control. La versión contextual clona automáticamente el mismo marcado.
 - Registrar para evaluación antes de replicar a los demás editores.
 **Registro acumulativo: 25 cambios.**
+
+## Cambio 26 — Header con selector visual de plataformas (2026-11-12)
+**Piloto aplicado solo a Crónica DEV.**
+- Se quita el título «Generador de posteos Crónica» y se sustituye el bloque de marca por un selector horizontal de **Crónica, Diario Show y BAE Negocios** con sus SVG originales.
+- La plataforma activa presenta color, tarjeta expandida y animación breve `pop`; las demás se muestran atenuadas en escala de grises y se iluminan al pasar el mouse o recibir foco.
+- En Crónica DEV el logo Crónica está seleccionado; los otros dos enlaces llevan a sus URL DEV reales. Se conserva el botón «Volver» al menú principal.
+- Responsive: las tres marcas permanecen en una fila con anchos flexibles en mobile y se respeta la preferencia `prefers-reduced-motion`.
+- Este header se evalúa en Crónica antes de aplicar el mismo sistema en BAE y Diario Show; al navegar a estos últimos se sigue viendo por ahora su header anterior.
+**Registro acumulativo: 26 cambios.**
