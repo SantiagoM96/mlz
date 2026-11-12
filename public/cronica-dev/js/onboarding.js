@@ -9,7 +9,7 @@
  const qs=s=>document.querySelector(s);
  const steps=[
   {selector:"section.carousel-panel",title:"Organizá las páginas",description:"Agregá, seleccioná o eliminá las páginas del carrusel. La portada y las internas se editan de manera independiente."},
-  {selector:"section.modern-design-group",title:"Elegí el diseño de cada placa",description:"Seleccioná Portada o Interior, configurá el logo y elegí la firma inferior de la placa."},
+  {selector:"section.modern-design-group",title:"Elegí el diseño de cada placa",description:"Seleccioná Portada o Interior para definir el diseño de la placa."},
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, configurá la volanta, destacá fragmentos y elegí su alineación."},
   {selector:"section.modern-design-group > .modern-toggle",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true,focusHeader:true},
