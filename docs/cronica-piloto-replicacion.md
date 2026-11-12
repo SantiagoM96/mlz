@@ -162,3 +162,15 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
 **Registro acumulativo:** 12 cambios exclusivos de Crónica DEV; ninguno replicado aún a BAE ni Diario Show.
+
+## Cambio 13 — Volanta oculta en Sin diseño y edición visual del texto (2026-11-12)
+**Estado:** implementado en Crónica DEV; pendiente de validación funcional y visual en navegador.
+
+- Se corrige el selector real del módulo: si la variante es `Sin diseño`, se oculta **el contenedor completo de Mostrar volanta**, aunque esté ubicado físicamente dentro de `Diseño de placas`. También se contempla el clon contextual de mobile.
+- El campo `Texto principal` incorpora edición visual con `contenteditable`, mostrando destacados en **negrita**, cursivas y tachados sin exponer `*`, `_` ni `~`.
+- Los botones de formato alternan activación/desactivación sobre un fragmento seleccionado. El botón Limpiar formato elimina los tres efectos en la selección.
+- Se mantiene un textarea original oculto como fuente para el motor actual de Canvas y exportación: el destacado permanece rojo en el PNG; negrita es solo la representación en el controlador.
+- La edición se sincroniza con la carga de páginas y el editor contextual mobile. Las ediciones de texto se convierten al formato interno de forma transparente.
+
+**Archivos:** `public/cronica-dev/js/rich-headline.js` (nuevo), `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+**Registro acumulativo:** 13 cambios exclusivos de Crónica DEV, pendientes de evaluación para BAE y Diario Show.
