@@ -62,6 +62,15 @@ document.addEventListener('click',event=>{
  if(event.detail>0)toggle.blur();
  if(typeof updateMobileSlideHeight==='function')requestAnimationFrame(updateMobileSlideHeight);
 },true);
+// Fusionar identidad en Diseño de placas sin duplicar IDs ni perder listeners.
+const designCard=document.querySelector('#dsMobileControlsPanel .ds-plate-design-group');
+const identityCard=document.querySelector('#dsMobileControlsPanel .ds-content-group');
+if(designCard&&identityCard){
+ const designBody=designCard.querySelector(':scope > .ds-control-card-body');
+ const identityBody=identityCard.querySelector(':scope > .ds-control-card-body');
+ for(const node of [...identityBody.children])designBody.append(node);
+ identityCard.remove();
+}
 // Secciones plegables: solo se oculta el contenido, sin reiniciar controles.
 document.querySelectorAll('.ds-control-card-toggle').forEach(button=>{
  button.addEventListener('click',()=>{
@@ -867,8 +876,8 @@ const previewContentHost=document.createElement('div');
 previewContentHost.id='dsMobileContentEditor';
 previewContentHost.className='ds-mobile-content-editor editor-panel';
 previewContentHost.hidden=true;
-previewContentHost.setAttribute('aria-label','Identidad gráfica de la placa');
-const sourceContent=document.querySelector('#dsMobileControlsPanel .ds-content-group');
+previewContentHost.setAttribute('aria-label','Diseño de placas de la placa');
+const sourceContent=document.querySelector('#dsMobileControlsPanel .ds-plate-design-group');
 const previewContentCard=sourceContent.cloneNode(true);
 previewContentCard.querySelectorAll('[id]').forEach(node=>node.id+='Preview');
 previewContentCard.querySelectorAll('[for]').forEach(node=>node.setAttribute('for',node.getAttribute('for')+'Preview'));
@@ -884,12 +893,14 @@ previewContentToggle.addEventListener('click',()=>{
  requestAnimationFrame(updateMobileSlideHeight);
 });
 previewContentCard.addEventListener('click',event=>{
- const choice=event.target.closest('[data-logo],[data-logo-position],[data-footer-style]');
+ const choice=event.target.closest('[data-logo],[data-logo-position],[data-footer-style],[data-variant]');
  if(choice){
   const source=choice.dataset.logo!==undefined?
    sourceContent.querySelector('[data-logo="'+choice.dataset.logo+'"]'):
    choice.dataset.logoPosition!==undefined?
    sourceContent.querySelector('[data-logo-position="'+choice.dataset.logoPosition+'"]'):
+   choice.dataset.variant!==undefined?
+   sourceContent.querySelector('[data-variant="'+choice.dataset.variant+'"]'):
    sourceContent.querySelector('[data-footer-style="'+choice.dataset.footerStyle+'"]');
   source?.click();syncPreviewContentEditor();
   return;
@@ -898,10 +909,11 @@ previewContentCard.addEventListener('click',event=>{
 });
 function syncPreviewContentEditor(){
  if(!previewContentHost.isConnected)return;
- for(const button of previewContentCard.querySelectorAll('[data-logo],[data-logo-position],[data-footer-style]')){
+ for(const button of previewContentCard.querySelectorAll('[data-logo],[data-logo-position],[data-footer-style],[data-variant]')){
   const selector=button.dataset.logo!==undefined?
    '[data-logo="'+button.dataset.logo+'"]':button.dataset.logoPosition!==undefined?
-   '[data-logo-position="'+button.dataset.logoPosition+'"]':'[data-footer-style="'+button.dataset.footerStyle+'"]';
+   '[data-logo-position="'+button.dataset.logoPosition+'"]':button.dataset.variant!==undefined?
+   '[data-variant="'+button.dataset.variant+'"]':'[data-footer-style="'+button.dataset.footerStyle+'"]';
   const source=sourceContent.querySelector(selector);
   if(source)button.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
  }
@@ -1049,7 +1061,7 @@ function makePreviewHit(id,label,handler,context){
  hitLayer.appendChild(button);
  return button;
 }
-makePreviewHit('dsLogoHitButton','Editar logo e Identidad gráfica',showMobileContentEditor,'logo');
+makePreviewHit('dsLogoHitButton','Editar logo en Diseño de placas',showMobileContentEditor,'logo');
 makePreviewHit('dsHeadlineHitButton','Editar Texto principal',()=>{
  if(mobileTabViewport.matches)openMobileHeadlineEditor();
  else{
