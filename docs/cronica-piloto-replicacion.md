@@ -448,3 +448,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - En Crónica, BAE y Diario Show DEV se desactiva **outline y box-shadow** tanto en `:focus` como en `:focus-visible` del botón Siguiente. Para uso por teclado se conserva un indicador no externo: subrayado del texto al recibir `:focus-visible`.
 - Se mantienen la gestión de foco, los atajos de teclado, los estados de los restantes controles y el diseño de las tarjetas. Se actualiza la versión del CSS de onboarding para evitar caché.
 **Registro acumulado: 43 cambios.**
+
+## Cambio 44 — Color real de degradés en miniaturas Diario Show DEV (2026-11-12)
+- **Solo Diario Show DEV.** Se igualan las miniaturas de **Variante 3 (cita fucsia)** y **Variante 4 (cita celeste)** a los tonos reales del canvas `renderQuoteVariant()`: **#E6008D** y **#00A6D9** respectivamente.
+- El degradado replica el comportamiento del render: transición del mismo RGB desde **0% a 100% de opacidad** sobre el fondo fotográfico neutro `#aeb4bc`, en lugar de los antiguos colores oscuros de miniatura `#A30065` y `#008FBE`.
+- **Diseño de placas y Diapositivas** se actualizan automáticamente: la navegación de páginas clona las miniaturas originales con las mismas clases y estilos. Sin cambios de colores en las placas exportadas ni en Crónica/BAE.
+**Registro acumulativo: 44 cambios.**
