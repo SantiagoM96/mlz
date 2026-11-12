@@ -1,0 +1,38 @@
+name: Onboarding Shift y espacios DEV
+on:
+  push:
+    paths:
+      - 'public/cronica-dev/js/onboarding.js'
+      - 'public/cronica-dev/css/onboarding.css'
+      - 'public/cronica-dev/css/modern-editor.css'
+      - 'public/bae-dev/js/onboarding.js'
+      - 'public/bae-dev/css/onboarding.css'
+      - 'public/bae-dev/css/modern-editor.css'
+      - 'public/diarioshow-dev/js/onboarding.js'
+      - 'public/diarioshow-dev/css/onboarding.css'
+      - 'public/shared/shift-click-demo.svg'
+      - 'scripts/editorial-onboarding-spacing-smoke.mjs'
+      - '.github/workflows/editorial-onboarding-spacing-smoke.yml'
+  workflow_dispatch:
+jobs:
+  onboard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Levantar DEV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public >/tmp/editorial-onboarding.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Comprobar ilustración y espaciado
+        run: node scripts/editorial-onboarding-spacing-smoke.mjs
