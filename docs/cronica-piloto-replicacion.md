@@ -456,3 +456,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Registro acumulativo: 44 cambios.**
 
 **QA Cambio 44: APROBADA** — [Chromium / GitHub Actions](https://github.com/SantiagoM96/mlz/actions/runs/43160878649). Se seleccionaron ambas variantes de cita en Diario Show DEV y se comprobó que los estilos computados de sus miniaturas en «Diseño de placas» y sus clones en «Diapositivas» son idénticos. Colores de los degradés finales: fucsia RGB (230,0,141) y celeste RGB (0,166,217), desde alfa 0 a alfa 1.
+
+## Cambio 45 — Switches en Diseño de placas y jerarquía final de Textos (2026-11-12)
+- **BAE DEV:** se mueve «Incluir textual» al final de Diseño de placas; su textarea «Textual» permanece al comienzo de Textos y se oculta cuando se desactiva el switch. Se conservan los elementos y listeners originales.
+- **Diario Show DEV:** para las variantes 3 y 4, se mueve el switch «Mostrar autor de la cita» a Diseño de placas, y su campo «Autor de la cita» pasa al comienzo de Textos. En variantes 1 y 2 ambos desaparecen; el campo sólo aparece al activar el switch en variantes de cita.
+- La estructura final de Textos mantiene los campos condicionados primero, después Formato de texto principal / Alineación, Texto principal y Tamaño de tipografía al final.
+- **BAE** recupera las etiquetas de formato de 14 px y botones de 43 px, y el realce interior blanco de alineación de Diario Show. No se alteran Crónica ni producción.
+**Registro acumulado: 45 cambios.**
