@@ -214,7 +214,11 @@ function newBlankPage(){
  return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
   image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank',samplePending:true};
 }
-function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
+function saveActivePage(){
+ const previous=carouselPages[activePage];if(!previous)return;
+ carouselPages[activePage]={...readCurrentPage(),
+  samplePending:pageVariant==='blank'&&Boolean(previous.samplePending)};
+}
 function syncVariantUI(){
  // La variante controla también el DOM de Formato y sus espejos mobile.
  document.documentElement.dataset.cronicaVariant=pageVariant;
