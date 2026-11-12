@@ -103,3 +103,17 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
 **Pendiente de replicación:** BAE y Diario Show, solo con autorización expresa.
+
+## Cambio 08 — Visibilidad contextual de los controles de Diseño de placas (2026-11-12)
+**Estado:** implementado solo en Crónica DEV; pendiente de validación visual.
+
+- **Portada:** opciones de diseño, logo y Firma inferior visibles.
+- **Interior:** Firma inferior oculta, porque este diseño no la dibuja; logo y resto de controles pertinentes visibles.
+- **Sin diseño:** solo quedan las variantes de diseño; se ocultan logo, firma y módulos de fotografía/textos hasta elegir un diseño que los utilice.
+- La regla se aplica al panel original y al editor contextual de la vista previa, también al cambiar de diapositiva.
+- Se conservan los valores de los controladores ocultos; no se eliminan al cambiar de variante.
+
+**Archivos:** `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+**Pendiente de replicación:** BAE y Diario Show, con autorización expresa.
+
+**Registro acumulativo:** 8 cambios en Crónica DEV; 8 pendientes de evaluación/adaptación en los otros productos.
