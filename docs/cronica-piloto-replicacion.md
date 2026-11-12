@@ -399,3 +399,11 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - La placa animada **Shift + clic** se ubica inmediatamente después del último módulo de configuración en cada editor y toma como objetivo exclusivamente el botón de cabecera de **Diseño de placas**, no el cuerpo completo. La máscara oscurece el contenido del acordeón y resalta solamente donde se pulsa el encabezado y el chevrón.
 - Se preservan la misma máscara instantánea, los botones del recorrido, su copia y el estado real de cada acordeón; se renueva la versión del onboarding en los tres DEV.
 **Registro acumulativo: 36 cambios.**
+
+## Cambio 37 — Ilustración Shift simplificada y ajuste final del recorrido (2026-11-12)
+- La ilustración compartida de Shift se reorganiza: **acordeones a la izquierda**, tecla Shift y mouse **a la derecha**. Se eliminan la caja adicional que rodeaba la tecla, el signo igual y los textos de instrucciones al pie.
+- El fondo de Shift iluminado cambia a un gris azulado moderado `#536279`, con icono y tipografía claros y legibles; sin relleno blanco pleno. La tecla y el mouse accionan sincronizadamente los **tres módulos**, que pasan de **36 px de alto (contraídos)** a **66 px (expandidos)** y regresan juntos, ajustando su posición para evitar superposiciones.
+- La ilustración se comparte en los onboarding de los tres DEV; se actualizan las versiones de caché del SVG y de los scripts.
+- Diario Show: se elimina el paso de fotografía duplicado entre «Distribución fotográfica» e «Importar noticias» para respetar la secuencia solicitada: Diseño de placas → Distribución fotográfica → Importar noticias → Textos → Shift + clic sobre la cabecera de Diseño.
+- Se mantiene sin cambios la lógica real de Shift + clic de cada editor y el resaltado de cabecera definido en Cambio 36.
+**Registro acumulativo: 37 cambios.**
