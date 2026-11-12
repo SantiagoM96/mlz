@@ -242,20 +242,18 @@ function renderCarouselNavigation(){
   button.setAttribute('title','Página '+(index+1)+' · '+variantName);
   button.className='carousel-page-thumb';
   button.dataset.variant=variant;
+  // Se clona la miniatura real del selector, sin recrear sus colores ni
+  // su composición. El aro de selección pertenece únicamente a este botón.
+  const original=document.querySelector('.cronica-variant-option[data-page-variant="'+variant+'"] .cronica-variant-thumbnail');
   const composition=document.createElement('span');
-  composition.className='carousel-page-art';
+  composition.className='carousel-design-copy editor-panel';
   composition.setAttribute('aria-hidden','true');
-  const photo=document.createElement('span');
-  photo.className='carousel-page-photo';
-  const content=document.createElement('span');
-  content.className='carousel-page-content';
-  const strap=document.createElement('span');
-  strap.className='carousel-page-strap';
-  const lines=document.createElement('span');
-  lines.className='carousel-page-lines';
-  lines.append(document.createElement('i'),document.createElement('i'));
-  content.append(strap,lines);
-  composition.append(photo,content);
+  if(original){
+   const design=document.createElement('span');
+   design.className='cronica-variant-option carousel-design-source';
+   design.appendChild(original.cloneNode(true));
+   composition.appendChild(design);
+  }
   const number=document.createElement('span');
   number.className='carousel-page-number';
   number.textContent=String(index+1);
