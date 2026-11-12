@@ -366,3 +366,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - El activo usa colores del SVG original; los otros mantienen el efecto de escala de grises, sin fondos, tarjetas ni inversión artificial del logotipo Diario Show.
 - Se iguala el ancho de botón Volver en mobile para evitar saltos de línea.
 **Registro acumulativo: 31 cambios.**
+
+## Cambio 32 — Orden de volanta y comportamiento blanco de controles (2026-11-12)
+- En Crónica DEV el orden dentro de **Textos** es: `Texto de la volanta` (condicional al switch de Diseño de placas) → `Formato de texto` / `Alineación` → `Texto principal` → `Tamaño de tipografía`.
+- En Crónica y BAE DEV se adopta el comportamiento de sliders de Diario Show: hover gris solo sobre la bolita real, y bolita blanca con halo blanco al arrastrarla. Afecta el slider de tamaño de texto, opacidad de halftone cuando esté disponible y zoom fotográfico.
+- Se mantiene la lógica de valores, los porcentajes, las variantes y el gesto de click sobre pista; no se muestra halo si se toca fuera de la bolita.
+- Diario Show DEV conserva su implementación actual, utilizada como referencia.
+**Registro acumulativo: 32 cambios.**
