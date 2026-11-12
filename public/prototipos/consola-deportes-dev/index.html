@@ -207,6 +207,30 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .sports-preview-sticky{top:24px!important;max-height:calc(100vh - 36px)!important;scrollbar-width:thin}
 @media(max-width:850px){.sports-preview-sticky{top:auto!important;max-height:none!important}}
 @media(max-width:600px){.activity-modality-options{display:grid;grid-template-columns:1fr}.activity-modality-options label{width:100%}}
+
+/* Comisión: bloques de días y rangos horarios independientes. */
+.schedule-editor{margin:24px 0 16px}
+.schedule-editor-intro{display:flex;justify-content:space-between;align-items:start;margin-bottom:16px}
+.schedule-editor h3{font-size:18px;line-height:24px;color:#236999;margin:0 0 6px}
+.schedule-editor .hint{margin:0;font-size:13px;line-height:20px}
+.schedule-block{padding:16px;margin:0 0 14px;border:1px solid #d4e3ed;border-radius:7px;background:#fff}
+.schedule-block-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;color:#236999}
+.schedule-block-heading strong{font-size:15px}
+.schedule-days{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.schedule-day{position:relative;display:inline-flex;min-height:42px;align-items:center;gap:8px;padding:8px 12px;border:1px solid #9dc6dc;border-radius:4px;color:#3d3d3d;background:#fff;cursor:pointer;font-size:14px}
+.schedule-day:has(input:checked){border-color:#006eff;background:#edf6ff;color:#236999;box-shadow:inset 0 0 0 1px #006eff}
+.schedule-day:focus-within{outline:2px solid #006eff;outline-offset:2px}
+.schedule-day input{width:18px;height:18px;accent-color:#006eff;margin:0;flex:none}
+.schedule-time-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:14px;align-items:end}
+.schedule-time-row .field{min-width:0}
+.schedule-time-row .field label{font-size:14px}
+.schedule-time-row input[type=time]{width:100%;height:48px;min-height:48px;padding:10px 14px;border-radius:4px;border:1px solid #5ba8d5;color:#3d3d3d;font-size:16px}
+.schedule-time-row input[type=time]:focus{border:1px solid #006eff;outline:0;box-shadow:inset 0 0 0 1px #006eff}
+.schedule-pending{display:flex;align-items:center;gap:9px;min-height:48px;font-size:13px;cursor:pointer}
+.schedule-pending input{accent-color:#006eff;width:19px;height:19px;flex:none}
+.schedule-add{display:inline-flex;gap:8px;align-items:center}
+.schedule-legacy{padding-top:10px}
+@media(max-width:680px){.schedule-block{padding:13px}.schedule-time-row{grid-template-columns:repeat(2,minmax(0,1fr))}.schedule-pending{grid-column:1/-1}.schedule-day{flex:1 1 100px}.dialog.wide{max-height:94dvh}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -425,7 +449,65 @@ if(type==='new'){editId=null;draft={id:'new-'+Date.now(),sourceId:'NUEVA',name:'
  try{localStorage.setItem(KEY,JSON.stringify(records))}catch{records=snapshot;alert('No hay espacio suficiente para guardar las fotos. Quitá alguna imagen e intentá de nuevo.');return}
  view='list';editId=null;draft=null;page=0;render();return}if(type==='add-commission'||type==='edit-commission'){syncDraftForm();modalType='commission';modalIndex=type==='add-commission'?-1:index;renderModal();return}if(type==='dup-commission'){syncDraftForm();let c=structuredClone(draft.commissions[index]);c.id='COM-COPIA-'+Date.now();draft.commissions.splice(index+1,0,c);render();return}if(type==='remove-commission'){syncDraftForm();if(confirm('¿Eliminar esta comisión del formulario?'))draft.commissions.splice(index,1);render();return}if(type==='export'){alert('Todavía no hay inscripciones reales disponibles para exportar.');return}}
 function syncDraftForm(){let form=document.getElementById('activity-form');if(!form||!draft)return;let d=new FormData(form);for(const k of ['name','venue','intensidad','sex'])draft[k]=String(d.get(k)||'');draft.tipo=readModalidades(d);draft.address=catalogs.sedes.find(s=>s.name===draft.venue)?.address||draft.address||'';draft.categoriaTipoGlobal=String(d.get('category')||'');draft.min=Number(d.get('min'));draft.max=Number(d.get('max'));draft._hidden=d.get('state')==='Oculta';draft.pcd=d.has('pcd');draft.previousTest=d.has('previousTest')}
-function renderModal(){if(!modalType){modal.innerHTML='';return}let body='',title='',footer='',wide='';if(modalType==='delete'){let a=records[modalIndex];title='Eliminar actividad';body='<p>¿Querés eliminar <strong>'+e(a?.name)+'</strong> de esta copia de desarrollo? También se eliminarán sus comisiones.</p><p class="hint">Esta acción no modifica la agenda pública.</p>';footer=btn('Cancelar','close')+btn(ic('delete')+' Eliminar actividad','confirm-delete','danger')}if(modalType==='commission'){let c=modalIndex<0?{prof:'',cupos:20,schedule:[{days:'Lunes y Miércoles',start:'17:00',end:'18:00'}],sex:draft.sex,tipo:draft.tipo,intensidad:draft.intensidad}:draft.commissions[modalIndex];let t=c.schedule?.[0]||{};title=modalIndex<0?'Nueva comisión':'Editar comisión';body='<form id="commission-form"><div class="grid2">'+sel('Profesor/a *','prof',safeCatalogOption('profesores',c.prof),c.prof)+f('Cupo *','cupos',c.cupos,'number','min="0" required')+f('Días','days',t.days||'')+f('Hora de inicio','start',t.start||'')+f('Hora de fin','end',t.end||'')+'</div><p class="hint">La modalidad, intensidad y público se configuran en la actividad. Los datos anteriores de la comisión se conservan en la fuente.</p></form>';footer=btn('Cancelar','close')+btn(modalIndex<0?'Agregar comisión':'Guardar comisión','save-commission','primary')}if(modalType==='catalog'){
+
+const WEEKDAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+let scheduleCounter=0;
+function normalizeScheduleDays(text){
+ const value=String(text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ const names=WEEKDAYS.map(d=>d.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+ const range=value.match(/(lunes|martes|miercoles|jueves|viernes|sabado|domingo)\s+a\s+(lunes|martes|miercoles|jueves|viernes|sabado|domingo)/);
+ if(range){const first=names.indexOf(range[1]),last=names.indexOf(range[2]);if(first>=0&&last>=first)return WEEKDAYS.slice(first,last+1)}
+ return WEEKDAYS.filter((d,i)=>new RegExp('\\b'+names[i]+'(?:s)?\\b').test(value));
+}
+function scheduleBlock(data={},i=null){
+ const id=i??++scheduleCounter;
+ const days=Array.isArray(data.selectedDays)?data.selectedDays:normalizeScheduleDays(data.days);
+ const pending=data.pending===true||data.start==='A confirmar'||data.end==='A confirmar';
+ const start=/^\d{2}:\d{2}$/.test(String(data.start||''))?data.start:'';
+ const end=/^\d{2}:\d{2}$/.test(String(data.end||''))?data.end:'';
+ return '<div class="schedule-block" data-schedule-block="'+id+'"><div class="schedule-block-heading"><strong>Horario <span class="schedule-block-number"></span></strong><button type="button" class="iconbtn red schedule-remove" title="Eliminar horario" aria-label="Eliminar bloque de días y horarios">'+ic('delete')+'</button></div>'+
+ '<div class="schedule-days" role="group" aria-label="Días de este horario">'+WEEKDAYS.map(day=>'<label class="schedule-day"><input type="checkbox" value="'+day+'" '+(days.includes(day)?'checked':'')+'><span>'+day+'</span></label>').join('')+'</div>'+
+ '<div class="schedule-time-row"><div class="field"><label>Desde</label><input type="time" class="schedule-start" value="'+e(start)+'" '+(pending?'disabled':'')+'></div><div class="field"><label>Hasta</label><input type="time" class="schedule-end" value="'+e(end)+'" '+(pending?'disabled':'')+'></div><label class="schedule-pending"><input type="checkbox" class="schedule-pending-check" '+(pending?'checked':'')+'> Horario a confirmar</label></div>'+
+ (days.length===0&&data.days?'<p class="hint schedule-legacy">Días originales: '+e(data.days)+'. Seleccioná los días correspondientes.</p>':'')+
+ '</div>';
+}
+function renumberScheduleBlocks(){
+ modal.querySelectorAll('.schedule-block-number').forEach((el,i)=>{el.textContent=String(i+1)});
+ modal.querySelectorAll('.schedule-remove').forEach(btn=>{btn.disabled=modal.querySelectorAll('.schedule-block').length===1});
+}
+function bindScheduleEditor(){
+ const container=modal.querySelector('#schedule-blocks');if(!container)return;
+ container.addEventListener('click',ev=>{
+  const remove=ev.target.closest('.schedule-remove');if(remove){remove.closest('.schedule-block').remove();renumberScheduleBlocks()}
+ });
+ container.addEventListener('change',ev=>{
+  if(!ev.target.matches('.schedule-pending-check'))return;
+  const block=ev.target.closest('.schedule-block');
+  block.querySelectorAll('.schedule-start,.schedule-end').forEach(input=>{input.disabled=ev.target.checked});
+ });
+ modal.querySelector('#schedule-add')?.addEventListener('click',()=>{
+  container.insertAdjacentHTML('beforeend',scheduleBlock({selectedDays:[],start:'',end:''}));
+  renumberScheduleBlocks();
+  container.lastElementChild?.scrollIntoView({block:'nearest',behavior:'smooth'});
+ });
+ renumberScheduleBlocks();
+}
+function readScheduleEditor(){
+ const blocks=[...modal.querySelectorAll('.schedule-block')],output=[];
+ if(!blocks.length){alert('Agregá al menos un horario.');return null}
+ for(let i=0;i<blocks.length;i++){
+  const block=blocks[i],days=[...block.querySelectorAll('.schedule-day input:checked')].map(x=>x.value);
+  const pending=block.querySelector('.schedule-pending-check').checked;
+  const start=block.querySelector('.schedule-start').value,end=block.querySelector('.schedule-end').value;
+  if(!days.length){alert('Seleccioná al menos un día en el horario '+(i+1)+'.');return null}
+  if(!pending&&(!start||!end)){alert('Completá las horas de inicio y fin del horario '+(i+1)+'.');return null}
+  if(!pending&&start>=end){alert('La hora de fin debe ser posterior a la hora de inicio en el horario '+(i+1)+'.');return null}
+  output.push({days:days.join(' y '),start:pending?'A confirmar':start,end:pending?'A confirmar':end,estimated:false,pending});
+ }
+ return output;
+}
+
+function renderModal(){if(!modalType){modal.innerHTML='';return}let body='',title='',footer='',wide='';if(modalType==='delete'){let a=records[modalIndex];title='Eliminar actividad';body='<p>¿Querés eliminar <strong>'+e(a?.name)+'</strong> de esta copia de desarrollo? También se eliminarán sus comisiones.</p><p class="hint">Esta acción no modifica la agenda pública.</p>';footer=btn('Cancelar','close')+btn(ic('delete')+' Eliminar actividad','confirm-delete','danger')}if(modalType==='commission'){let c=modalIndex<0?{prof:'',cupos:20,schedule:[{days:'Lunes y Miércoles',start:'17:00',end:'18:00'}],sex:draft.sex,tipo:draft.tipo,intensidad:draft.intensidad}:draft.commissions[modalIndex];title=modalIndex<0?'Nueva comisión':'Editar comisión';wide='wide';body='<form id="commission-form"><div class="grid2">'+sel('Profesor/a *','prof',safeCatalogOption('profesores',c.prof),c.prof)+f('Cupo *','cupos',c.cupos,'number','min="0" required')+'</div><div class="schedule-editor"><div class="schedule-editor-intro"><div><h3>Días y horarios</h3><p class="hint">Seleccioná los días que comparten un horario. Para otros horarios, agregá un bloque nuevo.</p></div></div><div id="schedule-blocks">'+(c.schedule?.length?c.schedule:[{days:'',start:'',end:''}]).map((t,i)=>scheduleBlock(t,i+1)).join('')+'</div><button type="button" class="btn schedule-add" id="schedule-add">'+ic('add')+' Agregar otro horario</button></div><p class="hint">Cada comisión admite varios horarios. La modalidad, intensidad y público se configuran en la actividad.</p></form>';footer=btn('Cancelar','close')+btn(modalIndex<0?'Agregar comisión':'Guardar comisión','save-commission','primary')}if(modalType==='catalog'){
  const def=CATALOG_DEFINITIONS[catalogTab],item=catalogEdit<0?{name:'',address:'',locality:''}:catalogs[catalogTab][catalogEdit];
  title=(catalogEdit<0?'Agregar ':'Editar ')+def.singular.toLowerCase();
  body='<form id="catalog-form">'+f('Nombre *','catalogName',item.name,'text','required maxlength="120"')+
@@ -439,7 +521,7 @@ if(modalType==='catalog-delete'){
  body='<p>¿Querés eliminar <strong>'+e(item.name)+'</strong> del catálogo?</p><p class="hint">'+e(count)+'. Los registros que ya lo usan conservarán el valor existente, pero no estará disponible para nuevas selecciones.</p>';
  footer=btn('Cancelar','close')+btn('Eliminar','confirm-catalog-delete','danger');
 }
-modal.innerHTML='<div class="backdrop" role="presentation"><div class="dialog '+wide+'" role="dialog" aria-modal="true" aria-labelledby="dialog-heading"><div class="dialog-title"><h2 id="dialog-heading">'+title+'</h2><button class="iconbtn" data-modal="close" aria-label="Cerrar">'+ic('close')+'</button></div><div class="dialog-content">'+body+'</div><div class="dialog-footer">'+footer+'</div></div></div>';modal.querySelectorAll('[data-action],[data-modal]').forEach(x=>x.addEventListener('click',()=>modalAction(x.dataset.action||x.dataset.modal)));let b=modal.querySelector('.backdrop');b.addEventListener('click',ev=>{if(ev.target===b)modalAction('close')});enhanceDeportesSelects(modal);modal.querySelector('input')?.focus()}
+modal.innerHTML='<div class="backdrop" role="presentation"><div class="dialog '+wide+'" role="dialog" aria-modal="true" aria-labelledby="dialog-heading"><div class="dialog-title"><h2 id="dialog-heading">'+title+'</h2><button class="iconbtn" data-modal="close" aria-label="Cerrar">'+ic('close')+'</button></div><div class="dialog-content">'+body+'</div><div class="dialog-footer">'+footer+'</div></div></div>';modal.querySelectorAll('[data-action],[data-modal]').forEach(x=>x.addEventListener('click',()=>modalAction(x.dataset.action||x.dataset.modal)));let b=modal.querySelector('.backdrop');b.addEventListener('click',ev=>{if(ev.target===b)modalAction('close')});enhanceDeportesSelects(modal);bindScheduleEditor();modal.querySelector('input')?.focus()}
 function modalAction(t){if(t==='close'){modalType=null;renderModal();return}if(t==='confirm-delete'){records.splice(modalIndex,1);save();modalType=null;render();return}if(t==='save-catalog'){
  const form=document.getElementById('catalog-form');if(!form.reportValidity())return;
  const data=new FormData(form),name=String(data.get('catalogName')||'').trim();
@@ -458,7 +540,7 @@ function modalAction(t){if(t==='close'){modalType=null;renderModal();return}if(t
  current.sort((a,b)=>a.name.localeCompare(b.name,'es'));persistCatalog();modalType=null;render();return
 }
 if(t==='confirm-catalog-delete'){catalogs[catalogTab].splice(catalogDelete,1);persistCatalog();modalType=null;render();return}
-if(t==='save-commission'){let form=document.getElementById('commission-form');if(!form.reportValidity())return;let data=new FormData(form);let old=modalIndex>=0?draft.commissions[modalIndex]:{};let c={...old,id:old.id||'COM-NUEVA-'+Date.now(),prof:String(data.get('prof')).trim(),cupos:Number(data.get('cupos')),schedule:[{days:String(data.get('days')),start:String(data.get('start')),end:String(data.get('end')),estimated:false,pending:false}],tipo:draft.tipo,intensidad:draft.intensidad,sex:draft.sex,pcd:draft.pcd,previousTest:draft.previousTest};if(!c.prof)return;if(modalIndex<0)draft.commissions.push(c);else draft.commissions[modalIndex]=c;modalType=null;render()}}
+if(t==='save-commission'){let form=document.getElementById('commission-form');if(!form.reportValidity())return;let data=new FormData(form);let schedule=readScheduleEditor();if(!schedule)return;let old=modalIndex>=0?draft.commissions[modalIndex]:{};let c={...old,id:old.id||'COM-NUEVA-'+Date.now(),prof:String(data.get('prof')).trim(),cupos:Number(data.get('cupos')),schedule,tipo:draft.tipo,intensidad:draft.intensidad,sex:draft.sex,pcd:draft.pcd,previousTest:draft.previousTest};if(!c.prof)return;if(modalIndex<0)draft.commissions.push(c);else draft.commissions[modalIndex]=c;modalType=null;render()}}
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&modalType){modalType=null;renderModal()}});
 
 /* Dropdowns con selector de escritorio y bottom sheet móvil, alineados al formulario de Deportes. */
