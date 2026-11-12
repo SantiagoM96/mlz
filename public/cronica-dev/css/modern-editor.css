@@ -855,3 +855,13 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
  }
  .modern-track>.preview>.cronica-preview-pages .carousel-pages{gap:8px}
 }
+
+/* Al entrar al primer paso del onboarding, también se destaca Páginas:
+   sin cabecera plegable, pero con el mismo pulso de las demás tarjetas. */
+.preview>.cronica-preview-pages.modern-card-flash{
+ animation:editorial-card-pulse 1.05s linear both!important;
+ border:1px solid #383d46!important;border-radius:10px!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .preview>.cronica-preview-pages.modern-card-flash{animation-duration:.01ms!important}
+}
