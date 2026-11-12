@@ -5,6 +5,18 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/'+slug+'/?onboarding=force',{waitUntil:'load'});
  await page.locator('.ds-tour-card:not([hidden])').waitFor({timeout:12000});
+ // El foco automático y el foco por teclado nunca deben dibujar aro
+ // alrededor del botón «Siguiente» / «Finalizar».
+ const nextButton=page.locator('.ds-tour-next');
+ await nextButton.focus();
+ const outline=await nextButton.evaluate(el=>{
+  const s=getComputedStyle(el);
+  return {style:s.outlineStyle,width:s.outlineWidth,shadow:s.boxShadow};
+ });
+ if(outline.style!=='none'||outline.shadow!=='none')
+  throw Error(slug+': botón Siguiente conserva aro exterior '+JSON.stringify(outline));
+ console.log('PASS botón Siguiente sin aro de foco',slug);
+
  if(slug!=='diarioshow-dev'){
   const mask=await page.locator('.ds-tour-highlight').evaluate(el=>{
    const s=getComputedStyle(el),shade=getComputedStyle(document.querySelector('.ds-tour-shade'));
