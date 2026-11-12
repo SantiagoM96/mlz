@@ -84,7 +84,11 @@ const nav=document.createElement('section');nav.className='editor-slide-nav';
 nav.setAttribute('aria-label','Diapositivas');
 nav.innerHTML='<div class="editor-slide-heading"><strong>Diapositivas</strong><span class="editor-slide-indicator" aria-live="polite"></span></div><div class="editor-slide-row"><div class="editor-slide-track" role="group" aria-label="Seleccionar diapositiva"></div><div class="editor-slide-actions"><button type="button" class="editor-slide-add-fixed" aria-label="Agregar diapositiva" title="Agregar diapositiva"><span class="material-icons">add</span></button><button type="button" class="editor-slide-delete" aria-label="Eliminar diapositiva" title="Eliminar diapositiva"><span class="material-icons">delete_outline</span></button></div></div>';
 preview.insertBefore(nav,preview.querySelector('.preview-toolbar'));
-function save(){pages[active]=editor.getPageState()}
+function save(){
+ const previous=pages[active];
+ const current=editor.getPageState();
+ pages[active]={...current,samplePending:current.variant==='blank'&&Boolean(previous?.samplePending)};
+}
 function load(index){
  active=index;editor.setPageState(pages[index]);syncBlankOptions();draw();
 }
