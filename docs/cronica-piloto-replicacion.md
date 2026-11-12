@@ -283,3 +283,11 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Las copias contextuales mobile de ambos módulos se sincronizan con el mismo switch/valor originales.
 - Se actualizó prueba automatizada de composición y visibilidad del campo.
 **Registro acumulativo: 20 cambios**, con los cambios 19 y 20 documentados como revisión de ubicación.
+
+## Cambio 21 — Orden correcto de Formato de texto en Crónica DEV (2026-11-12)
+**Estado:** aplicado exclusivamente en Crónica DEV; pendiente de prueba visual automatizada.
+- En el módulo **Textos** se fija el orden: **Texto de la volanta** (si está activo) → **Formato de texto** → **Texto principal** → **Tamaño de tipografía**.
+- El interruptor **Mostrar volanta** permanece en **Diseño de placas**, sin cambios en su funcionamiento.
+- Se reubica el grupo de formato original sin recrearlo, preservando listeners, selección de texto, previsualización y exportación.
+- **Propuesta UX para evaluar antes de implementar:** renombrar el label a «Formato del texto principal» y añadir una ayuda breve «Seleccioná una parte del texto principal para aplicar o quitar el formato». Este cambio de copy todavía no se implementa.
+- **Registro acumulativo:** 21 cambios; BAE y Diario Show no se modificaron y la propuesta UX queda pendiente de definición para replicación.
