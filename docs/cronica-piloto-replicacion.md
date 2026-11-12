@@ -117,3 +117,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Pendiente de replicación:** BAE y Diario Show, con autorización expresa.
 
 **Registro acumulativo:** 8 cambios en Crónica DEV; 8 pendientes de evaluación/adaptación en los otros productos.
+
+## Cambio 09 — Volanta activa con texto explicativo por defecto (2026-11-12)
+**Estado:** implementado únicamente en Crónica DEV; pendiente de validación visual.
+
+- En la página inicial de Portada, la volanta viene activada con el texto de ejemplo: `ESCRIBÍ ACÁ UNA FRASE BREVE QUE PRESENTE LA NOTICIA`.
+- Cada nueva diapositiva **Sin diseño** conserva internamente una volanta activada y el mismo texto de ejemplo; al seleccionar **Portada** o **Interior** se muestra con texto desde el primer momento.
+- El texto de ejemplo es editable; no se vuelve a imponer al cambiar de diseño o de página para no sobrescribir contenido del usuario. Los valores propios de cada diapositiva se conservan.
+- El botón Limpiar recupera el texto de ejemplo de la variante activa; el resto de la lógica de selección, renderizado y exportación no se modifica.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/index.html`.
+**Registro acumulativo:** 9 cambios en Crónica DEV; pendientes de evaluación/adaptación en BAE y Diario Show, sin replicar todavía.
