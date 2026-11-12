@@ -89,6 +89,11 @@ try{
   await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);
   await page.waitForTimeout(650);
  }
+ const final=await state('after-roundtrip-clicks');
+ requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
+ console.log('CONTEXT DIAGNOSTIC',JSON.stringify({actual,afterTabs,final,issues},null,2));
+ requireState(issues.length===0,'JS errors: '+issues.join('; '));
+ console.log('PASS: mobile logo/text context switches 5 times + after tab roundtrip, centered panels, no auto-focus');
  // Diseño de placas y Textos en la preview deben usar el mismo
  // marco, interior y animación que sus tarjetas de Formato.
  for(const [name,source,mirror] of [
@@ -118,11 +123,7 @@ try{
     &&actual.headerBg===reference.headerBg&&actual.bodyBg===reference.bodyBg,
     'DS MOBILE CONTEXT CARD GEOMETRY WRONG '+name+' '+JSON.stringify({actual,reference}));
  }
- const final=await state('after-roundtrip-clicks');
- requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
- console.log('CONTEXT DIAGNOSTIC',JSON.stringify({actual,afterTabs,final,issues},null,2));
- requireState(issues.length===0,'JS errors: '+issues.join('; '));
- console.log('PASS: mobile logo/text context switches 5 times + after tab roundtrip, centered panels, no auto-focus');
+
  // Desktop: same vertical slider must sit to the left of the canvas;
  // both hit areas must lead to their original modules, without focusing text.
  const desktop=await browser.newPage({viewport:{width:1440,height:900}});
