@@ -99,7 +99,7 @@ if(isCronica){
  const content=sections.find(s=>s.querySelector('#headline'));
  textPanel=document.createElement('section');textPanel.className='panel-group';
  textPanel.setAttribute('aria-label','Textos');
- for(const sel of ['.typography-row','#headline','#size']){
+ for(const sel of ['#headline','#size','.typography-row']){
   const node=content.querySelector(sel);
   const field=sel==='.typography-row'?node:node?.closest('.control-field');
   if(field)textPanel.appendChild(field);
@@ -137,12 +137,12 @@ if(originalContent){
   originalContent.before(photoSection);
  }
  if(isCronica){
-  // Después de Formato y Alineación: switch, texto de volanta y titular.
+  // La volanta pertenece a Textos, inmediatamente arriba de Formato de texto.
+  // Movemos los controles originales para preservar listeners y estado.
   const formatRow=textPanel.querySelector('.typography-row');
-  let after=formatRow;
-  for(const sel of ['#showStrap','#strapText','#headline']){
+  for(const sel of ['#showStrap','#strapText']){
    const field=$(sel)?.closest('.control-field');
-   if(field){after.after(field);after=field}
+   if(field&&formatRow)formatRow.before(field);
   }
  }else{
   const urlField=$('articleUrl')?.closest('.control-field');
@@ -389,7 +389,7 @@ mirrorToggle?.addEventListener('click',()=>{
 });
 function syncMirror(){
  if(!host.isConnected)return;
- const ids=['headline','size',...(isCronica?[]:['quote','enableQuote'])];
+ const ids=['headline','size',...(isCronica?['showStrap','strapText']:['quote','enableQuote'])];
  for(const id of ids){
   const source=$(id),mirror=mirrorId(id);
   if(!source||!mirror)continue;
@@ -399,6 +399,10 @@ function syncMirror(){
  const textValue=$('sizeLabel')?.textContent;
  if(mirrorId('sizeLabel'))mirrorId('sizeLabel').textContent=textValue||size.value;
  if(mirrorId('quote'))mirrorId('quote').hidden=$('quote').hidden;
+ if(isCronica){
+  const strap=mirrorId('strapText')?.closest('.control-field');
+  if(strap)strap.hidden=!$('showStrap')?.checked;
+ }
  for(const id of ['formatUppercase','alignLeft','alignCenter']){
   const source=$(id),mirror=mirrorId(id);
   if(source&&mirror)mirror.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
@@ -407,7 +411,7 @@ function syncMirror(){
  progress(size);if(mirrorId('size'))progress(mirrorId('size'));
  progress(zoom);if(dots)progress(dots);
 }
-for(const id of ['headline','size','quote','enableQuote']){
+for(const id of ['headline','size','quote','enableQuote','showStrap','strapText']){
  const source=$(id),mirror=mirrorId(id);if(!source||!mirror)continue;
  mirror.addEventListener(source.type==='checkbox'?'change':'input',()=>{
   if(source.type==='checkbox')source.checked=mirror.checked;else source.value=mirror.value;
@@ -459,12 +463,7 @@ function syncVariantDependentControls(){
   const footer=card.querySelector('.modern-footer-field');
   if(logo)logo.hidden=!designed;
   if(footer)footer.hidden=!footerAllowed;
-  // El switch de volanta puede estar dentro de esta tarjeta: ocultar
-  // su campo completo, nunca únicamente el input.
-  const switchField=card.querySelector('#showStrap, #showStrapIdentityPreview')?.closest('.control-field');
-  const strapField=card.querySelector('#strapText, #strapTextIdentityPreview')?.closest('.control-field');
-  if(switchField)switchField.hidden=!designed;
-  if(strapField)strapField.hidden=!designed||!$('showStrap')?.checked;
+  // Los controles de volanta ya pertenecen exclusivamente a Textos.
  }
  const photoPanel=panel.querySelector('.modern-photo-group');
  if(photoPanel)photoPanel.hidden=!designed;
