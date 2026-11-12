@@ -384,3 +384,5 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se unifica en **16 px** la distancia entre submódulos directos, incluidos diseño, fotografía, importación, controles de logo, firma y textos. Se evitan márgenes duplicados.
 - Se mantienen los módulos, contenidos y controles propios de cada marca, sin tocar producción.
 **Registro acumulativo: 34 cambios.**
+
+**QA de Cambios 33 y 34 (Chromium): APROBADO.** [Workflow](https://github.com/SantiagoM96/mlz/actions/runs/43156340497): la ilustración Shift se muestra y carga correctamente en Crónica, BAE y Diario Show; en Crónica y BAE se comprobaron los padding desktop de 18/14 px y mobile de 15/12 px. La prueba de comportamiento Shift + clic funcional no formó parte de este smoke test; se conserva la lógica preexistente de acordeones.
