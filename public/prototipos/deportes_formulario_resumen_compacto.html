@@ -3740,19 +3740,19 @@ const SHARED_SPORTS_KEY='mlz-deportes-shared-v1';
 const ACTIVITIES=(()=>{
  try{
   const raw=localStorage.getItem(SHARED_SPORTS_KEY);
-  if(!raw)return structuredClone(BASE_ACTIVITIES);
+  if(!raw)return structuredClone(BASE_ACTIVITIES).filter(a=>a._hidden!==true);
   const data=JSON.parse(raw);
-  if(!data||data.schemaVersion!==1||!Array.isArray(data.activities)||!data.activities.length)return structuredClone(BASE_ACTIVITIES);
+  if(!data||data.schemaVersion!==1||!Array.isArray(data.activities))return structuredClone(BASE_ACTIVITIES).filter(a=>a._hidden!==true);
   const unique=new Set();
   for(const a of data.activities){
    if(!a||typeof a.id!=='string'||!a.id||unique.has(a.id)||typeof a.name!=='string'||!Array.isArray(a.commissions))throw Error('Formato inválido');
    unique.add(a.id);
    for(const c of a.commissions)if(!c||!Array.isArray(c.schedule))throw Error('Comisión inválida');
   }
-  return data.activities;
+  return data.activities.filter(a=>a._hidden!==true);
  }catch(error){
   console.warn('Deportes: no se pudo cargar la edición compartida; se conservan datos originales.',error);
-  return structuredClone(BASE_ACTIVITIES);
+  return structuredClone(BASE_ACTIVITIES).filter(a=>a._hidden!==true);
  }
 })();
 
@@ -4510,7 +4510,7 @@ document.getElementById('signup').addEventListener('submit',e=>{e.preventDefault
 }
 
 function nav(to){let newHash='#'+to;if(location.hash!==newHash){location.hash=newHash}else{renderRoute();window.scrollTo(0,0)}}
-function renderRoute(){let page=location.hash.slice(1).split('?')[0];if(page!=='03_formulario_inscripcion.html'){document.body.classList.remove('enrollment-intro','enrollment-form');}if(page==='02_seleccion_horario.html')renderDetail();else if(page==='03_formulario_inscripcion.html')renderForm();else renderCatalog()}
+function renderRoute(){let page=location.hash.slice(1).split('?')[0];if(page!=='03_formulario_inscripcion.html'){document.body.classList.remove('enrollment-intro','enrollment-form');}if(page==='02_seleccion_horario.html'||page==='03_formulario_inscripcion.html'){const id=getParams().get('ficha');if(id&&!ACTIVITIES.some(a=>a.id===id)){location.replace(location.pathname+location.search+'#01_buscador.html');return}}if(page==='02_seleccion_horario.html')renderDetail();else if(page==='03_formulario_inscripcion.html')renderForm();else renderCatalog()}
 document.addEventListener('click',e=>{let a=e.target.closest('a[href]');if(!a)return;let href=a.getAttribute('href')||'';if(/^0[123]_[a-z_]+\.html(?:\?.*)?$/.test(href)){e.preventDefault();nav(href)}});
 window.addEventListener('hashchange',()=>{renderRoute();window.scrollTo(0,0)});
 renderRoute();
