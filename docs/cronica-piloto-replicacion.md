@@ -308,3 +308,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se sincroniza la copia contextual de Diseño de placas con el control original para mobile.
 - En Sin diseño no se muestran ni logo ni ubicación. Diario Show no se modifica.
 **Registro acumulativo: 23 cambios.**
+
+## Cambio 24 — Botón «+» fijo cuando desborda el paginador (2026-11-12)
+- En Crónica DEV el control «+» de la columna derecha se mantiene en posición fija al desbordar las miniaturas, como en Diario Show, con la miniatura punteada desplazable al final.
+- Se reservó la celda del botón y se corrigió el ancho flexible del contenedor; el estado visible depende del desborde, no de la posición del scroll.
+- Pendiente de validación automatizada de interacción.
+
+## Cambio 25 — Íconos para Firma inferior (2026-11-12)
+- Crónica DEV: la opción **Centrada** incorpora Material Symbols `format_align_center` y **Carrusel** incorpora `view_carousel`, ambos a la izquierda del texto.
+- Se conservan las etiquetas, estados seleccionados, tamaño de los botones y el comportamiento del control. La versión contextual clona automáticamente el mismo marcado.
+- Registrar para evaluación antes de replicar a los demás editores.
+**Registro acumulativo: 25 cambios.**
