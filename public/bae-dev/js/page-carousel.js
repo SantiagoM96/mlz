@@ -25,8 +25,15 @@ function variantName(s){
  return {dark:'Negro',white:'Blanco',red:'Rojo'}[s.variant]||'Diseño';
 }
 function syncBlankOptions(){
+ const selected=pages[active]?.variant;
  document.querySelectorAll('[data-editor-blank]').forEach(button=>{
-  button.setAttribute('aria-pressed',String(pages[active]?.variant==='blank'));
+  button.setAttribute('aria-pressed',String(selected==='blank'));
+ });
+ // Solamente una variante puede verse seleccionada a la vez. La copia
+ // contextual de la vista previa comparte la misma selección.
+ document.querySelectorAll(variantSelector).forEach(button=>{
+  button.setAttribute('aria-pressed',String(selected!=='blank'&&
+   (isDS?button.dataset.variant:button.dataset.theme)===selected));
  });
 }
 function insertBlankOptions(){
