@@ -265,3 +265,12 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Diario Show: se aplica también el trazo a ambos placeholders de fotografía compartida sin alterar las mitades ni sus márgenes.
 - No modifica el renderizado ni la exportación PNG. Solo UI de preview.
 - **Registro acumulativo:** 18 cambios.
+
+## Cambio 19 — Mover Mostrar volanta a Textos en Crónica DEV (2026-11-12)
+**Alcance:** Crónica DEV únicamente. **Estado:** aplicado en código, pendiente de QA visual.
+- Los controles originales de `Mostrar volanta` y `Texto de la volanta` se mueven desde la tarjeta `Diseño de placas` hasta `Textos`, directamente por encima de `Formato de texto`.
+- Se preservan los listeners, la vista previa, el renderizado y los valores por diapositiva.
+- El clon de edición contextual de textos también refleja el interruptor y el campo de volanta y sincroniza cambios con los controles principales.
+- `Sin diseño` mantiene oculto todo el módulo de textos; no expone interruptor ni campo de volanta.
+- No se modifica BAE ni Diario Show en este cambio.
+**Registro acumulativo:** 19 cambios.
