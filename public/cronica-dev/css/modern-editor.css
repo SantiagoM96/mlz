@@ -680,7 +680,7 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
    los acordeones de Formato. La pista horizontal puede seguir recortando
    al cambiar de pestaña sin cortar los cuatro lados del resplandor. */
 @media(max-width:700px){
- .modern-track > .editor-panel:not(.modern-preview-text-editor):not(.modern-preview-identity-editor){
+ main .modern-track > .editor-panel:not(.modern-preview-text-editor):not(.modern-preview-identity-editor){
   box-sizing:border-box!important;
   padding:6px 6px 10px!important;
   background:transparent!important;border:0!important;
