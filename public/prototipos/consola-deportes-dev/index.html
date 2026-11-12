@@ -110,6 +110,53 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .photo-status{display:inline-flex;gap:5px;align-items:center;font-size:12px;font-weight:700;color:#236999}
 .photo-status .mi{font-size:16px}
 @media(max-width:600px){.photo-drop{padding:15px}.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Consola Deportes — composición del formulario basada en frame Figma 14001:2489.
+   Área principal 860/1200 y vista previa sticky en segunda columna. */
+.workspace{max-width:calc(1200px + 80px);padding-left:40px;padding-right:40px}
+.sports-form-layout{display:grid;grid-template-columns:minmax(0,860fr) minmax(270px,324fr);gap:16px;align-items:start;max-width:1200px}
+.sports-form-main{min-width:0}.sports-form-aside{min-width:0}
+.sports-form-section{margin:0 0 32px;padding:0;background:#fff;border:0}
+.sports-form-section .grid2{gap:16px}
+.sports-form-section .grid2+.grid2{margin-top:16px}
+.sports-form-section>.grid2{margin-bottom:16px}
+.sports-full-field{margin-bottom:16px}
+.sports-boolean-row{display:flex;align-items:center;flex-wrap:wrap;gap:20px;padding:20px 0 0}
+.sports-boolean-row .switchrow{min-height:30px;cursor:pointer}
+.sports-section-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.sports-section-heading h2{font-size:18px;font-weight:700;color:#236999;line-height:24px}
+.sports-section-heading .sub{margin-top:6px}
+.sports-data-table{min-width:660px;border:1px solid #dce4ea}
+.sports-data-table th{background:#f1f4f6;font-size:13px;color:#3d3d3d;height:40px;padding:8px}
+.sports-data-table td{height:48px;padding:8px}
+.sports-data-table td strong{font-size:13px;font-weight:500}
+.sports-data-table tr:nth-child(even) td{background:#f7f8f9}
+.sports-data-table .iconbtn{width:32px;height:32px}
+.sports-data-table .row-actions{white-space:nowrap}
+.sports-preview-sticky{position:sticky;top:92px;padding:0 0 20px}
+.sports-preview-sticky>h2{font-size:18px;color:#236999;margin:0 0 4px}
+.sports-preview-sticky>.sub{margin:0 0 18px}
+.sports-preview-card{border:1px solid #dbe4ea;border-radius:8px;background:#fff;overflow:hidden;box-shadow:0 5px 18px rgba(21,65,91,.08)}
+.sports-preview-photo,.sports-preview-placeholder{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:2/1;object-fit:cover;background:#edf3f7;color:#236999}
+.sports-preview-placeholder{gap:8px;flex-direction:column;font-size:13px}
+.sports-preview-placeholder .mi{font-size:34px}
+.sports-preview-body{padding:17px}.sports-preview-body h3{font-size:20px;line-height:1.3;margin:10px 0;color:#3d3d3d}
+.sports-preview-body>p{font-size:14px;color:#637282;margin:0 0 14px}
+.sports-preview-details{border-top:1px solid #e4e9ee;padding-top:12px;margin-bottom:14px;display:grid;gap:10px}
+.sports-preview-details>div{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:20px}
+.sports-preview-details .mi{color:#236999;font-size:20px;flex:none}
+.sports-photo-drop{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.sports-add-photo{width:208px;height:117px;background:#f8fbfd;border:1px dashed #7baecb;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;color:#236999;font-size:14px;font-weight:700;cursor:pointer}
+.sports-add-photo:hover{background:#edf6fc;border-color:#236999}
+.sports-add-photo .mi{font-size:28px}
+.sports-photo-drop #photo-gallery{flex:1;min-width:200px}
+.sports-photo-drop .photo-grid{margin-top:0;grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}
+.sports-photo-drop .photo-empty{margin:38px 0}
+.sports-form-footer{display:flex;gap:12px;justify-content:flex-end;margin:24px 0 60px}
+.form-page-header{margin-bottom:24px}
+@media(max-width:1150px){.sports-form-layout{grid-template-columns:minmax(0,1fr) 280px;gap:22px}.workspace{padding-left:24px;padding-right:24px}}
+@media(max-width:850px){.sports-form-layout{grid-template-columns:1fr}.sports-form-aside{grid-row:1}.sports-preview-sticky{position:static}.sports-preview-card{max-width:450px}.sports-form-main{grid-row:2}}
+@media(max-width:600px){.sports-form-section .grid2{grid-template-columns:1fr}.sports-section-heading{align-items:flex-start;flex-wrap:wrap}.sports-form-footer .btn{flex:1;padding:8px}.sports-add-photo{width:160px}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -203,7 +250,34 @@ async function uploadPhotos(files){
  }catch(err){alert(err.message||'No se pudo procesar la fotografía.');render()}
 }
 
-function editView(){const a=draft;return '<div class="eyebrow">Actividades deportivas y recreativas / <a href="#" data-action="list">Administrador</a> / '+(editId?'Editar actividad':'Nueva actividad')+'</div><div class="heading"><div><h1>'+(editId?'Editar actividad':'Nueva actividad')+'</h1><p class="sub">Completá la información que se muestra en el catálogo público de Deportes.</p></div><div class="actions">'+btn('Cancelar','list')+btn(ic('save')+' '+(editId?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div></div><form id="activity-form"><div class="grid2"><div><section class="panel"><div class="panelhead"><h2>Información general</h2></div><div class="panelbody"><div class="grid2">'+f('Nombre de la actividad *','name',a.name,'text','required')+sel('Estado','state',['Activa','Oculta'],status(a))+sel('Categoría','category',safeCatalogOption('categorias',a.categoriaTipoGlobal),a.categoriaTipoGlobal)+sel('Modalidad','tipo',MODALIDADES,a.tipo)+sel('Intensidad','intensidad',INTENSIDADES,a.intensidad)+sel('Público','sex',PUBLICOS,a.sex)+f('Edad mínima','min',a.min,'number','min="0"')+f('Edad máxima','max',a.max,'number','min="0"')+'</div><div style="margin-top:15px" class="switchrow"><input id="pcd" name="pcd" type="checkbox" '+(a.pcd?'checked':'')+'><label for="pcd">Actividad para personas con discapacidad</label></div><div style="margin-top:12px" class="switchrow"><input id="previousTest" name="previousTest" type="checkbox" '+(a.previousTest?'checked':'')+'><label for="previousTest">Requiere evaluación previa</label></div></div></section><section class="panel"><div class="panelhead"><h2>Ubicación</h2></div><div class="panelbody"><div class="grid2">'+sel('Sede *','venue',safeCatalogOption('sedes',a.venue),a.venue)+f('Dirección','address',a.address,'text','readonly')+'</div></div></section><section class="panel"><div class="panelhead"><div><h2>Imágenes y portada</h2><p class="sub" style="margin-top:6px">Fotos de la actividad, independientes de las comisiones.</p></div></div><div class="panelbody"><div class="photo-drop"><span class="mi" aria-hidden="true">add_photo_alternate</span><div style="flex:1;min-width:210px"><strong>Adjuntar fotografías</strong><p class="hint">JPG, PNG o WebP. Hasta 6 fotos. Formato recomendado: 2:1. La primera imagen será la portada.</p></div><button class="btn primary" type="button" data-action="photo-upload">'+ic('upload')+' Agregar fotos</button><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden aria-label="Seleccionar imágenes"></div><div id="photo-gallery">'+renderPhotos(a)+'</div><p class="hint" style="margin-top:15px">Las fotos se guardan comprimidas solo en este navegador de desarrollo. No se publican ni se transfieren al producto público.</p></div></section></div><div><section class="panel"><div class="panelhead"><h2>Vista previa</h2></div><div class="panelbody"><div class="preview">'+(a.photos?.[0]?'<img class="photo-preview" alt="Portada de '+e(a.name)+'" src="'+e(a.photos[0].data)+'">':'')+'<span class="pill">'+e(a.categoriaTipoGlobal||'Deportes')+'</span><h3>'+e(a.name||'Nueva actividad')+'</h3><p>'+e(a.venue||'Sede a definir')+'</p><p class="muted">'+e(a.ageLabel||((a.min??0)+' a '+(a.max??59)+' años'))+'</p><span class="tag '+(a._hidden?'off':'')+'">'+status(a)+'</span></div></div></section><section class="panel"><div class="panelhead"><h2>Comisiones y horarios</h2>'+btn(ic('add')+' Agregar comisión','add-commission','primary')+'</div><div class="tablewrap"><table style="min-width:500px"><thead><tr><th>Profesor/a</th><th>Días y horarios</th><th>Cupos</th><th>Acciones</th></tr></thead><tbody>'+(a.commissions.length?a.commissions.map((c,i)=>'<tr><td><strong>'+e(c.prof)+'</strong><small>'+e(c.id)+'</small></td><td>'+e((c.schedule||[]).map(t=>t.days+' · '+t.start+' a '+t.end).join(' / ')||'A confirmar')+'</td><td>'+e(c.cupos)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Editar comisión" data-action="edit-commission" data-index="'+i+'">'+ic('edit')+'</button><button type="button" class="iconbtn" title="Duplicar comisión" data-action="dup-commission" data-index="'+i+'">'+ic('content_copy')+'</button><button type="button" class="iconbtn red" title="Eliminar comisión" data-action="remove-commission" data-index="'+i+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="4" class="empty">Todavía no hay comisiones. Agregá una para empezar.</td></tr>')+'</tbody></table></div></section></div></div><div class="actions" style="justify-content:flex-end;margin-bottom:30px">'+btn('Cancelar','list')+btn(ic('save')+' '+(editId?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div></form>'}
+function editView(){
+ const a=draft, edit=Boolean(editId);
+ const category=e(a.categoriaTipoGlobal||'Deporte');
+ const heroImage=a.photos?.[0]?'<img class="sports-preview-photo" src="'+e(a.photos[0].data)+'" alt="Portada de '+e(a.name)+'">':'<div class="sports-preview-placeholder">'+ic('image')+'<span>Imagen de la actividad</span></div>';
+ const card='<div class="sports-preview-card">'+heroImage+'<div class="sports-preview-body"><span class="pill">'+category+'</span><h3>'+e(a.name||'Nombre de la actividad')+'</h3><p>'+e(a.ageLabel||((a.min??5)+' a '+(a.max??59)+' años'))+'</p><div class="sports-preview-details"><div>'+ic('location_on')+'<span>'+e(a.venue||'Sede por definir')+'</span></div><div>'+ic('schedule')+'<span>'+e(a.commissions.length)+' comisiones disponibles</span></div></div><span class="tag '+(a._hidden?'off':'')+'">'+status(a)+'</span></div></div>';
+ return '<div class="eyebrow">Actividades deportivas y recreativas / <a href="#" data-action="list">Administrador</a> / '+(edit?'Editar actividad':'Nueva actividad')+'</div>'+
+ '<div class="heading form-page-header"><div><h1>'+(edit?'Editar actividad':'Nueva actividad')+'</h1><p class="sub">Completá la información de la actividad deportiva.</p></div></div>'+
+ '<form id="activity-form"><div class="sports-form-layout"><div class="sports-form-main">'+
+ '<section class="sports-form-section"><div class="grid2">'+
+ f('Nombre de la actividad *','name',a.name,'text','required')+
+ sel('Estado','state',['Activa','Oculta'],status(a))+
+ sel('Sede *','venue',safeCatalogOption('sedes',a.venue),a.venue)+
+ sel('Categoría','category',safeCatalogOption('categorias',a.categoriaTipoGlobal),a.categoriaTipoGlobal)+
+ '</div><div class="sports-full-field">'+f('Dirección','address',a.address,'text','readonly')+'</div>'+
+ '<div class="grid2">'+sel('Modalidad','tipo',MODALIDADES,a.tipo)+sel('Intensidad','intensidad',INTENSIDADES,a.intensidad)+sel('Público','sex',PUBLICOS,a.sex)+f('Edad mínima','min',a.min,'number','min="0"')+f('Edad máxima','max',a.max,'number','min="0"')+'</div>'+
+ '<div class="sports-boolean-row"><label class="switchrow"><input id="pcd" name="pcd" type="checkbox" '+(a.pcd?'checked':'')+'>Actividad para personas con discapacidad</label><label class="switchrow"><input id="previousTest" name="previousTest" type="checkbox" '+(a.previousTest?'checked':'')+'>Requiere prueba previa</label></div>'+
+ '</section>'+
+ '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Comisiones y horarios</h2><p class="sub">Profesores, días, horarios y cupos de cada comisión.</p></div>'+btn(ic('add')+' Agregar comisión','add-commission','primary')+'</div>'+
+ '<div class="tablewrap"><table class="sports-data-table"><thead><tr><th>Profesor/a</th><th>Días y horarios</th><th>Cupos</th><th>Acciones</th></tr></thead><tbody>'+
+ (a.commissions.length?a.commissions.map((c,i)=>'<tr><td><strong>'+e(c.prof)+'</strong><small>'+e(c.id)+'</small></td><td>'+e((c.schedule||[]).map(t=>t.days+' · '+t.start+' a '+t.end).join(' / ')||'A confirmar')+'</td><td>'+e(c.cupos)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Editar comisión" data-action="edit-commission" data-index="'+i+'">'+ic('edit')+'</button><button type="button" class="iconbtn" title="Duplicar comisión" data-action="dup-commission" data-index="'+i+'">'+ic('content_copy')+'</button><button type="button" class="iconbtn red" title="Eliminar comisión" data-action="remove-commission" data-index="'+i+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="4" class="empty">Todavía no hay comisiones. Agregá una para empezar.</td></tr>')+
+ '</tbody></table></div></section>'+
+ '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Imágenes y portada</h2><p class="sub">Agregá fotos para mostrar en la ficha de la actividad.</p></div></div>'+
+ '<div class="sports-photo-drop"><button type="button" class="sports-add-photo" data-action="photo-upload">'+ic('add_circle')+'<span>Agregar foto</span></button><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden aria-label="Seleccionar imágenes"><div id="photo-gallery">'+renderPhotos(a)+'</div></div>'+
+ '<p class="hint">Hasta 6 fotografías · JPG, PNG o WebP · Recomendado 2:1. La primera imagen es la portada. Se guardan solo en este navegador.</p>'+
+ '</section>'+
+ '<div class="sports-form-footer">'+btn('Cancelar','list')+btn(ic('save')+' '+(edit?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div>'+
+ '</div><aside class="sports-form-aside"><div class="sports-preview-sticky"><h2>Vista previa</h2><p class="sub">Así se visualizará la actividad.</p>'+card+'</div></aside></div></form>';
+}
 function registrationsView(){return '<div class="eyebrow">Actividades deportivas y recreativas / Consola / Inscripciones</div><div class="heading"><div><h1>Inscripciones</h1><p class="sub">Estructura inicial para consultar inscripciones por actividad y comisión.</p></div><div class="actions">'+btn(ic('arrow_back')+' Volver','list')+btn(ic('download')+' Exportar CSV','export')+'</div></div><p class="note">Aún no hay una fuente conectada de inscripciones reales. Esta sección se presenta vacía para no inventar datos personales ni inscripciones.</p><section class="panel"><div class="panelhead"><h2>Últimas inscripciones</h2></div><div class="panelbody"><div class="filters"><div class="field search"><label>Buscar vecino</label><input disabled placeholder="Nombre, apellido o DNI"></div><div class="field"><label>Actividad</label><select disabled><option>Seleccionar</option></select></div><div class="field"><label>Estado</label><select disabled><option>Seleccionar</option></select></div></div></div><div class="tablewrap"><table><thead><tr><th>Vecino</th><th>Actividad</th><th>Comisión</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead></table><div class="empty">No hay inscripciones cargadas. Próximamente podremos vincularlas con el sistema correspondiente.</div></div></section>'}
 function settingsView(){
  const type=catalogTab,def=CATALOG_DEFINITIONS[type],rows=catalogs[type];
