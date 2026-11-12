@@ -361,9 +361,18 @@ for(const [brand,config] of Object.entries(tests)){
       const style=getComputedStyle(node);
       return {name:style.animationName,duration:style.animationDuration,shadow:style.boxShadow};
      });
-     assert(pagesPulse.name==='editorial-card-pulse'&&pagesPulse.duration==='1.05s'&&
-      pagesPulse.shadow.includes('0px 0px 0px 2px'),
-      'Crónica: Páginas fijo no recibe el pulso del onboarding '+JSON.stringify(pagesPulse));
+     assert(pagesPulse.name==='editorial-card-pulse'&&pagesPulse.duration==='1.05s',
+      'Crónica: Páginas fijo no tiene animación de onboarding '+JSON.stringify(pagesPulse));
+     // El pulso inicial pudo concluir mientras el navegador cargaba:
+     // volver al primer paso comprueba que realmente se reinicia.
+     await tour.locator('.ds-tour-next').click();
+     await tour.locator('.ds-tour-back').click();
+     const restarted=await tour.locator('.preview > .cronica-preview-pages').evaluate(node=>{
+      const style=getComputedStyle(node);
+      return {shadow:style.boxShadow,name:style.animationName};
+     });
+     assert(restarted.name==='editorial-card-pulse'&&restarted.shadow.includes('0px 0px 0px 2px'),
+      'Crónica: al volver a Páginas no reinicia pulso '+JSON.stringify(restarted));
     }else assert(visual.expanded==='true'&&visual.pulseName==='editorial-card-pulse'&&
      visual.pulseDuration==='1.05s'&&visual.shadow.includes('0px 0px 0px 2px'),
      'Crónica: el paso '+n+' no pulsa tarjeta ya abierta '+JSON.stringify(visual));
