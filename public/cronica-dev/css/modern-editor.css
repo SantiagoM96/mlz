@@ -1102,3 +1102,36 @@ html[data-cronica-variant="blank"] .modern-preview-identity-editor .control-fiel
 .preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page] .carousel-page-number{
  background:#ed0000!important;color:white!important;
 }
+
+/* Cambio 15 — fijar 48 × 64: escala del thumbnail, sin wrappers flex.
+   El número es overlay absoluto, nunca forma parte del flujo. */
+.preview>.cronica-preview-pages .carousel-page-thumb{
+ position:relative!important;display:block!important;flex:0 0 48px!important;
+ width:48px!important;height:64px!important;min-width:48px!important;
+ min-height:64px!important;padding:0!important;overflow:hidden!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page]{
+ overflow:visible!important;
+}
+.preview>.cronica-preview-pages .carousel-design-copy{
+ position:absolute!important;inset:0!important;display:block!important;
+ width:48px!important;height:64px!important;overflow:hidden!important;
+ padding:0!important;margin:0!important;
+}
+.preview>.cronica-preview-pages .carousel-design-copy>.cronica-variant-thumbnail{
+ position:absolute!important;left:0!important;top:0!important;
+ display:flex!important;flex-direction:column!important;flex-shrink:0!important;
+ width:60px!important;height:80px!important;min-width:60px!important;
+ min-height:80px!important;max-width:none!important;
+ margin:0!important;padding:0!important;
+ transform:scale(.8)!important;transform-origin:top left!important;
+ box-sizing:border-box!important;outline:0!important;
+}
+.preview>.cronica-preview-pages .carousel-design-copy>.cronica-variant-thumbnail-blank{
+ display:block!important;background:#aeb4bc!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb .carousel-page-number{
+ position:absolute!important;top:4px!important;left:50%!important;
+ transform:translateX(-50%)!important;z-index:4!important;
+ margin:0!important;pointer-events:none!important;
+}
