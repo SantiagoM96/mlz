@@ -159,6 +159,32 @@ for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]
  makeCard(section,title,section===textPanel);
 }
 if(!textPanel)return;
+// Cambio 45 — BAE: los switches de contenido pertenecen a Diseño de placas;
+// el campo editable del textual aparece PRIMERO dentro de Textos.
+if(!isCronica){
+ const designBody=panel.querySelector('.modern-design-group > .modern-body');
+ const textBody=textPanel.querySelector(':scope > .modern-body');
+ const quoteToggle=$('enableQuote');
+ const quoteField=quoteToggle?.closest('.control-field');
+ const quoteInput=$('quote');
+ if(designBody&&textBody&&quoteField&&quoteInput){
+  const switchLabel=quoteField.querySelector('label.switch-row');
+  if(switchLabel){
+   const switchField=document.createElement('div');
+   switchField.className='control-field modern-quote-toggle-field';
+   switchField.append(switchLabel);
+   designBody.append(switchField);
+  }
+  quoteField.classList.add('modern-quote-input-field');
+  const label=document.createElement('label');
+  label.htmlFor='quote';label.textContent='Textual';
+  quoteField.prepend(label);
+  textBody.prepend(quoteField);
+  const syncQuote=()=>{quoteField.hidden=!quoteToggle.checked;quoteInput.hidden=!quoteToggle.checked};
+  quoteToggle.addEventListener('change',syncQuote);
+  syncQuote();
+ }
+}
 // Photo input card: native file input and its existing image loader remain intact.
 const photoFile=$('file');
 if(photoFile&&!photoFile.closest('.modern-photo-picker')){
