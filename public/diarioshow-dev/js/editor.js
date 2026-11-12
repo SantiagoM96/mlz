@@ -727,7 +727,8 @@ function syncMobileTextEditor(){
   mirrorId('sizeLabel').textContent=el('sizeLabel').textContent;
  }
  mirrorId('headline').classList.toggle('uppercase-preview',el('headline').classList.contains('uppercase-preview'));
- mirrorId('showQuoteAuthor').checked=el('showQuoteAuthor').checked;
+ const mirroredAuthorSwitch=mirrorId('showQuoteAuthor');
+ if(mirroredAuthorSwitch)mirroredAuthorSwitch.checked=el('showQuoteAuthor').checked;
  mirrorId('quoteAuthorField').hidden=el('quoteAuthorField').hidden;
  mirrorId('quoteAuthorInputField').hidden=el('quoteAuthorInputField').hidden;
  for(const id of ['alignLeft','alignCenter','formatUppercase']){
@@ -740,7 +741,7 @@ for(const id of ['headline','quoteAuthor']){
   source.dispatchEvent(new Event('input',{bubbles:true}));
  });
 }
-mirrorId('showQuoteAuthor').addEventListener('change',event=>{
+mirrorId('showQuoteAuthor')?.addEventListener('change',event=>{
  const source=el('showQuoteAuthor');source.checked=event.target.checked;
  source.dispatchEvent(new Event('change',{bubbles:true}));
  syncMobileTextEditor();
