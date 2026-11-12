@@ -996,3 +996,11 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .preview>.cronica-preview-pages .carousel-pages.is-dragging .carousel-add-placeholder{
  pointer-events:none;
 }
+
+/* Sin barra visible, la pista no reserva espacio de más debajo de las placas. */
+.preview>.cronica-preview-pages .carousel-pages{
+ height:84px;min-height:84px;padding:10px 4px;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ height:84px;min-height:84px;
+}
