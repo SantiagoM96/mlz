@@ -725,3 +725,133 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
   border-radius:9px!important;
  }
 }
+
+
+/* PILOTO CRÓNICA 03: navegador horizontal de páginas sobre la preview.
+   Nodo original, fijo y sin acordeón; no crece verticalmente con más páginas. */
+.preview>.cronica-preview-pages{
+ box-sizing:border-box;display:block!important;
+ width:100%;max-width:540px;min-width:0;
+ margin:0 auto 16px!important;padding:12px 14px!important;
+ border:1px solid #383d46!important;border-radius:10px!important;
+ background:#24262c!important;color:#f1f2f6;
+ box-shadow:none!important;overflow:hidden;
+}
+.preview>.cronica-preview-pages .carousel-heading{
+ display:flex;align-items:center;justify-content:flex-start;
+ min-height:19px;margin:0 0 9px;padding:0;
+}
+.preview>.cronica-preview-pages #pageIndicator{
+ display:flex;align-items:center;gap:8px;margin:0;
+ font:600 12px/17px Inter,Arial,sans-serif;
+}
+.preview>.cronica-preview-pages .carousel-indicator-count{color:#c5cad2}
+.preview>.cronica-preview-pages .carousel-indicator-type{
+ padding:3px 8px;border-radius:5px;color:#fff;
+ background:#ed0000;font:700 11px/15px Inter,Arial,sans-serif;
+}
+.preview>.cronica-preview-pages .carousel-indicator-type.is-internal{
+ background:#4b505a;color:#f4f4f5;
+}
+.preview>.cronica-preview-pages .carousel-compact-row{
+ display:flex;align-items:center;gap:10px;min-width:0;
+}
+.preview>.cronica-preview-pages .carousel-pages{
+ display:flex;flex:1 1 auto;align-items:center;
+ flex-wrap:nowrap!important;gap:10px;min-width:0;min-height:70px;
+ margin:0;padding:4px 4px 5px;
+ overflow-x:auto;overflow-y:hidden;
+ overscroll-behavior-x:contain;scroll-behavior:smooth;
+ scrollbar-width:thin;scrollbar-color:#595e69 transparent;
+}
+.preview>.cronica-preview-pages .carousel-pages::-webkit-scrollbar{height:4px}
+.preview>.cronica-preview-pages .carousel-pages::-webkit-scrollbar-thumb{
+ background:#595e69;border-radius:20px;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb{
+ --page-bg:#353941;--page-photo:#656a73;--page-panel:#41454e;
+ --page-strap:#777c85;--page-text:#8d929b;--page-accent:#aaaeb7;
+ --page-number-bg:#292d34;--page-number:#d0d3d9;
+ position:relative;isolation:isolate;display:block;flex:0 0 48px;
+ width:48px!important;height:64px!important;min-height:64px!important;
+ padding:0!important;border:1px solid #555a64!important;
+ border-radius:6px!important;box-sizing:border-box!important;
+ background:var(--page-bg);color:var(--page-number);
+ overflow:hidden;outline:0 solid transparent;outline-offset:2px;
+ cursor:pointer;transition:filter .15s;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[aria-current=page]{
+ --page-bg:#5e111a;--page-photo:#ab3b46;--page-panel:#761722;
+ --page-strap:#d85862;--page-text:#e97a83;--page-accent:#f2a0a6;
+ --page-number-bg:#820e1b;--page-number:#ffb4ba;
+ border-color:#555a64!important;
+ outline:2px solid #ed0000!important;
+}
+.preview>.cronica-preview-pages .carousel-page-thumb:hover{filter:brightness(1.12)}
+.preview>.cronica-preview-pages .carousel-page-thumb:focus-visible{
+ outline:2px solid #ed0000!important;
+}
+.preview>.cronica-preview-pages .carousel-page-art{
+ position:absolute;inset:0;display:flex;flex-direction:column;
+ overflow:hidden;pointer-events:none;
+}
+.preview>.cronica-preview-pages .carousel-page-photo{
+ display:block;flex:0 0 48%;min-height:0;background:var(--page-photo);
+}
+.preview>.cronica-preview-pages .carousel-page-content{
+ display:flex;flex:1;min-height:0;flex-direction:column;background:var(--page-panel);
+}
+.preview>.cronica-preview-pages .carousel-page-strap{
+ display:block;position:relative;flex:0 0 3px;background:var(--page-strap);
+}
+.preview>.cronica-preview-pages .carousel-page-thumb[data-variant=cover] .carousel-page-strap{flex-basis:9px}
+.preview>.cronica-preview-pages .carousel-page-thumb[data-variant=cover] .carousel-page-strap:after{
+ content:'';position:absolute;top:3px;left:25%;right:25%;
+ height:3px;border-radius:5px;background:var(--page-accent);
+}
+.preview>.cronica-preview-pages .carousel-page-lines{
+ display:flex;flex:1;min-height:0;flex-direction:column;
+ align-items:center;justify-content:center;gap:3px;
+}
+.preview>.cronica-preview-pages .carousel-page-lines i{
+ display:block;width:76%;height:3px;flex:0 0 3px;
+ border-radius:5px;background:var(--page-text);
+}
+.preview>.cronica-preview-pages .carousel-page-lines i:nth-child(2){
+ width:52%;background:var(--page-accent);
+}
+.preview>.cronica-preview-pages .carousel-page-number{
+ position:absolute;top:4px;left:50%;transform:translateX(-50%);
+ display:flex;align-items:center;justify-content:center;z-index:1;
+ min-width:15px;height:16px;padding:0 3px;border-radius:4px;
+ background:var(--page-number-bg);color:var(--page-number);
+ font:700 10px/1 Inter,Arial,sans-serif;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ display:flex;flex:0 0 30px;flex-direction:column;align-items:stretch;
+ justify-content:center;gap:5px;margin:0;
+}
+.preview>.cronica-preview-pages .carousel-actions button{
+ display:flex;align-items:center;justify-content:center;
+ flex:0 0 30px;width:30px;height:30px;min-height:30px;
+ padding:0;margin:0;border-radius:7px;cursor:pointer;
+}
+.preview>.cronica-preview-pages .carousel-actions button .material-icons{
+ font-size:19px;line-height:1;
+}
+.preview>.cronica-preview-pages .carousel-actions .remove-page{
+ background:#363a43;
+}
+.preview>.cronica-preview-pages .carousel-actions .remove-page:disabled{
+ opacity:.35;cursor:not-allowed;
+}
+/* La barra de instrucciones se elimina visualmente, pero se mantiene
+   el nodo #status para las actualizaciones del motor de exportación. */
+.preview>.preview-toolbar[hidden]{display:none!important}
+@media(max-width:700px){
+ .modern-track>.preview>.cronica-preview-pages{
+  width:100%!important;max-width:540px!important;min-width:0;
+  margin:0 0 16px!important;padding:10px 12px!important;
+ }
+ .modern-track>.preview>.cronica-preview-pages .carousel-pages{gap:8px}
+}
