@@ -5,6 +5,8 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
+// Volantas un 30 % más altas; las mismas medidas se usan en preview y PNG.
+const COVER_STRAP_HEIGHT=68,INTERNAL_STRAP_HEIGHT=65;
 let footerStyle='carousel';
 document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
@@ -67,10 +69,10 @@ function wrappedLines(text,size){
 function drawStrap(y,isCover){
  if(!el('showStrap').checked)return;
  const content=el('strapText').value.replace(/\s+/g,' ').trim().toLocaleUpperCase('es-AR'),maxWidth=W-EDGE*2;
- let size=isCover?34:32;
+ let size=isCover?37:35;
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
- const textWidth=ctx.measureText(content).width,barHeight=isCover?52:50;
+ const textWidth=ctx.measureText(content).width,barHeight=isCover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT;
  const width=isCover?Math.min(maxWidth,Math.ceil(textWidth+44)):W;
  const left=isCover?(W-width)/2:0;
  ctx.fillStyle=RED;ctx.fillRect(left,y,width,barHeight);
@@ -133,7 +135,7 @@ function render(includeHover=true){
   const lineHeight=()=>Math.round(size*1.09);
   function textTop(){return availableBottom-(lines.length?size*0.85+(lines.length-1)*lineHeight():0)}
   const showBar=el('showStrap').checked;
-  const barHeight=showBar?(cover?52:50):0;
+  const barHeight=showBar?(cover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT):0;
   const requiredGap=cover?80:80;
   while(size>32&&textTop()-(showBar?barHeight+requiredGap:80)<230){
     size-=2;lines=wrappedLines(desired,size);
@@ -144,8 +146,8 @@ function render(includeHover=true){
   if(cover){
    // La distancia desde el borde inferior de la volanta hasta el texto es 50 px.
    // Sin volanta, se mide desde el borde inferior de la línea roja de 13 px.
-   panelTop=Math.max(160,top-(showBar?76:56.5));
-   barY=panelTop-26;
+   panelTop=Math.max(160,top-(showBar?50+COVER_STRAP_HEIGHT/2:56.5));
+   barY=panelTop-COVER_STRAP_HEIGHT/2;
   }else{
    panelTop=Math.max(160,top-50-(showBar?barHeight:0));
    barY=panelTop;
