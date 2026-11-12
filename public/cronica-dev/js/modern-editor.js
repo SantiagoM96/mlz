@@ -68,7 +68,7 @@ function makeCard(section,title,isText=false){
 // Reiniciarlo explícitamente permite destacar tarjetas ya abiertas sin
 // cambiar su geometría ni añadir un segundo borde de foco.
 function pulseEditorCard(card,context=false){
- if(!card||!card.classList.contains('modern-card'))return;
+ if(!card||!(card.classList.contains('modern-card')||card.classList.contains('cronica-preview-pages')))return;
  card.classList.remove('modern-card-flash','modern-context-target');
  if(context)document.querySelectorAll('.modern-context-target').forEach(
   node=>node.classList.remove('modern-context-target')
