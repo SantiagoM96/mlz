@@ -477,6 +477,7 @@ function renumberScheduleBlocks(){
 }
 function bindScheduleEditor(){
  const container=modal.querySelector('#schedule-blocks');if(!container)return;
+ scheduleCounter=Math.max(scheduleCounter,...[...container.querySelectorAll('.schedule-block')].map(el=>Number(el.dataset.scheduleBlock)||0));
  container.addEventListener('click',ev=>{
   const remove=ev.target.closest('.schedule-remove');if(remove){remove.closest('.schedule-block').remove();renumberScheduleBlocks()}
  });
