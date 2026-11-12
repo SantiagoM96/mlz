@@ -202,11 +202,13 @@ function readCurrentPage(){
   size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY,variant:pageVariant};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
-const COVER_STRAP="LA CLAVE DE ESTA NOTICIA";
+const COVER_STRAP="ESCRIBÍ ACÁ UNA FRASE BREVE QUE PRESENTE LA NOTICIA";
+// Ejemplo común para una nueva diapositiva: funciona tanto en Portada como en Interior.
+const DEFAULT_STRAP=COVER_STRAP;
 const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato principal* y dejá los detalles para las siguientes placas.";
 const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
+ return {headline:INTERNAL_HEADLINE,strapText:DEFAULT_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
   image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank'};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
