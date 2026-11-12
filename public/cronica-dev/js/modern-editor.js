@@ -459,6 +459,12 @@ function syncVariantDependentControls(){
   const footer=card.querySelector('.modern-footer-field');
   if(logo)logo.hidden=!designed;
   if(footer)footer.hidden=!footerAllowed;
+  // El switch de volanta puede estar dentro de esta tarjeta: ocultar
+  // su campo completo, nunca únicamente el input.
+  const switchField=card.querySelector('#showStrap, #showStrapIdentityPreview')?.closest('.control-field');
+  const strapField=card.querySelector('#strapText, #strapTextIdentityPreview')?.closest('.control-field');
+  if(switchField)switchField.hidden=!designed;
+  if(strapField)strapField.hidden=!designed||!$('showStrap')?.checked;
  }
  const photoPanel=panel.querySelector('.modern-photo-group');
  if(photoPanel)photoPanel.hidden=!designed;
