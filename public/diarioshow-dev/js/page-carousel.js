@@ -81,11 +81,18 @@ function draw(){
   btn.setAttribute('aria-label','Diapositiva '+(i+1)+', '+variantName(p));
   btn.setAttribute('aria-current',String(active===i));
   btn.title='Diapositiva '+(i+1)+' · '+variantName(p);
-  const art=document.createElement('span');art.className='editor-slide-art';art.setAttribute('aria-hidden','true');
-  const photo=document.createElement('span');photo.className='editor-slide-photo';
-  const footer=document.createElement('span');footer.className='editor-slide-footer';
-  footer.append(document.createElement('i'),document.createElement('i'));
-  art.append(photo,footer);
+  // Copiar la vista nativa de Diseño de placa: mismas reglas, fondos y trazos.
+  const selector=p.variant==='blank'
+   ?document.querySelector(isDS?'.ds-variant-options [data-editor-blank]':'.theme-swatches [data-editor-blank]')
+   :document.querySelector(isDS?'.ds-variant-option[data-variant="'+p.variant+'"]':'.theme-swatch[data-theme="'+p.variant+'"]');
+  const art=document.createElement('span');art.className='editor-slide-native editor-panel';art.setAttribute('aria-hidden','true');
+  if(selector){
+   const wrapper=document.createElement('span');
+   wrapper.className=isDS?'ds-variant-option editor-slide-native-option':'theme-swatch editor-slide-native-option '+p.variant;
+   const original=selector.querySelector(isDS?'.ds-variant-preview':'.theme-swatch-thumb');
+   if(original)wrapper.appendChild(original.cloneNode(true));
+   art.append(wrapper);
+  }
   const num=document.createElement('span');num.className='editor-slide-number';num.textContent=String(i+1);
   btn.append(art,num);btn.addEventListener('click',()=>select(i));track.append(btn);
  });
