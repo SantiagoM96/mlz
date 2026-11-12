@@ -252,6 +252,34 @@ const track=document.createElement('div');track.className='modern-track';
 main.prepend(nav);main.append(shell);shell.append(track);track.append(panel,preview);
 const zoom=$('photoZoom'),zoomBox=zoom?.closest('.preview-zoom');
 const toolbar=preview.querySelector('.preview-toolbar'),stage=$('photoStage');
+// PILOTO CRÓNICA: conservar los nodos originales del carrusel y sus listeners
+// y trasladarlos a la parte superior de Vista previa, fuera de Formato.
+const pagesCard=isCronica?panel.querySelector(':scope > .carousel-panel'):null;
+if(pagesCard){
+ pagesCard.classList.remove('modern-card','modern-card-flash','modern-context-target');
+ pagesCard.classList.add('cronica-preview-pages');
+ const header=pagesCard.querySelector(':scope > .modern-toggle');
+ const body=pagesCard.querySelector(':scope > .modern-body');
+ if(body){
+  // El contenido deja de ser un acordeón y permanece visible.
+  body.hidden=false;
+  body.classList.remove('modern-body');
+  body.classList.add('cronica-preview-pages-inner');
+  while(body.firstChild)pagesCard.appendChild(body.firstChild);
+  body.remove();
+ }
+ header?.remove();
+ const legacyTitle=pagesCard.querySelector(':scope > h2');
+ legacyTitle?.remove();
+ const heading=pagesCard.querySelector('.carousel-heading');
+ heading?.querySelector('h2')?.remove();
+ pagesCard.setAttribute('aria-label','Navegación de páginas');
+ preview.insertBefore(pagesCard,toolbar);
+ // Los avisos siguen disponibles para lectores de pantalla y para app.js,
+ // que actualiza #status al importar, descargar o producir errores.
+ if(toolbar)toolbar.hidden=true;
+}
+
 if(zoomBox){
  zoomBox.classList.add('modern-photo-zoom');
  const label=zoomBox.querySelector('label');
