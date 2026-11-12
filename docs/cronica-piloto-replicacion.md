@@ -435,3 +435,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Únicamente en el paso **«Editá el texto desde la vista previa»**, se incrementa un **30 %** la separación de la tarjeta del tooltip respecto del foco: **18 → 23,4 px** en posición horizontal, y **12 → 15,6 px** cuando se posiciona arriba/abajo por falta de espacio.
 - Los demás pasos conservan sus separaciones, la máscara salta instantáneamente y ningún cambio altera las interacciones del editor.
 **Registro acumulativo: 41 cambios.**
+
+## Cambio 42 — Mano curva detrás de Shift y mouse físico (2026-11-12)
+- En la animación compartida de Shift se reemplaza la flecha por un **cursor de mano** de trazado más prolijo, con yema alineada al chevrón.
+- Se incorpora de nuevo un **mouse físico** a la derecha, con movimiento corto y botón que se ilumina durante el clic. La mano parte desde abajo y se desplaza con `animateMotion` mediante una curva que evita atravesar Shift; la mano se dibuja debajo de la tecla en el orden SVG.
+- Shift sigue iluminado durante el trayecto y el clic; los acordeones comienzan a desplegarse a continuación, se sostienen abiertos y vuelven a cerrarse, con loop.
+- SVG compartido en Crónica, BAE y Diario Show DEV; versionado de URL para invalidar caché.
+**Registro acumulado: 42 cambios.**
