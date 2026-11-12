@@ -93,7 +93,6 @@ html[data-editor-plate-variant=blank] .preview .ds-text-hit{display:none!importa
 html[data-editor-plate-variant=blank] .editor-panel .modern-card:not(.modern-design-group),
 html[data-editor-plate-variant=blank] .editor-panel .ds-control-card:not(.ds-plate-design-group),
 html[data-editor-plate-variant=blank] .editor-panel .modern-design-group .control-field:not(:has(.theme-swatches)),
-html[data-editor-plate-variant=blank] .editor-panel .modern-design-group .control-field:not(:has(.cronica-variant-options)),
 html[data-editor-plate-variant=blank] .editor-panel .ds-plate-design-group .ds-control-card-body>.control-field:not(.ds-variant-field),
 html[data-editor-plate-variant=blank] .modern-preview-text-editor,
 html[data-editor-plate-variant=blank] #dsMobileTextEditor,
@@ -102,3 +101,20 @@ html[data-editor-plate-variant=blank] #dsMobileContentEditor .ds-control-card:no
  .editor-slide-nav{width:100%;max-width:540px;padding:10px 12px;margin:0 0 16px}
  .editor-slide-track{gap:8px}
 }
+
+/* Editor visual del titular: el textarea del motor sigue funcionando oculto. */
+.editor-panel textarea.cronica-rich-source{display:none!important}
+.editor-panel .cronica-rich-headline{
+ box-sizing:border-box;display:block;width:100%;min-height:120px;max-height:260px;
+ overflow-x:hidden;overflow-y:auto;padding:12px 14px;
+ border:1px solid #4a4e56;border-radius:7px;background:#292c32;
+ color:#f2f2f5;font:400 14px/1.5 Inter,Arial,sans-serif;
+ white-space:pre-wrap;overflow-wrap:anywhere;outline:none;cursor:text;
+ scrollbar-width:thin;scrollbar-color:#686d76 transparent;
+}
+.editor-panel .cronica-rich-headline:focus-visible{border-color:var(--slide-accent,#d82626);outline:1px solid var(--slide-accent,#d82626)}
+.editor-panel .cronica-rich-headline [data-accent=true]{font-weight:800}
+.editor-panel .cronica-rich-headline [data-italic=true]{font-style:italic}
+.editor-panel .cronica-rich-headline [data-strike=true]{text-decoration:line-through}
+.editor-panel .cronica-rich-headline::selection,.editor-panel .cronica-rich-headline *::selection{background:#bb3a4f;color:white}
+body:has(.ds-mobile-tabs) .editor-slide-export-card button[data-export=all]{background:#e6008d}
