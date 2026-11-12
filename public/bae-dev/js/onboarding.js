@@ -8,13 +8,12 @@
  const storageKey='bae-dev-tour-desktop-v1';
  const qs=s=>document.querySelector(s);
  const steps=[
-  {selector:"section.modern-card:has(.theme-swatches)",title:"Elegí el diseño de tu placa",description:"Seleccioná el color de la placa entre las opciones disponibles. También podés ajustar su textura en Diseño."},
+  {selector:"section.modern-design-group",title:"Elegí el diseño de tu placa",description:"Seleccioná el estilo de la placa y configurá su logo y firma inferior."},
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
   {selector:"section.modern-import-group",title:"Importá una noticia",description:"Pegá el enlace de BAE Negocios para importar el titular y la fotografía de la noticia."},
-  {selector:"section.modern-design-group",title:"Configurá el logo y la firma",description:"Seleccioná el logo de BAE y elegí entre la firma inferior centrada y la de carrusel."},
-  {selector:"section.modern-text-card",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, aplicá formato, elegí la alineación y activá el textual cuando lo necesites."},
   {selector:"section.modern-card:has(.texture-field)",title:"Ajustá el diseño",description:"Cambiá la textura y su opacidad para terminar de personalizar la placa."},
+  {selector:"section.modern-design-group > .modern-toggle",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true,focusHeader:true},
   {selector:"#photoStage",title:"Editá desde la vista previa",description:"Tocá el logo para abrir Diseño de placas o el titular para abrir Textos. El módulo correspondiente se destaca."},
   {selector:"body",title:"¿Poco espacio?",description:"Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.",fullScreen:true,showZoomDemo:true}
  ];
