@@ -59,13 +59,24 @@ function makeCard(section,title,isText=false){
   // Con teclado (detail === 0) se conserva el foco accesible.
   if(event.shiftKey&&event.detail>0)toggle.blur();
   // Pulso en el borde exterior, sin cambiar su geometría.
-  section.classList.remove('modern-card-flash');
-  void section.offsetWidth;
-  section.classList.add('modern-card-flash');
+  pulseEditorCard(section);
   requestAnimationFrame(updateHeight);
  });
  return section;
 }
+// Pulso compartido para clic normal, selección contextual y onboarding.
+// Reiniciarlo explícitamente permite destacar tarjetas ya abiertas sin
+// cambiar su geometría ni añadir un segundo borde de foco.
+function pulseEditorCard(card,context=false){
+ if(!card||!card.classList.contains('modern-card'))return;
+ card.classList.remove('modern-card-flash','modern-context-target');
+ if(context)document.querySelectorAll('.modern-context-target').forEach(
+  node=>node.classList.remove('modern-context-target')
+ );
+ void card.offsetWidth;
+ card.classList.add(context?'modern-context-target':'modern-card-flash');
+}
+window.CronicaPulseCard=pulseEditorCard;
 // Evitar el falso :focus-visible al mantener Shift sobre un acordeón
 // previamente enfocado con el mouse. Solo la navegación real por teclado
 // habilita nuevamente el anillo accesible de foco.
@@ -439,8 +450,7 @@ function showPreviewContext(which){
   if(toggle&&body){toggle.setAttribute('aria-expanded','true');body.hidden=false}
  }
  const card=narrow.matches?mirrored:source;
- document.querySelectorAll('.modern-context-target').forEach(c=>c.classList.remove('modern-context-target'));
- void card.offsetWidth;card.classList.add('modern-context-target');
+ pulseEditorCard(card,true);
  const scrollTarget=narrow.matches?(isLogo?identityHost:host):source;
  if(scrollTarget){
   const center=()=>{
