@@ -126,3 +126,16 @@ html[data-editor-plate-variant=blank] .preview #splitPhotoZones,
 html[data-editor-plate-variant=blank] .preview .ds-split-photo-zone,
 html[data-editor-plate-variant=blank] .preview .ds-photo-hit{display:none!important}
 .editor-slide-nav .editor-slide-thumb:hover{filter:brightness(1.12)}
+
+
+/* Onboarding y foco: evitar el doble anillo accidental con Shift + mouse. */
+.editor-panel .modern-toggle[data-pointer-origin]:focus-visible,
+.editor-panel .ds-control-card-toggle[data-pointer-origin]:focus-visible{
+ outline:0!important;outline-offset:0!important;
+}
+.editor-slide-nav.modern-card-flash,
+.editor-slide-nav.ds-control-card-flash{animation:editor-slide-context-pulse 1.05s linear both}
+@keyframes editor-slide-context-pulse{
+ 0%,100%{box-shadow:none}
+ 15%,75%{box-shadow:0 0 0 2px var(--slide-accent)}
+}
