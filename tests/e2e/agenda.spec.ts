@@ -33,7 +33,8 @@ test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page 
   await expect(card.getByRole('heading', { level: 2 })).toHaveCSS('font-size', '22px');
   await expect(card.locator('[data-material-symbol="event_available"]').first()).toHaveCSS('font-size', '20px');
   await expect(card.locator('[data-material-symbol="schedule"]').first()).toHaveCSS('font-size', '20px');
-  await expect(card.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
+  const cardWithBadge = page.getByTestId('agenda-card').filter({ has: page.locator('[data-agenda-chip="activity"]') }).first();
+  await expect(cardWithBadge.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
   await expect(card.getByText('Actividad pasada')).toHaveCount(0);
 });
 
