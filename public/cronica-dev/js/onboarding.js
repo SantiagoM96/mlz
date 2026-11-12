@@ -9,11 +9,10 @@
  const qs=s=>document.querySelector(s);
  const steps=[
   {selector:"section.carousel-panel",title:"Organizá las páginas",description:"Agregá, seleccioná o eliminá las páginas del carrusel. La portada y las internas se editan de manera independiente."},
-  {selector:"section.cronica-variant-panel",title:"Elegí el diseño de cada placa",description:"Elegí Portada o Interior para la página seleccionada del carrusel."},
+  {selector:"section.modern-design-group",title:"Elegí el diseño de cada placa",description:"Seleccioná Portada o Interior, configurá el logo y elegí la firma inferior de la placa."},
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
-  {selector:"section.modern-design-group",title:"Configurá el logo y la firma",description:"Seleccioná el logo de Crónica y elegí la firma inferior. La portada mantiene su firma de carrusel por defecto."},
-  {selector:"section.modern-text-card",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, configurá la volanta, destacá fragmentos y elegí su alineación."},
+  {selector:"section.modern-design-group > .modern-toggle",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true,focusHeader:true},
   {selector:"#photoStage",title:"Editá desde la vista previa",description:"Tocá el logo para abrir Diseño de placas o el titular para abrir Textos. El módulo correspondiente se destaca."},
   {selector:"body",title:"¿Poco espacio?",description:"Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.",fullScreen:true,showZoomDemo:true}
  ];
