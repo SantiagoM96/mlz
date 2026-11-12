@@ -33,22 +33,44 @@ for(const [brand,config] of Object.entries(tests)){
    if(brand==='cronica'){
     // Diez páginas no deben producir una segunda fila ni aumentar la altura.
     if(mobile)await page.locator('#modernTabpreview').click();
+    const heading=await page.locator('.preview > .cronica-preview-pages .carousel-heading').evaluate(el=>({
+     title:el.querySelector('h2')?.textContent?.trim(),
+     titleX:el.querySelector('h2')?.getBoundingClientRect().left,
+     countX:el.querySelector('#pageIndicator')?.getBoundingClientRect().left
+    }));
+    assert(heading.title==='Diapositivas'&&heading.titleX<heading.countX,
+     'Crónica: Diapositivas no está a la izquierda '+JSON.stringify(heading));
     const initialHeight=await page.locator('.preview > .cronica-preview-pages').evaluate(node=>node.offsetHeight);
-    for(let i=0;i<9;i++)await page.locator('#addPage').click();
+    assert(await page.locator('#carouselPages .carousel-add-placeholder').count()===1,
+     'Crónica: no existe la miniatura punteada de agregar');
+    assert(await page.locator('#addPage').isHidden(),
+     'Crónica: el botón + fijo no debe ocupar espacio antes del desborde');
+    for(let i=0;i<9;i++){
+     await page.locator('#carouselPages .carousel-add-placeholder').click();
+    }
     const overflow=await page.locator('.preview > .cronica-preview-pages').evaluate(node=>{
      const list=node.querySelector('#carouselPages');
      const active=list.querySelector('[aria-current="page"]');
      return {height:node.offsetHeight,scrollWidth:list.scrollWidth,clientWidth:list.clientWidth,
-      count:list.children.length,selected:active?.getAttribute('aria-label'),
+      count:list.querySelectorAll('.carousel-page-thumb').length,
+      add:list.querySelectorAll('.carousel-add-placeholder').length,
+      hasOverflow:node.classList.contains('carousel-is-overflowing'),
+      selected:active?.getAttribute('aria-label'),
       left:list.scrollLeft};
     });
-    assert(overflow.count===10&&overflow.scrollWidth>overflow.clientWidth&&
+    assert(overflow.count===10&&overflow.add===1&&overflow.hasOverflow&&
+     overflow.scrollWidth>overflow.clientWidth&&
      Math.abs(overflow.height-initialHeight)<5,
      'Crónica: al sumar páginas, la barra crece verticalmente '+JSON.stringify({initialHeight,overflow}));
     assert(overflow.selected?.startsWith('Página 10'),
      'Crónica: no queda seleccionada la última página '+JSON.stringify(overflow));
+    assert(await page.locator('#addPage').isVisible(),
+     'Crónica: el botón + fijo no aparece cuando las diapositivas desbordan');
+    await page.locator('#addPage').click();
+    assert(await page.locator('#carouselPages .carousel-page-thumb').count()===11,
+     'Crónica: el botón + fijo no agrega páginas');
     await page.locator('#removePage').click();
-    assert(await page.locator('#carouselPages .carousel-page-thumb').count()===9,
+    assert(await page.locator('#carouselPages .carousel-page-thumb').count()===10,
      'Crónica: eliminar página no funciona tras mover navegador');
     // Restaurar estado inicial para el resto de las comprobaciones.
     await page.reload({waitUntil:'load'});
