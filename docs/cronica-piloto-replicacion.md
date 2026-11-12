@@ -463,3 +463,5 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - La estructura final de Textos mantiene los campos condicionados primero, después Formato de texto principal / Alineación, Texto principal y Tamaño de tipografía al final.
 - **BAE** recupera las etiquetas de formato de 14 px y botones de 43 px, y el realce interior blanco de alineación de Diario Show. No se alteran Crónica ni producción.
 **Registro acumulado: 45 cambios.**
+
+**QA Cambio 45 — APROBADA (Chromium, 2026-11-12).** [Ejecución](https://github.com/SantiagoM96/mlz/actions/runs/43224660518): BAE confirma switch de textual dentro de Diseño de placas, textarea condicionado al inicio de Textos, tamaño al final y controles de formato/alineación visualmente igualados a Diario Show. Diario Show confirma switches y campos en sus módulos correctos, con visibilidad condicional correcta en variantes 1, 2, 3 y 4; comprobado también activar/desactivar autor. Se corrigió además el espejo contextual mobile, que debe tolerar que el switch ya no se clone dentro de Textos. Sin errores JavaScript en el recorrido probado.
