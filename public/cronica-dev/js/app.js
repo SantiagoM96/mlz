@@ -204,14 +204,15 @@ function readCurrentPage(){
   size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY,variant:pageVariant};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
-const COVER_STRAP="RESUMÍ ACÁ EL TEMA";
+const COVER_STRAP="CULTURA EN LA CIUDAD";
 // Ejemplo común para una nueva diapositiva: funciona tanto en Portada como en Interior.
 const DEFAULT_STRAP=COVER_STRAP;
-const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato principal* y dejá los detalles para las siguientes placas.";
-const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
+const COVER_HEADLINE="Un nuevo *espacio cultural* abrió sus puertas y presentó actividades para toda la comunidad";
+const INTERNAL_HEADLINE="El espacio ofrecerá *talleres, muestras y espectáculos* durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.";
+const INTERNAL_STRAP="NUEVAS ACTIVIDADES";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:DEFAULT_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
-  image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank'};
+ return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
+  image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank',samplePending:true};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
 function syncVariantUI(){
@@ -358,8 +359,20 @@ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addE
  // Una placa sin diseño no muestra volanta. Al aplicar Portada o Interior,
  // el usuario comienza con la volanta activa y su texto de ejemplo.
  if(previous==='blank'&&next!=='blank'){
+  // Las páginas nuevas son Sin diseño, pero estrenan textos completos
+  // al escoger Portada o Interior; no se reemplazan ediciones posteriores.
+  const current=carouselPages[activePage];
+  if(current?.samplePending){
+   el('headline').value=next==='cover'?COVER_HEADLINE:INTERNAL_HEADLINE;
+   el('strapText').value=next==='cover'?COVER_STRAP:INTERNAL_STRAP;
+   el('size').value=next==='cover'?'64':'52';
+   textAlignment=next==='cover'?'center':'left';
+   el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));
+   el('alignCenter').setAttribute('aria-pressed',String(textAlignment==='center'));
+   current.samplePending=false;
+  }
   el('showStrap').checked=true;
-  if(!el('strapText').value.trim())el('strapText').value=DEFAULT_STRAP;
+  if(!el('strapText').value.trim())el('strapText').value=next==='cover'?COVER_STRAP:INTERNAL_STRAP;
   el('strapField').hidden=false;
  }
  syncVariantUI();saveActivePage();renderCarouselNavigation();render();
@@ -458,7 +471,9 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- const initial=newBlankPage();initial.variant=pageVariant;if(pageVariant==='cover'){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ const initial=newBlankPage();initial.variant=pageVariant;initial.samplePending=false;
+ if(pageVariant==='cover'){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ if(pageVariant==='internal'){initial.headline=INTERNAL_HEADLINE;initial.strapText=INTERNAL_STRAP;initial.showStrap=true}
  loadPage(initial);saveActivePage();
 });
 // Exportar una placa o todo el carrusel sin perder el estado de edición.
