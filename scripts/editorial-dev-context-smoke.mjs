@@ -59,6 +59,30 @@ for(const [brand,config] of Object.entries(tests)){
    const opened=await toggle.locator('span:nth-child(2)').boundingBox();
    assert(opened&&Math.abs(original.x-opened.x)<0.6&&Math.abs(original.y-opened.y)<0.6,brand+': saltó la cabecera al abrir');
    assert(await page.locator('aside.editor-panel').first().evaluate(el=>getComputedStyle(el).backgroundColor)==='rgba(0, 0, 0, 0)',brand+': sigue la caja contenedora exterior');
+   if(mobile){
+    // Mismo margen de seguridad que Diario Show: el halo de 2px no
+    // toca los extremos del carrusel y las cabeceras plegadas son redondas.
+    const geometry=await page.evaluate(()=>{
+     const panel=document.querySelector('main .modern-track > aside.editor-panel');
+     const p=panel.getBoundingClientRect();
+     return [...panel.querySelectorAll(':scope > .modern-card')].filter(card=>{
+      const css=getComputedStyle(card);return css.display!=='none'&&card.getBoundingClientRect().height>0;
+     }).map(card=>{
+      const r=card.getBoundingClientRect(),css=getComputedStyle(card);
+      return {left:r.left-p.left,right:p.right-r.right,border:css.borderTopWidth,radius:css.borderTopLeftRadius};
+     });
+    });
+    assert(geometry.length>=3&&geometry.every(v=>v.left>=5&&v.right>=5&&v.border==='1px'&&v.radius==='10px'),
+     brand+': tarjeta mobile pegada al borde '+JSON.stringify(geometry));
+    await toggle.click();
+    const corners=await toggle.evaluate(node=>{
+     const cs=getComputedStyle(node);return {expanded:node.getAttribute('aria-expanded'),
+      left:cs.borderBottomLeftRadius,right:cs.borderBottomRightRadius};
+    });
+    assert(corners.expanded==='false'&&corners.left==='9px'&&corners.right==='9px',
+     brand+': cabecera plegada sin esquinas inferiores redondas '+JSON.stringify(corners));
+    await toggle.click();
+   }
    // Shift + clic debe afectar TODOS los acordeones visibles de Formato.
    // El clic normal debe continuar alterando un único módulo.
    const allToggles=page.locator('aside.editor-panel > .modern-card:visible > .modern-toggle');
