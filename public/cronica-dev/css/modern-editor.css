@@ -1015,3 +1015,12 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .editor-panel .modern-text-card[hidden],
 .editor-panel .modern-preview-text-editor[hidden],
 .modern-preview-text-editor[hidden]{display:none!important;}
+
+
+/* CRÓNICA DEV — cambio 11: ningún control de volanta en «Sin diseño». */
+.editor-panel .modern-text-card[hidden],
+.editor-panel .modern-mirror-card[hidden],
+.editor-panel .modern-photo-group[hidden],
+.modern-preview-text-editor[hidden],
+.editor-panel .modern-text-card .control-field[hidden],
+.modern-preview-text-editor .control-field[hidden]{display:none!important}
