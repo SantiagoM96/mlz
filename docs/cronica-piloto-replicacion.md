@@ -151,3 +151,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
 **Registro acumulativo:** 11 cambios solo en Crónica DEV; BAE y Diario Show pendientes de replicación por solicitud expresa.
+
+## Cambio 12 — «Sin diseño» realmente vacío y volantas breves (2026-11-12)
+**Estado:** implementado únicamente en Crónica DEV; pendiente de validación visual del usuario.
+
+- El texto inicial editable de la volanta pasa a `RESUMÍ ACÁ EL TEMA` para Portada e Interior, en lugar del anterior ejemplo largo.
+- Tipografía inicial de la volanta: Portada **37 → 40 px** e Interior **35 → 38 px**, conservando el autoajuste de tamaño para texto largo y las alturas ya aprobadas (68 / 65 px).
+- La variante de la página queda reflejada en `html[data-cronica-variant]` y determina la visibilidad de tarjetas completas con CSS, no solo de los controles individualmente. En `Sin diseño` se ocultan Texto, Mostrar volanta, Fotografía, Logo y Firma en el panel normal y el contextual mobile; solo queda el selector de diseños.
+- Al seleccionar Portada o Interior reaparecen los módulos pertinentes con la volanta habilitada por defecto y texto de ejemplo; las personalizaciones posteriores no se pierden al alternar páginas.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+**Registro acumulativo:** 12 cambios exclusivos de Crónica DEV; ninguno replicado aún a BAE ni Diario Show.
