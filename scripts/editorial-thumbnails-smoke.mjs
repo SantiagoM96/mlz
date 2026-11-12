@@ -35,6 +35,34 @@ for(const data of cases){
   const second=await page.locator(data.thumb).nth(1).getAttribute('data-variant');
   assert(second==='blank',data.slug+': segunda diapositiva no es Sin diseño, es '+second);
   console.log('PASS',data.slug,'añadir Sin diseño');
+  // La página sin diseño tiene que tener textos de ejemplo al elegir formato.
+  const target=data.slug==='cronica-dev'?'cover':data.slug==='bae-dev'?'dark':'pink';
+  await page.locator(data.choose(target)).first().click();
+  await page.waitForFunction(([selector,expected])=>document.querySelectorAll(selector)[1]?.dataset.variant===expected,[data.thumb,target],{timeout:6000});
+  const sample=await page.locator('#headline').inputValue();
+  assert(sample.trim().length>25,data.slug+': nueva página sin titular '+JSON.stringify(sample));
+  if(data.slug==='cronica-dev'){
+   const strap=await page.locator('#strapText').inputValue();
+   assert(strap.trim().length>0&&await page.locator('#showStrap').isChecked(),data.slug+': volanta de ejemplo no activa');
+  }
+  if(data.slug==='bae-dev'){
+   assert(await page.locator('#enableQuote').isChecked()&&(await page.locator('#quote').inputValue()).trim().length>0,data.slug+': textual de ejemplo ausente');
+  }
+  if(data.slug==='diarioshow-dev'){
+   // Las variantes de cita deben activar autor y tener un nombre ficticio.
+   await page.locator(data.choose('quote')).first().click();
+   await page.waitForFunction(()=>document.querySelectorAll('.editor-slide-thumb')[1]?.dataset.variant==='quote',{timeout:6000});
+   const author=await page.locator('#quoteAuthor').inputValue();
+   assert((await page.locator('#headline').inputValue()).trim().length>0&&author.trim().length>0&&await page.locator('#showQuoteAuthor').isChecked(),data.slug+': cita/autor de ejemplo ausentes');
+  }
+  // Lo escrito manualmente no debe reemplazarse al cambiar otra vez de variante.
+  const custom='Texto editado para verificar que no se sobrescribe';
+  await page.locator('#headline').evaluate((node,value)=>{node.value=value;node.dispatchEvent(new Event('input',{bubbles:true}))},custom);
+  const changeTo=data.slug==='cronica-dev'?'internal':data.slug==='bae-dev'?'red':'blue';
+  await page.locator(data.choose(changeTo)).first().click();
+  await page.waitForFunction(([selector,expected])=>document.querySelectorAll(selector)[1]?.dataset.variant===expected,[data.thumb,changeTo],{timeout:6000});
+  assert((await page.locator('#headline').inputValue())===custom,data.slug+': se sobrescribió texto editado al cambiar la plantilla');
+  console.log('PASS',data.slug,'textos iniciales y persistencia de edición');
   assert(!errors.length,data.slug+' errores JS '+errors.join(' | '));
  }catch(e){failures.push(e.message);console.error('FAIL',e.message)}
  finally{await page.close()}
