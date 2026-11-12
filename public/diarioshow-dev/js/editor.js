@@ -71,6 +71,24 @@ if(designCard&&identityCard){
  for(const node of [...identityBody.children])designBody.append(node);
  identityCard.remove();
 }
+// Cambio 45 — Diario Show: «Mostrar autor de la cita» vive en Diseño
+// de placas; el input condicionado permanece arriba de todo en Textos.
+// Se mueven los nodos reales: ningún ID ni listener se duplica.
+if(designCard){
+ const designBody=designCard.querySelector(':scope > .ds-control-card-body');
+ const textBody=document.querySelector('#dsMobileControlsPanel .ds-texts-group > .ds-control-card-body');
+ const authorField=el('quoteAuthorField');
+ const switchLabel=authorField?.querySelector('.ds-author-toggle');
+ if(designBody&&textBody&&authorField&&switchLabel){
+  const switchField=document.createElement('div');
+  switchField.className='control-field ds-author-switch-field';
+  switchField.id='quoteAuthorToggleField';
+  switchField.hidden=true;
+  switchField.append(switchLabel);
+  designBody.append(switchField);
+  textBody.prepend(authorField);
+ }
+}
 // Secciones plegables: solo se oculta el contenido, sin reiniciar controles.
 document.querySelectorAll('.ds-control-card-toggle').forEach(button=>{
  button.addEventListener('click',()=>{
@@ -425,6 +443,8 @@ function setVariant(value){
  }
  if(isQuote&&photoLayout!=='single')setPhotoLayout('single');
  el('quoteAuthorField').hidden=!isQuote;
+ const authorToggleField=el('quoteAuthorToggleField');
+ if(authorToggleField)authorToggleField.hidden=!isQuote;
  document.querySelectorAll('.ds-footer-style-field').forEach(field=>field.hidden=isQuote);
  el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
  // Importar noticias no corresponde a las variantes de cita 3 y 4.
