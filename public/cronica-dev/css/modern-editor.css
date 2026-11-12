@@ -1004,3 +1004,14 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .preview>.cronica-preview-pages .carousel-actions{
  height:84px;min-height:84px;
 }
+
+
+/* CRÓNICA DEV — cambio 08: controles visibles únicamente si el diseño los admite. */
+.editor-panel .modern-design-group .logo-control-field[hidden],
+.editor-panel .modern-design-group .modern-footer-field[hidden],
+.modern-preview-identity-editor .logo-control-field[hidden],
+.modern-preview-identity-editor .modern-footer-field[hidden],
+.editor-panel .modern-photo-group[hidden],
+.editor-panel .modern-text-card[hidden],
+.editor-panel .modern-preview-text-editor[hidden],
+.modern-preview-text-editor[hidden]{display:none!important;}
