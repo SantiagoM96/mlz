@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let photoRevision=0;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
+let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let photoRevision=0;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false,pageBlank=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
 // Foto compartida: dos recortes independientes dentro del área fotográfica.
 let photoLayout='single',activePhotoSide='left';
 // Regiones exactas aproximadas de cada línea de titular, en coordenadas del PNG.
@@ -301,6 +301,7 @@ el('size').addEventListener('keydown',event=>{
 el('size').addEventListener('keyup',()=>setSizeAdjusting(false));
 function render(includeHover=true){
 try{
+ if(pageBlank){ctx.clearRect(0,0,W,H);ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);photoBottom=H;return;}
 headlineHitRegions=[];
 const colors=palette[el('theme').value]||palette.pink,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(headlineForPreview(),size),quotes=[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
@@ -401,6 +402,7 @@ document.querySelectorAll('.texture-option').forEach(button=>button.addEventList
 const variantButtons=[...document.querySelectorAll('.ds-variant-option[data-variant]')];
 function setVariant(value){
  if(!palette[value])return;
+ pageBlank=false;document.documentElement.dataset.editorPlateVariant=value;
  // Primera vista de la tercera variante: ejemplo sin reemplazar contenido editado.
  if(['quote','quote-blue'].includes(value)&&el('headline').value==='*Mauro Icardi* consiguió la *eximición de prisión* tras el escándalo con Wanda Nara'){
   el('headline').value='OJALÁ A LA GENTE LE DIERA TANTO MIEDO TENER UN HIJO GOLPEADOR COMO TENER UN HIJO GAY';
@@ -1154,5 +1156,35 @@ if(typeof ResizeObserver!=='undefined'){
 }
 syncMobileTabViewport();
 setPreviewContext('text');
-window.DiarioShowEditor={setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
+window.DiarioShowEditor={
+ getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
+ headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,showQuoteAuthor:el('showQuoteAuthor').checked,
+ size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
+ image,zoom,offsetX,offsetY,photoLayout,activePhotoSide,
+ splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
+ selectedLogo,logoPosition,footerStyle,selectedTexture};},
+ setPageState(s){
+  setVariant(s.theme||'pink');
+  pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
+  el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
+  el('showQuoteAuthor').checked=Boolean(s.showQuoteAuthor);
+  el('quoteAuthorInputField').hidden=!s.showQuoteAuthor;
+  el('size').value=s.size||'70';el('dots').value=s.dots||'5';
+  textAlignment=s.alignment||'center';
+  el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));
+  el('alignCenter').setAttribute('aria-pressed',String(textAlignment==='center'));
+  forceUppercase=Boolean(s.uppercase);syncUppercaseUI();
+  image=s.image||null;zoom=s.zoom||1;offsetX=s.offsetX||0;offsetY=s.offsetY||0;
+  if(s.splitPhotos)for(const side of ['left','right'])Object.assign(splitPhotos[side],s.splitPhotos[side]);
+  setPhotoLayout(s.photoLayout||'single');activePhotoSide=s.activePhotoSide||'left';
+  selectedLogo=s.selectedLogo||'primary';syncLogoChoices();
+  logoPosition=s.logoPosition||'right';syncLogoPosition();footerStyle=s.footerStyle||'center';
+  document.querySelectorAll('[data-footer-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.footerStyle===footerStyle)));
+  selectedTexture=s.selectedTexture||'1';halftone=halftoneAssets[selectedTexture]||null;
+  document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture===selectedTexture)));
+  el('sizeLabel').textContent=el('size').value;el('dotsLabel').textContent=el('dots').value+'%';
+  render();el('headline').dispatchEvent(new Event('input',{bubbles:true}));
+ },
+ setBlank(active){pageBlank=Boolean(active);document.documentElement.dataset.editorPlateVariant=pageBlank?'blank':el('theme').value;render();},
+ setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
 })();
