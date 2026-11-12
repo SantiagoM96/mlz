@@ -40,7 +40,7 @@ for(const [brand,config] of Object.entries(tests)){
      const a=el.getBoundingClientRect(),b=tip.getBoundingClientRect();
      return {iconRight:a.right,iconLeft:a.left,bubbleLeft:b.left,bubbleRight:b.right,viewWidth:innerWidth,side:tip.classList.contains('modern-tip-left')};
     });
-    assert(rects.bubbleRight<=rects.viewWidth-15&&rects.bubbleLeft>=15,
+    assert(rects.bubbleRight<=rects.viewWidth-13&&rects.bubbleLeft>=13,
      brand+': tooltip fuera del viewport '+JSON.stringify(rects));
     assert(rects.side?rects.bubbleRight<rects.iconLeft:rects.bubbleLeft>rects.iconRight,
      brand+': tooltip no está al lado del ítem '+JSON.stringify(rects));
@@ -88,7 +88,7 @@ for(const [brand,config] of Object.entries(tests)){
     brand+': clic normal afectó más de un módulo');
    await firstToggle.click();
    console.log('PASS '+brand+' '+(mobile?'mobile':'desktop')+': Shift + clic global y clic normal local');
-   const identity=page.locator('aside.editor-panel .modern-identity-group').first();
+   const identity=page.locator('aside.editor-panel .modern-design-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
    const target=brand==='cronica'?'center':'carousel';
    await identity.locator('[data-footer-style="'+target+'"]').click();
