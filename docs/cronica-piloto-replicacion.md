@@ -274,3 +274,12 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - `Sin diseño` mantiene oculto todo el módulo de textos; no expone interruptor ni campo de volanta.
 - No se modifica BAE ni Diario Show en este cambio.
 **Registro acumulativo:** 19 cambios.
+
+## Cambio 20 — Switch de volanta en Diseño, contenido en Textos (2026-11-12)
+**Alcance:** únicamente Crónica DEV. Corrige y reemplaza la disposición del Cambio 19.
+- El switch original `Mostrar volanta` permanece dentro de **Diseño de placas**, conservando su control y estado por diapositiva.
+- Solo el campo editable `Texto de la volanta` se ubica en el módulo **Textos**, inmediatamente encima de `Texto principal`.
+- El campo de texto aparece cuando el switch está activo y desaparece cuando está inactivo, sin borrar su contenido. No se muestran controles de volanta al usar `Sin diseño`.
+- Las copias contextuales mobile de ambos módulos se sincronizan con el mismo switch/valor originales.
+- Se actualizó prueba automatizada de composición y visibilidad del campo.
+**Registro acumulativo: 20 cambios**, con los cambios 19 y 20 documentados como revisión de ubicación.
