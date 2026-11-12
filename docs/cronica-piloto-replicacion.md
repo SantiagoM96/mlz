@@ -53,3 +53,20 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **QA:** `scripts/editorial-dev-context-smoke.mjs` verifica la nueva ubicación, eliminación del acordeón, 10 páginas sin crecimiento vertical, selección y eliminación, y el pulso del onboarding.
 
 **Replicación futura:** la incorporación de Páginas en Diario Show y BAE requiere adaptar sus motores de estado, exportación e independencia de placas; no debe consistir en copiar solamente este CSS.
+
+## Cambio 04 — Cabecera Diapositivas y tarjeta punteada para añadir (2026-11-12)
+**Estado:** piloto implementado en Crónica DEV; pendiente de aprobación visual. No replicado a BAE ni Diario Show.
+
+**Detalles:**
+- El navegador fijo de la preview lleva título **Diapositivas** a la izquierda (negrita, como las cabeceras de Formato, sin icono) y contador `N de N` con distintivo `Portada/Interior` alineados a la derecha.
+- La lista de diapositivas termina con un botón de 48 × 64 px, mismo formato de miniatura, borde punteado de 2 px y un ícono Material Icons `add` centrado. Al pulsarlo invoca el mismo método original de agregar diapositiva, no crea lógica paralela.
+- El placeholder se desplaza al final conforme se agregan diapositivas y se integra al scroll horizontal; cuando el ancho total desborda se hace visible el botón **+** fijo al lado del botón Eliminar, ubicado a la derecha por encima de la pista. Mientras el placeholder cabe, el botón + fijo se oculta para evitar duplicación visual.
+- La fila mantiene una sola línea y la misma altura; las miniaturas y el placeholder se desplazan por debajo de las acciones fijas cuando hay desborde.
+- El botón Eliminar conserva sus reglas y se mantiene fijo. El anillo exterior rojo y el relleno de la miniatura seleccionada no se alteran.
+- Aplica a desktop y a la pestaña Vista previa mobile.
+
+**Archivos:** `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/js/app.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+
+**QA:** `scripts/editorial-dev-context-smoke.mjs` verifica posición del título y contador, aparición del placeholder, agregado hasta diez diapositivas, altura fija, aparición del botón fijo, añadido y borrado.
+
+**Replicación futura:** depende del cambio 03 y de implementar previamente la arquitectura multi-página en cada editor; no copiar hasta recibir autorización.
