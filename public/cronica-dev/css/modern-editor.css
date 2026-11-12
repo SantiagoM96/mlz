@@ -1024,3 +1024,20 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .modern-preview-text-editor[hidden],
 .editor-panel .modern-text-card .control-field[hidden],
 .modern-preview-text-editor .control-field[hidden]{display:none!important}
+
+
+/* CRÓNICA DEV — cambio 12: fuente de verdad para visibilidad según variante.
+   Ocultamos tarjetas enteras y campos, incluso si otros estilos fuerzan display. */
+html[data-cronica-variant="blank"] .editor-panel .modern-text-card,
+html[data-cronica-variant="blank"] .editor-panel .modern-photo-group,
+html[data-cronica-variant="blank"] .editor-panel .modern-design-group .logo-control-field,
+html[data-cronica-variant="blank"] .editor-panel .modern-design-group .modern-footer-field,
+html[data-cronica-variant="blank"] .modern-preview-text-editor,
+html[data-cronica-variant="blank"] .modern-preview-identity-editor .logo-control-field,
+html[data-cronica-variant="blank"] .modern-preview-identity-editor .modern-footer-field,
+html[data-cronica-variant="blank"] #showStrap,
+html[data-cronica-variant="blank"] #strapField,
+html[data-cronica-variant="blank"] #showStrapMobile,
+html[data-cronica-variant="blank"] #strapFieldMobile{
+ display:none!important;
+}
