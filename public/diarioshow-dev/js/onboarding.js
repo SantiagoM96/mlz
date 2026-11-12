@@ -12,8 +12,8 @@
   {selector:'#dsMobileControlsPanel .ds-photo-layout-group',title:'Definí la distribución fotográfica',description:'Elegí Simple para usar una fotografía o Compartida para trabajar con dos imágenes.'},
   {selector:'#photoUploadArea',title:'Agregá tus fotografías',description:'Seleccioná una o más fotografías según la distribución elegida. Arrastralas en la vista previa para ajustar el encuadre y utilizá el zoom.'},
   {selector:'#dsMobileControlsPanel .ds-import-group',title:'Importá y personalizá tu placa',description:'Pegá el enlace de una noticia para importar su contenido. También podés configurar el logo y elegir el estilo de la firma inferior.'},
-  {selector:'#dsMobileControlsPanel .ds-texts-group',title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true},
   {selector:'#dsMobileControlsPanel .ds-texts-group',title:'Editá los textos',description:'Escribí o ajustá el titular, aplicá formato y elegí la alineación del texto.'},
+  {selector:"#dsMobileControlsPanel .ds-plate-design-group > .ds-control-card-toggle",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true,focusHeader:true},
   {selector:'#photoStage',title:'Editá desde la vista previa',description:'Hacé clic en el logo para abrir Diseño de placas o en el titular para abrir Textos. El editor te lleva al módulo correspondiente.'},
   {selector:'body',title:'¿Poco espacio?',description:'Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.',fullScreen:true,showZoomDemo:true}
  ];
