@@ -337,3 +337,11 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Altura común de imágenes de escritorio 32 px y anchos proporcionales a los SVG; las vistas angostas reducen el espacio disponible y el tamaño sin deformar el logo.
 - Se conservan las rutas entre los 3 DEV y el botón Volver; BAE DEV y Diario Show DEV no se modifican todavía.
 **Registro acumulativo: 27 cambios.**
+
+## Cambio 28 — Tamaños ópticos del selector de plataformas (2026-11-12)
+- Crónica DEV exclusivamente: se abandona el alto uniforme de 32 px, que hacía que los logos más apaisados dominasen el header.
+- En desktop el SVG de Crónica pasa de **32 a 40 px (+25 %)**, Diario Show a **24 px** y BAE Negocios a **18 px** de alto; todos conservan su relación de aspecto y ancho natural.
+- Tamaños responsive específicos por marca, con reducción proporcional en pantallas angostas y sin volver a cajas/fondos ni alterar los colores originales.
+- Permanecen el estado activo a color, los inactivos en grises, la expansión del activo, la navegación entre entornos DEV y el botón Volver.
+- Pendiente de aprobación visual antes de replicar el header a BAE y Diario Show.
+**Registro acumulativo: 28 cambios.**
