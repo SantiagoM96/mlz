@@ -80,19 +80,25 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
    if(!visible||!image.loaded||!image.src.includes('shift-click-demo.svg'))
     throw Error(slug+': falta imagen Shift '+JSON.stringify({visible,image}));
    const illustration=await page.evaluate(async()=>{
-    const response=await fetch('../shared/shift-click-demo.svg?v=shift-hand-mouse-v42-20261112');
+    const response=await fetch('../shared/shift-click-demo.svg?v=shift-arrow-accordion-v46-20261112');
     const svg=await response.text();
     const parsed=new DOMParser().parseFromString(svg,'image/svg+xml');
     return {
      status:response.status,
      panels:parsed.querySelectorAll('#modules .module').length,
-     expandedHeights:[...parsed.querySelectorAll('#modules .module animate[attributeName="height"]')].map(x=>x.getAttribute('values')),
+     revealClips:parsed.querySelectorAll('clipPath .reveal').length,
+     clippedBodies:parsed.querySelectorAll('#modules g[clip-path] > .body').length,
+     simulatedControls:parsed.querySelectorAll('#modules .control,#modules .selected').length,
      shift:parsed.querySelector('#shift-key .shift')?.getAttribute('x'),
-     pointer:parsed.querySelector('#mouse-pointer animateMotion')?.getAttribute('path'),
-     pointerPath:parsed.querySelector('#mouse-pointer .cursor-hand')?.getAttribute('d'),
+     pointerPath:parsed.querySelector('#mouse-pointer .cursor-arrow')?.getAttribute('d'),
+     hasHand:!!parsed.querySelector('.cursor-hand'),
      mouse:!!parsed.querySelector('#mouse-button .mouse'),
-     mouseClick:!!parsed.querySelector('#mouse-button .mouse-button animate'),
-     behindShift:(()=>{const hand=parsed.querySelector('#mouse-pointer'),shift=parsed.querySelector('#shift-key');return hand&&shift&&!!(hand.compareDocumentPosition(shift)&Node.DOCUMENT_POSITION_FOLLOWING)})(),
+     mouseClick:svg.includes('@keyframes mouse-light'),
+     behindShift:(()=>{const pointer=parsed.querySelector('#mouse-pointer'),shift=parsed.querySelector('#shift-key');return pointer&&shift&&!!(pointer.compareDocumentPosition(shift)&Node.DOCUMENT_POSITION_FOLLOWING)})(),
+     curvedPath:svg.includes("M520 207 C480 230 386 224 340 170 C310 134 308 72 293 40"),
+     clickBeforeOpen:svg.includes('36%,38%{transform:scale(.9)}')&&svg.includes('0%,38%,89%,100%{height:36px}'),
+     revealAfterOpen:svg.includes('0%,47%,84%,100%{opacity:0}53%,76%{opacity:1}'),
+     reducedMotion:svg.includes('@media(prefers-reduced-motion:reduce)')&&svg.includes('*{animation:none!important}'),
      clickX:parsed.querySelector('.click-ring')?.getAttribute('cx'),
      hasBottomCaption:svg.includes('Mantené presionada Shift'),
      hasEquals:svg.includes('> = </text>')||svg.includes('>=</text>'),
@@ -101,8 +107,9 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
     };
    });
    if(illustration.status!==200||illustration.panels!==3||
-      illustration.expandedHeights.some(v=>!v?.includes('36;36;66;66;36'))||
-      !(Number(illustration.shift)>320&&illustration.pointer?.includes('C486 230 437 213 401 192')&&illustration.pointer?.endsWith('293 40')&&illustration.pointerPath&&illustration.mouse&&illustration.mouseClick&&illustration.behindShift&&illustration.clickX==='293')||
+      illustration.revealClips!==3||illustration.clippedBodies!==3||illustration.simulatedControls<8||
+      illustration.hasHand||!illustration.curvedPath||!illustration.clickBeforeOpen||!illustration.revealAfterOpen||!illustration.reducedMotion||
+      !(Number(illustration.shift)>320&&illustration.pointerPath&&illustration.mouse&&illustration.mouseClick&&illustration.behindShift&&illustration.clickX==='293')||
       illustration.hasBottomCaption||illustration.hasEquals||
       illustration.shiftKeyBoxCount!==1||!illustration.lightBackground)
     throw Error(slug+': SVG Shift no coincide con diseño aprobado '+JSON.stringify(illustration));
