@@ -423,3 +423,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Registro acumulado: 39 cambios.**
 
 **QA Cambio 39 — APROBADA (Chromium, 2026-11-12).** [Ejecución](https://github.com/SantiagoM96/mlz/actions/runs/43158017727): el recorrido de los tres editores mantiene el orden de diapositivas, módulos, Shift y acciones de la preview; el paso Shift enfoca sólo la cabecera. Se verificaron **tres recortes reales** en el paso de logo (logo de la preview, grupo de controles de logo y ubicación, y firma inferior) en Crónica, BAE y Diario Show; la tarjeta se mantiene vinculada al logo. [GitHub Pages](https://github.com/SantiagoM96/mlz/actions/runs/43158017722) publicado satisfactoriamente.
+
+## Cambio 40 — El mouse de la ilustración es un puntero (2026-11-12)
+- Corrección de la ilustración animada de Shift compartida por Crónica, BAE y Diario Show DEV: el «mouseito» es un **cursor de flecha**, no un mouse físico.
+- El cursor parte del lado derecho, avanza hasta el chevrón del primer acordeón (x=293, y=40), hace un pequeño clic con halo mientras Shift permanece iluminado; a partir de ese clic se abren simultáneamente las tres secciones, permanecen abiertas brevemente y se cierran para reiniciar el ciclo.
+- Se conserva la iluminación gris azulada de Shift, con texto/icono contrastado. El SVG y sus referencias tienen nuevos parámetros de caché, sin alterar los otros pasos del onboarding.
+**Registro acumulativo: 40 cambios.**
