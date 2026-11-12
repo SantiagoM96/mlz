@@ -1,54 +1,90 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="250" viewBox="0 0 600 250" role="img" aria-labelledby="title desc">
-<title id="title">Shift más clic para expandir o contraer todos los módulos</title>
-<desc id="desc">La tecla Shift se ilumina mientras un mouse hace clic sobre la cabecera de un acordeón. Tres módulos cambian de estado juntos.</desc>
+<title id="title">Shift y clic: expandir o contraer todos los módulos</title>
+<desc id="desc">A la izquierda, tres módulos se abren y cierran juntos. A la derecha, la tecla Shift se mantiene presionada mientras se hace clic con el mouse.</desc>
 <style>
- .key,.mouse,.panel{fill:#2a2d37;stroke:#777b89;stroke-width:2}
- .shift{fill:#30343f;stroke:#8b91a1;stroke-width:2}
- .type{fill:#edf0f5;font:700 22px system-ui,sans-serif}
- .small{fill:#c6cbd6;font:600 14px system-ui,sans-serif}
- .detail{fill:#858b98}
- .tap{fill:#fff;opacity:0}
- .mouseButton{fill:#414754}
- .rule{fill:#8d93a0}
- .rule2{fill:#a4a9b4;opacity:.6}
- .keyPulse{animation:shiftPulse 3.6s ease-in-out infinite}
- .mouseTap{animation:mouseTap 3.6s ease-in-out infinite;transform-origin:235px 99px}
- .panelBody{animation:accordionPulse 3.6s ease-in-out infinite;transform-box:fill-box;transform-origin:top center}
- .clickPulse{animation:clickPulse 3.6s ease-in-out infinite;transform-origin:244px 75px}
- @keyframes shiftPulse{0%,12%,74%,100%{fill:#30343f;stroke:#8b91a1}22%,65%{fill:#e9edf6;stroke:#fff}}
- @keyframes mouseTap{0%,29%,50%,100%{transform:translateY(0)}34%,42%{transform:translateY(5px)}}
- @keyframes accordionPulse{0%,30%,74%,100%{transform:scaleY(.12);opacity:.15}41%,65%{transform:scaleY(1);opacity:1}}
- @keyframes clickPulse{0%,28%,47%,100%{opacity:0;transform:scale(.5)}34%{opacity:.65;transform:scale(1)}44%{opacity:0;transform:scale(1.5)}}
- @media(prefers-reduced-motion:reduce){*{animation:none!important}.panelBody{transform:scaleY(1);opacity:1}}
+ .module{fill:#292d38;stroke:#747c8c;stroke-width:2}
+ .heading{fill:#e7ebf4;font:600 14px system-ui,-apple-system,sans-serif}
+ .bodyline{stroke:#929baa;stroke-width:3;stroke-linecap:round}
+ .chevron{fill:none;stroke:#e4e9f2;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+ .shift{fill:#333b4a;stroke:#8996a9;stroke-width:2}
+ .shift-icon{stroke:#edf3fc;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+ .shift-label{fill:#edf3fc;font:700 21px system-ui,-apple-system,sans-serif}
+ .mouse{fill:#303746;stroke:#8793a8;stroke-width:2}
+ .mouse-divider{stroke:#818b9f;stroke-width:2;fill:none}
+ .mouse-button{fill:#5b687d}
+ .press{animation:shift-down 4.2s ease-in-out infinite}
+ .mouse-press{animation:mouse-down 4.2s ease-in-out infinite;transform-origin:540px 107px}
+ .click-ring{fill:none;stroke:#f3f6fd;stroke-width:3;animation:click-flash 4.2s ease-out infinite;transform-origin:528px 89px}
+ .body{animation:body-visible 4.2s ease-in-out infinite}
+ @keyframes shift-down{
+  0%,15%,79%,100%{fill:#333b4a;stroke:#8996a9}
+  22%,70%{fill:#536279;stroke:#cad5e6}
+ }
+ @keyframes mouse-down{
+  0%,29%,44%,100%{transform:translateY(0)}
+  33%,38%{transform:translateY(4px)}
+ }
+ @keyframes click-flash{
+  0%,29%,44%,100%{opacity:0;transform:scale(.6)}
+  34%{opacity:.8;transform:scale(1)}
+  43%{opacity:0;transform:scale(1.45)}
+ }
+ @keyframes body-visible{
+  0%,30%,81%,100%{opacity:0}
+  41%,71%{opacity:1}
+ }
+ @media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .body{opacity:1}
+  .click-ring{opacity:0}
+ }
 </style>
 <rect x="1" y="1" width="598" height="248" rx="18" fill="#20232c" stroke="#444a58" stroke-width="2"/>
-<rect x="28" y="64" width="161" height="82" rx="13" class="key"/>
-<rect x="39" y="75" width="139" height="60" rx="9" class="shift keyPulse"/>
-<path d="M62 109V96l-8 8m8-8 8 8" fill="none" stroke="#b7c0d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="83" y="112" class="type">Shift</text>
-<text x="202" y="114" class="type">+</text>
-<g class="mouseTap">
- <rect x="233" y="60" width="60" height="86" rx="29" class="mouse"/>
- <path d="M263 60V98" fill="none" stroke="#777b89" stroke-width="2"/>
- <path d="M263 98H234" stroke="#777b89" stroke-width="2"/>
- <rect x="250" y="71" width="8" height="20" rx="4" class="mouseButton"/>
-</g>
-<circle class="clickPulse" cx="251" cy="74" r="20" fill="none" stroke="#fff" stroke-width="3"/>
-<text x="309" y="114" class="type">=</text>
-<g>
- <rect x="353" y="28" width="218" height="60" rx="8" class="panel"/>
- <rect x="353" y="97" width="218" height="60" rx="8" class="panel"/>
- <rect x="353" y="166" width="218" height="60" rx="8" class="panel"/>
- <text x="366" y="49" class="small">Diseño de placas</text>
- <text x="366" y="118" class="small">Fotografía</text>
- <text x="366" y="187" class="small">Textos</text>
- <path d="M548 46l6 6 6-6M548 115l6 6 6-6M548 184l6 6 6-6" fill="none" stroke="#f0f0f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
- <g class="panelBody">
-  <path d="M368 62h115M368 70h75M368 78h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
-  <path d="M368 131h115M368 139h75M368 147h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
-  <path d="M368 200h115M368 208h75M368 216h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
+<!-- Izquierda: tres acordeones. Las alturas y las posiciones se sincronizan. -->
+<g id="modules">
+ <g id="module-design">
+  <rect class="module" x="18" y="18" width="294" height="36" rx="8">
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  </rect>
+  <text class="heading" x="32" y="41">Diseño de placas</text>
+  <path class="chevron" d="M287 34l6 6 6-6"/>
+  <g class="body">
+   <path class="bodyline" d="M34 63h160M34 73h120"/>
+  </g>
+ </g>
+ <g id="module-photo">
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  <rect class="module" x="18" y="62" width="294" height="36" rx="8">
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  </rect>
+  <text class="heading" x="32" y="85">Fotografía</text>
+  <path class="chevron" d="M287 78l6 6 6-6"/>
+  <g class="body">
+   <path class="bodyline" d="M34 107h178M34 117h110"/>
+  </g>
+ </g>
+ <g id="module-text">
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 60;0 60;0 0;0 0" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  <rect class="module" x="18" y="106" width="294" height="36" rx="8">
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  </rect>
+  <text class="heading" x="32" y="129">Textos</text>
+  <path class="chevron" d="M287 122l6 6 6-6"/>
+  <g class="body">
+   <path class="bodyline" d="M34 151h150M34 161h205"/>
+  </g>
  </g>
 </g>
-<text x="30" y="203" class="small">Mantené presionada Shift</text>
-<text x="30" y="224" class="small">y hacé clic en una cabecera</text>
+<!-- Derecha: tecla Shift sin caja adicional, y mouse. -->
+<g id="shift-key">
+ <rect class="shift press" x="360" y="78" width="118" height="64" rx="10"/>
+ <path class="shift-icon" d="M385 115v-17l-8 9m8-9 8 9"/>
+ <text class="shift-label" x="402" y="117">Shift</text>
+</g>
+<g id="mouse-button" class="mouse-press">
+ <rect class="mouse" x="516" y="72" width="58" height="86" rx="28"/>
+ <path class="mouse-divider" d="M545 73v34M545 107h-28"/>
+ <rect class="mouse-button" x="529" y="83" width="8" height="19" rx="4"/>
+</g>
+<circle class="click-ring" cx="532" cy="88" r="18"/>
 </svg>
