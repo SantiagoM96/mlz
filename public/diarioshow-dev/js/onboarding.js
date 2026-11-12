@@ -13,7 +13,7 @@
   {selector:'#photoUploadArea',title:'Agregá tus fotografías',description:'Seleccioná una o más fotografías según la distribución elegida. Arrastralas en la vista previa para ajustar el encuadre y utilizá el zoom.'},
   {selector:'#dsMobileControlsPanel .ds-import-group',title:'Importá y personalizá tu placa',description:'Pegá el enlace de una noticia para importar su contenido. También podés configurar el logo y elegir el estilo de la firma inferior.'},
   {selector:'#dsMobileControlsPanel .ds-texts-group',title:'Editá los textos',description:'Escribí o ajustá el titular, aplicá formato y elegí la alineación del texto.'},
-  {selector:'#photoStage',title:'Editá desde la vista previa',description:'Hacé clic en el logo para abrir Identidad gráfica o en el titular para abrir Textos. El editor te lleva al módulo correspondiente.'},
+  {selector:'#photoStage',title:'Editá desde la vista previa',description:'Hacé clic en el logo para abrir Diseño de placas o en el titular para abrir Textos. El editor te lleva al módulo correspondiente.'},
   {selector:'body',title:'¿Poco espacio?',description:'Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.',fullScreen:true,showZoomDemo:true}
  ];
  let index=-1,active=false,layer=null,card=null,highlight=null;
