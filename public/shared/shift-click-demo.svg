@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="250" viewBox="0 0 600 250" role="img" aria-labelledby="title desc">
 <title id="title">Shift y clic: expandir o contraer todos los módulos</title>
-<desc id="desc">A la izquierda, tres módulos se abren y cierran juntos. A la derecha, la tecla Shift se mantiene presionada mientras se hace clic con el mouse.</desc>
+<desc id="desc">A la izquierda, tres módulos se abren y cierran juntos. A la derecha, Shift se ilumina y un puntero de mouse se desplaza hasta el chevrón del primer módulo, hace clic y abre todos los acordeones.</desc>
 <style>
  .module{fill:#292d38;stroke:#747c8c;stroke-width:2}
  .heading{fill:#e7ebf4;font:600 14px system-ui,-apple-system,sans-serif}
@@ -9,29 +9,27 @@
  .shift{fill:#333b4a;stroke:#8996a9;stroke-width:2}
  .shift-icon{stroke:#edf3fc;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
  .shift-label{fill:#edf3fc;font:700 21px system-ui,-apple-system,sans-serif}
- .mouse{fill:#303746;stroke:#8793a8;stroke-width:2}
- .mouse-divider{stroke:#818b9f;stroke-width:2;fill:none}
- .mouse-button{fill:#5b687d}
+ .cursor-arrow{fill:#f3f6ff;stroke:#171b24;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
  .press{animation:shift-down 4.2s ease-in-out infinite}
- .mouse-press{animation:mouse-down 4.2s ease-in-out infinite;transform-origin:540px 107px}
- .click-ring{fill:none;stroke:#f3f6fd;stroke-width:3;animation:click-flash 4.2s ease-out infinite;transform-origin:528px 89px}
+ .cursor-click{animation:cursor-tap 4.2s ease-in-out infinite;transform-box:fill-box;transform-origin:top left}
+ .click-ring{fill:none;stroke:#f3f6fd;stroke-width:3;animation:click-flash 4.2s ease-out infinite;transform-origin:293px 40px}
  .body{animation:body-visible 4.2s ease-in-out infinite}
  @keyframes shift-down{
   0%,15%,79%,100%{fill:#333b4a;stroke:#8996a9}
-  22%,70%{fill:#536279;stroke:#cad5e6}
+  19%,73%{fill:#536279;stroke:#cad5e6}
  }
- @keyframes mouse-down{
-  0%,29%,44%,100%{transform:translateY(0)}
-  33%,38%{transform:translateY(4px)}
+ @keyframes cursor-tap{
+  0%,31%,40%,100%{transform:scale(1)}
+  34%,37%{transform:scale(.82)}
  }
  @keyframes click-flash{
-  0%,29%,44%,100%{opacity:0;transform:scale(.6)}
-  34%{opacity:.8;transform:scale(1)}
-  43%{opacity:0;transform:scale(1.45)}
+  0%,32%,43%,100%{opacity:0;transform:scale(.6)}
+  35%{opacity:.8;transform:scale(1)}
+  42%{opacity:0;transform:scale(1.45)}
  }
  @keyframes body-visible{
-  0%,30%,81%,100%{opacity:0}
-  41%,71%{opacity:1}
+  0%,36%,82%,100%{opacity:0}
+  45%,72%{opacity:1}
  }
  @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important}
@@ -44,7 +42,7 @@
 <g id="modules">
  <g id="module-design">
   <rect class="module" x="18" y="18" width="294" height="36" rx="8">
-   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.36;.46;.72;.84;1" dur="4.2s" repeatCount="indefinite"/>
   </rect>
   <text class="heading" x="32" y="41">Diseño de placas</text>
   <path class="chevron" d="M287 34l6 6 6-6"/>
@@ -53,9 +51,9 @@
   </g>
  </g>
  <g id="module-photo">
-  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 30;0 30;0 0;0 0" keyTimes="0;.36;.46;.72;.84;1" dur="4.2s" repeatCount="indefinite"/>
   <rect class="module" x="18" y="62" width="294" height="36" rx="8">
-   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.36;.46;.72;.84;1" dur="4.2s" repeatCount="indefinite"/>
   </rect>
   <text class="heading" x="32" y="85">Fotografía</text>
   <path class="chevron" d="M287 78l6 6 6-6"/>
@@ -64,9 +62,9 @@
   </g>
  </g>
  <g id="module-text">
-  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 60;0 60;0 0;0 0" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 60;0 60;0 0;0 0" keyTimes="0;.36;.46;.72;.84;1" dur="4.2s" repeatCount="indefinite"/>
   <rect class="module" x="18" y="106" width="294" height="36" rx="8">
-   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.30;.42;.71;.83;1" dur="4.2s" repeatCount="indefinite"/>
+   <animate attributeName="height" values="36;36;66;66;36;36" keyTimes="0;.36;.46;.72;.84;1" dur="4.2s" repeatCount="indefinite"/>
   </rect>
   <text class="heading" x="32" y="129">Textos</text>
   <path class="chevron" d="M287 122l6 6 6-6"/>
@@ -75,16 +73,21 @@
   </g>
  </g>
 </g>
-<!-- Derecha: tecla Shift sin caja adicional, y mouse. -->
+<!-- Shift permanece presionado mientras el cursor se desplaza al chevrón. -->
 <g id="shift-key">
  <rect class="shift press" x="360" y="78" width="118" height="64" rx="10"/>
  <path class="shift-icon" d="M385 115v-17l-8 9m8-9 8 9"/>
  <text class="shift-label" x="402" y="117">Shift</text>
 </g>
-<g id="mouse-button" class="mouse-press">
- <rect class="mouse" x="516" y="72" width="58" height="86" rx="28"/>
- <path class="mouse-divider" d="M545 73v34M545 107h-28"/>
- <rect class="mouse-button" x="529" y="83" width="8" height="19" rx="4"/>
+<!-- Puntero real: arranca a la derecha, apunta al chevrón (293,40), hace clic y regresa. -->
+<g id="mouse-pointer">
+ <animateTransform attributeName="transform" type="translate"
+  values="494 160;494 160;293 40;293 40;293 40;494 160;494 160"
+  keyTimes="0;.17;.31;.41;.74;.86;1"
+  dur="4.2s" repeatCount="indefinite"/>
+ <g class="cursor-click">
+  <path class="cursor-arrow" d="M0 0 V24 L7 18 L12 30 L18 27 L12 16 H24 Z"/>
+ </g>
 </g>
-<circle class="click-ring" cx="532" cy="88" r="18"/>
+<circle class="click-ring" cx="293" cy="40" r="18"/>
 </svg>
