@@ -404,9 +404,9 @@ function setVariant(value){
  if(!palette[value])return;
  pageBlank=false;document.documentElement.dataset.editorPlateVariant=value;
  // Primera vista de la tercera variante: ejemplo sin reemplazar contenido editado.
- if(['quote','quote-blue'].includes(value)&&el('headline').value==='*Mauro Icardi* consiguió la *eximición de prisión* tras el escándalo con Wanda Nara'){
-  el('headline').value='OJALÁ A LA GENTE LE DIERA TANTO MIEDO TENER UN HIJO GOLPEADOR COMO TENER UN HIJO GAY';
-  el('quoteAuthor').value='La Joaqui';
+ if(['quote','quote-blue'].includes(value)&&el('headline').value==='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores'){
+  el('headline').value='ESTOY VIVIENDO UNA ETAPA LLENA DE *NUEVOS DESAFÍOS*';
+  el('quoteAuthor').value='Una artista invitada';
  }
  el('theme').value=value;
  el('photoLayoutOptions').dataset.variant=value;
@@ -602,7 +602,7 @@ el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')active
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
 el('clearAll').addEventListener('click',()=>{
- el('articleUrl').value='';el('headline').value='';el('quoteAuthor').value='La Joaqui';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
+ el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  forceUppercase=false;syncUppercaseUI();
