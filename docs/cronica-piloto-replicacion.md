@@ -358,3 +358,11 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se aplica el mismo factor de reducción del 10 % a las reglas responsive de ambas marcas, preservando proporciones SVG y colores originales.
 - El resto del selector, navegación y animaciones permanece sin cambios. Pendiente de aprobación para replicación.
 **Registro acumulativo: 30 cambios.**
+
+## Cambio 31 — Replicar selector del header en BAE y Diario Show DEV (2026-11-12)
+- Se replica a los otros dos DEV el selector de plataformas aprobado en Crónica DEV (Cambio 30). El HTML mantiene **Crónica → Diario Show → BAE** en ese orden y el mismo CSS de separación, tamaños ópticos, comportamiento responsive y ampliación visual (sin reordenar ni desplazar elementos adyacentes).
+- Cada editor tiene su propia identidad activa: Crónica en Crónica DEV, Diario Show en Diario Show DEV y BAE en BAE DEV; solo cambia `is-active` y `aria-current="page"`.
+- Los enlaces navegan a cada entorno DEV real y el botón «Volver» sigue enlazando al menú principal.
+- El activo usa colores del SVG original; los otros mantienen el efecto de escala de grises, sin fondos, tarjetas ni inversión artificial del logotipo Diario Show.
+- Se iguala el ancho de botón Volver en mobile para evitar saltos de línea.
+**Registro acumulativo: 31 cambios.**
