@@ -21,7 +21,40 @@ for(const [brand,config] of Object.entries(tests)){
    assert(await page.locator('aside.editor-panel .modern-design-group').count()===1&&await page.locator('aside.editor-panel .modern-identity-group').count()===0,brand+': diseño no absorbió identidad');
    assert(await page.locator('.modern-photo-group').count()===1,brand+': fotografía no separada');
    if(brand==='bae')assert(await page.locator('.modern-import-group #articleUrl').count()===1,'BAE: falta importar noticia');
-   if(brand==='cronica')assert(await page.locator('.carousel-panel').count()===1,'Crónica: falta páginas');
+   if(brand==='cronica'){
+    assert(await page.locator('.preview > .cronica-preview-pages').count()===1&&
+     await page.locator('aside.editor-panel > .carousel-panel').count()===0,
+     'Crónica: Páginas no está fijo encima de la preview');
+    assert(await page.locator('.preview > .preview-toolbar').isHidden(),
+     'Crónica: barra de instrucciones antigua sigue visible');
+    const designFirst=await page.locator('aside.editor-panel > .modern-card').first().evaluate(node=>node.classList.contains('modern-design-group'));
+    assert(designFirst,'Crónica: Diseño de placas no quedó primero en Formato');
+   }
+   if(brand==='cronica'){
+    // Diez páginas no deben producir una segunda fila ni aumentar la altura.
+    if(mobile)await page.locator('#modernTabpreview').click();
+    const initialHeight=await page.locator('.preview > .cronica-preview-pages').evaluate(node=>node.offsetHeight);
+    for(let i=0;i<9;i++)await page.locator('#addPage').click();
+    const overflow=await page.locator('.preview > .cronica-preview-pages').evaluate(node=>{
+     const list=node.querySelector('#carouselPages');
+     const active=list.querySelector('[aria-current="page"]');
+     return {height:node.offsetHeight,scrollWidth:list.scrollWidth,clientWidth:list.clientWidth,
+      count:list.children.length,selected:active?.getAttribute('aria-label'),
+      left:list.scrollLeft};
+    });
+    assert(overflow.count===10&&overflow.scrollWidth>overflow.clientWidth&&
+     Math.abs(overflow.height-initialHeight)<5,
+     'Crónica: al sumar páginas, la barra crece verticalmente '+JSON.stringify({initialHeight,overflow}));
+    assert(overflow.selected?.startsWith('Página 10'),
+     'Crónica: no queda seleccionada la última página '+JSON.stringify(overflow));
+    await page.locator('#removePage').click();
+    assert(await page.locator('#carouselPages .carousel-page-thumb').count()===9,
+     'Crónica: eliminar página no funciona tras mover navegador');
+    // Restaurar estado inicial para el resto de las comprobaciones.
+    await page.reload({waitUntil:'load'});
+    await page.waitForSelector('.modern-logo-hit');
+    if(mobile)await page.locator('#modernTabcontrols').click();
+   }
    // Paridad visual: no hay pop-up lateral, el zoom vive junto al Canvas.
    assert(await page.locator('#browserZoomTip').isHidden(),brand+': pop-up de zoom todavía visible');
    assert(await page.locator('#photoStage > .modern-photo-zoom #photoZoom').count()===1,brand+': zoom no está al costado de la placa');
@@ -323,7 +356,15 @@ for(const [brand,config] of Object.entries(tests)){
       shadow:pulse?.boxShadow,rounding:spotlight.borderRadius,mask:spotlight.boxShadow,
       shadeBg:shade.backgroundColor};
     },targetSelectors[n-1]);
-    assert(visual.expanded==='true'&&visual.pulseName==='editorial-card-pulse'&&
+    if(n===1){
+     const pagesPulse=await tour.locator('.preview > .cronica-preview-pages').evaluate(node=>{
+      const style=getComputedStyle(node);
+      return {name:style.animationName,duration:style.animationDuration,shadow:style.boxShadow};
+     });
+     assert(pagesPulse.name==='editorial-card-pulse'&&pagesPulse.duration==='1.05s'&&
+      pagesPulse.shadow.includes('0px 0px 0px 2px'),
+      'Crónica: Páginas fijo no recibe el pulso del onboarding '+JSON.stringify(pagesPulse));
+    }else assert(visual.expanded==='true'&&visual.pulseName==='editorial-card-pulse'&&
      visual.pulseDuration==='1.05s'&&visual.shadow.includes('0px 0px 0px 2px'),
      'Crónica: el paso '+n+' no pulsa tarjeta ya abierta '+JSON.stringify(visual));
     assert(visual.rounding==='12px'&&visual.mask.includes('rgba(9, 10, 14, 0.77)')&&
