@@ -1316,8 +1316,8 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 /* En el diseño anterior todos medían 32 px de alto.
    Crónica crece 25%; los logos más apaisados bajan de tamaño. */
 .header-inner .editor-platform-cronica{--platform-logo-height:40px}
-.header-inner .editor-platform-diarioshow{--platform-logo-height:28.8px}
-.header-inner .editor-platform-bae{--platform-logo-height:21.6px}
+.header-inner .editor-platform-diarioshow{--platform-logo-height:25.92px}
+.header-inner .editor-platform-bae{--platform-logo-height:19.44px}
 .header-inner .editor-platform-option.is-active{
  filter:none!important;opacity:1;transform:scale(1.065);
  background:none!important;border:0!important;box-shadow:none!important;
@@ -1342,15 +1342,15 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  .header-inner .editor-platform-switcher{gap:clamp(8px,1.7vw,16px)}
  .header-inner .editor-platform-option{min-height:42px;padding:4px 0}
  .header-inner .editor-platform-cronica{--platform-logo-height:clamp(28px,4.4vw,38px)}
- .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(21.6px,3.24vw,28.8px)}
- .header-inner .editor-platform-bae{--platform-logo-height:clamp(16.8px,2.4vw,21.6px)}
+ .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(19.44px,2.916vw,25.92px)}
+ .header-inner .editor-platform-bae{--platform-logo-height:clamp(15.12px,2.16vw,19.44px)}
 }
 @media(max-width:700px){
  .header-inner .editor-platform-switcher{flex:1 1 auto;min-width:0;gap:8px}
  .header-inner .editor-platform-option{flex:0 1 auto;min-width:0;min-height:38px;padding:3px 0}
  .header-inner .editor-platform-cronica{--platform-logo-height:clamp(19px,5.4vw,27px)}
- .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(15.6px,4.68vw,22.8px)}
- .header-inner .editor-platform-bae{--platform-logo-height:clamp(12px,3.48vw,16.8px)}
+ .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(14.04px,4.212vw,20.52px)}
+ .header-inner .editor-platform-bae{--platform-logo-height:clamp(10.8px,3.132vw,15.12px)}
  .header-inner .editor-platform-option.is-active{transform:scale(1.045)}
 }
 @media(max-width:400px){
