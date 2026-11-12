@@ -373,3 +373,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se mantiene la lógica de valores, los porcentajes, las variantes y el gesto de click sobre pista; no se muestra halo si se toca fuera de la bolita.
 - Diario Show DEV conserva su implementación actual, utilizada como referencia.
 **Registro acumulativo: 32 cambios.**
+
+## Cambio 33 — Onboarding Shift + clic (2026-11-12)
+- Se suma en Crónica, BAE y Diario Show DEV una placa de recorrido para la combinación **Shift + clic**, con una ilustración vectorial animada de tecla Shift, mouse y acordeones sincronizados.
+- El dibujo aparece debajo del texto del paso, conserva la demostración de zoom de las demás placas y respeta la configuración de movimiento reducido.
+- En Diario Show se reemplaza la comprobación fija del índice de la placa de vista previa por la identificación por selector, para que insertar el nuevo paso no altere el recorrido.
+
+## Cambio 34 — Ritmo interior de Diario Show replicado en BAE y Crónica DEV (2026-11-12)
+- El interior de los acordeones utiliza **18 px vertical / 14 px horizontal** en desktop y **15 px / 12 px** en mobile.
+- Se unifica en **16 px** la distancia entre submódulos directos, incluidos diseño, fotografía, importación, controles de logo, firma y textos. Se evitan márgenes duplicados.
+- Se mantienen los módulos, contenidos y controles propios de cada marca, sin tocar producción.
+**Registro acumulativo: 34 cambios.**
