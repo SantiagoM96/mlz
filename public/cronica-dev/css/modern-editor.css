@@ -1288,70 +1288,74 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 }
 @media(max-width:380px){.editor-panel .modern-footer-options button{gap:5px!important;padding:8px 5px!important}}
 
-/* Cambio 26 — Selector editorial de plataformas, piloto en Crónica DEV.
-   Tres logos navegables; el activo se expande sin empujar al resto. */
+/* Cambio 27 — logos sueltos, sin tarjetas ni tratamientos cromáticos ajenos.
+   Escala de grises sobre el SVG ORIGINAL, jamás brightness/invert.
+   Tamaño visual común, anchos proporcionales por aspecto de cada logo. */
 .header-inner .editor-platform-switcher{
- box-sizing:border-box;display:flex;align-items:center;gap:10px;
- flex:1 1 auto;min-width:0;max-width:620px;padding:6px 0;
+ box-sizing:border-box;display:flex;align-items:center;justify-content:flex-start;
+ gap:clamp(12px,2.2vw,25px);flex:1 1 auto;min-width:0;max-width:none;
+ padding:4px 0;overflow:visible;
 }
 .header-inner .editor-platform-option{
  position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;
- flex:0 1 160px;min-width:0;width:160px;height:58px;
- padding:10px 14px;box-sizing:border-box;border:1px solid transparent;
- border-radius:12px;background:rgba(255,255,255,.055);
- text-decoration:none;cursor:pointer;outline-offset:3px;
- filter:grayscale(1);opacity:.46;transform:scale(.96);
- transition:opacity .22s ease,filter .22s ease,background .22s ease,
-   border-color .22s ease,transform .32s cubic-bezier(.16,1.4,.35,1),
-   box-shadow .22s ease;
+ flex:0 1 auto;min-width:0;width:auto;height:auto;min-height:46px;
+ margin:0;padding:5px 0;box-sizing:border-box;
+ border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+ text-decoration:none;cursor:pointer;
+ filter:grayscale(1);opacity:.53;transform:scale(1);
+ transform-origin:center center;
+ transition:filter .23s ease,opacity .23s ease,
+  transform .32s cubic-bezier(.16,1.28,.35,1);
 }
 .header-inner .editor-platform-option img{
- width:100%;height:100%;max-height:36px;object-fit:contain;
- display:block;pointer-events:none;
+ box-sizing:border-box;display:block;flex:none;pointer-events:none;
+ width:auto!important;height:32px!important;max-width:100%;max-height:none!important;
+ object-fit:contain;filter:none!important;opacity:1;
 }
-.header-inner .editor-platform-cronica img{max-height:43px}
+.header-inner .editor-platform-cronica img,
 .header-inner .editor-platform-diarioshow img,
-.header-inner .editor-platform-bae img{filter:brightness(0) invert(1)}
-.header-inner .editor-platform-option:hover{
- opacity:.88;transform:scale(1.035);filter:grayscale(.35);
- background:rgba(255,255,255,.10);
+.header-inner .editor-platform-bae img{filter:none!important}
+.header-inner .editor-platform-option.is-active{
+ filter:none!important;opacity:1;transform:scale(1.065);
+ background:none!important;border:0!important;box-shadow:none!important;
+ z-index:1;cursor:default;animation:editor-logo-pop .42s cubic-bezier(.18,1.5,.4,1) both;
+}
+.header-inner .editor-platform-option:hover:not(.is-active){
+ filter:grayscale(.25);opacity:.94;transform:scale(1.04);
+ background:none!important;box-shadow:none!important;
 }
 .header-inner .editor-platform-option:focus-visible{
- outline:2px solid #f3f3f5;outline-offset:3px;opacity:1;
+ outline:2px solid #f3f3f5;outline-offset:4px;border-radius:4px!important;opacity:1;
 }
-.header-inner .editor-platform-option.is-active{
- opacity:1;filter:none;transform:scale(1.09);
- background:rgba(237,0,0,.13);border-color:rgba(237,0,0,.42);
- box-shadow:0 9px 23px rgba(0,0,0,.16),inset 0 0 0 1px rgba(255,255,255,.05);
- z-index:1;cursor:default;
- animation:editor-platform-pop .43s cubic-bezier(.18,1.65,.4,1) both;
+.header-inner .editor-platform-option:active:not(.is-active){transform:scale(.97)}
+@keyframes editor-logo-pop{
+ 0%{transform:scale(.96)}
+ 55%{transform:scale(1.095)}
+ 100%{transform:scale(1.065)}
 }
-.header-inner .editor-platform-option.is-active img{filter:none}
-@keyframes editor-platform-pop{
- 0%{transform:scale(.9)}
- 52%{transform:scale(1.15)}
- 100%{transform:scale(1.09)}
-}
-.header-inner .editor-platform-option:active:not(.is-active){
- transform:scale(.94);
+/* Distribución proporcional por la relación de aspecto real de cada SVG.
+   Ante poco ancho se reduce la altura de TODOS en conjunto, no se deforma ninguno. */
+@media(max-width:900px){
+ .header-inner .editor-platform-switcher{gap:clamp(8px,1.7vw,16px)}
+ .header-inner .editor-platform-option{flex:0 1 auto;min-height:38px;padding:4px 0}
+ .header-inner .editor-platform-option img{height:clamp(15px,2.9vw,27px)!important}
 }
 @media(max-width:700px){
- .header-inner .editor-platform-switcher{
-  flex:1 1 auto;gap:6px;min-width:0;max-width:none;
- }
+ .header-inner .editor-platform-switcher{flex:1 1 auto;min-width:0;gap:8px}
  .header-inner .editor-platform-option{
-  flex:1 1 0;width:auto;min-width:0;height:49px;padding:9px 6px;
-  border-radius:9px;
+  flex:1 1 0;min-width:0;min-height:38px;padding:3px 0;
  }
- .header-inner .editor-platform-option img{max-height:29px}
- .header-inner .editor-platform-cronica img{max-height:35px}
- .header-inner .editor-platform-option.is-active{transform:scale(1.055)}
+ .header-inner .editor-platform-option img{
+  display:block;height:auto!important;max-height:26px!important;
+  width:100%!important;max-width:100%!important;
+ }
+ .header-inner .editor-platform-option.is-active{transform:scale(1.045)}
 }
 @media(max-width:400px){
- .header-inner .editor-platform-switcher{gap:4px}
- .header-inner .editor-platform-option{height:45px;padding:7px 4px}
- .header-inner .editor-platform-option img{max-height:26px}
- .header-inner .editor-platform-cronica img{max-height:31px}
+ .header-inner .editor-platform-switcher{gap:6px}
+ .header-inner .editor-platform-option{min-height:34px}
+ .header-inner .editor-platform-option img{max-height:22px!important}
 }
 @media(prefers-reduced-motion:reduce){
  .header-inner .editor-platform-option{animation:none!important;transition:none!important}
