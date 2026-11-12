@@ -425,6 +425,7 @@ function setVariant(value){
  }
  if(isQuote&&photoLayout!=='single')setPhotoLayout('single');
  el('quoteAuthorField').hidden=!isQuote;
+ document.querySelectorAll('.ds-footer-style-field').forEach(field=>field.hidden=isQuote);
  el('quoteAuthorInputField').hidden=!el('showQuoteAuthor').checked;
  // Importar noticias no corresponde a las variantes de cita 3 y 4.
  // Ocultar la tarjeta completa, nunca dejar una cabecera con cuerpo vacío.
