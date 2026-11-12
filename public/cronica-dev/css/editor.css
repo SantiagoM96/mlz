@@ -764,10 +764,10 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 }
 .editor-panel .carousel-pages .carousel-page-thumb[aria-current="page"]{
  border-color:#555a64!important;
- outline:4px solid #ed0000!important;
+ outline:2px solid #ed0000!important;
  outline-offset:2px!important;
 }
 .editor-panel .carousel-pages .carousel-page-thumb:focus-visible{
- outline:4px solid #ed0000!important;
+ outline:2px solid #ed0000!important;
  outline-offset:2px!important;
 }
