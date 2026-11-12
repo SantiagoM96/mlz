@@ -612,14 +612,15 @@ test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes
   await expect(more).toHaveCount(0);
 });
 
-test('el estado sin resultados reproduce la ilustración de Figma', async ({ page }) => {
+test('el estado sin resultados muestra la ilustración 3D nueva', async ({ page }) => {
   await page.goto(activities);
   await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('zzzzz-sin-coincidencias');
   const empty = page.getByTestId('agenda-empty-state');
   const image = empty.locator('img');
   await expect(image).toBeVisible();
-  await expect(image).toHaveJSProperty('naturalWidth', 194);
-  await expect(image).toHaveJSProperty('naturalHeight', 207);
+  await expect(image).toHaveAttribute('src', /\/assets\/agenda\/no-results-mascot\.png$/);
+  await expect(image).toHaveJSProperty('naturalWidth', 388);
+  await expect(image).toHaveJSProperty('naturalHeight', 403);
   await expect(empty.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await expect(empty.getByRole('button', { name: 'Limpiar filtros' })).toHaveCSS('height', '48px');
   await empty.getByRole('button', { name: 'Limpiar filtros' }).click();

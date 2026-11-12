@@ -54,7 +54,7 @@ export function AgendaPage() {
       {filtered.length === 0 ? (
         <section data-testid="agenda-empty-state"
           className="agenda-motion-empty flex min-h-[355px] flex-col items-center justify-center text-center" aria-live="polite">
-          <img src={import.meta.env.BASE_URL + 'assets/agenda/no-results.png'}
+          <img src={import.meta.env.BASE_URL + 'assets/agenda/no-results-mascot.png'}
             alt="" width={194} height={207}
             className="h-[207px] w-[194px] shrink-0 object-contain" />
           <div className="mt-6 max-w-full px-3 text-[18px] leading-[26px] text-grey-900">
