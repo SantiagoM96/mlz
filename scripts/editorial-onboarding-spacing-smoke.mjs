@@ -48,7 +48,15 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
       Math.abs(geometry.mask.top-geometry.header.top)>9||
       (geometry.whole.height>geometry.header.height+35&&geometry.mask.height>=geometry.whole.height))
     throw Error(slug+': la máscara no señala solo la cabecera '+JSON.stringify(geometry));
-   console.log('PASS orden y spotlight cabecera',slug,JSON.stringify(titles));
+   const rounded=await page.evaluate(()=>{
+    const root=document.querySelector('#dsOnboardingLayer');
+    const svg=root?.querySelector('.ds-tour-multispot');
+    const path=svg?.firstElementChild?.getAttribute('d')||'';
+    return {rounded:root?.classList.contains('is-rounded-spotlight'),display:svg?getComputedStyle(svg).display:'',path};
+   });
+   if(!rounded.rounded||rounded.display!=='block'||!(rounded.path.match(/ Q/g)||[]).length)
+    throw Error(slug+': el foco de cabecera no tiene esquinas redondeadas '+JSON.stringify(rounded));
+ console.log('PASS orden y spotlight cabecera',slug,JSON.stringify(titles));
 
    found=true;
    const visible=await page.locator('#dsTourShiftDemo').isVisible();
@@ -112,10 +120,10 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
    target:t?{x:t.x,y:t.y,width:t.width,height:t.height}:null,
    controls:f?{x:f.x,y:f.y,width:f.width,height:f.height}:null,
    footer:b?{x:b.x,y:b.y,width:b.width,height:b.height}:null,
-   holes:n,path
+   holes:n,path,curves:(path.match(/ Q/g)||[]).length
   };
  },slug);
- if(logo.group!=='preview'||!logo.active||logo.display!=='block'||logo.holes!==3||
+ if(logo.group!=='preview'||!logo.active||logo.display!=='block'||logo.holes!==3||logo.curves!==12||
   !logo.target||logo.target.width<5||logo.target.height<5||
   !logo.controls||logo.controls.width<5||logo.controls.height<5||
   !logo.footer||logo.footer.width<5||logo.footer.height<5)
@@ -125,6 +133,25 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
  const textTitle=await page.locator('#dsTourTitle').textContent();
  if(textTitle!=='Editá el texto desde la vista previa')
   throw Error(slug+': no sigue el paso de titular '+textTitle);
+ const textGap=await page.evaluate(()=>{
+  const root=document.querySelector('#dsOnboardingLayer');
+  const highlight=document.querySelector('.ds-tour-highlight')?.getBoundingClientRect();
+  const card=document.querySelector('.ds-tour-card')?.getBoundingClientRect();
+  const path=document.querySelector('.ds-tour-multispot path')?.getAttribute('d')||'';
+  if(!highlight||!card)return null;
+  let gap;
+  if(card.right<=highlight.left)gap=highlight.left-card.right;
+  else if(card.left>=highlight.right)gap=card.left-highlight.right;
+  else if(card.bottom<=highlight.top)gap=highlight.top-card.bottom;
+  else if(card.top>=highlight.bottom)gap=card.top-highlight.bottom;
+  return {gap,rounded:root?.classList.contains('is-rounded-spotlight'),path};
+ });
+ if(!textGap||!textGap.rounded||(textGap.path.match(/ Q/g)||[]).length!==4||
+   !Number.isFinite(textGap.gap)||
+   (Math.abs(textGap.gap-23.4)>.7&&Math.abs(textGap.gap-15.6)>.7))
+  throw Error(slug+': el tip de texto no respeta 30% extra y radio 8 '+JSON.stringify(textGap));
+ console.log('PASS foco redondeado y separación 30% en titular',slug,JSON.stringify({gap:textGap.gap}));
+
 
  if(errors.length)throw Error(slug+': errores JS '+errors.join(' | '));
  await page.locator('.ds-tour-close').click();
