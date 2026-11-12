@@ -13,6 +13,23 @@ for(const data of cases){
  try{
   await page.goto('http://127.0.0.1:8765/'+data.slug+'/?onboarding=off',{waitUntil:'load'});
   await page.locator(data.thumb).first().waitFor({timeout:15000});
+  if(data.slug==='cronica-dev'){
+   const headers=await page.locator('.editor-platform-switcher .editor-platform-option').evaluateAll(nodes=>nodes.map(n=>({href:n.getAttribute('href'),current:n.getAttribute('aria-current'),img:n.querySelector('img')?.getAttribute('src'),loaded:n.querySelector('img')?.naturalWidth>0})));
+   assert(headers.length===3&&headers.every(n=>n.loaded)&&headers[0].current==='page'&&headers[1].href==='../diarioshow-dev/'&&headers[2].href==='../bae-dev/', 'Crónica: header de plataformas incorrecto '+JSON.stringify(headers));
+   const checkLayout=async()=>page.evaluate(()=>{
+    const bar=document.querySelector('.header-inner').getBoundingClientRect();
+    const links=[...document.querySelectorAll('.editor-platform-option')].map(n=>n.getBoundingClientRect());
+    const back=document.querySelector('.dashboard-back-link').getBoundingClientRect();
+    return {barWidth:bar.width,links:links.map(n=>({left:n.left,right:n.right,top:n.top,bottom:n.bottom})),backLeft:back.left,backRight:back.right};
+   });
+   const desktop=await checkLayout();
+   assert(desktop.links.every((x,i)=>i===0||x.left>=desktop.links[i-1].right-2)&&desktop.links[2].right<desktop.backLeft+4, 'Crónica: selector se superpone en desktop '+JSON.stringify(desktop));
+   await page.setViewportSize({width:390,height:844});
+   const mobile=await checkLayout();
+   assert(mobile.links.every((x,i)=>i===0||x.left>=mobile.links[i-1].right-2)&&mobile.links[2].right<mobile.backLeft+4, 'Crónica: selector se superpone en mobile '+JSON.stringify(mobile));
+   await page.setViewportSize({width:1440,height:900});
+   console.log('PASS cronica-dev selector de plataformas desktop/mobile');
+  }
   const initial=await page.locator('#headline').inputValue();
   const expected=data.slug==='cronica-dev'?'espacio cultural':data.slug==='bae-dev'?'nuevas inversiones':'anuncio inesperado';
   assert(initial.includes(expected),data.slug+': el texto de la página inicial sigue viejo: '+JSON.stringify(initial));
