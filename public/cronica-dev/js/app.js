@@ -3,7 +3,7 @@
 'use strict';
 
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false,pageVariant='cover';
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',logoPosition='right',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 // Volantas un 30 % más altas; las mismas medidas se usan en preview y PNG.
 const COVER_STRAP_HEIGHT=68,INTERNAL_STRAP_HEIGHT=65;
@@ -21,7 +21,7 @@ function drawBrandLogo(){
  if(selectedLogo==='none')return;
  const img=logoImages[selectedLogo];
  if(!img||!img.complete||!img.naturalWidth)return;
- ctx.drawImage(img,W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
+ ctx.drawImage(img,logoPosition==='left'?EDGE:W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
 }
 // El campo refleja el modo mayúsculas sin alterar el texto que escribió el usuario.
 function syncUppercaseUI(){
@@ -31,6 +31,13 @@ function syncUppercaseUI(){
 function syncLogoChoices(){
  document.querySelectorAll('.logo-choice').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.logo===selectedLogo)));
 }
+function syncLogoPosition(){
+ document.querySelectorAll('[data-logo-position]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.logoPosition===logoPosition)));
+}
+document.querySelectorAll('[data-logo-position]').forEach(button=>button.addEventListener('click',()=>{
+ logoPosition=button.dataset.logoPosition;syncLogoPosition();render();
+}));
+syncLogoPosition();
 function parseRich(text){
  const out=[];let state={accent:false,italic:false,strike:false},buffer='';
  const flush=()=>{if(buffer){out.push({text:buffer,...state});buffer=''}};
@@ -201,7 +208,7 @@ finally{window.dispatchEvent(new Event('modern:render'))}
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY,variant:pageVariant};
+  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
 const COVER_STRAP="CULTURA EN LA CIUDAD";
@@ -211,8 +218,8 @@ const COVER_HEADLINE="Un nuevo *espacio cultural* abrió sus puertas y presentó
 const INTERNAL_HEADLINE="El espacio ofrecerá *talleres, muestras y espectáculos* durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.";
 const INTERNAL_STRAP="NUEVAS ACTIVIDADES";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
-  image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank',samplePending:true};
+ return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',logoPosition:'right',
+  image:null,zoom:1,offsetX:0,offsetY:0,logoPosition:'right',variant:'blank',samplePending:true};
 }
 function saveActivePage(){
  const previous=carouselPages[activePage];if(!previous)return;
@@ -229,7 +236,7 @@ function loadPage(page){
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
- selectedLogo=page.logo||'primary';syncLogoChoices();
+ selectedLogo=page.logo||'primary';syncLogoChoices();logoPosition=page.logoPosition||'right';syncLogoPosition();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
  el('file').value='';dragging=false;
  el('alignLeft').setAttribute('aria-pressed',String(page.alignment==='left'));
