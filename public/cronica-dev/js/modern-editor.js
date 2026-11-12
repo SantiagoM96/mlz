@@ -157,9 +157,21 @@ const photoFile=$('file');
 if(photoFile&&!photoFile.closest('.modern-photo-picker')){
  const photoField=photoFile.closest('.control-field');
  const photoPicker=document.createElement('div');photoPicker.className='modern-photo-picker';
- const photoSurface=document.createElement('label');
- photoSurface.className='modern-photo-surface';photoSurface.setAttribute('for','file');
- photoSurface.innerHTML='<span class="material-symbols-outlined modern-photo-icon" aria-hidden="true">add_photo_alternate</span><span class="modern-photo-text"><strong class="modern-photo-action">Seleccioná</strong> <span class="modern-photo-caption">una fotografía</span></span>';
+ const photoSurface=document.createElement('div');
+ photoSurface.className='modern-photo-surface';
+ const photoLink=document.createElement('label');
+ photoLink.className='modern-photo-clickable';photoLink.setAttribute('for','file');
+ photoLink.innerHTML='<span class="material-symbols-outlined modern-photo-icon" aria-hidden="true">add_photo_alternate</span><span class="modern-photo-text"><strong class="modern-photo-action">Seleccioná</strong> <span class="modern-photo-caption">una fotografía</span></span>';
+ photoSurface.append(photoLink);
+ // La ayuda mantiene su botón original, pero queda dentro de la misma caja
+ // que el selector, igual que Diario Show.
+ const help=photoField.querySelector('.help-trigger');
+ if(help){
+  help.classList.add('modern-photo-help');
+  photoSurface.append(help);
+ }
+ const heading=photoField.querySelector(':scope > label,:scope > .help-label-row');
+ if(heading)heading.hidden=true;
  photoFile.classList.add('modern-photo-input');
  photoFile.parentNode.insertBefore(photoPicker,photoFile);
  photoPicker.append(photoFile,photoSurface);
