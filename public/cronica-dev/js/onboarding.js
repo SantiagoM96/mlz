@@ -13,7 +13,8 @@
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, configurá la volanta, destacá fragmentos y elegí su alineación."},
   {selector:"section.modern-design-group > .modern-toggle",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true,focusHeader:true},
-  {selector:"#photoStage",title:"Editá desde la vista previa",description:"Tocá el logo para abrir Diseño de placas o el titular para abrir Textos. El módulo correspondiente se destaca."},
+  {selector:'.modern-logo-hit',title:'Configurá el logo y la firma',description:'Tocá el logo de la vista previa para abrir Diseño de placas y cambiar el logo, su ubicación o la firma inferior.'},
+  {selector:'.modern-text-hit',title:'Editá el texto desde la vista previa',description:'Tocá el titular en la vista previa para abrir sus controles de texto.'},
   {selector:"body",title:"¿Poco espacio?",description:"Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.",fullScreen:true,showZoomDemo:true}
  ];
  let index=-1,active=false,layer=null,card=null,highlight=null;
@@ -103,7 +104,7 @@
    if(existing)demoSlot.appendChild(existing.cloneNode(true));
   }
   layer.classList.toggle('is-whole-screen',Boolean(step.fullScreen));
-  document.body.classList.toggle('ds-tour-preview-step',step.selector==='#photoStage');
+  document.body.classList.toggle('ds-tour-preview-step',step.selector==='.modern-logo-hit'||step.selector==='.modern-text-hit'||step.selector==='#dsLogoHitButton'||step.selector==='#dsHeadlineHitButton');
   layer.querySelector('.ds-tour-back').disabled=index===0;
   layer.querySelector('.ds-tour-next').textContent=index===steps.length-1?'Finalizar':'Siguiente';
   layer.querySelector('.ds-tour-dots').innerHTML=steps.map((_,i)=>'<span class="'+(i===index?'is-current':'')+'"></span>').join('');
