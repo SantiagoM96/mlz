@@ -89,6 +89,35 @@ try{
   await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);
   await page.waitForTimeout(650);
  }
+ // Diseño de placas y Textos en la preview deben usar el mismo
+ // marco, interior y animación que sus tarjetas de Formato.
+ for(const [name,source,mirror] of [
+  ['text','#dsMobileControlsPanel .ds-texts-group','#dsMobileTextEditor .ds-control-card'],
+  ['logo','#dsMobileControlsPanel .ds-plate-design-group','#dsMobileContentEditor .ds-control-card']
+ ]){
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+  await page.waitForTimeout(90);
+  await page.locator(name==='text'?'#dsHeadlineHitButton':'#dsLogoHitButton').click();
+  const actual=await page.locator(mirror).evaluate(node=>{
+   const card=getComputedStyle(node),rect=node.getBoundingClientRect();
+   const parent=node.parentElement.getBoundingClientRect();
+   const header=getComputedStyle(node.querySelector('.ds-control-card-toggle'));
+   const body=getComputedStyle(node.querySelector('.ds-control-card-body'));
+   return {animation:card.animationName,duration:card.animationDuration,
+    border:card.borderTopWidth,radius:card.borderTopLeftRadius,
+    shadow:card.boxShadow,left:rect.left-parent.left,right:parent.right-rect.right,
+    headerBg:header.backgroundColor,bodyBg:body.backgroundColor};
+  });
+  const reference=await page.locator(source).evaluate(node=>({
+   headerBg:getComputedStyle(node.querySelector('.ds-control-card-toggle')).backgroundColor,
+   bodyBg:getComputedStyle(node.querySelector('.ds-control-card-body')).backgroundColor
+  }));
+  requireState(actual.animation==='ds-context-card-flash'&&actual.duration==='1.05s'
+    &&actual.border==='1px'&&actual.radius==='10px'
+    &&actual.shadow.includes('0px 0px 0px 2px')&&actual.left>=3&&actual.right>=3
+    &&actual.headerBg===reference.headerBg&&actual.bodyBg===reference.bodyBg,
+    'DS MOBILE CONTEXT CARD GEOMETRY WRONG '+name+' '+JSON.stringify({actual,reference}));
+ }
  const final=await state('after-roundtrip-clicks');
  requireState(final.context==='text'&&!final.textHidden&&final.logoHidden,'POST-TABS SWITCH FAIL '+JSON.stringify(final));
  console.log('CONTEXT DIAGNOSTIC',JSON.stringify({actual,afterTabs,final,issues},null,2));
@@ -131,9 +160,10 @@ try{
  const textMarked=await desktop.evaluate(()=>({
   logo:document.querySelector('#dsMobileControlsPanel .ds-plate-design-group').classList.contains('is-preview-context-target'),
   text:document.querySelector('#dsMobileControlsPanel .ds-texts-group').classList.contains('is-preview-context-target'),
-  border:getComputedStyle(document.querySelector('#dsMobileControlsPanel .ds-texts-group')).borderTopColor
+  border:getComputedStyle(document.querySelector('#dsMobileControlsPanel .ds-texts-group')).borderTopColor,
+  shadow:getComputedStyle(document.querySelector('#dsMobileControlsPanel .ds-texts-group')).boxShadow
  }));
- requireState(!textMarked.logo&&textMarked.text&&textMarked.border==='rgb(230, 0, 141)',
+ requireState(!textMarked.logo&&textMarked.text&&textMarked.border==='rgb(56, 61, 70)'&&textMarked.shadow.includes('0px 0px 0px 2px'),
   'DESKTOP TEXT OUTLINE STATE WRONG '+JSON.stringify(textMarked));
  requireState(txt==='true'&&focused!=='headline','DESKTOP HEADLINE MUST OPEN TEXT MODULE WITHOUT FOCUS '+focused);
  await desktop.locator('#dsMobileControlsPanel .ds-design-group .ds-control-card-toggle').count().catch(()=>0);
