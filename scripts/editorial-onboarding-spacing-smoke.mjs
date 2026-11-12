@@ -19,7 +19,7 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
   ?['Elegí el diseño de cada placa','Agregá una fotografía','Editá los textos']
   :slug==='bae-dev'
    ?['Elegí el diseño de tu placa','Agregá una fotografía','Importá una noticia','Editá los textos','Ajustá el diseño']
-   :['Elegí el diseño de tu placa','Definí la distribución fotográfica','Agregá tus fotografías','Importá y personalizá tu placa','Editá los textos'];
+   :['Elegí el diseño de tu placa','Definí la distribución fotográfica','Importá y personalizá tu placa','Editá los textos'];
  let found=false;
  const titles=[];
  for(let i=0;i<13;i++){
@@ -57,8 +57,32 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
     src:el.getAttribute('src'),
     alt:el.getAttribute('alt')
    }));
-   if(!visible||!image.loaded||!image.src.endsWith('shift-click-demo.svg'))
+   if(!visible||!image.loaded||!image.src.includes('shift-click-demo.svg'))
     throw Error(slug+': falta imagen Shift '+JSON.stringify({visible,image}));
+   const illustration=await page.evaluate(async()=>{
+    const response=await fetch('../shared/shift-click-demo.svg?v=shift-layout-v37-20261112');
+    const svg=await response.text();
+    const parsed=new DOMParser().parseFromString(svg,'image/svg+xml');
+    return {
+     status:response.status,
+     panels:parsed.querySelectorAll('#modules .module').length,
+     expandedHeights:[...parsed.querySelectorAll('#modules .module animate[attributeName="height"]')].map(x=>x.getAttribute('values')),
+     shift:parsed.querySelector('#shift-key .shift')?.getAttribute('x'),
+     mouse:parsed.querySelector('#mouse-button .mouse')?.getAttribute('x'),
+     hasBottomCaption:svg.includes('Mantené presionada Shift'),
+     hasEquals:svg.includes('> = </text>')||svg.includes('>=</text>'),
+     shiftKeyBoxCount:parsed.querySelectorAll('#shift-key rect').length,
+     lightBackground:svg.includes('#536279')
+    };
+   });
+   if(illustration.status!==200||illustration.panels!==3||
+      illustration.expandedHeights.some(v=>!v?.includes('36;36;66;66;36'))||
+      !(Number(illustration.shift)>320&&Number(illustration.mouse)>Number(illustration.shift))||
+      illustration.hasBottomCaption||illustration.hasEquals||
+      illustration.shiftKeyBoxCount!==1||!illustration.lightBackground)
+    throw Error(slug+': SVG Shift no coincide con diseño aprobado '+JSON.stringify(illustration));
+   console.log('PASS ilustración Shift',slug,'tres módulos animados a la izquierda y teclas a la derecha');
+
    console.log('PASS onboarding',slug,'Shift + clic e ilustración cargada');
    break;
   }
