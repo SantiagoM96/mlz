@@ -111,9 +111,12 @@ if(originalContent){
   originalContent.before(photoSection);
  }
  if(isCronica){
-  for(const sel of ['#showStrap','#strapText']){
+  // Después de Formato y Alineación: switch, texto de volanta y titular.
+  const formatRow=textPanel.querySelector('.typography-row');
+  let after=formatRow;
+  for(const sel of ['#showStrap','#strapText','#headline']){
    const field=$(sel)?.closest('.control-field');
-   if(field)textPanel.prepend(field);
+   if(field){after.after(field);after=field}
   }
  }else{
   const urlField=$('articleUrl')?.closest('.control-field');
@@ -123,6 +126,15 @@ if(originalContent){
    importSection.append(urlField);
    originalContent.before(importSection);
   }
+ }
+ // La selección de diseño, el logo y la firma viven en una misma tarjeta.
+ // Se reubican nodos originales: conserva todos los listeners y el Canvas.
+ const designSection=sections.find(node=>node.classList.contains('cronica-variant-panel')||node.querySelector('.theme-swatches'));
+ if(designSection){
+  designSection.classList.add('modern-design-group');
+  const fields=[...originalContent.querySelectorAll(':scope > .control-field')];
+  for(const field of fields)designSection.append(field);
+  originalContent.remove();
  }
 }
 for(const section of [...panel.querySelectorAll(':scope > section.panel-group')]){
@@ -340,8 +352,8 @@ for(const id of ['alignLeft','alignCenter','formatUppercase']){
  const mirror=mirrorId(id),source=$(id);if(!mirror||!source)continue;
  mirror.addEventListener('click',()=>{source.click();syncMirror()});
 }
-// Editor contextual de identidad: solo clona la interfaz; el estado sigue en el motor original.
-const identitySource=panel.querySelector('.modern-identity-group');
+// Editor contextual de Diseño de placas: miniaturas, logo y firma comparten módulo.
+const identitySource=panel.querySelector('.modern-design-group');
 const identityMirror=identitySource?.cloneNode(true);
 let identityHost=null;
 if(identityMirror){
@@ -350,7 +362,7 @@ if(identityMirror){
  identityMirror.querySelectorAll('[for]').forEach(n=>n.setAttribute('for',n.getAttribute('for')+'IdentityPreview'));
  identityHost=document.createElement('div');
  identityHost.className='editor-panel modern-preview-identity-editor';
- identityHost.setAttribute('aria-label','Identidad gráfica desde Vista previa');
+ identityHost.setAttribute('aria-label','Diseño de placas desde Vista previa');
  identityHost.hidden=true;identityHost.append(identityMirror);host.after(identityHost);
  const toggle=identityMirror.querySelector('.modern-toggle'),body=identityMirror.querySelector('.modern-body');
  toggle.addEventListener('click',()=>{
@@ -359,21 +371,23 @@ if(identityMirror){
   requestAnimationFrame(updateHeight);
  });
  identityMirror.addEventListener('click',event=>{
-  const choice=event.target.closest('[data-logo],[data-footer-style]');
+  const choice=event.target.closest('[data-logo],[data-footer-style],[data-page-variant],[data-theme]');
   if(!choice)return;
-  const selector=choice.dataset.logo!==undefined
-   ?'[data-logo="'+choice.dataset.logo+'"]'
-   :'[data-footer-style="'+choice.dataset.footerStyle+'"]';
+  const selector=choice.dataset.logo!==undefined?'[data-logo="'+choice.dataset.logo+'"]':
+   choice.dataset.footerStyle!==undefined?'[data-footer-style="'+choice.dataset.footerStyle+'"]':
+   choice.dataset.pageVariant!==undefined?'[data-page-variant="'+choice.dataset.pageVariant+'"]':
+   '[data-theme="'+choice.dataset.theme+'"]';
   identitySource.querySelector(selector)?.click();
   syncIdentityMirror();
  });
 }
 function syncIdentityMirror(){
  if(!identityMirror||!identitySource)return;
- for(const option of identityMirror.querySelectorAll('[data-logo],[data-footer-style]')){
-  const selector=option.dataset.logo!==undefined
-   ?'[data-logo="'+option.dataset.logo+'"]'
-   :'[data-footer-style="'+option.dataset.footerStyle+'"]';
+ for(const option of identityMirror.querySelectorAll('[data-logo],[data-footer-style],[data-page-variant],[data-theme]')){
+  const selector=option.dataset.logo!==undefined?'[data-logo="'+option.dataset.logo+'"]':
+   option.dataset.footerStyle!==undefined?'[data-footer-style="'+option.dataset.footerStyle+'"]':
+   option.dataset.pageVariant!==undefined?'[data-page-variant="'+option.dataset.pageVariant+'"]':
+   '[data-theme="'+option.dataset.theme+'"]';
   const source=identitySource.querySelector(selector);
   if(source)option.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
  }
@@ -476,7 +490,7 @@ for(const target of [canvas,textHit]){
 // La zona del logo está por encima del Canvas y de la carga de fotos.
 const logoHit=document.createElement('button');
 logoHit.type='button';logoHit.className='modern-logo-hit';
-logoHit.setAttribute('aria-label','Editar Identidad gráfica y logo');
+logoHit.setAttribute('aria-label','Editar logo en Diseño de placas');
 stage.append(logoHit);
 logoHit.addEventListener('click',event=>{
  event.preventDefault();event.stopPropagation();showPreviewContext('logo');
