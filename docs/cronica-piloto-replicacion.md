@@ -255,3 +255,13 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - **Sin diseño:** refuerzo CSS del estado `data-editor-plate-variant="blank"` para ocultar en Diario Show todos los módulos del panel de Formato salvo `Diseño de placas`, el editor contextual de identidad/logo, el editor contextual de texto y los hotspots de logo/fotografía; BAE conserva únicamente el selector de variantes. Crónica mantiene sus controles contextuales anteriores.
 - **QA:** ampliada `scripts/editorial-thumbnails-smoke.mjs` para verificar el texto inicial, el textual de BAE, la volanta de Crónica, el autor de Diario Show y que el estado vacío no muestre los módulos restantes. Pendiente de resultado de ejecución en Chromium.
 - **Registro acumulado:** 17 cambios. Aplicados solamente a los tres DEV, sin modificar producción.
+
+
+## Cambio 18 — Contorno de carga fotográfica igual a hotspots de texto y logo (2026-11-12)
+**Estado:** aplicado a Crónica DEV, BAE DEV y Diario Show DEV; pendiente de verificación visual en navegador.
+- Se sustituye el dibujo visible de línea fotográfica mediante SVG (`stroke-width:1`, `stroke-dasharray:5 3`) por el mismo **borde CSS `2px dashed`** que usan las selecciones de texto y logo.
+- Se conserva el gris de fotografía `#41464e` (en lugar de los colores de marca).
+- Se mantiene `border-radius:6px`, los insets del contenedor, el hover, el foco, la interacción drag & drop y el disparo de adjuntar. El contorno SVG se conserva invisible para no alterar el DOM/eventos.
+- Diario Show: se aplica también el trazo a ambos placeholders de fotografía compartida sin alterar las mitades ni sus márgenes.
+- No modifica el renderizado ni la exportación PNG. Solo UI de preview.
+- **Registro acumulativo:** 18 cambios.
