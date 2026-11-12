@@ -231,6 +231,11 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .schedule-add{display:inline-flex;gap:8px;align-items:center}
 .schedule-legacy{padding-top:10px}
 @media(max-width:680px){.schedule-block{padding:13px}.schedule-time-row{grid-template-columns:repeat(2,minmax(0,1fr))}.schedule-pending{grid-column:1/-1}.schedule-day{flex:1 1 100px}.dialog.wide{max-height:94dvh}}
+
+.schedule-duration{display:flex;align-items:center;min-height:34px;margin-top:12px;padding:7px 12px;border-radius:4px;background:#f1f5f8;color:#526a78;font-size:13px;line-height:20px;font-weight:500}
+.schedule-duration.valid{background:#eaf5fb;color:#236999;font-weight:700}
+.schedule-duration.invalid{background:#fff0f0;color:#a8323e}
+@media(max-width:680px){.schedule-duration{margin-top:10px}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -459,6 +464,29 @@ function normalizeScheduleDays(text){
  if(range){const first=names.indexOf(range[1]),last=names.indexOf(range[2]);if(first>=0&&last>=first)return WEEKDAYS.slice(first,last+1)}
  return WEEKDAYS.filter((d,i)=>new RegExp('\\b'+names[i]+'(?:s)?\\b').test(value));
 }
+
+function scheduleDurationLabel(start,end,pending=false){
+ if(pending)return 'Horario a confirmar';
+ if(!start||!end)return 'Completá las horas para ver la duración';
+ const parseTime=v=>{const m=/^(\d{2}):(\d{2})$/.exec(v);return m?Number(m[1])*60+Number(m[2]):NaN};
+ const minutes=parseTime(end)-parseTime(start);
+ if(!Number.isFinite(minutes)||minutes<=0)return 'Revisá las horas: el fin debe ser posterior al inicio';
+ const hours=Math.floor(minutes/60),rest=minutes%60;
+ return 'Duración: '+[hours?(hours===1?'1 hora':hours+' horas'):'',rest?(rest===1?'1 minuto':rest+' minutos'):''].filter(Boolean).join(' y ');
+}
+function updateScheduleDuration(block){
+ if(!block)return;
+ const status=block.querySelector('.schedule-duration');
+ if(!status)return;
+ const start=block.querySelector('.schedule-start').value;
+ const end=block.querySelector('.schedule-end').value;
+ const pending=block.querySelector('.schedule-pending-check').checked;
+ const invalid=!pending&&start&&end&&start>=end;
+ status.textContent=scheduleDurationLabel(start,end,pending);
+ status.classList.toggle('invalid',Boolean(invalid));
+ status.classList.toggle('valid',Boolean(!pending&&start&&end&&!invalid));
+}
+
 function scheduleBlock(data={},i=null){
  const id=i??++scheduleCounter;
  const days=Array.isArray(data.selectedDays)?data.selectedDays:normalizeScheduleDays(data.days);
@@ -468,7 +496,7 @@ function scheduleBlock(data={},i=null){
  return '<div class="schedule-block" data-schedule-block="'+id+'"><div class="schedule-block-heading"><strong>Horario <span class="schedule-block-number"></span></strong><button type="button" class="iconbtn red schedule-remove" title="Eliminar horario" aria-label="Eliminar bloque de días y horarios">'+ic('delete')+'</button></div>'+
  '<div class="schedule-days" role="group" aria-label="Días de este horario">'+WEEKDAYS.map(day=>'<label class="schedule-day"><input type="checkbox" value="'+day+'" '+(days.includes(day)?'checked':'')+'><span>'+day+'</span></label>').join('')+'</div>'+
  '<div class="schedule-time-row"><div class="field"><label>Desde</label><input type="time" class="schedule-start" value="'+e(start)+'" '+(pending?'disabled':'')+'></div><div class="field"><label>Hasta</label><input type="time" class="schedule-end" value="'+e(end)+'" '+(pending?'disabled':'')+'></div><label class="schedule-pending"><input type="checkbox" class="schedule-pending-check" '+(pending?'checked':'')+'> Horario a confirmar</label></div>'+
- (days.length===0&&data.days?'<p class="hint schedule-legacy">Días originales: '+e(data.days)+'. Seleccioná los días correspondientes.</p>':'')+
+ '<div class="schedule-duration" role="status" aria-live="polite">'+e(scheduleDurationLabel(start,end,pending))+'</div>'+ (days.length===0&&data.days?'<p class="hint schedule-legacy">Días originales: '+e(data.days)+'. Seleccioná los días correspondientes.</p>':'')+
  '</div>';
 }
 function renumberScheduleBlocks(){
@@ -481,10 +509,13 @@ function bindScheduleEditor(){
  container.addEventListener('click',ev=>{
   const remove=ev.target.closest('.schedule-remove');if(remove){remove.closest('.schedule-block').remove();renumberScheduleBlocks()}
  });
+ container.addEventListener('input',ev=>{if(ev.target.matches('.schedule-start,.schedule-end'))updateScheduleDuration(ev.target.closest('.schedule-block'))});
  container.addEventListener('change',ev=>{
-  if(!ev.target.matches('.schedule-pending-check'))return;
-  const block=ev.target.closest('.schedule-block');
-  block.querySelectorAll('.schedule-start,.schedule-end').forEach(input=>{input.disabled=ev.target.checked});
+  if(ev.target.matches('.schedule-pending-check')){
+   const block=ev.target.closest('.schedule-block');
+   block.querySelectorAll('.schedule-start,.schedule-end').forEach(input=>{input.disabled=ev.target.checked});
+   updateScheduleDuration(block);
+  }else if(ev.target.matches('.schedule-start,.schedule-end'))updateScheduleDuration(ev.target.closest('.schedule-block'));
  });
  modal.querySelector('#schedule-add')?.addEventListener('click',()=>{
   container.insertAdjacentHTML('beforeend',scheduleBlock({selectedDays:[],start:'',end:''}));
@@ -492,6 +523,7 @@ function bindScheduleEditor(){
   container.lastElementChild?.scrollIntoView({block:'nearest',behavior:'smooth'});
  });
  renumberScheduleBlocks();
+ container.querySelectorAll('.schedule-block').forEach(updateScheduleDuration);
 }
 function readScheduleEditor(){
  const blocks=[...modal.querySelectorAll('.schedule-block')],output=[];
