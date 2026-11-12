@@ -386,3 +386,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Registro acumulativo: 34 cambios.**
 
 **QA de Cambios 33 y 34 (Chromium): APROBADO.** [Workflow](https://github.com/SantiagoM96/mlz/actions/runs/43156340497): la ilustración Shift se muestra y carga correctamente en Crónica, BAE y Diario Show; en Crónica y BAE se comprobaron los padding desktop de 18/14 px y mobile de 15/12 px. La prueba de comportamiento Shift + clic funcional no formó parte de este smoke test; se conserva la lógica preexistente de acordeones.
+
+## Cambio 35 — Máscara de onboarding instantánea como Diario Show (2026-11-12)
+- **Crónica DEV:** se elimina la variante propia de máscara basada en `box-shadow: 0 0 0 200vmax` sobre un recuadro que se desplazaba entre destinos. Se vuelve al sistema de cuatro zonas opacas, idéntico al de Diario Show.
+- **Crónica y BAE DEV:** se anulan las transiciones de `left`, `top`, `width` y `height` del resaltado y se desactiva cualquier transición de la tarjeta del onboarding. La máscara se actualiza instantáneamente al cambiar de paso, sin volar por el viewport.
+- La tarjeta glassmorphism, el texto, los pasos y las ilustraciones se conservan; Diario Show DEV no se modifica.
+**Registro acumulativo: 35 cambios.**
