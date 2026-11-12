@@ -945,3 +945,22 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .preview>.cronica-preview-pages .carousel-actions #removePage{
  margin-top:auto!important;
 }
+
+
+/* CRÓNICA DEV — ajuste 06: anillo de selección completo y acciones compactas. */
+.preview>.cronica-preview-pages .carousel-pages{
+ height:96px;min-height:96px;
+ padding:10px 4px 14px;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ display:grid;grid-template-columns:30px;
+ grid-template-rows:30px 30px;
+ align-content:center;justify-content:center!important;
+ row-gap:6px;height:96px;min-height:96px;
+}
+.preview>.cronica-preview-pages .carousel-actions #addPage{
+ grid-row:1;grid-column:1;margin:0!important;
+}
+.preview>.cronica-preview-pages .carousel-actions #removePage{
+ grid-row:2;grid-column:1;margin:0!important;
+}
