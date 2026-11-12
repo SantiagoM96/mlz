@@ -16,11 +16,13 @@ for(const data of cases){
   for(const variant of data.variants){
    let control=page.locator(data.choose(variant)).first();
    await control.click();
+   await page.waitForFunction(([selector,expected])=>document.querySelector(selector)?.dataset.variant===expected,[data.thumb,variant],{timeout:6000});
    const result=await page.locator(data.thumb).first().evaluate((el,selector)=>{
     const design=el.querySelector(selector),number=el.querySelector('.carousel-page-number,.editor-slide-number');
     const rect=x=>{if(!x)return null;const b=x.getBoundingClientRect();return {x:b.x,y:b.y,w:b.width,h:b.height}};
     return {root:rect(el),design:rect(design),number:rect(number),actual:el.dataset.variant,overflow:getComputedStyle(el).overflow};
    },data.native);
+   assert(result.actual===variant,data.slug+' '+variant+': variante desincronizada '+JSON.stringify(result));
    assert(result.design,data.slug+' '+variant+': falta miniatura de diseño '+JSON.stringify(result));
    assert(Math.abs(result.root.w-48)<1&&Math.abs(result.root.h-64)<1,data.slug+' '+variant+': tamaño contenedor '+JSON.stringify(result));
    assert(Math.abs(result.design.w-48)<1&&Math.abs(result.design.h-64)<1,data.slug+' '+variant+': tamaño dibujo '+JSON.stringify(result));
