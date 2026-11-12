@@ -1,0 +1,32 @@
+name: Miniaturas DEV — geometría visual
+on:
+  push:
+    paths:
+      - 'public/cronica-dev/**'
+      - 'public/bae-dev/**'
+      - 'public/diarioshow-dev/**'
+      - 'scripts/editorial-thumbnails-smoke.mjs'
+      - '.github/workflows/editorial-thumbnails-smoke.yml'
+  workflow_dispatch:
+jobs:
+  thumbnails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Servir editores DEV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public >/tmp/editorial-thumbs.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Verificar miniaturas completas y variantes
+        run: node scripts/editorial-thumbnails-smoke.mjs
