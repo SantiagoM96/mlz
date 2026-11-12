@@ -218,3 +218,13 @@
   display:none!important;
  }
 }
+
+/* Shift + clic — ilustración animada debajo de la explicación. */
+.ds-onboarding-layer .ds-tour-shift-demo{
+ width:100%;margin:0 0 16px;overflow:hidden;
+ border-radius:10px;
+}
+.ds-onboarding-layer .ds-tour-shift-demo[hidden]{display:none!important}
+.ds-onboarding-layer .ds-tour-shift-demo img{
+ display:block;width:100%;height:auto;max-height:170px;object-fit:contain;
+}
