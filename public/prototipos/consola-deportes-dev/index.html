@@ -159,6 +159,36 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 @media(max-width:600px){.sports-form-section .grid2{grid-template-columns:1fr}.sports-section-heading{align-items:flex-start;flex-wrap:wrap}.sports-form-footer .btn{flex:1;padding:8px}.sports-add-photo{width:160px}}
 
 .en-panel{max-width:960px;border:1px solid #dce4ea;border-radius:8px;padding:24px;margin-bottom:22px}.en-panel h2,.en-section h2,.en-sticky h2{font-size:19px;color:#236999;margin:0 0 16px}.en-list{margin-top:15px;border:1px solid #dce4ea;border-radius:5px;max-height:460px;overflow:auto}.en-item{width:100%;border:0;border-bottom:1px solid #e1e7eb;display:flex;align-items:center;gap:14px;text-align:left;background:#fff;padding:14px;color:#3d3d3d}.en-item>span:first-child{flex:1}.en-item small,.en-radio-row small{display:block;font-size:12px;color:#637282;margin-top:4px}.en-item>span:nth-child(2){font-size:12px;color:#236999}.en-item:hover,.en-item.chosen,.en-radio-row.chosen{background:#eef7fd}.en-item.chosen{box-shadow:inset 3px 0 #236999}.en-radio-row{display:flex;gap:15px;align-items:center;padding:15px;border-bottom:1px solid #e1e7eb;cursor:pointer}.en-radio-row input{accent-color:#006eff;width:20px;height:20px}.en-radio-row>span:nth-child(2){flex:1}.en-buttons{display:flex;justify-content:flex-end;gap:12px;margin:22px 0;flex-wrap:wrap}.en-buttons button:disabled{opacity:.45;cursor:not-allowed}.en-layout{display:grid;grid-template-columns:minmax(0,860fr) minmax(260px,324fr);gap:20px;max-width:1200px}.en-layout>div{min-width:0}.en-section{border-bottom:1px solid #e1e7eb;padding-bottom:27px;margin-bottom:28px}.en-section .grid2{margin-bottom:16px}.en-choices{border:0;margin:14px 0;padding:0;display:flex;gap:20px;flex-wrap:wrap}.en-choices legend{font-weight:700;color:#236999;margin-bottom:10px}.en-choices label{display:flex;align-items:center;gap:7px}.en-choices input,.en-minor input,.en-checks input{accent-color:#006eff;width:19px;height:19px}.en-minor{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #b9d5e5;border-radius:6px;margin-bottom:20px}.en-checks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0 24px}.en-checks label{display:flex;align-items:center;gap:8px;font-size:14px}.en-section input[type=file]{height:auto;min-height:48px;padding:8px;font-size:13px}.en-sticky{position:sticky;top:90px;border:1px solid #dce4ea;border-radius:8px;padding:20px;box-shadow:0 5px 18px #1235}.en-sticky h3{font-size:19px;margin:14px 0}.en-sticky p{font-size:14px;color:#637282;margin:10px 0}.en-sticky hr{border:0;border-top:1px solid #e1e7eb;margin:18px 0}.en-result{max-width:680px;text-align:center;margin:65px auto;border:1px solid #dce4ea;border-radius:10px;padding:40px}.en-result>.mi{font-size:50px;color:#258b50}.en-result .btn{margin:10px 5px}@media(max-width:900px){.en-layout{grid-template-columns:1fr}.en-sticky{position:static}.en-layout aside{grid-row:1}}@media(max-width:600px){.en-panel{padding:15px}.en-section .grid2{grid-template-columns:1fr}.en-checks{grid-template-columns:1fr}}
+
+.sports-form-layout{align-items:stretch!important}.sports-form-aside{align-self:stretch!important;min-height:100%;overflow:visible}
+.sports-preview-sticky{position:sticky!important;top:86px!important;max-height:calc(100vh - 100px);overflow:auto;overscroll-behavior:contain}
+.sports-preview-sticky .catalog-card{border:1px solid #e7e7e7;border-radius:8px;min-height:344px;display:flex;flex-direction:column;overflow:hidden;background:#fff;color:#3d3d3d}
+.sports-preview-sticky .catalog-card .card-art{display:block;flex:0 0 34px;height:34px;background:linear-gradient(115deg,#208fb8,#2ba2c9 45%,#66b8da)}
+.sports-preview-sticky .catalog-card .card-art.image-art{height:auto;aspect-ratio:2/1;flex:initial}
+.sports-preview-sticky .catalog-card .card-art img{width:100%;aspect-ratio:2/1;object-fit:cover;display:block}
+.sports-preview-sticky .catalog-card .card-body{padding:16px 24px 20px;display:flex;flex-direction:column;gap:12px;flex:1;min-width:0}
+.sports-preview-sticky .catalog-card .card-cat{color:#888;font-size:14px;font-weight:500;line-height:20px;text-transform:uppercase;overflow-wrap:anywhere}
+.sports-preview-sticky .catalog-card .card-name{color:#236999;font-size:22px;line-height:28px;font-weight:700;margin:0;overflow-wrap:anywhere}
+.sports-preview-sticky .catalog-card .card-demographic{display:flex;flex-wrap:wrap;gap:5px}
+.sports-preview-sticky .catalog-card .meta-tag{display:inline-flex;min-height:24px;padding:2px 8px;border-radius:5px;background:#e5f0ff;color:#006eff;font-size:13px;font-weight:500}
+.sports-preview-sticky .catalog-card .meta-tag.is-pcd{background:#f1fcf4;color:#218846}
+.sports-preview-sticky .catalog-card .card-info{display:flex;align-items:flex-start;gap:8px;font-size:18px;line-height:23px;color:#3d3d3d;font-weight:700}
+.sports-preview-sticky .catalog-card .card-info>.ico{width:20px;flex:0 0 20px;display:grid;place-items:center;color:#236999;padding-top:2px}
+.sports-preview-sticky .catalog-card .card-info .sub{font-size:17px;line-height:22px;font-weight:400;color:#666;display:block;margin-top:4px}
+.sports-preview-sticky .catalog-card .card-modalities{font-size:18px;line-height:23px;color:#3d3d3d;font-weight:700;overflow-wrap:anywhere}
+.sports-preview-sticky .catalog-card .card-link{display:inline-flex;color:#236999;font-size:16px;line-height:20px;font-weight:500;margin-top:auto;padding-top:8px}
+@media(max-width:850px){.sports-form-aside{min-height:0}.sports-preview-sticky{position:static!important;max-height:none;overflow:visible}}
+.workspace .tablewrap table{border-collapse:collapse;border:1px solid #e1e1e1;width:100%}
+.workspace .tablewrap thead th{background:#f4f4f4;color:#3d3d3d;height:40px;padding:8px;font-size:13px;font-weight:700;line-height:20px;border:1px solid #e2e2e2;vertical-align:middle}
+.workspace .tablewrap tbody td{padding:8px;height:40px;border:1px solid #e5e5e5;vertical-align:middle;font-size:13px;line-height:20px}
+.workspace .tablewrap tbody tr:nth-child(even) td{background:#f7f7f7}
+.workspace .tablewrap tbody tr:nth-child(odd) td{background:#fff}
+.workspace .tablewrap tbody tr:hover td{background:#edf6fc}
+.workspace .tablewrap tbody td strong{font-size:13px;line-height:20px;font-weight:500}
+.workspace .tablewrap tbody td small{font-size:11px;line-height:16px}
+.workspace .tablewrap .row-actions{text-align:center;white-space:nowrap}
+.workspace .tablewrap .iconbtn{width:32px;height:32px;border-radius:4px;padding:4px;color:#236999}
+.workspace .tablewrap .iconbtn.red{color:#bd3545}.workspace .tablewrap .iconbtn .mi{font-size:24px}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -253,11 +283,24 @@ async function uploadPhotos(files){
  }catch(err){alert(err.message||'No se pudo procesar la fotografía.');render()}
 }
 
+
+function activityCatalogPreview(a){
+ const name=a.name||'Nombre de la actividad';
+ const age=a.ageLabel&&!a.ageEstimated&&a.min===5&&a.max===59?a.ageLabel:(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades');
+ const img=a.photos?.[0]?.data;
+ const art=img?'<div class="card-art image-art"><img src="'+e(img)+'" alt=""></div>':'<div class="card-art" aria-hidden="true"></div>';
+ const tags=(a.pcd||a.previousTest)?'<div class="card-demographic">'+(a.pcd?'<span class="meta-tag is-pcd">Personas con discapacidad</span>':'')+(a.previousTest?'<span class="meta-tag is-test">Prueba previa</span>':'')+'</div>':'';
+ return '<div class="catalog-card">'+art+'<div class="card-body"><div class="card-cat">'+e(a.categoriaTipoGlobal||'Deporte')+'</div><h3 class="card-name">'+e(name)+'</h3>'+tags+'<div class="card-info"><span class="ico">'+ic('groups')+'</span><span>'+e(age)+'</span></div><div class="card-info"><span class="ico">'+ic('location_on')+'</span><span>'+e(a.venue||'Sede por definir')+'<span class="sub">'+e(a.address||'Dirección por definir')+'</span></span></div><div class="card-modalities">'+e(String(a.tipo||'').split('/').map(x=>x.trim()).join(' - '))+'</div><span class="card-link">Ver más</span></div></div>';
+}
+function refreshActivityCatalogPreview(){
+ if(view!=='edit'||!draft)return;
+ const form=document.getElementById('activity-form'),target=document.getElementById('activityCatalogPreview');if(!form||!target)return;
+ const d=new FormData(form);
+ target.innerHTML=activityCatalogPreview({...draft,name:String(d.get('name')||''),categoriaTipoGlobal:String(d.get('category')||''),venue:String(d.get('venue')||''),address:String(d.get('address')||''),tipo:String(d.get('tipo')||''),min:Number(d.get('min')||0),max:Number(d.get('max')||0),pcd:d.has('pcd'),previousTest:d.has('previousTest')});
+}
 function editView(){
  const a=draft, edit=Boolean(editId);
- const category=e(a.categoriaTipoGlobal||'Deporte');
- const heroImage=a.photos?.[0]?'<img class="sports-preview-photo" src="'+e(a.photos[0].data)+'" alt="Portada de '+e(a.name)+'">':'<div class="sports-preview-placeholder">'+ic('image')+'<span>Imagen de la actividad</span></div>';
- const card='<div class="sports-preview-card">'+heroImage+'<div class="sports-preview-body"><span class="pill">'+category+'</span><h3>'+e(a.name||'Nombre de la actividad')+'</h3><p>'+e(a.ageLabel||((a.min??5)+' a '+(a.max??59)+' años'))+'</p><div class="sports-preview-details"><div>'+ic('location_on')+'<span>'+e(a.venue||'Sede por definir')+'</span></div><div>'+ic('schedule')+'<span>'+e(a.commissions.length)+' comisiones disponibles</span></div></div><span class="tag '+(a._hidden?'off':'')+'">'+status(a)+'</span></div></div>';
+ const card=activityCatalogPreview(a);
  return '<div class="eyebrow">Actividades deportivas y recreativas / <a href="#" data-action="list">Administrador</a> / '+(edit?'Editar actividad':'Nueva actividad')+'</div>'+
  '<div class="heading form-page-header"><div><h1>'+(edit?'Editar actividad':'Nueva actividad')+'</h1><p class="sub">Completá la información de la actividad deportiva.</p></div></div>'+
  '<form id="activity-form"><div class="sports-form-layout"><div class="sports-form-main">'+
@@ -279,7 +322,7 @@ function editView(){
  '<p class="hint">Hasta 6 fotografías · JPG, PNG o WebP · Recomendado 2:1. La primera imagen es la portada. Se guardan solo en este navegador.</p>'+
  '</section>'+
  '<div class="sports-form-footer">'+btn('Cancelar','list')+btn(ic('save')+' '+(edit?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div>'+
- '</div><aside class="sports-form-aside"><div class="sports-preview-sticky"><h2>Vista previa</h2><p class="sub">Así se visualizará la actividad.</p>'+card+'</div></aside></div></form>';
+ '</div><aside class="sports-form-aside"><div class="sports-preview-sticky"><h2>Vista previa</h2><p class="sub">Así se visualizará la actividad.</p><div id="activityCatalogPreview">'+card+'</div></div></aside></div></form>';
 }
 function registrationsView(){return '<div class="eyebrow">Actividades deportivas y recreativas / Consola / Inscripciones</div><div class="heading"><div><h1>Inscripciones</h1><p class="sub">Estructura inicial para consultar inscripciones por actividad y comisión.</p></div><div class="actions">'+btn(ic('arrow_back')+' Volver','list')+btn(ic('person_add')+' Nueva inscripción','enroll-new','primary')+btn(ic('download')+' Exportar CSV','export')+'</div></div><p class="note">Aún no hay una fuente conectada de inscripciones reales. Esta sección se presenta vacía para no inventar datos personales ni inscripciones.</p><section class="panel"><div class="panelhead"><h2>Últimas inscripciones</h2></div><div class="panelbody"><div class="filters"><div class="field search"><label>Buscar vecino</label><input disabled placeholder="Nombre, apellido o DNI"></div><div class="field"><label>Actividad</label><select disabled><option>Seleccionar</option></select></div><div class="field"><label>Estado</label><select disabled><option>Seleccionar</option></select></div></div></div><div class="tablewrap"><table><thead><tr><th>Vecino</th><th>Actividad</th><th>Comisión</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead></table><div class="empty">No hay inscripciones cargadas. Próximamente podremos vincularlas con el sistema correspondiente.</div></div></section>'}
 
@@ -334,7 +377,7 @@ function overviewView(){return listView()}
 function bind(){app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filterText=x.target.value;page=0;const pos=x.target.selectionStart;render();let n=document.getElementById('query');n.focus();n.setSelectionRange(pos,pos)});const searchEnroll=document.getElementById('en-search');if(searchEnroll)searchEnroll.addEventListener('input',ev=>{enrollSearch=ev.target.value;const at=ev.target.selectionStart;render();const next=document.getElementById('en-search');next?.focus();next?.setSelectionRange(at,at)});
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
-const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of ['venue','state']){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
+if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview)}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of ['venue','state']){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
 function action(type,id,index){if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
