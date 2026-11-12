@@ -119,7 +119,7 @@ if(originalContent){
  // Firma inferior: dos presentaciones, sin alterar su diseño inicial.
  const footerField=document.createElement('div');
  footerField.className='control-field modern-footer-field';
- footerField.innerHTML='<label>Firma inferior</label><div class="modern-footer-options" role="group" aria-label="Firma inferior"><button type="button" data-footer-style="center" aria-pressed="'+String(!isCronica)+'">Centrada</button><button type="button" data-footer-style="carousel" aria-pressed="'+String(isCronica)+'">Carrusel</button></div>';
+ footerField.innerHTML='<label>Firma inferior</label><div class="modern-footer-options" role="group" aria-label="Firma inferior"><button type="button" data-footer-style="center" aria-pressed="'+String(!isCronica)+'"><span class="material-symbols-outlined" aria-hidden="true">format_align_center</span><span>Centrada</span></button><button type="button" data-footer-style="carousel" aria-pressed="'+String(isCronica)+'"><span class="material-symbols-outlined" aria-hidden="true">view_carousel</span><span>Carrusel</span></button></div>';
  originalContent.append(footerField);
  footerField.addEventListener('click',event=>{
   const button=event.target.closest('[data-footer-style]');
