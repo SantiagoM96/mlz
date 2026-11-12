@@ -133,8 +133,8 @@ window.__editorialHotspotBounds={
  text:{left:Math.max(0,minX-26),right:Math.min(W,maxX+26),
   top:Math.max(0,(baselines[0]??footerTop)-size*1.05-10),
   bottom:Math.min(H,(baselines.at(-1)??footerTop)+size*.28+10)},
- logo:{left:W-LOGO_MARGIN-LOGO_WIDTH-54,top:LOGO_MARGIN-54,
-  right:W-LOGO_MARGIN+54,bottom:LOGO_MARGIN+LOGO_HEIGHT+54}
+ logo:{left:(logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH)-54,top:LOGO_MARGIN-54,
+  right:(logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH)+LOGO_WIDTH+54,bottom:LOGO_MARGIN+LOGO_HEIGHT+54}
 };
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
