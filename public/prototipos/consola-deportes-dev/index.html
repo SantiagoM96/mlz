@@ -244,6 +244,14 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .schedule-time-row .schedule-length:focus{outline:0;border-color:#006eff;box-shadow:inset 0 0 0 1px #006eff}
 .schedule-duration{margin-top:12px}
 @media(max-width:680px){.schedule-time-row{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px}.schedule-time-row input[type="time"],.schedule-time-row .schedule-length{padding:8px 6px;font-size:14px}.schedule-time-row .field label{font-size:12px;line-height:17px;min-height:34px}}
+
+.activity-age-controls{display:grid;grid-template-columns:1fr;gap:14px;max-width:100%}
+.activity-age-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end}
+.activity-age-details[hidden],.activity-age-details .field[hidden]{display:none!important}
+.activity-age-controls>.field{max-width:100%}
+.activity-age-details .field{min-width:0}
+.activity-age-controls input[type=number]{height:48px}
+@media(max-width:600px){.activity-age-details{grid-template-columns:1fr}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -281,13 +289,31 @@ function persistCatalog(){try{localStorage.setItem(CATALOG_KEY,JSON.stringify(ca
 function catalogNames(type){return catalogs[type].map(x=>x.name)}
 function selectedCatalog(type,value){return [...new Set([...catalogNames(type),...(value&&!catalogNames(type).includes(value)?[value]:[])])]}
 function safeCatalogOption(type,value){return selectedCatalog(type,value)}
-function alignExistingCommissionFields(){
- // Los datos heredados contienen modalidad en ambos niveles.
- // La modalidad administrable se define exclusivamente en la actividad.
- records.forEach(a=>{if(a.tipo==='Competitivo / Federado')a.tipo='Competitivo';});
+function reconcileDemoRecords(list){
+ const byId=new Map(INITIAL.map(a=>[a.id,a]));
+ for(const a of list){
+  const base=byId.get(a.id);
+  if(!base)continue;
+  if(base.nivel&&!a.name.includes(base.nivel)&&base.name.endsWith(' - '+base.nivel)){
+   const original=base.name.slice(0,-(' - '+base.nivel).length);
+   if(a.name===original)a.name=base.name;
+  }
+  for(const c of a.commissions||[]){
+   const original=base.commissions.find(x=>x.id===c.id);
+   if(!original)continue;
+   for(let i=0;i<(c.schedule||[]).length;i++){
+    const s=c.schedule[i],replacement=original.schedule[i];
+    if(s&&replacement&&(s.pending||s.start==='A confirmar'||s.end==='A confirmar')){
+     s.start=replacement.start;s.end=replacement.end;s.pending=false;
+    }
+    if(s)s.estimated=false;
+   }
+   c.estimated=false;c.cuposDemo=false;
+  }
+ }
+ return list;
 }
-
-let records=load();alignExistingCommissionFields();
+let records=reconcileDemoRecords(load());
 let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDone=false;
 let view='list',editId=null,filterText='',filterVenue='',filterState='',page=0,modalType=null,modalIndex=-1,draft=null,registrationFilter='';
 const app=document.getElementById('app'),modal=document.getElementById('modal');
@@ -341,7 +367,7 @@ async function uploadPhotos(files){
 
 function activityCatalogPreview(a){
  const name=a.name||'Nombre de la actividad';
- const age=a.ageLabel&&!a.ageEstimated&&a.min===5&&a.max===59?a.ageLabel:(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades');
+ const age=a.ageLabel||(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades');
  const img=a.photos?.[0]?.data;
  const art=img?'<div class="card-art image-art"><img src="'+e(img)+'" alt=""></div>':'<div class="card-art" aria-hidden="true"></div>';
  const tags=(a.pcd||a.previousTest)?'<div class="card-demographic">'+(a.pcd?'<span class="meta-tag is-pcd">Personas con discapacidad</span>':'')+(a.previousTest?'<span class="meta-tag is-test">Prueba previa</span>':'')+'</div>':'';
@@ -351,7 +377,7 @@ function refreshActivityCatalogPreview(){
  if(view!=='edit'||!draft)return;
  const form=document.getElementById('activity-form'),target=document.getElementById('activityCatalogPreview');if(!form||!target)return;
  const d=new FormData(form);
- target.innerHTML=activityCatalogPreview({...draft,name:String(d.get('name')||''),categoriaTipoGlobal:String(d.get('category')||''),venue:String(d.get('venue')||''),address:catalogs.sedes.find(s=>s.name===String(d.get('venue')||''))?.address||draft.address||'',tipo:readModalidades(d),min:Number(d.get('min')||0),max:Number(d.get('max')||0),pcd:d.has('pcd'),previousTest:d.has('previousTest')});
+ target.innerHTML=activityCatalogPreview({...draft,name:String(d.get('name')||''),categoriaTipoGlobal:String(d.get('category')||''),venue:String(d.get('venue')||''),address:catalogs.sedes.find(s=>s.name===String(d.get('venue')||''))?.address||draft.address||'',tipo:readModalidades(d),intensidad:readIntensities(d),...ageValues(d,draft),pcd:d.has('pcd'),previousTest:d.has('previousTest')});
 }
 
 function modalidadesSeleccionadas(value){
@@ -363,6 +389,60 @@ function modalidadControl(value){
  return '<fieldset class="activity-modalities"><legend>Modalidad *</legend><p class="sub">Podés elegir una o varias opciones.</p><div class="activity-modality-options">'+MODALIDADES.map(x=>'<label><input type="checkbox" name="modalidades" value="'+e(x)+'" '+(chosen.includes(x)?'checked':'')+'><span>'+e(x)+'</span></label>').join('')+'</div></fieldset>';
 }
 function readModalidades(data){return MODALIDADES.filter(x=>data.getAll('modalidades').includes(x)).join(' / ')}
+
+
+function intensityOptions(value){
+ const existing=String(value||'').toLocaleLowerCase('es').split('/').map(x=>x.trim());
+ return '<fieldset class="activity-modalities"><legend>Intensidad *</legend><p class="sub">Podés combinar niveles de intensidad.</p><div class="activity-modality-options">'+INTENSIDADES.map(x=>'<label><input type="checkbox" name="intensidades" value="'+e(x)+'" '+(existing.includes(x.toLocaleLowerCase('es'))?'checked':'')+'><span>'+e(x)+'</span></label>').join('')+'</div></fieldset>';
+}
+function readIntensities(data){return INTENSIDADES.filter(x=>data.getAll('intensidades').includes(x)).join(' / ')}
+function ageModeFrom(a){
+ const label=String(a.ageLabel||'').toLowerCase();
+ if(label.includes('todas las edades'))return 'all';
+ if(label.startsWith('mayor de')||label.startsWith('desde'))return 'from';
+ if(label.startsWith('hasta'))return 'until';
+ return 'custom';
+}
+function ageControl(a){
+ const mode=ageModeFrom(a),months=String(a.ageLabel||'').includes('meses')||a.min>0&&a.min<1;
+ const scale=months?12:1;
+ const min=Math.round(Number(a.min??5)*scale*100)/100,max=Math.round(Number(a.max??59)*scale*100)/100;
+ return '<div class="activity-age-controls"><div class="field"><label for="ageMode">Rango de edades</label><select name="ageMode" id="ageMode">'+
+ [['all','Todas las edades'],['from','Desde una edad'],['until','Hasta una edad'],['custom','Personalizado (inicio y fin)']].map(([v,t])=>'<option value="'+v+'" '+(v===mode?'selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
+ '<div class="activity-age-details" id="activity-age-details"><div class="field"><label for="ageUnit">Unidad</label><select id="ageUnit" name="ageUnit"><option value="years" '+(!months?'selected':'')+'>Años</option><option value="months" '+(months?'selected':'')+'>Meses</option></select></div>'+
+ '<div class="field" id="age-min-field"><label for="min">Edad mínima</label><input name="min" id="min" type="number" min="0" step="1" value="'+e(min)+'"></div>'+
+ '<div class="field" id="age-max-field"><label for="max">Edad máxima</label><input name="max" id="max" type="number" min="0" step="1" value="'+e(max)+'"></div></div></div>';
+}
+function toggleAgeControls(){
+ const mode=document.getElementById('ageMode')?.value,details=document.getElementById('activity-age-details');
+ if(!mode||!details)return;
+ details.hidden=mode==='all';
+ document.getElementById('age-min-field').hidden=mode==='until';
+ document.getElementById('age-max-field').hidden=mode==='from';
+ for(const el of details.querySelectorAll('input'))el.required=!el.parentElement.hidden&&!details.hidden;
+}
+function ageValues(data,previous){
+ const mode=String(data.get('ageMode')||'all'),unit=String(data.get('ageUnit')||'years');
+ const divisor=unit==='months'?12:1,one=unit==='months'?'mes':'año',plural=unit==='months'?'meses':'años';
+ const number=v=>Number(v)/divisor;
+ const minRaw=Number(data.get('min')),maxRaw=Number(data.get('max'));
+ if(mode==='all')return {min:0,max:120,ageLabel:'Todas las edades'};
+ if(mode==='from'){
+  if(!Number.isFinite(minRaw)||minRaw<0)throw Error('Ingresá una edad mínima válida.');
+  const min=number(minRaw);
+  if(previous&&ageModeFrom(previous)==='from'&&previous.min===min&&previous.ageLabel)return {min,max:120,ageLabel:previous.ageLabel};
+  return {min,max:120,ageLabel:'Desde '+minRaw+' '+(minRaw===1?one:plural)};
+ }
+ if(mode==='until'){
+  if(!Number.isFinite(maxRaw)||maxRaw<0)throw Error('Ingresá una edad máxima válida.');
+  return {min:0,max:number(maxRaw),ageLabel:'Hasta '+maxRaw+' '+(maxRaw===1?one:plural)};
+ }
+ if(!Number.isFinite(minRaw)||!Number.isFinite(maxRaw)||minRaw<0||maxRaw<=minRaw)throw Error('La edad máxima debe ser mayor que la mínima.');
+ const min=number(minRaw),max=number(maxRaw);
+ if(previous&&ageModeFrom(previous)==='custom'&&previous.min===min&&previous.max===max&&previous.ageLabel)return {min,max,ageLabel:previous.ageLabel};
+ return {min,max,ageLabel:'De '+minRaw+' a '+maxRaw+' '+plural};
+}
+function applyAgeFromForm(data,target){Object.assign(target,ageValues(data,target))}
 
 function editView(){
  const a=draft, edit=Boolean(editId);
@@ -377,8 +457,8 @@ function editView(){
  sel('Sede *','venue',safeCatalogOption('sedes',a.venue),a.venue)+
  '</div><p class="hint activity-venue-help">La dirección se obtiene automáticamente del catálogo de sedes.</p>'+
  '<div class="activity-section-group">'+modalidadControl(a.tipo)+'</div>'+
- '<div class="grid2 activity-attributes">'+sel('Intensidad','intensidad',INTENSIDADES,a.intensidad)+sel('Público','sex',PUBLICOS,a.sex)+'</div>'+
- '<fieldset class="activity-age-range"><legend>Rango de edades</legend><div class="grid2">'+f('Edad mínima','min',a.min,'number','min="0"')+f('Edad máxima','max',a.max,'number','min="0"')+'</div></fieldset>'+
+ '<div class="activity-section-group">'+intensityOptions(a.intensidad)+'</div>'+ '<div class="grid2 activity-attributes">'+sel('Público','sex',PUBLICOS,a.sex)+'</div>'+
+ '<div class="activity-section-group">'+ageControl(a)+'</div>'+
  '<div class="sports-boolean-row"><label class="switchrow"><input id="pcd" name="pcd" type="checkbox" '+(a.pcd?'checked':'')+'>Actividad para personas con discapacidad</label><label class="switchrow"><input id="previousTest" name="previousTest" type="checkbox" '+(a.previousTest?'checked':'')+'>Requiere prueba previa</label></div>'+
  '</section>'+
  '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Comisiones y horarios</h2><p class="sub">Profesores, días, horarios y cupos de cada comisión.</p></div>'+btn(ic('add')+' Agregar comisión','add-commission','primary')+'</div>'+
@@ -445,7 +525,7 @@ function overviewView(){return listView()}
 function bind(){app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filterText=x.target.value;page=0;const pos=x.target.selectionStart;render();let n=document.getElementById('query');n.focus();n.setSelectionRange(pos,pos)});const searchEnroll=document.getElementById('en-search');if(searchEnroll)searchEnroll.addEventListener('input',ev=>{enrollSearch=ev.target.value;const at=ev.target.selectionStart;render();const next=document.getElementById('en-search');next?.focus();next?.setSelectionRange(at,at)});
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
-if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview)}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of ['venue','state']){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
+if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
 function action(type,id,index){if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
@@ -458,10 +538,10 @@ if(type==='catalog-delete'){catalogDelete=index;modalType='catalog-delete';rende
 if(type==='public'){window.open('https://santiagom96.github.io/mlz/prototipos/deportes_formulario_resumen_compacto.html','_blank','noopener');return}if(type==='photo-upload'){document.getElementById('photoInput')?.click();return}
 if(type==='photo-remove'){syncDraftForm();if(draft?.photos){draft.photos.splice(index,1);render()}return}
 if(type==='photo-cover'){syncDraftForm();if(draft?.photos&&index>0&&index<draft.photos.length){const selected=draft.photos.splice(index,1)[0];draft.photos.unshift(selected);render()}return}
-if(type==='new'){editId=null;draft={id:'new-'+Date.now(),sourceId:'NUEVA',name:'',min:5,max:59,ageLabel:'Todas las edades',pcd:false,sex:'Mixto',previousTest:false,venue:'',address:'',tipo:'Recreativo',intensidad:'Bajo',commissions:[],categoriaTipoGlobal:'Artes marciales y combate'};view='edit';render();return}if(type==='edit'){editId=id;draft=structuredClone(records.find(a=>a.id===id));view='edit';render();return}if(type==='duplicate'){let a=structuredClone(records.find(x=>x.id===id));a.id='copy-'+Date.now();a.sourceId='COPIA';a.name+=' (copia)';records.unshift(a);save();render();return}if(type==='toggle'){let a=records.find(x=>x.id===id);a._hidden=!a._hidden;save();render();return}if(type==='delete'){modalType='delete';modalIndex=records.findIndex(x=>x.id===id);renderModal();return}if(type==='clear'){filterText='';filterVenue='';filterState='';page=0;render();return}if(type==='prev'){page=Math.max(0,page-1);render();return}if(type==='next'){let count=records.filter(x=>(!filterText||(x.name+' '+x.sourceId+' '+x.categoriaTipoGlobal).toLowerCase().includes(filterText.toLowerCase()))&&(!filterVenue||x.venue===filterVenue)&&(!filterState||status(x)===filterState)).length;page=Math.min(Math.max(0,Math.ceil(count/10)-1),page+1);render();return}if(type==='save-activity'){let form=document.getElementById('activity-form');if(!form.reportValidity())return;let data=new FormData(form);draft.name=String(data.get('name')).trim();draft._hidden=data.get('state')==='Oculta';draft.categoriaTipoGlobal=String(data.get('category'));draft.tipo=readModalidades(data);if(!draft.tipo){alert('Seleccioná al menos una modalidad.');return}draft.intensidad=String(data.get('intensidad'));draft.sex=String(data.get('sex'));draft.min=Number(data.get('min'));draft.max=Number(data.get('max'));draft.venue=String(data.get('venue')).trim();draft.address=catalogs.sedes.find(x=>x.name===draft.venue)?.address||draft.address||'';draft.pcd=data.has('pcd');draft.previousTest=data.has('previousTest');if(draft.min>draft.max){alert('La edad mínima no puede ser mayor a la máxima.');return}if(!draft.name||!draft.venue){alert('Completá nombre y sede.');return}const snapshot=structuredClone(records);if(editId){records[records.findIndex(a=>a.id===editId)]=draft}else records.unshift(draft);
+if(type==='new'){editId=null;draft={id:'new-'+Date.now(),sourceId:'NUEVA',name:'',min:5,max:59,ageLabel:'Todas las edades',pcd:false,sex:'Mixto',previousTest:false,venue:'',address:'',tipo:'Recreativo',intensidad:'Bajo',commissions:[],categoriaTipoGlobal:'Artes marciales y combate'};view='edit';render();return}if(type==='edit'){editId=id;draft=structuredClone(records.find(a=>a.id===id));view='edit';render();return}if(type==='duplicate'){let a=structuredClone(records.find(x=>x.id===id));a.id='copy-'+Date.now();a.sourceId='COPIA';a.name+=' (copia)';records.unshift(a);save();render();return}if(type==='toggle'){let a=records.find(x=>x.id===id);a._hidden=!a._hidden;save();render();return}if(type==='delete'){modalType='delete';modalIndex=records.findIndex(x=>x.id===id);renderModal();return}if(type==='clear'){filterText='';filterVenue='';filterState='';page=0;render();return}if(type==='prev'){page=Math.max(0,page-1);render();return}if(type==='next'){let count=records.filter(x=>(!filterText||(x.name+' '+x.sourceId+' '+x.categoriaTipoGlobal).toLowerCase().includes(filterText.toLowerCase()))&&(!filterVenue||x.venue===filterVenue)&&(!filterState||status(x)===filterState)).length;page=Math.min(Math.max(0,Math.ceil(count/10)-1),page+1);render();return}if(type==='save-activity'){let form=document.getElementById('activity-form');if(!form.reportValidity())return;let data=new FormData(form);draft.name=String(data.get('name')).trim();draft._hidden=data.get('state')==='Oculta';draft.categoriaTipoGlobal=String(data.get('category'));draft.tipo=readModalidades(data);if(!draft.tipo){alert('Seleccioná al menos una modalidad.');return}draft.intensidad=readIntensities(data);if(!draft.intensidad){alert('Seleccioná al menos una intensidad.');return}draft.sex=String(data.get('sex'));try{applyAgeFromForm(data,draft)}catch(err){alert(err.message);return}draft.venue=String(data.get('venue')).trim();draft.address=catalogs.sedes.find(x=>x.name===draft.venue)?.address||draft.address||'';draft.pcd=data.has('pcd');draft.previousTest=data.has('previousTest');if(draft.min>draft.max){alert('La edad mínima no puede ser mayor a la máxima.');return}if(!draft.name||!draft.venue){alert('Completá nombre y sede.');return}const snapshot=structuredClone(records);if(editId){records[records.findIndex(a=>a.id===editId)]=draft}else records.unshift(draft);
  try{localStorage.setItem(KEY,JSON.stringify(records))}catch{records=snapshot;alert('No hay espacio suficiente para guardar las fotos. Quitá alguna imagen e intentá de nuevo.');return}
  view='list';editId=null;draft=null;page=0;render();return}if(type==='add-commission'||type==='edit-commission'){syncDraftForm();modalType='commission';modalIndex=type==='add-commission'?-1:index;renderModal();return}if(type==='dup-commission'){syncDraftForm();let c=structuredClone(draft.commissions[index]);c.id='COM-COPIA-'+Date.now();draft.commissions.splice(index+1,0,c);render();return}if(type==='remove-commission'){syncDraftForm();if(confirm('¿Eliminar esta comisión del formulario?'))draft.commissions.splice(index,1);render();return}if(type==='export'){alert('Todavía no hay inscripciones reales disponibles para exportar.');return}}
-function syncDraftForm(){let form=document.getElementById('activity-form');if(!form||!draft)return;let d=new FormData(form);for(const k of ['name','venue','intensidad','sex'])draft[k]=String(d.get(k)||'');draft.tipo=readModalidades(d);draft.address=catalogs.sedes.find(s=>s.name===draft.venue)?.address||draft.address||'';draft.categoriaTipoGlobal=String(d.get('category')||'');draft.min=Number(d.get('min'));draft.max=Number(d.get('max'));draft._hidden=d.get('state')==='Oculta';draft.pcd=d.has('pcd');draft.previousTest=d.has('previousTest')}
+function syncDraftForm(){let form=document.getElementById('activity-form');if(!form||!draft)return;let d=new FormData(form);for(const k of ['name','venue','sex'])draft[k]=String(d.get(k)||'');draft.tipo=readModalidades(d);draft.intensidad=readIntensities(d);draft.address=catalogs.sedes.find(s=>s.name===draft.venue)?.address||draft.address||'';draft.categoriaTipoGlobal=String(d.get('category')||'');try{applyAgeFromForm(d,draft)}catch{}draft._hidden=d.get('state')==='Oculta';draft.pcd=d.has('pcd');draft.previousTest=d.has('previousTest')}
 
 const WEEKDAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 let scheduleCounter=0;
