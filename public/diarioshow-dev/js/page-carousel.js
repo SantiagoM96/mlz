@@ -24,9 +24,29 @@ const variantSelector=isDS?'.ds-variant-option[data-variant]':'.theme-swatch[dat
 const blankParent=document.querySelector(isDS?'.ds-variant-options':'.theme-swatches');
 let pages=[editor.getPageState()],active=0,drag=null,suppressClick=false;
 const $=(name)=>nav.querySelector(name);
+// Textos de ejemplo ficticios y editables, nunca se importan de noticias reales.
+function sampleForVariant(variant){
+ if(isDS){
+  if(['quote','quote-blue'].includes(variant))return {
+   headline:'ESTOY VIVIENDO UNA ETAPA LLENA DE *NUEVOS DESAFÍOS*',
+   quoteAuthor:'Una artista invitada',showQuoteAuthor:true,
+   size:'70',alignment:'center'
+  };
+  return {
+   headline:'Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores',
+   quoteAuthor:'Una artista invitada',showQuoteAuthor:false,
+   size:'70',alignment:'center'
+  };
+ }
+ return {
+  headline:'Una empresa argentina anunció *nuevas inversiones* para ampliar su producción',
+  quote:'“El objetivo es generar más empleo durante el próximo año”',
+  enableQuote:true,size:'70',alignment:'left'
+ };
+}
 function blankPage(){
  const initial=editor.getPageState();
- return {...initial,variant:'blank',headline:'',image:null,zoom:1,offsetX:0,offsetY:0,
+ return {...initial,variant:'blank',samplePending:true,headline:'',image:null,zoom:1,offsetX:0,offsetY:0,
   quote:'',enableQuote:false,quoteAuthor:'',showQuoteAuthor:false,
   photoLayout:'single',splitPhotos:{left:{image:null,zoom:1,x:0,y:0},right:{image:null,zoom:1,x:0,y:0}}};
 }
@@ -145,9 +165,20 @@ document.addEventListener('click',event=>{
  }
  const variantButton=event.target.closest(variantSelector);
  if(!variantButton)return;
+ const variant=isDS?variantButton.dataset.variant:variantButton.dataset.theme;
+ const shouldSeed=pages[active]?.variant==='blank'&&pages[active]?.samplePending;
  if(pages[active]?.variant==='blank')editor.setBlank(false);
- // El controlador de la marca actualiza el resto del estado después de este evento.
- setTimeout(()=>{save();draw()},0);
+ // Ejecutar luego del listener nativo de cada marca para no sobrescribir
+ // su configuración de plantilla. No repetir el ejemplo después.
+ setTimeout(()=>{
+  if(shouldSeed){
+   const current=editor.getPageState();
+   const sample=sampleForVariant(variant);
+   editor.setPageState({...current,...sample,variant,theme:variant});
+   pages[active].samplePending=false;
+  }
+  save();draw();
+ },0);
 },true);
 // La tarjeta sin diseño debe aparecer en el mismo selector del producto.
 insertBlankOptions();
