@@ -421,3 +421,5 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se reutilizan los controles existentes sin duplicarlos ni cambiar sus acciones; se respeta el modo sin transiciones y se habilitan los grupos aplicables al mostrar el paso.
 - Exclusivo a los tres DEV; sin modificaciones en producción.
 **Registro acumulado: 39 cambios.**
+
+**QA Cambio 39 — APROBADA (Chromium, 2026-11-12).** [Ejecución](https://github.com/SantiagoM96/mlz/actions/runs/43158017727): el recorrido de los tres editores mantiene el orden de diapositivas, módulos, Shift y acciones de la preview; el paso Shift enfoca sólo la cabecera. Se verificaron **tres recortes reales** en el paso de logo (logo de la preview, grupo de controles de logo y ubicación, y firma inferior) en Crónica, BAE y Diario Show; la tarjeta se mantiene vinculada al logo. [GitHub Pages](https://github.com/SantiagoM96/mlz/actions/runs/43158017722) publicado satisfactoriamente.
