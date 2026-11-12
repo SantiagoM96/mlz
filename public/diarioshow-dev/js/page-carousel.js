@@ -147,7 +147,7 @@ document.addEventListener('click',event=>{
  if(!variantButton)return;
  if(pages[active]?.variant==='blank')editor.setBlank(false);
  // El controlador de la marca actualiza el resto del estado después de este evento.
- queueMicrotask(()=>{save();draw()});
+ setTimeout(()=>{save();draw()},0);
 },true);
 // La tarjeta sin diseño debe aparecer en el mismo selector del producto.
 insertBlankOptions();
