@@ -174,3 +174,35 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/rich-headline.js` (nuevo), `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
 **Registro acumulativo:** 13 cambios exclusivos de Crónica DEV, pendientes de evaluación para BAE y Diario Show.
+
+---
+
+## Replicación a BAE DEV y Diario Show DEV — lote de los cambios 01–13
+
+**Solicitada y autorizada el 12/11/2026.** Destino exclusivo: `public/bae-dev/` y `public/diarioshow-dev/`, sin modificaciones en BAE o Diario Show de producción.
+
+### Adaptaciones compartidas aplicadas
+
+- **Cambios 01–02 (foco/onboarding):** se incorporó la supresión del foco duplicado con Shift para cabeceras activadas por mouse; Tab y teclado conservan el foco accesible. Se añadió un primer paso de onboarding para la navegación multipágina. Los demás pasos y particularidades del recorrido de cada marca se conservaron.
+- **Cambios 03–06 (navegación):** se incorpora una tarjeta fija `Diapositivas` sobre la preview, con contador, miniaturas seleccionables, placeholder punteado al final y controles de agregar y eliminar en una columna lateral. El botón rojo/rosa fijo aparece cuando hay desborde. La barra de scroll está oculta; mouse arrastra y touch desliza; los botones permanecen fijos y las miniaturas no aumentan la altura del bloque.
+- **Cambio 07 (multipágina/Sin diseño):** se incorpora un estado de placa completamente gris y sin componentes exportados. La primera página puede cambiar de variante y cada página siguiente nace en estado `Sin diseño`. Las páginas mantienen fotografía, zoom, textos y configuración editorial propios. BAE conserva **Negro, Blanco y Rojo**; Diario Show conserva **Variantes 1 a 4** en lugar de sustituirlas por Portada/Interior de Crónica.
+- **Cambio 08 (controles contextuales):** `Sin diseño` oculta los paneles de contenido/fotografía/importación y las opciones de logo/firma que no aplican. En Diario Show las variantes de cita 3 y 4 no ofrecen el estilo de firma inferior. Se preservan valores al alternar páginas.
+- **Cambios 09–12 (volantas):** **específicos de las plantillas de Crónica**. No se agregaron volantas rojas a los layouts BAE o Diario Show, que tienen otros recursos y composiciones. El principio transversal —que `Sin diseño` no muestre ningún recurso ni controlador de contenido— sí se aplica.
+- **Cambio 13 (edición visual):** se integró un editor enriquecido para titulares. El controlador muestra negrita en vez de marcadores de destacado, además de cursiva y tachado; los botones alternan el estilo sobre una selección. El motor de Canvas y PNG continúa recibiendo el formato interno `*`, `_` y `~`.
+
+### Implementación y arquitectura
+
+- Nuevo módulo compartido (copia adaptada por marca): `js/page-carousel.js` y `css/page-carousel.css`.
+- Editor enriquecido: `js/rich-headline.js`.
+- Nuevos métodos `getPageState()`, `setPageState()` y `setBlank()` en los motores existentes `js/editor.js`. La instancia de cada marca continúa dibujando su Canvas original de 1080×1440 px.
+- Exportación múltiple en PNG individuales, con nombre de marca, número de diapositiva y fecha/hora; separación de un segundo entre descargas. Cuando hay más de una página se muestra el diálogo `Solo esta / Todas / Cancelar`. Si hay una sola, se mantiene la descarga directa original.
+- Los importadores, variantes originales de diseño, fotografía compartida exclusiva de Diario Show, logos y controladores de cada producto se mantienen.
+- Onboarding adaptado en `js/onboarding.js`; las plantillas originales no se sustituyen por los colores de Crónica.
+
+### Estado de QA y próximos controles
+
+- **Verificado en repositorio:** archivos creados y enlazados en los dos index DEV; los motores y módulos JavaScript modificados pasan análisis sintáctico.
+- **Pendiente:** prueba de funcionamiento real en navegador desktop/mobile (agregar y borrar, selección por arrastre, volver a una página editada, fotografía compartida de Diario Show y descarga de todas las páginas); prueba visual de la miniatura `Sin diseño` y de la edición enriquecida con selección y alternancia de estilos.
+- Estas pruebas pendientes impiden afirmar paridad funcional completa con Crónica y publicación visual verificada, aunque los cambios de código están guardados.
+
+**Registro:** 13 cambios fuente de Crónica; lote de replicación a dos productos DEV iniciado y aplicado en código. En BAE y Diario Show quedan pendientes las verificaciones funcionales indicadas, no permisos ni instrucciones del usuario.
