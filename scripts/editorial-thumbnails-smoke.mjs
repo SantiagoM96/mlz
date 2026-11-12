@@ -13,6 +13,19 @@ for(const data of cases){
  try{
   await page.goto('http://127.0.0.1:8765/'+data.slug+'/?onboarding=off',{waitUntil:'load'});
   await page.locator(data.thumb).first().waitFor({timeout:15000});
+  const initial=await page.locator('#headline').inputValue();
+  const expected=data.slug==='cronica-dev'?'espacio cultural':data.slug==='bae-dev'?'nuevas inversiones':'anuncio inesperado';
+  assert(initial.includes(expected),data.slug+': el texto de la página inicial sigue viejo: '+JSON.stringify(initial));
+  if(data.slug==='cronica-dev'){
+   assert((await page.locator('#strapText').inputValue())==='CULTURA EN LA CIUDAD',data.slug+': volanta inicial no actualizada');
+  }
+  if(data.slug==='bae-dev'){
+   assert(await page.locator('#enableQuote').isChecked()&&(await page.locator('#quote').inputValue()).includes('generar más empleo'),data.slug+': textual inicial no actualizado');
+  }
+  if(data.slug==='diarioshow-dev'){
+   assert((await page.locator('#quoteAuthor').inputValue())==='Una artista invitada',data.slug+': autor inicial no actualizado');
+  }
+  console.log('PASS',data.slug,'primera diapositiva con contenido de ejemplo');
   for(const variant of data.variants){
    let control=page.locator(data.choose(variant)).first();
    await control.click();
@@ -35,6 +48,19 @@ for(const data of cases){
   const second=await page.locator(data.thumb).nth(1).getAttribute('data-variant');
   assert(second==='blank',data.slug+': segunda diapositiva no es Sin diseño, es '+second);
   console.log('PASS',data.slug,'añadir Sin diseño');
+  if(data.slug==='diarioshow-dev'){
+   const groups=await page.locator('#dsMobileControlsPanel > .panel-group').evaluateAll(nodes=>
+    nodes.map(n=>({className:n.className,visible:getComputedStyle(n).display!=='none'})));
+   const remaining=groups.filter(g=>g.visible);
+   assert(remaining.length===1&&remaining[0].className.includes('ds-plate-design-group'),
+    data.slug+': sin diseño muestra otros módulos '+JSON.stringify(groups));
+   const context=await page.locator('#dsMobileContentEditor').evaluate(n=>getComputedStyle(n).display);
+   assert(context==='none',data.slug+': panel contextual de logo visible en Sin diseño');
+  }
+  if(data.slug==='bae-dev'){
+   assert(await page.locator('.editor-panel .modern-text-card').first().isHidden(),data.slug+': textos visibles en Sin diseño');
+  }
+  console.log('PASS',data.slug,'Sin diseño sin controladores');
   // La página sin diseño tiene que tener textos de ejemplo al elegir formato.
   const target=data.slug==='cronica-dev'?'cover':data.slug==='bae-dev'?'dark':'pink';
   await page.locator(data.choose(target)).first().click();
