@@ -377,7 +377,8 @@ function refreshActivityCatalogPreview(){
  if(view!=='edit'||!draft)return;
  const form=document.getElementById('activity-form'),target=document.getElementById('activityCatalogPreview');if(!form||!target)return;
  const d=new FormData(form);
- target.innerHTML=activityCatalogPreview({...draft,name:String(d.get('name')||''),categoriaTipoGlobal:String(d.get('category')||''),venue:String(d.get('venue')||''),address:catalogs.sedes.find(s=>s.name===String(d.get('venue')||''))?.address||draft.address||'',tipo:readModalidades(d),intensidad:readIntensities(d),...ageValues(d,draft),pcd:d.has('pcd'),previousTest:d.has('previousTest')});
+ let age;try{age=ageValues(d,draft)}catch{age={min:draft.min,max:draft.max,ageLabel:draft.ageLabel}}
+ target.innerHTML=activityCatalogPreview({...draft,name:String(d.get('name')||''),categoriaTipoGlobal:String(d.get('category')||''),venue:String(d.get('venue')||''),address:catalogs.sedes.find(s=>s.name===String(d.get('venue')||''))?.address||draft.address||'',tipo:readModalidades(d),intensidad:readIntensities(d),...age,pcd:d.has('pcd'),previousTest:d.has('previousTest')});
 }
 
 function modalidadesSeleccionadas(value){
@@ -412,6 +413,21 @@ function ageControl(a){
  '<div class="activity-age-details" id="activity-age-details"><div class="field"><label for="ageUnit">Unidad</label><select id="ageUnit" name="ageUnit"><option value="years" '+(!months?'selected':'')+'>Años</option><option value="months" '+(months?'selected':'')+'>Meses</option></select></div>'+
  '<div class="field" id="age-min-field"><label for="min">Edad mínima</label><input name="min" id="min" type="number" min="0" step="1" value="'+e(min)+'"></div>'+
  '<div class="field" id="age-max-field"><label for="max">Edad máxima</label><input name="max" id="max" type="number" min="0" step="1" value="'+e(max)+'"></div></div></div>';
+}
+function handleAgeUnitChange(){
+ const el=document.getElementById('ageUnit');if(!el)return;
+ const previous=el.dataset.lastUnit||'years',current=el.value;
+ if(previous!==current){
+  const factor=previous==='years'&&current==='months'?12:1/12;
+  for(const id of ['min','max']){
+   const input=document.getElementById(id);
+   if(input&&input.value!==''&&Number.isFinite(Number(input.value))){
+    input.value=String(Math.round(Number(input.value)*factor*100)/100);
+   }
+  }
+ }
+ el.dataset.lastUnit=current;
+ refreshActivityCatalogPreview();
 }
 function toggleAgeControls(){
  const mode=document.getElementById('ageMode')?.value,details=document.getElementById('activity-age-details');
@@ -488,7 +504,7 @@ function enrollmentPage(){
  if(enrollStep===1){
  const matches=records.filter(x=>!x._hidden&&x.commissions.length&&(!enrollSearch||(x.name+' '+x.categoriaTipoGlobal+' '+x.venue).toLowerCase().includes(enrollSearch.toLowerCase())));
  return bread+'<div class="heading"><div><h1>Inscribir persona</h1><p class="sub">Paso 1 de 2 · Seleccioná una actividad y una sola comisión.</p></div>'+btn('Volver','registrations')+'</div><section class="en-panel"><h2>Seleccionar actividad</h2><div class="field"><label for="en-search">Buscar actividad, categoría o sede</label><input id="en-search" placeholder="Buscar actividad" value="'+e(enrollSearch)+'"></div><div class="en-list">'+(matches.length?matches.map(x=>'<button type="button" class="en-item '+(x.id===enrollActivity?'chosen':'')+'" data-action="en-pick" data-id="'+e(x.id)+'"><span><strong>'+e(x.name)+'</strong><small>'+e(x.categoriaTipoGlobal)+' · '+e(x.venue)+'</small></span><span>'+x.commissions.length+' comisiones</span>'+ic('chevron_right')+'</button>').join(''):'<p class="empty">No hay coincidencias.</p>')+'</div></section>'+
- (a?'<section class="en-panel"><h2>Seleccionar comisión de '+e(a.name)+'</h2><p class="sub">Elegí una opción. Los cupos pertenecen al prototipo de demostración.</p><div class="en-list" role="radiogroup" aria-label="Comisiones">'+a.commissions.map(x=>'<label class="en-radio-row '+(x.id===enrollCommission?'chosen':'')+'"><input type="radio" name="en-option" value="'+e(x.id)+'" '+(x.id===enrollCommission?'checked':'')+'><span><strong>'+e(x.prof)+'</strong><small>'+e(x.schedule.map(y=>y.days+' · '+y.start+' a '+y.end).join(' / '))+'</small></span><span class="tag">'+e(x.cupos)+' cupos demo</span></label>').join('')+'</div><div class="en-buttons">'+btn('Cancelar','registrations')+'<button type="button" class="btn primary" data-action="en-next" '+(c?'':'disabled')+'>Continuar '+ic('arrow_forward')+'</button></div></section>':'');
+ (a?'<section class="en-panel"><h2>Seleccionar comisión de '+e(a.name)+'</h2><p class="sub">Elegí una opción. Seleccioná una única comisión para continuar.</p><div class="en-list" role="radiogroup" aria-label="Comisiones">'+a.commissions.map(x=>'<label class="en-radio-row '+(x.id===enrollCommission?'chosen':'')+'"><input type="radio" name="en-option" value="'+e(x.id)+'" '+(x.id===enrollCommission?'checked':'')+'><span><strong>'+e(x.prof)+'</strong><small>'+e(x.schedule.map(y=>y.days+' · '+y.start+' a '+y.end).join(' / '))+'</small></span><span class="tag">'+e(x.cupos)+' cupos</span></label>').join('')+'</div><div class="en-buttons">'+btn('Cancelar','registrations')+'<button type="button" class="btn primary" data-action="en-next" '+(c?'':'disabled')+'>Continuar '+ic('arrow_forward')+'</button></div></section>':'');
  }
  if(!a||!c)return bread+btn('Volver','en-back');
  const personal=eg([['Nombre','nombre','text',true],['Apellido','apellido','text',true],['DNI','dni','text',true],['Fecha de nacimiento','nacimiento','date',true],['Teléfono','tel','tel'],['Teléfono alternativo','altel','tel'],['Correo electrónico','email','email',true],['Calle','calle'],['Altura','altura'],['Piso','piso'],['Departamento','depto']])+'<div class="grid2">'+es('Género','genero',['Femenino','Masculino','No binario','Prefiero no responder'])+es('Localidad','localidad',['Lomas de Zamora','Banfield','Temperley','Llavallol','Turdera','San José','Villa Fiorito','Ingeniero Budge','Albertina','Santa Marta','Parque Barón','Otra'])+'</div>'+er('¿Autoriza la difusión de imágenes?','imagenes');
@@ -499,7 +515,7 @@ function enrollmentPage(){
  const files='<div class="grid2">'+['Frente DNI','Dorso DNI','Certificado único de discapacidad (CUD)','Apto Médico Competitivo','Apto Médico Federado'].map((x,i)=>'<div class="field"><label for="en-archivo'+i+'">'+e(x)+'</label><input id="en-archivo'+i+'" type="file" name="archivo'+i+'" accept=".jpg,.jpeg,.png,.pdf"></div>').join('')+'</div>';
  return bread+'<div class="heading"><div><h1>Formulario de inscripción</h1><p class="sub">Paso 2 de 2 · Inscripción asistida.</p></div>'+btn('Cambiar comisión','en-back')+'</div><p class="note">Prototipo: no guarda ni envía información personal, médica o documentación. No realiza inscripciones reales.</p><form id="en-form"><div class="en-layout"><div>'+
  section('Información personal','<label class="en-minor"><input type="checkbox" name="menor"> El trámite es para un menor de 18 años</label>'+personal)+section('Información deportiva',deportiva)+section('Contacto de emergencia',eg([['Nombre','emnombre'],['Apellido','emapellido'],['Teléfono','emtelefono','tel']]))+section('Datos médicos relevantes',salud)+section('Datos médicos adicionales',extras)+section('Documentación a adjuntar',files)+
- '<div class="en-buttons">'+btn('Volver','en-back')+'<button class="btn primary" type="submit">'+ic('check')+' Simular inscripción</button></div></div><aside><div class="en-sticky"><h2>Resumen de inscripción</h2><span class="pill">'+e(a.categoriaTipoGlobal)+'</span><h3>'+e(a.name)+'</h3><p>'+e(a.venue)+'</p><hr><strong>Comisión</strong><p>'+e(c.prof)+'</p><p>'+e(c.schedule.map(x=>x.days+' · '+x.start+' a '+x.end).join(' / '))+'</p><span class="tag">'+e(c.cupos)+' cupos de demostración</span><p class="hint">Una inscripción · Una comisión</p></div></aside></div></form>';
+ '<div class="en-buttons">'+btn('Volver','en-back')+'<button class="btn primary" type="submit">'+ic('check')+' Simular inscripción</button></div></div><aside><div class="en-sticky"><h2>Resumen de inscripción</h2><span class="pill">'+e(a.categoriaTipoGlobal)+'</span><h3>'+e(a.name)+'</h3><p>'+e(a.venue)+'</p><hr><strong>Comisión</strong><p>'+e(c.prof)+'</p><p>'+e(c.schedule.map(x=>x.days+' · '+x.start+' a '+x.end).join(' / '))+'</p><span class="tag">'+e(c.cupos)+' cupos</span><p class="hint">Una inscripción · Una comisión</p></div></aside></div></form>';
 }
 
 function settingsView(){
@@ -525,7 +541,7 @@ function overviewView(){return listView()}
 function bind(){app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filterText=x.target.value;page=0;const pos=x.target.selectionStart;render();let n=document.getElementById('query');n.focus();n.setSelectionRange(pos,pos)});const searchEnroll=document.getElementById('en-search');if(searchEnroll)searchEnroll.addEventListener('input',ev=>{enrollSearch=ev.target.value;const at=ev.target.selectionStart;render();const next=document.getElementById('en-search');next?.focus();next?.setSelectionRange(at,at)});
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
-if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
+if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
 function action(type,id,index){if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
