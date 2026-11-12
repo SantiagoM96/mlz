@@ -12,6 +12,7 @@
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
   {selector:"section.modern-import-group",title:"Importá una noticia",description:"Pegá el enlace de BAE Negocios para importar el titular y la fotografía de la noticia."},
   {selector:"section.modern-design-group",title:"Configurá el logo y la firma",description:"Seleccioná el logo de BAE y elegí entre la firma inferior centrada y la de carrusel."},
+  {selector:"section.modern-text-card",title:'Abrí o cerrá todos los módulos',description:'Mantené presionada la tecla Shift y hacé clic en la cabecera de un módulo para expandirlos o contraerlos todos juntos.',showShiftDemo:true},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, aplicá formato, elegí la alineación y activá el textual cuando lo necesites."},
   {selector:"section.modern-card:has(.texture-field)",title:"Ajustá el diseño",description:"Cambiá la textura y su opacidad para terminar de personalizar la placa."},
   {selector:"#photoStage",title:"Editá desde la vista previa",description:"Tocá el logo para abrir Diseño de placas o el titular para abrir Textos. El módulo correspondiente se destaca."},
@@ -35,7 +36,7 @@
   layer.id='dsOnboardingLayer';
   layer.className='ds-onboarding-layer';
   layer.hidden=true;
-  layer.innerHTML='<div class="ds-tour-shade" data-side="top"></div><div class="ds-tour-shade" data-side="left"></div><div class="ds-tour-shade" data-side="right"></div><div class="ds-tour-shade" data-side="bottom"></div><div class="ds-tour-highlight" aria-hidden="true"></div><section class="ds-tour-card" role="dialog" aria-modal="true" aria-labelledby="dsTourTitle" aria-describedby="dsTourDesc"><div class="ds-tour-card-header"><span id="dsTourProgress" class="ds-tour-progress"></span><button type="button" class="ds-tour-close" aria-label="Cerrar el recorrido">×</button></div><h2 id="dsTourTitle"></h2><p id="dsTourDesc"></p><div id="dsTourZoomDemo" class="ds-tour-zoom-demo preview" hidden aria-label="Demostración animada del zoom del navegador"></div><div class="ds-tour-dots" aria-hidden="true"></div><div class="ds-tour-footer"><button type="button" class="ds-tour-skip">Omitir</button><div class="ds-tour-nav"><button type="button" class="ds-tour-back">Anterior</button><button type="button" class="ds-tour-next">Siguiente</button></div></div></section>';
+  layer.innerHTML='<div class="ds-tour-shade" data-side="top"></div><div class="ds-tour-shade" data-side="left"></div><div class="ds-tour-shade" data-side="right"></div><div class="ds-tour-shade" data-side="bottom"></div><div class="ds-tour-highlight" aria-hidden="true"></div><section class="ds-tour-card" role="dialog" aria-modal="true" aria-labelledby="dsTourTitle" aria-describedby="dsTourDesc"><div class="ds-tour-card-header"><span id="dsTourProgress" class="ds-tour-progress"></span><button type="button" class="ds-tour-close" aria-label="Cerrar el recorrido">×</button></div><h2 id="dsTourTitle"></h2><p id="dsTourDesc"></p><div id="dsTourZoomDemo" class="ds-tour-zoom-demo preview" hidden aria-label="Demostración animada del zoom del navegador"></div><div id="dsTourShiftDemo" class="ds-tour-shift-demo" hidden aria-label="Demostración de Shift más clic"><img src="../shared/shift-click-demo.svg" alt="Tecla Shift presionada y mouse haciendo clic para abrir o cerrar todos los módulos" width="600" height="250"></div><div class="ds-tour-dots" aria-hidden="true"></div><div class="ds-tour-footer"><button type="button" class="ds-tour-skip">Omitir</button><div class="ds-tour-nav"><button type="button" class="ds-tour-back">Anterior</button><button type="button" class="ds-tour-next">Siguiente</button></div></div></section>';
   document.body.appendChild(layer);
   shadows=[...layer.querySelectorAll('.ds-tour-shade')];
   highlight=layer.querySelector('.ds-tour-highlight');
@@ -93,6 +94,7 @@
   layer.querySelector('#dsTourProgress').textContent=(index+1)+' de '+steps.length;
   layer.querySelector('#dsTourTitle').textContent=step.title;
   layer.querySelector('#dsTourDesc').textContent=step.description;
+  layer.querySelector('#dsTourShiftDemo').hidden=!step.showShiftDemo;
   const demoSlot=layer.querySelector('#dsTourZoomDemo');
   demoSlot.hidden=!step.showZoomDemo;
   if(step.showZoomDemo&&!demoSlot.firstChild){
