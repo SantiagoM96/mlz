@@ -464,6 +464,14 @@ function syncVariantDependentControls(){
  if(photoPanel)photoPanel.hidden=!designed;
  if(textPanel)textPanel.hidden=!designed;
  if(host)host.hidden=!designed;
+ // Ocultar de forma explícita también el switch y el campo en la copia
+ // contextual: nunca mostrar «Mostrar volanta» cuando es Sin diseño.
+ for(const card of [textPanel,clone].filter(Boolean)){
+  const switchField=card.querySelector('#showStrap, #showStrapMobile')?.closest('.control-field');
+  const strapField=card.querySelector('#strapText, #strapTextMobile')?.closest('.control-field');
+  if(switchField)switchField.hidden=!designed;
+  if(strapField)strapField.hidden=!designed||!$('showStrap')?.checked;
+ }
  // No borrar valores: al volver a una variante que los admite se restauran.
 }
 function syncIdentityMirror(){
