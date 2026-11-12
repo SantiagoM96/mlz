@@ -81,3 +81,13 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - No se altera el motor de selección, agregado o eliminación, ni BAE/Diario Show.
 
 **Archivo:** `public/cronica-dev/css/modern-editor.css` y versión de caché de `public/cronica-dev/index.html`.
+
+## Ajuste 06 — Anillo visible y botones compactos (2026-11-12)
+**Estado:** aplicado exclusivamente a Crónica DEV; pendiente de confirmación visual del usuario.
+
+- La fila desplazable tiene 96 px de alto, con 10 px de espacio superior y 14 px inferior para mostrar completo el contorno rojo exterior de 2 px con offset de 2 px sin recortes.
+- El área de los botones también tiene 96 px. Los botones se ubican en dos posiciones fijas de 30 px, separadas por 6 px, centradas verticalmente.
+- El tacho permanece en la segunda posición independientemente de la aparición del botón + rojo en la primera; ya no quedan separados por un margen automático.
+- Se conserva el scroll horizontal, la selección y la lógica original de agregar/eliminar.
+
+**Archivos:** `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
