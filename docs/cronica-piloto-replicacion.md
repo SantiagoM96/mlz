@@ -243,3 +243,5 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/bae-dev/js/page-carousel.js`, `public/diarioshow-dev/js/page-carousel.js`.
 **Registro acumulado:** 16 cambios; el Cambio 16 se aplica a los tres DEV, sin modificar producción.
+
+**Verificación del Cambio 16 (Chromium, 12/11/2026): APROBADA.** [Prueba automatizada](https://github.com/SantiagoM96/mlz/actions/runs/43150967560): creación de diapositiva Sin diseño, elección de plantilla, contenido inicial para Crónica/BAE/Diario Show, volanta activa, textual de BAE, autor de cita de Diario Show y persistencia de modificaciones manuales. El ajuste adicional de Diario Show contempla el cambio entre una placa de titular y una de cita, adaptando los ejemplos solo si no se editaron. [Publicación DEV](https://github.com/SantiagoM96/mlz/actions/runs/43150967690) completada. Los tests heredados de contexto/onboarding continúan con incidencias independientes.
