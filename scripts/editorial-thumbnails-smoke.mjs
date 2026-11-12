@@ -25,6 +25,24 @@ for(const data of cases){
   if(data.slug==='diarioshow-dev'){
    assert((await page.locator('#quoteAuthor').inputValue())==='Una artista invitada',data.slug+': autor inicial no actualizado');
   }
+  if(data.slug==='cronica-dev'){
+   const placement=await page.evaluate(()=>{
+    const text=document.querySelector('.editor-panel .modern-text-card');
+    const design=document.querySelector('.editor-panel .modern-design-group');
+    const switchField=document.getElementById('showStrap')?.closest('.control-field');
+    const strapField=document.getElementById('strapText')?.closest('.control-field');
+    const format=text?.querySelector('.typography-row');
+    return {textExists:!!text,insideText:!!(text?.contains(switchField)&&text?.contains(strapField)),
+      outsideDesign:!!design&&!design.contains(switchField),
+      beforeFormat:!!(format&&switchField&&strapField&&
+       (switchField.compareDocumentPosition(format)&Node.DOCUMENT_POSITION_FOLLOWING)&&
+       (strapField.compareDocumentPosition(format)&Node.DOCUMENT_POSITION_FOLLOWING)),
+      cloned:!!document.getElementById('showStrapMobile')};
+   });
+   assert(placement.insideText&&placement.outsideDesign&&placement.beforeFormat&&placement.cloned,
+    'Crónica: volanta no quedó dentro de Textos sobre Formato '+JSON.stringify(placement));
+   console.log('PASS cronica-dev volanta dentro de Textos sobre Formato');
+  }
   console.log('PASS',data.slug,'primera diapositiva con contenido de ejemplo');
   // El punteado de foto utiliza el mismo border CSS que texto/logo,
   // manteniendo el gris editorial y sin superponer el SVG anterior.
