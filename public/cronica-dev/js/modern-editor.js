@@ -137,13 +137,11 @@ if(originalContent){
   originalContent.before(photoSection);
  }
  if(isCronica){
-  // La volanta pertenece a Textos, inmediatamente arriba de Formato de texto.
-  // Movemos los controles originales para preservar listeners y estado.
-  const formatRow=textPanel.querySelector('.typography-row');
-  for(const sel of ['#showStrap','#strapText']){
-   const field=$(sel)?.closest('.control-field');
-   if(field&&formatRow)formatRow.before(field);
-  }
+  // El switch permanece en Diseño de placas; solo su campo editable
+  // va dentro de Textos, inmediatamente antes de Texto principal.
+  const headlineField=textPanel.querySelector('#headline')?.closest('.control-field');
+  const strapField=$('strapText')?.closest('.control-field');
+  if(headlineField&&strapField)headlineField.before(strapField);
  }else{
   const urlField=$('articleUrl')?.closest('.control-field');
   if(urlField){
@@ -389,7 +387,7 @@ mirrorToggle?.addEventListener('click',()=>{
 });
 function syncMirror(){
  if(!host.isConnected)return;
- const ids=['headline','size',...(isCronica?['showStrap','strapText']:['quote','enableQuote'])];
+ const ids=['headline','size',...(isCronica?['strapText']:['quote','enableQuote'])];
  for(const id of ids){
   const source=$(id),mirror=mirrorId(id);
   if(!source||!mirror)continue;
@@ -411,7 +409,7 @@ function syncMirror(){
  progress(size);if(mirrorId('size'))progress(mirrorId('size'));
  progress(zoom);if(dots)progress(dots);
 }
-for(const id of ['headline','size','quote','enableQuote','showStrap','strapText']){
+for(const id of ['headline','size','quote','enableQuote','strapText']){
  const source=$(id),mirror=mirrorId(id);if(!source||!mirror)continue;
  mirror.addEventListener(source.type==='checkbox'?'change':'input',()=>{
   if(source.type==='checkbox')source.checked=mirror.checked;else source.value=mirror.value;
@@ -451,6 +449,15 @@ if(identityMirror){
   identitySource.querySelector(selector)?.click();
   syncIdentityMirror();
  });
+ // El interruptor del espejo de Diseño de placas actúa sobre el input
+ // original, evitando duplicar estado y listeners.
+ const mirrorStrap=identityMirror.querySelector('#showStrapIdentityPreview');
+ mirrorStrap?.addEventListener('change',()=>{
+  const original=$('showStrap');
+  original.checked=mirrorStrap.checked;
+  original.dispatchEvent(new Event('change',{bubbles:true}));
+  syncIdentityMirror();syncMirror();
+ });
 }
 function syncVariantDependentControls(){
  if(!isCronica||!identitySource)return;
@@ -463,19 +470,18 @@ function syncVariantDependentControls(){
   const footer=card.querySelector('.modern-footer-field');
   if(logo)logo.hidden=!designed;
   if(footer)footer.hidden=!footerAllowed;
-  // Los controles de volanta ya pertenecen exclusivamente a Textos.
+  const switchField=card.querySelector('#showStrap, #showStrapIdentityPreview')?.closest('.control-field');
+  if(switchField)switchField.hidden=!designed;
  }
  const photoPanel=panel.querySelector('.modern-photo-group');
  if(photoPanel)photoPanel.hidden=!designed;
  if(textPanel)textPanel.hidden=!designed;
  if(host)host.hidden=!designed;
- // Ocultar de forma explícita también el switch y el campo en la copia
- // contextual: nunca mostrar «Mostrar volanta» cuando es Sin diseño.
+ // El contenido de la volanta solo aparece en Textos si el switch
+ // de Diseño de placas está habilitado.
  for(const card of [textPanel,clone].filter(Boolean)){
-  const switchField=card.querySelector('#showStrap, #showStrapMobile')?.closest('.control-field');
-  const strapField=card.querySelector('#strapText, #strapTextMobile')?.closest('.control-field');
-  if(switchField)switchField.hidden=!designed;
-  if(strapField)strapField.hidden=!designed||!$('showStrap')?.checked;
+  const field=card.querySelector('#strapText, #strapTextMobile')?.closest('.control-field');
+  if(field)field.hidden=!designed||!$('showStrap')?.checked;
  }
  // No borrar valores: al volver a una variante que los admite se restauran.
 }
@@ -489,6 +495,8 @@ function syncIdentityMirror(){
   const source=identitySource.querySelector(selector);
   if(source)option.setAttribute('aria-pressed',source.getAttribute('aria-pressed'));
  }
+ const switchMirror=identityMirror.querySelector('#showStrapIdentityPreview');
+ if(switchMirror)switchMirror.checked=Boolean($('showStrap')?.checked);
  syncVariantDependentControls();
 }
 function showPreviewContext(which){
@@ -546,9 +554,10 @@ clone.querySelectorAll('.help-trigger').forEach(t=>{
  b.addEventListener('click',e=>{e.stopPropagation();const open=!t.classList.contains('is-open');
   t.classList.toggle('is-open',open);b.setAttribute('aria-expanded',String(open))});
 });
-function syncAfterRender(){syncMirror();updateHeight()}
+function syncAfterRender(){syncMirror();syncIdentityMirror();updateHeight()}
 window.addEventListener('modern:render',syncAfterRender);
 document.addEventListener('click',()=>requestAnimationFrame(syncAfterRender));
+$('showStrap')?.addEventListener('change',()=>requestAnimationFrame(syncAfterRender));
 syncMirror();
 // A transparent hit surface lets the user scroll over the TEXT portion
 // of the canvas (touch-action:pan-y), while the photo keeps native reframe drag.
