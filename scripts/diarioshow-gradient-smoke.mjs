@@ -3,7 +3,7 @@ const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:900}});
 await page.goto('http://127.0.0.1:8765/diarioshow-dev/',{waitUntil:'load'});
 const expected={quote:'rgba(230, 0, 141, 0)', 'quote-blue':'rgba(0, 166, 217, 0)'};
-const full={quote:'rgba(230, 0, 141, 1)','quote-blue':'rgba(0, 166, 217, 1)'};
+const full={quote:'rgb(230, 0, 141)','quote-blue':'rgb(0, 166, 217)'};
 for(const variant of ['quote','quote-blue']){
  const option=page.locator('#dsMobileControlsPanel .ds-plate-design-group .ds-variant-option[data-variant="'+variant+'"]').first();
  const thumb=option.locator('.ds-variant-preview');
