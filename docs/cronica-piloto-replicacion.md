@@ -291,3 +291,12 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se reubica el grupo de formato original sin recrearlo, preservando listeners, selección de texto, previsualización y exportación.
 - **Propuesta UX para evaluar antes de implementar:** renombrar el label a «Formato del texto principal» y añadir una ayuda breve «Seleccioná una parte del texto principal para aplicar o quitar el formato». Este cambio de copy todavía no se implementa.
 - **Registro acumulativo:** 21 cambios; BAE y Diario Show no se modificaron y la propuesta UX queda pendiente de definición para replicación.
+
+
+## Cambio 22 — Botonera de texto igual a Diario Show en Crónica DEV (2026-11-12)
+**Estado:** aplicado en Crónica DEV; pendiente de validación visual final.
+- El módulo Textos adopta las proporciones y estilos del bloque equivalente de Diario Show: botones de formato **43×43 px**, separación de controles independientes, labels de **14 px / 600** y columnas alineadas.
+- Los botones de alineación se presentan como un grupo segmentado **39×43 px** con bordes grises. El estado seleccionado tiene fondo gris `#3b3f46` y **anillo blanco interior de 1,5 px en los cuatro lados**, inclusive el lado compartido central. Es el mismo patrón que Diario Show.
+- El botón de mayúsculas conserva su acento rojo institucional de Crónica cuando está activo. No se alteran los listeners del editor de texto enriquecido ni la selección del contenido, ni los demás elementos del panel.
+- En mobile angosto, la alineación baja a una segunda fila para evitar desbordes.
+- **Registro acumulativo:** 22 cambios. Esta transferencia ocurre únicamente en Crónica DEV; BAE no se modifica.
