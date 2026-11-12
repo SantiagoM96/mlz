@@ -4,7 +4,7 @@
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-2.svg?v=1');loadTexture('2','./textures/punteado-grises-ajustados.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const LOGO_MARGIN=80,LOGO_WIDTH=123.75*1.15,LOGO_HEIGHT=LOGO_WIDTH*192/358;
-let selectedLogo='primary',footerStyle='center';
+let selectedLogo='primary',footerStyle='center',pageBlank=false;
 document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const logoImages={},logoSources={primary:'./logos/primario.svg',white:'./logos/blanco.svg'};
 for(const [key,src] of Object.entries(logoSources)){
@@ -31,6 +31,7 @@ function parseRich(text){const out=[];let style={accent:false,italic:false,strik
 function wrapRich(text,size,quote=false){const result=[];for(const paragraph of String(text).split('\n')){const spans=quote?[{text:paragraph,italic:true,accent:false,strike:false}]:parseRich(paragraph);let line=[],width=0;for(const span of spans){for(const part of span.text.match(/\S+|\s+/g)||[]){const font=(span.italic?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';ctx.font=font;const partWidth=ctx.measureText(part).width;if(width+partWidth>920&&width>0&&part.trim()){result.push({parts:line,quote});line=[];width=0}if(!line.length&&!part.trim())continue;line.push({...span,text:part,width:partWidth});width+=partWidth}}if(line.length)result.push({parts:line,quote})}return result}
 function render(){
 try{
+ if(pageBlank){ctx.clearRect(0,0,W,H);ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);photoBottom=H;updatePhotoStage();return;}
 const colors=palette[el('theme').value]||palette.dark,size=Number(el('size').value),lineHeight=Math.round(size*1.12*0.8*1.10),main=wrapRich(document.getElementById('formatUppercase')?.getAttribute('aria-pressed')==='true'?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value,size),quotes=el('enableQuote').checked?wrapRich(el('quote').value,size,true):[];
 // Coordenadas en píxeles reales del PNG (1080 × 1440), no píxeles CSS.
 // Piso de la firma exactamente a 80 px del borde inferior.
@@ -302,5 +303,31 @@ if(typeof ResizeObserver!=='undefined'){
 }
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 scheduleBrowserZoomTipPosition();
-window.BAEEditor={setImporting(active){importingArticle=active;render()},setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
+window.BAEEditor={
+ getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
+ headline:el('headline').value,quote:el('quote').value,enableQuote:el('enableQuote').checked,
+ size:el('size').value,dots:el('dots').value,alignment:textAlignment,
+ uppercase:el('formatUppercase')?.getAttribute('aria-pressed')==='true',
+ image,zoom,offsetX,offsetY,selectedLogo,footerStyle,selectedTexture};},
+ setPageState(s){
+  pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
+  el('theme').value=s.theme||'dark';
+  document.querySelectorAll('.theme-swatch').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===s.variant)));
+  el('headline').value=s.headline||'';el('quote').value=s.quote||'';
+  el('enableQuote').checked=Boolean(s.enableQuote);el('quote').hidden=!s.enableQuote;
+  el('size').value=s.size||'70';el('dots').value=s.dots||'5';
+  textAlignment=s.alignment||'left';
+  el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));
+  el('alignCenter').setAttribute('aria-pressed',String(textAlignment==='center'));
+  const upper=el('formatUppercase');if(upper){upper.setAttribute('aria-pressed',String(Boolean(s.uppercase)));el('headline').classList.toggle('uppercase-preview',Boolean(s.uppercase))}
+  image=s.image||null;zoom=s.zoom||1;offsetX=s.offsetX||0;offsetY=s.offsetY||0;
+  selectedLogo=s.selectedLogo||'primary';syncLogoChoices();footerStyle=s.footerStyle||'center';
+  document.querySelectorAll('[data-footer-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.footerStyle===footerStyle)));
+  selectedTexture=s.selectedTexture||'1';halftone=halftoneAssets[selectedTexture]||null;
+  document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture===selectedTexture)));
+  el('sizeLabel').textContent=el('size').value;el('dotsLabel').textContent=el('dots').value+'%';
+  render();el('headline').dispatchEvent(new Event('input',{bubbles:true}));
+ },
+ setBlank(active){pageBlank=Boolean(active);document.documentElement.dataset.editorPlateVariant=pageBlank?'blank':el('theme').value;render();},
+ setImporting(active){importingArticle=active;render()},setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
 })();
