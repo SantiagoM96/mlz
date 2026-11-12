@@ -358,7 +358,15 @@ function initializeCarousel(){
 document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addEventListener('click',()=>{
  const next=button.dataset.pageVariant;
  if(next===pageVariant)return;
+ const previous=pageVariant;
  pageVariant=next;
+ // Una placa sin diseño no muestra volanta. Al aplicar Portada o Interior,
+ // el usuario comienza con la volanta activa y su texto de ejemplo.
+ if(previous==='blank'&&next!=='blank'){
+  el('showStrap').checked=true;
+  if(!el('strapText').value.trim())el('strapText').value=DEFAULT_STRAP;
+  el('strapField').hidden=false;
+ }
  syncVariantUI();saveActivePage();renderCarouselNavigation();render();
 }));
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
