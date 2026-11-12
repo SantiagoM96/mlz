@@ -217,3 +217,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Sin diseño en BAE: gris liso `#aeb4bc`, borde `#565a63`; se desactiva el trazo generado por `::before`, sin textos ni líneas. Se aplica también al clon del paginador.
 - Se mantiene la lógica independiente de variantes por página, de modo que cambiar de diseño actualiza la miniatura correspondiente.
 - Ámbito: exclusivamente `cronica-dev`, `bae-dev`, `diarioshow-dev`; no modifica producción.
+
+
+## Cambio 15 — Reparación de miniaturas recortadas o desplazadas (2026-11-12)
+**Alcance:** Crónica DEV, BAE DEV y Diario Show DEV. Ajuste correctivo del Cambio 14.
+- Problema reportado con captura: el arte aparecía pequeño, cortado o desplazado hacia un costado dentro de la miniatura y el número daba la impresión de empujar el layout.
+- Causa: las copias visuales del selector de diseño heredaban reglas flex de su wrapper y combinaban escalas distintas entre wrapper y miniatura.
+- Corrección: el elemento gráfico original se coloca en un sistema de coordenadas **60×80 px**, se escala **una sola vez al 80 %** hasta **48×64 px**, con `transform-origin: top left`. El contenedor de 48×64 permanece fijo y el número está en `position:absolute` con `z-index` superior.
+- En Crónica se eliminó el wrapper flex adicional entre el contenedor y la miniatura original.
+- En BAE y Diario Show, el wrapper de clase de variante se conserva únicamente para los estilos de marca, pero se fuerza a un bloque 60×80 y se escala en un único punto.
+- La geometría se cubre con `scripts/editorial-thumbnails-smoke.mjs` y el workflow `.github/workflows/editorial-thumbnails-smoke.yml`. Se prueban todas las variantes, offset del dibujo, posición del número y nueva página sin diseño.
+- **QA:** análisis sintáctico de scripts correcto; prueba automatizada en Chromium iniciada. El resultado debe consultarse antes de confirmar la validación visual.
