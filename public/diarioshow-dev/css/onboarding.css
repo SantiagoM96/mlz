@@ -220,3 +220,16 @@
 .ds-onboarding-layer.is-rounded-spotlight .ds-tour-multispot{display:block!important}
 .ds-onboarding-layer.is-rounded-spotlight .ds-tour-shade,
 .ds-onboarding-layer.is-rounded-spotlight .ds-tour-highlight{display:none!important}
+
+/* Cambio 43 — «Siguiente» no debe mostrar ningún aro exterior.
+   El onboarding lo enfoca por JS al cambiar de paso, lo que a veces
+   disparaba :focus-visible aun sin interacción por teclado.
+   Se conserva indicación accesible de teclado mediante subrayado interno. */
+.ds-onboarding-layer .ds-tour-card .ds-tour-next:focus,
+.ds-onboarding-layer .ds-tour-card .ds-tour-next:focus-visible{
+ outline:none!important;outline-offset:0!important;
+ box-shadow:none!important;
+}
+.ds-onboarding-layer .ds-tour-card .ds-tour-next:focus-visible{
+ text-decoration:underline;text-underline-offset:3px;
+}
