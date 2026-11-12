@@ -252,6 +252,18 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .activity-age-details .field{min-width:0}
 .activity-age-controls input[type=number]{height:48px}
 @media(max-width:600px){.activity-age-details{grid-template-columns:1fr}}
+
+.registration-status{display:inline-block;padding:5px 9px;border-radius:5px;font-size:12px;font-weight:600;white-space:nowrap;background:#eef1f4;color:#526171}
+.registration-status.confirmed{background:#edf8f1;color:#237947}
+.registration-status.review{background:#fff7e6;color:#98660c}
+.registration-status.waiting{background:#eaf1fe;color:#236999}
+.registration-counter{padding:13px 20px;font-size:13px;color:#687681;margin:0}
+.reg-section{border-bottom:1px solid #e3e9ed;padding-bottom:18px;margin-bottom:17px}.reg-section h3{font-size:17px;color:#236999;margin:0 0 12px}
+.reg-person h3{margin:0;font-size:23px}.reg-person p{margin:5px 0 20px;color:#657585}
+.reg-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.reg-field{display:flex;flex-direction:column;gap:4px;font-size:13px;min-width:0}
+.reg-field span{color:#687888}.reg-field strong{font-size:14px;overflow-wrap:anywhere;font-weight:500}
+@media(max-width:600px){.reg-fields{grid-template-columns:1fr}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -315,6 +327,7 @@ function reconcileDemoRecords(list){
  return list;
 }
 let records=reconcileDemoRecords(load());
+let demoRegistrations=[],registrationSearch='',registrationActivity='',registrationStatus='',registrationDetailsId='',demoLoadError=false;
 let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDone=false;
 let view='list',editId=null,filterText='',filterVenue='',filterState='',page=0,modalType=null,modalIndex=-1,draft=null,registrationFilter='';
 const app=document.getElementById('app'),modal=document.getElementById('modal');
@@ -500,8 +513,57 @@ function editView(){
  '<div class="sports-form-footer">'+btn('Cancelar','list')+btn(ic('save')+' '+(edit?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div>'+
  '</div><aside class="sports-form-aside"><div class="sports-preview-sticky"><h2>Vista previa</h2><p class="sub">Así se visualizará la actividad.</p><div id="activityCatalogPreview">'+card+'</div></div></aside></div></form>';
 }
-function registrationsView(){return '<div class="eyebrow">Actividades deportivas y recreativas / Consola / Inscripciones</div><div class="heading"><div><h1>Inscripciones</h1><p class="sub">Estructura inicial para consultar inscripciones por actividad y comisión.</p></div><div class="actions">'+btn(ic('arrow_back')+' Volver','list')+btn(ic('person_add')+' Nueva inscripción','enroll-new','primary')+btn(ic('download')+' Exportar CSV','export')+'</div></div><p class="note">Aún no hay una fuente conectada de inscripciones reales. Esta sección se presenta vacía para no inventar datos personales ni inscripciones.</p><section class="panel"><div class="panelhead"><h2>Últimas inscripciones</h2></div><div class="panelbody"><div class="filters"><div class="field search"><label>Buscar vecino</label><input disabled placeholder="Nombre, apellido o DNI"></div><div class="field"><label>Actividad</label><select disabled><option>Seleccionar</option></select></div><div class="field"><label>Estado</label><select disabled><option>Seleccionar</option></select></div></div></div><div class="tablewrap"><table><thead><tr><th>Vecino</th><th>Actividad</th><th>Comisión</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead></table><div class="empty">No hay inscripciones cargadas. Próximamente podremos vincularlas con el sistema correspondiente.</div></div></section>'}
 
+function regActivity(r){return records.find(a=>a.id===r.activityId)||INITIAL.find(a=>a.id===r.activityId)}
+function regCommission(r){return regActivity(r)?.commissions?.find(c=>c.id===r.commissionId)}
+function regFiltered(){
+ return demoRegistrations.filter(r=>{
+ const needle=(r.person.nombre+' '+r.person.apellido+' '+r.person.dni).toLocaleLowerCase('es');
+ return (!registrationSearch||needle.includes(registrationSearch.toLocaleLowerCase('es')))&&(!registrationActivity||r.activityId===registrationActivity)&&(!registrationStatus||r.status===registrationStatus);
+ });
+}
+function registrationsView(){
+ const filtered=regFiltered(),counts={
+ confirmed:demoRegistrations.filter(r=>r.status==='Confirmada').length,
+ review:demoRegistrations.filter(r=>r.status==='En revisión').length,
+ wait:demoRegistrations.filter(r=>r.status==='Lista de espera').length
+ };
+ const activities=[...new Map(demoRegistrations.map(r=>[r.activityId,regActivity(r)?.name||r.activityId])).entries()];
+ return '<div class="eyebrow">Actividades deportivas y recreativas / Consola / Inscripciones</div>'+
+ '<div class="heading"><div><h1>Inscripciones</h1><p class="sub">Historial ficticio para probar el circuito administrativo.</p></div><div class="actions">'+btn(ic('arrow_back')+' Volver','list')+btn(ic('person_add')+' Nueva inscripción','enroll-new','primary')+'</div></div>'+
+ '<p class="note"><strong>Datos sintéticos.</strong> Las personas y los campos de sus fichas son ficticios; no hay documentos, teléfonos ni diagnósticos reales. Las nuevas inscripciones todavía no se guardan.</p>'+
+ '<div class="stats"><div class="stat">Inscripciones ficticias<b>'+demoRegistrations.length+'</b></div><div class="stat">Confirmadas<b>'+counts.confirmed+'</b></div><div class="stat">En revisión<b>'+counts.review+'</b></div><div class="stat">Lista de espera<b>'+counts.wait+'</b></div></div>'+
+ '<section class="panel"><div class="panelhead"><h2>Historial de inscripciones</h2></div>'+
+ '<div class="panelbody"><div class="filters"><div class="field search"><label for="registrationSearch">Buscar persona</label><input id="registrationSearch" placeholder="Nombre, apellido o código ficticio" value="'+e(registrationSearch)+'"></div>'+
+ '<div class="field"><label for="registrationActivity">Actividad</label><select id="registrationActivity"><option value="">Todas las actividades</option>'+activities.map(([id,name])=>'<option value="'+e(id)+'" '+(registrationActivity===id?'selected':'')+'>'+e(name)+'</option>').join('')+'</select></div>'+
+ '<div class="field"><label for="registrationStatus">Estado</label><select id="registrationStatus"><option value="">Todos los estados</option>'+['Confirmada','En revisión','Lista de espera'].map(status=>'<option value="'+e(status)+'" '+(registrationStatus===status?'selected':'')+'>'+e(status)+'</option>').join('')+'</select></div></div></div>'+
+ '<div class="tablewrap"><table><thead><tr><th>Persona</th><th>Actividad</th><th>Comisión</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>'+
+ (filtered.length?filtered.map(r=>'<tr><td><strong>'+e(r.person.nombre+' '+r.person.apellido)+'</strong><small>'+e(r.person.dni)+'</small></td><td>'+e(regActivity(r)?.name||'Actividad no encontrada')+'</td><td>'+e(regCommission(r)?.prof||r.commissionId)+'</td><td><span class="registration-status '+(r.status==='Confirmada'?'confirmed':r.status==='Lista de espera'?'waiting':'review')+'">'+e(r.status)+'</span></td><td>'+e(r.createdAt)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Ver ficha de inscripción" aria-label="Ver ficha de '+e(r.person.nombre+' '+r.person.apellido)+'" data-action="registration-detail" data-id="'+e(r.id)+'">'+ic('visibility')+'</button></td></tr>').join(''):'<tr><td colspan="6" class="empty">'+(demoLoadError?'No se pudo cargar el archivo de inscripciones ficticias.':'No se encontraron inscripciones.')+'</td></tr>')+
+ '</tbody></table></div><p class="registration-counter">Mostrando '+filtered.length+' de '+demoRegistrations.length+' inscripciones ficticias.</p></section>';
+}
+function registrationDetailView(r){
+ const a=regActivity(r),c=regCommission(r),p=r.person,m=r.medical;
+ const item=(label,val)=>'<div class="reg-field"><span>'+e(label)+'</span><strong>'+e(val==null||val===''?'No informado':val)+'</strong></div>';
+ const group=(title,values)=>'<section class="reg-section"><h3>'+e(title)+'</h3><div class="reg-fields">'+values.join('')+'</div></section>';
+ return '<p class="note"><strong>Ficha ficticia de demostración.</strong> No representa una inscripción real.</p>'+
+ '<div class="reg-person"><h3>'+e(p.nombre+' '+p.apellido)+'</h3><p>'+e(r.id)+' · '+e(r.status)+'</p></div>'+
+ group('Actividad y comisión',[item('Actividad',a?.name),item('Comisión',c?.id||r.commissionId),item('Profesor/a',c?.prof),item('Sede',a?.venue),item('Fecha',r.createdAt)])+
+ group('Información personal',[item('Nombre',p.nombre),item('Apellido',p.apellido),item('Código de prueba (no es DNI)',p.dni),item('Nacimiento',p.nacimiento),item('Género',p.genero),item('Teléfono',p.telefono),item('Correo',p.email),item('Localidad',p.localidad),item('Calle',p.calle),item('Difusión de imágenes',p.imagenAutorizacion)])+
+ group('Información deportiva',[item('Modalidad',r.sport.tipo),item('Condición',r.sport.condicion),item('CUD',r.sport.cud)])+
+ group('Contacto de emergencia ficticio',[item('Nombre',r.emergency.nombre),item('Apellido',r.emergency.apellido),item('Teléfono',r.emergency.telefono)])+
+ group('Datos médicos de prueba',[item('Altura',m.altura),item('Peso',m.peso),item('Grupo sanguíneo',m.sangre),item('Diagnóstico',m.diagnostico),item('Indicaciones',m.indicaciones),item('Alergias',m.alergias),item('Autorización médica',m.urgencia)])+
+ group('Documentación',r.documents.map(d=>item(d.tipo,d.estado)));
+}
+async function loadDemoRegistrations(){
+ try{
+ const response=await fetch('../data/deportes-inscripciones-demo.json',{cache:'no-store'});
+ if(!response.ok)throw Error('HTTP '+response.status);
+ const data=await response.json();
+ if(!Array.isArray(data.registrations)||!data.registrations.every(r=>r.synthetic===true&&r.person&&r.activityId))throw Error('Invalid demo dataset');
+ demoRegistrations=data.registrations;demoLoadError=false;
+ }catch(error){console.warn('No se pudieron cargar las inscripciones ficticias',error);demoLoadError=true;}
+ if(view==='registrations')render();
+}
 function ef(label,id,type='text',required=false){
 return '<div class="field"><label for="en-'+id+'">'+e(label)+(required?' *':'')+'</label><input id="en-'+id+'" name="'+id+'" type="'+type+'" '+(required?'required':'')+'></div>'}
 function es(label,id,values){
@@ -550,11 +612,15 @@ function catalogUsage(type,name){
  return count+' '+(type==='profesores'?'comisiones':'actividades');
 }
 function overviewView(){return listView()}
-function bind(){app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filterText=x.target.value;page=0;const pos=x.target.selectionStart;render();let n=document.getElementById('query');n.focus();n.setSelectionRange(pos,pos)});const searchEnroll=document.getElementById('en-search');if(searchEnroll)searchEnroll.addEventListener('input',ev=>{enrollSearch=ev.target.value;const at=ev.target.selectionStart;render();const next=document.getElementById('en-search');next?.focus();next?.setSelectionRange(at,at)});
+function bind(){app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let regSearch=document.getElementById('registrationSearch');
+if(regSearch)regSearch.addEventListener('input',event=>{registrationSearch=event.target.value;const pos=event.target.selectionStart;render();let next=document.getElementById('registrationSearch');next?.focus();next?.setSelectionRange(pos,pos)});
+for(const key of ['registrationActivity','registrationStatus']){const select=document.getElementById(key);if(select)select.addEventListener('change',()=>{if(key==='registrationActivity')registrationActivity=select.value;else registrationStatus=select.value;render()})}
+let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filterText=x.target.value;page=0;const pos=x.target.selectionStart;render();let n=document.getElementById('query');n.focus();n.setSelectionRange(pos,pos)});const searchEnroll=document.getElementById('en-search');if(searchEnroll)searchEnroll.addEventListener('input',ev=>{enrollSearch=ev.target.value;const at=ev.target.selectionStart;render();const next=document.getElementById('en-search');next?.focus();next?.setSelectionRange(at,at)});
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
 function action(type,id,index){if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
+if(type==='registration-detail'){registrationDetailsId=id;modalType='registration-detail';renderModal();return}
 if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='en-pick'){enrollActivity=id;enrollCommission='';render();return}
@@ -692,7 +758,13 @@ function readScheduleEditor(){
  return output;
 }
 
-function renderModal(){if(!modalType){modal.innerHTML='';return}let body='',title='',footer='',wide='';if(modalType==='delete'){let a=records[modalIndex];title='Eliminar actividad';body='<p>¿Querés eliminar <strong>'+e(a?.name)+'</strong> de esta copia de desarrollo? También se eliminarán sus comisiones.</p><p class="hint">Esta acción no modifica la agenda pública.</p>';footer=btn('Cancelar','close')+btn(ic('delete')+' Eliminar actividad','confirm-delete','danger')}if(modalType==='commission'){let c=modalIndex<0?{prof:'',cupos:20,schedule:[{days:'Lunes y Miércoles',start:'17:00',end:'18:00'}],sex:draft.sex,tipo:draft.tipo,intensidad:draft.intensidad}:draft.commissions[modalIndex];title=modalIndex<0?'Nueva comisión':'Editar comisión';wide='wide';body='<form id="commission-form"><div class="grid2">'+sel('Profesor/a *','prof',safeCatalogOption('profesores',c.prof),c.prof)+f('Cupo *','cupos',c.cupos,'number','min="0" required')+'</div><div class="schedule-editor"><div class="schedule-editor-intro"><div><h3>Días y horarios</h3><p class="hint">Seleccioná los días que comparten un horario. Para otros horarios, agregá un bloque nuevo.</p></div></div><div id="schedule-blocks">'+(c.schedule?.length?c.schedule:[{days:'',start:'',end:''}]).map((t,i)=>scheduleBlock(t,i+1)).join('')+'</div><button type="button" class="btn schedule-add" id="schedule-add">'+ic('add')+' Agregar otro horario</button></div><p class="hint">Cada comisión admite varios horarios. La modalidad, intensidad y público se configuran en la actividad.</p></form>';footer=btn('Cancelar','close')+btn(modalIndex<0?'Agregar comisión':'Guardar comisión','save-commission','primary')}if(modalType==='catalog'){
+function renderModal(){if(!modalType){modal.innerHTML='';return}let body='',title='',footer='',wide='';if(modalType==='registration-detail'){
+ const registration=demoRegistrations.find(r=>r.id===registrationDetailsId);
+ title='Ficha de inscripción · Ejemplo';wide='wide';
+ body=registration?registrationDetailView(registration):'<p>No se encontró la inscripción.</p>';
+ footer=btn('Cerrar','close');
+}
+if(modalType==='delete'){let a=records[modalIndex];title='Eliminar actividad';body='<p>¿Querés eliminar <strong>'+e(a?.name)+'</strong> de esta copia de desarrollo? También se eliminarán sus comisiones.</p><p class="hint">Esta acción no modifica la agenda pública.</p>';footer=btn('Cancelar','close')+btn(ic('delete')+' Eliminar actividad','confirm-delete','danger')}if(modalType==='commission'){let c=modalIndex<0?{prof:'',cupos:20,schedule:[{days:'Lunes y Miércoles',start:'17:00',end:'18:00'}],sex:draft.sex,tipo:draft.tipo,intensidad:draft.intensidad}:draft.commissions[modalIndex];title=modalIndex<0?'Nueva comisión':'Editar comisión';wide='wide';body='<form id="commission-form"><div class="grid2">'+sel('Profesor/a *','prof',safeCatalogOption('profesores',c.prof),c.prof)+f('Cupo *','cupos',c.cupos,'number','min="0" required')+'</div><div class="schedule-editor"><div class="schedule-editor-intro"><div><h3>Días y horarios</h3><p class="hint">Seleccioná los días que comparten un horario. Para otros horarios, agregá un bloque nuevo.</p></div></div><div id="schedule-blocks">'+(c.schedule?.length?c.schedule:[{days:'',start:'',end:''}]).map((t,i)=>scheduleBlock(t,i+1)).join('')+'</div><button type="button" class="btn schedule-add" id="schedule-add">'+ic('add')+' Agregar otro horario</button></div><p class="hint">Cada comisión admite varios horarios. La modalidad, intensidad y público se configuran en la actividad.</p></form>';footer=btn('Cancelar','close')+btn(modalIndex<0?'Agregar comisión':'Guardar comisión','save-commission','primary')}if(modalType==='catalog'){
  const def=CATALOG_DEFINITIONS[catalogTab],item=catalogEdit<0?{name:'',address:'',locality:''}:catalogs[catalogTab][catalogEdit];
  title=(catalogEdit<0?'Agregar ':'Editar ')+def.singular.toLowerCase();
  body='<form id="catalog-form">'+f('Nombre *','catalogName',item.name,'text','required maxlength="120"')+
@@ -812,4 +884,5 @@ document.addEventListener('change',event=>{
 });
 
 render();
+loadDemoRegistrations();
 </script></body></html>
