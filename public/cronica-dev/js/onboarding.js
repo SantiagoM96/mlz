@@ -87,6 +87,10 @@
   const target=qs(step.selector);
   if(!target)return;
   toggleCardOpen(target);
+  // Cada avance del recorrido dispara el pulso aunque la tarjeta ya esté
+  // expandida. No se fuerza un clic artificial sobre el acordeón abierto.
+  const accordion=target.closest('.modern-card');
+  if(!step.fullScreen&&accordion)window.CronicaPulseCard?.(accordion);
   layer.querySelector('#dsTourProgress').textContent=(index+1)+' de '+steps.length;
   layer.querySelector('#dsTourTitle').textContent=step.title;
   layer.querySelector('#dsTourDesc').textContent=step.description;
