@@ -179,8 +179,9 @@ function render(includeHover=true){
   // 1.05x del cuerpo arriba y .28x debajo de la línea base, más 10 px.
   const textRect={left:Math.max(0,left-26),top:Math.max(0,(baselines[0]??availableBottom)-size*1.05-10),
    right:Math.min(W,right+26),bottom:Math.min(H,(baselines.at(-1)??availableBottom)+size*.28+10)};
-  const logoRect={left:W-EDGE-LOGO_WIDTH-54,top:EDGE-54,
-   right:W-EDGE+54,bottom:EDGE+LOGO_HEIGHT+54};
+  const logoX=logoPosition==='left'?EDGE:W-EDGE-LOGO_WIDTH;
+  const logoRect={left:logoX-54,top:EDGE-54,
+   right:logoX+LOGO_WIDTH+54,bottom:EDGE+LOGO_HEIGHT+54};
   window.__editorialHotspotBounds={text:textRect,logo:logoRect};
 
   if(cover){
