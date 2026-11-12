@@ -844,3 +844,24 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  .header-inner:has(.editor-platform-switcher) .dashboard-back-link{flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;height:40px!important;padding:0!important;margin-left:auto!important;justify-content:center!important}
  .header-inner:has(.editor-platform-switcher) .dashboard-back-link .back-link-text{display:none!important}
 }
+
+/* Cambio 32 — misma respuesta táctil de sliders que Diario Show:
+   base oscura, hover gris, bolita blanca con halo al arrastrar el thumb.
+   El cambio es visual: no altera el valor ni el rango permitido. */
+.editor-panel .modern-size-field.is-thumb-hover input[type=range]::-webkit-slider-thumb,
+.editor-panel .modern-card .modern-body .is-thumb-hover #dots::-webkit-slider-thumb,
+.preview .modern-photo-zoom.is-thumb-hover input[type=range]::-webkit-slider-thumb,
+.editor-panel .modern-size-field.is-thumb-hover input[type=range]::-moz-range-thumb,
+.editor-panel .modern-card .modern-body .is-thumb-hover #dots::-moz-range-thumb,
+.preview .modern-photo-zoom.is-thumb-hover input[type=range]::-moz-range-thumb{
+ background:#9297a1!important;box-shadow:none!important;
+}
+.editor-panel .modern-size-field.is-thumb-engaged input[type=range]::-webkit-slider-thumb,
+.editor-panel .modern-card .modern-body .is-thumb-engaged #dots::-webkit-slider-thumb,
+.preview .modern-photo-zoom.is-thumb-engaged input[type=range]::-webkit-slider-thumb,
+.editor-panel .modern-size-field.is-thumb-engaged input[type=range]::-moz-range-thumb,
+.editor-panel .modern-card .modern-body .is-thumb-engaged #dots::-moz-range-thumb,
+.preview .modern-photo-zoom.is-thumb-engaged input[type=range]::-moz-range-thumb{
+ background:#fff!important;border-color:#fff!important;
+ box-shadow:0 0 0 3px rgba(255,255,255,.27),0 0 10px 3px rgba(255,255,255,.48)!important;
+}
