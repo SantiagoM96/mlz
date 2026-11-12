@@ -8,7 +8,7 @@
  const storageKey='bae-dev-tour-desktop-v1';
  const qs=s=>document.querySelector(s);
  const steps=[
-  {selector:"section.modern-design-group",title:"Elegí el diseño de tu placa",description:"Seleccioná el estilo de la placa y configurá su logo y firma inferior."},
+  {selector:"section.modern-design-group",title:"Elegí el diseño de tu placa",description:"Seleccioná el estilo visual que querés usar en esta placa."},
   {selector:"section.modern-photo-group",title:"Agregá una fotografía",description:"Cargá una imagen y ajustá su encuadre arrastrándola en la vista previa o utilizando el zoom."},
   {selector:"section.modern-import-group",title:"Importá una noticia",description:"Pegá el enlace de BAE Negocios para importar el titular y la fotografía de la noticia."},
   {selector:"section.modern-text-card",title:"Editá los textos",description:"Escribí el titular, aplicá formato, elegí la alineación y activá el textual cuando lo necesites."},
