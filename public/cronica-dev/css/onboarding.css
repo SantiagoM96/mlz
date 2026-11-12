@@ -198,27 +198,6 @@
 .ds-onboarding-layer .ds-tour-next:hover{filter:brightness(1.14)}
 
 
-/* El spotlight usa una sola máscara exterior recortada alrededor de un
-   rectángulo con radio 12 px; las cuatro zonas conservan su geometría y
-   absorben los clics fuera del hueco, pero ya no dibujan esquinas rectas. */
-@media(min-width:701px){
- .ds-onboarding-layer{overflow:hidden}
- .ds-onboarding-layer .ds-tour-shade{
-  background:transparent!important;
- }
- .ds-onboarding-layer .ds-tour-highlight{
-  box-sizing:border-box!important;
-  border:0!important;
-  border-radius:12px!important;
-  background:transparent!important;
-  box-shadow:0 0 0 200vmax rgba(9,10,14,.77)!important;
-  pointer-events:none;
- }
- .ds-onboarding-layer.is-whole-screen .ds-tour-highlight{
-  display:none!important;
- }
-}
-
 /* Shift + clic — ilustración animada debajo de la explicación. */
 .ds-onboarding-layer .ds-tour-shift-demo{
  width:100%;margin:0 0 16px;overflow:hidden;
@@ -227,4 +206,23 @@
 .ds-onboarding-layer .ds-tour-shift-demo[hidden]{display:none!important}
 .ds-onboarding-layer .ds-tour-shift-demo img{
  display:block;width:100%;height:auto;max-height:170px;object-fit:contain;
+}
+
+/* Cambio 35 — mismo salto instantáneo de máscara que Diario Show.
+   Cuatro paneles de oscurecimiento independientes sin desplazamiento
+   entre pasos; la tarjeta también aparece en su nueva posición sin volar. */
+@media(min-width:701px){
+ .ds-onboarding-layer .ds-tour-shade{
+  background:rgba(9,10,14,.77)!important;
+  transition:none!important;animation:none!important;
+ }
+ .ds-onboarding-layer .ds-tour-highlight{
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  background:transparent!important;
+  transition:none!important;animation:none!important;
+ }
+ .ds-onboarding-layer .ds-tour-card{
+  transition:none!important;
+ }
+ .ds-onboarding-layer.is-whole-screen .ds-tour-shade{display:none!important}
 }
