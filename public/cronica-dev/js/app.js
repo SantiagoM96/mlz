@@ -242,6 +242,18 @@ function renderCarouselNavigation(){
   button.append(composition,number);
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
+ // Una miniatura punteada al final permite añadir una diapositiva sin
+ // abandonar la navegación. Usa exactamente el mismo controlador existente.
+ const addTile=document.createElement('button');
+ addTile.type='button';addTile.className='carousel-add-placeholder';
+ addTile.setAttribute('aria-label','Agregar nueva diapositiva');
+ addTile.setAttribute('title','Agregar nueva diapositiva');
+ const addIcon=document.createElement('span');
+ addIcon.className='material-icons';addIcon.setAttribute('aria-hidden','true');
+ addIcon.textContent='add';
+ addTile.append(addIcon);
+ addTile.addEventListener('click',()=>el('addPage').click());
+ list.appendChild(addTile);
  const indicator=el('pageIndicator');
  const count=document.createElement('span');
  count.className='carousel-indicator-count';
@@ -251,6 +263,19 @@ function renderCarouselNavigation(){
  type.textContent=pageVariant==='cover'?'Portada':'Interior';
  indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
+ // Con espacio libre, la miniatura punteada es el botón de agregar.
+ // Cuando desborda, el botón fijo se incorpora junto al de eliminar;
+ // la fila sigue desplazándose horizontalmente por debajo de las acciones.
+ const recalc=()=>{
+  const host=list.closest('.cronica-preview-pages');
+  if(!host)return;
+  host.classList.toggle('carousel-is-overflowing',list.scrollWidth>list.clientWidth+2);
+ };
+ requestAnimationFrame(recalc);
+ if(!list.dataset.resizeObserved&&typeof ResizeObserver!=='undefined'){
+  list.dataset.resizeObserved='true';
+  new ResizeObserver(recalc).observe(list);
+ }
  // En la barra horizontal de la preview, mantener siempre a la vista
  // la página seleccionada sin desplazar verticalmente todo el documento.
  requestAnimationFrame(()=>{
