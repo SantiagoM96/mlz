@@ -26,6 +26,24 @@ for(const data of cases){
    assert((await page.locator('#quoteAuthor').inputValue())==='Una artista invitada',data.slug+': autor inicial no actualizado');
   }
   console.log('PASS',data.slug,'primera diapositiva con contenido de ejemplo');
+  // El punteado de foto utiliza el mismo border CSS que texto/logo,
+  // manteniendo el gris editorial y sin superponer el SVG anterior.
+  const dash=await page.evaluate(()=>{
+   const b=document.querySelector('.preview .photo-hover-border');
+   const cs=getComputedStyle(b);
+   const svg=getComputedStyle(b.querySelector('.photo-hover-outline'));
+   const split=document.querySelector('.preview .split-photo-zone');
+   const half=split?getComputedStyle(split,'::before'):null;
+   return {width:cs.borderTopWidth,style:cs.borderTopStyle,color:cs.borderTopColor,
+    svg:svg.display,split:half?{width:half.borderTopWidth,style:half.borderTopStyle,color:half.borderTopColor}:null};
+  });
+  assert(dash.width==='2px'&&dash.style==='dashed'&&dash.color==='rgb(65, 70, 78)'&&dash.svg==='none',
+   data.slug+': trazo fotográfico distinto al de texto/logo '+JSON.stringify(dash));
+  if(data.slug==='diarioshow-dev'){
+   assert(dash.split?.width==='2px'&&dash.split?.style==='dashed'&&dash.split?.color==='rgb(65, 70, 78)',
+    data.slug+': trazo fotográfico compartido incorrecto '+JSON.stringify(dash));
+  }
+  console.log('PASS',data.slug,'punteado fotográfico de 2px y gris conservado');
   for(const variant of data.variants){
    let control=page.locator(data.choose(variant)).first();
    await control.click();
