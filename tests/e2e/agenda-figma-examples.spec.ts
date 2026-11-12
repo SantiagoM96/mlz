@@ -417,7 +417,7 @@ test('Agenda V2: mismo bloque con calendario, recurrencia bold, período regular
   await page.goto(list);
   const search = page.getByRole('textbox', { name: 'Buscar actividades' });
   await search.fill('Yoga en Comunidad');
-  await verify(page.getByTestId('agenda-card').first(), 'Todos los martes',
+  await verify(page.getByTestId('agenda-card').filter({ hasText: 'Plaza Grigera' }).first(), 'Todos los martes',
     'Del 10 de noviembre al 15 de diciembre', '09:00 a 10:00 h');
 
   await page.goto(list + '/preview-v2-yoga-dos-sedes--sede-plaza-grigera');
