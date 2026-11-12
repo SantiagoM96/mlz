@@ -206,3 +206,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Estas pruebas pendientes impiden afirmar paridad funcional completa con Crónica y publicación visual verificada, aunque los cambios de código están guardados.
 
 **Registro:** 13 cambios fuente de Crónica; lote de replicación a dos productos DEV iniciado y aplicado en código. En BAE y Diario Show quedan pendientes las verificaciones funcionales indicadas, no permisos ni instrucciones del usuario.
+
+
+## Cambio 14 — Miniaturas fieles a Diseño de placas en los tres editores DEV (2026-11-12)
+**Estado:** implementado en código; pendiente de validación visual.
+- Crónica DEV: cada diapositiva reutiliza un clon visual de `.cronica-variant-thumbnail` según `blank`, `cover` o `internal`, manteniendo el arte exacto del selector.
+- BAE DEV: cada diapositiva reutiliza un clon de `.theme-swatch-thumb` de Negro, Blanco, Rojo o Sin diseño; se conserva la clase de color correspondiente en el wrapper.
+- Diario Show DEV: cada diapositiva reutiliza un clon de `.ds-variant-preview` de su variante 1–4 o Sin diseño.
+- La selección solo añade el aro externo; no recolorea ni reemplaza el arte de las miniaturas.
+- Sin diseño en BAE: gris liso `#aeb4bc`, borde `#565a63`; se desactiva el trazo generado por `::before`, sin textos ni líneas. Se aplica también al clon del paginador.
+- Se mantiene la lógica independiente de variantes por página, de modo que cambiar de diseño actualiza la miniatura correspondiente.
+- Ámbito: exclusivamente `cronica-dev`, `bae-dev`, `diarioshow-dev`; no modifica producción.
