@@ -352,3 +352,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - No se alteran la animación, el color original del logo activo, la escala de grises de inactivos ni las rutas de navegación.
 - BAE DEV y Diario Show DEV todavía conservan sus headers propios, a la espera de aprobación del piloto.
 **Registro acumulativo: 29 cambios.**
+
+## Cambio 30 — Reducir Diario Show y BAE un 10 % (2026-11-12)
+- Piloto exclusivo en Crónica DEV. Diario Show reduce su altura de **28,8 a 25,92 px**, BAE Negocios de **21,6 a 19,44 px**. Crónica permanece en **40 px**.
+- Se aplica el mismo factor de reducción del 10 % a las reglas responsive de ambas marcas, preservando proporciones SVG y colores originales.
+- El resto del selector, navegación y animaciones permanece sin cambios. Pendiente de aprobación para replicación.
+**Registro acumulativo: 30 cambios.**
