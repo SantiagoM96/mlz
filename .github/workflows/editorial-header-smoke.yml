@@ -1,0 +1,35 @@
+name: Header de plataformas DEV
+on:
+  push:
+    paths:
+      - 'public/cronica-dev/index.html'
+      - 'public/cronica-dev/css/modern-editor.css'
+      - 'public/bae-dev/index.html'
+      - 'public/bae-dev/css/modern-editor.css'
+      - 'public/diarioshow-dev/index.html'
+      - 'public/diarioshow-dev/css/editor.css'
+      - 'scripts/editorial-platform-header-smoke.mjs'
+      - '.github/workflows/editorial-header-smoke.yml'
+  workflow_dispatch:
+jobs:
+  header:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Levantar editores DEV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public >/tmp/editorial-header.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Comparar las tres marcas desktop y mobile
+        run: node scripts/editorial-platform-header-smoke.mjs
