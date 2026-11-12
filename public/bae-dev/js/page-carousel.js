@@ -7,6 +7,17 @@ const editor=isDS?window.DiarioShowEditor:window.BAEEditor;
 const main=document.querySelector('main'),preview=main?.querySelector('.preview');
 if(!editor||!preview)return;
 const brand=isDS?'Diario-Show':'BAE';
+// El click de mouse no debe generar un segundo contorno de foco al usar Shift.
+// La navegación por teclado mantiene su foco accesible.
+const headingSelector=isDS?'.ds-control-card-toggle':'.modern-toggle';
+document.addEventListener('pointerdown',event=>{
+ const button=event.target.closest?.(headingSelector);
+ if(button)button.setAttribute('data-pointer-origin','');
+},true);
+document.addEventListener('keydown',event=>{
+ if(['Tab','Enter',' ','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key))
+  document.querySelectorAll(headingSelector+'[data-pointer-origin]').forEach(b=>b.removeAttribute('data-pointer-origin'));
+},true);
 const canvas=document.getElementById('art');
 const originalDownload=document.getElementById('download');
 const variantSelector=isDS?'.ds-variant-option[data-variant]':'.theme-swatch[data-theme]';
