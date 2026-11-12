@@ -407,3 +407,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Diario Show: se elimina el paso de fotografía duplicado entre «Distribución fotográfica» e «Importar noticias» para respetar la secuencia solicitada: Diseño de placas → Distribución fotográfica → Importar noticias → Textos → Shift + clic sobre la cabecera de Diseño.
 - Se mantiene sin cambios la lógica real de Shift + clic de cada editor y el resaltado de cabecera definido en Cambio 36.
 **Registro acumulativo: 37 cambios.**
+
+## Cambio 38 — Onboarding contextual del logo sobre la vista previa (2026-11-12)
+- En Crónica, BAE y Diario Show DEV se incorpora después del paso Shift una explicación «Configurá el logo y la firma» cuyo objetivo es **la zona real clickeable del logo en la vista previa** (`.modern-logo-hit` o `#dsLogoHitButton`), no Diseño de placas.
+- Se destaca solo esa zona en la máscara y la tarjeta queda posicionada junto al logo; el texto explica que hacer clic en el logo abre el módulo con sus controles.
+- Se separa la explicación de edición de titular: el paso siguiente resalta exclusivamente la zona clickeable del texto en la preview. Se preservan los pasos de módulos, el orden y la máscara sin transición.
+- Los triggers del editor son los existentes; se cambia únicamente el onboarding y sus textos. Se renueva la versión del script para evitar caché anterior.
+**Registro acumulado: 38 cambios.**
