@@ -99,7 +99,7 @@ if(isCronica){
  const content=sections.find(s=>s.querySelector('#headline'));
  textPanel=document.createElement('section');textPanel.className='panel-group';
  textPanel.setAttribute('aria-label','Textos');
- for(const sel of ['#headline','#size','.typography-row']){
+ for(const sel of ['.typography-row','#headline','#size']){
   const node=content.querySelector(sel);
   const field=sel==='.typography-row'?node:node?.closest('.control-field');
   if(field)textPanel.appendChild(field);
