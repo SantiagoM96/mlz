@@ -295,8 +295,13 @@ function renderCarouselNavigation(){
  const recalc=()=>{
   const host=list.closest('.cronica-preview-pages');
   if(!host)return;
-  host.classList.toggle('carousel-is-overflowing',list.scrollWidth>list.clientWidth+2);
+  // La acción fija no debe depender de scrollLeft ni de la posición de la
+  // miniatura +: aparece en cuanto el contenido excede el ancho disponible.
+  const overflowing=list.scrollWidth>list.clientWidth+2;
+  host.classList.toggle('carousel-is-overflowing',overflowing);
+  el('addPage').disabled=false;
  };
+ recalc();
  requestAnimationFrame(recalc);
  if(!list.dataset.resizeObserved&&typeof ResizeObserver!=='undefined'){
   list.dataset.resizeObserved='true';
