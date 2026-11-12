@@ -414,3 +414,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Se separa la explicación de edición de titular: el paso siguiente resalta exclusivamente la zona clickeable del texto en la preview. Se preservan los pasos de módulos, el orden y la máscara sin transición.
 - Los triggers del editor son los existentes; se cambia únicamente el onboarding y sus textos. Se renueva la versión del script para evitar caché anterior.
 **Registro acumulado: 38 cambios.**
+
+## Cambio 39 — Onboarding por bloques y foco doble de logo (2026-11-12)
+- Se formalizan bloques semánticos en las tres marcas: `slides` (introducción a diapositivas) → `panel` (repaso estricto por los acordeones de izquierda) → `shortcuts` (Shift + clic en la cabecera Diseño de placas) → `preview` (logo y titular sobre la placa) → `help` (zoom). El progreso continúa mostrando cada paso individual.
+- La explicación de logo no apunta al acordeón entero: se añade una **máscara SVG con tres ventanas independientes** que deja visibles la zona clickeable del logo de preview, el grupo de selector de logo/ubicación y el campo de firma inferior, oscureciendo el resto de Diseño de placas. La tarjeta se posiciona junto al logo de la preview. El spotlight convencional se restaura automáticamente en los demás pasos.
+- Se reutilizan los controles existentes sin duplicarlos ni cambiar sus acciones; se respeta el modo sin transiciones y se habilitan los grupos aplicables al mostrar el paso.
+- Exclusivo a los tres DEV; sin modificaciones en producción.
+**Registro acumulado: 39 cambios.**
