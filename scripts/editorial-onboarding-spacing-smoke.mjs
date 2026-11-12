@@ -89,6 +89,27 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
   await page.locator('.ds-tour-next').click();
  }
  if(!found)throw Error(slug+': no aparece paso Shift en el onboarding');
+ await page.locator('.ds-tour-next').click();
+ const logoTitle=await page.locator('#dsTourTitle').textContent();
+ if(logoTitle!=='Configurá el logo y la firma')
+  throw Error(slug+': no sigue el paso del logo de la preview: '+logoTitle);
+ const logo=await page.evaluate(slug=>{
+  const selector=slug==='diarioshow-dev'?'#dsLogoHitButton':'.modern-logo-hit';
+  const target=document.querySelector(selector),mask=document.querySelector('.ds-tour-highlight');
+  const t=target?.getBoundingClientRect(),m=mask?.getBoundingClientRect();
+  return {target:t?{x:t.x,y:t.y,width:t.width,height:t.height}:null,
+   mask:m?{x:m.x,y:m.y,width:m.width,height:m.height}:null};
+ },slug);
+ if(!logo.target||!logo.mask||logo.target.width<5||logo.target.height<5||
+  Math.abs(logo.mask.x-logo.target.x)>10||Math.abs(logo.mask.y-logo.target.y)>10||
+  Math.abs(logo.mask.width-logo.target.width)>20||Math.abs(logo.mask.height-logo.target.height)>20)
+  throw Error(slug+': spotlight no está en logo de preview '+JSON.stringify(logo));
+ console.log('PASS spotlight del logo en preview',slug,JSON.stringify(logo));
+ await page.locator('.ds-tour-next').click();
+ const textTitle=await page.locator('#dsTourTitle').textContent();
+ if(textTitle!=='Editá el texto desde la vista previa')
+  throw Error(slug+': no sigue el paso de titular '+textTitle);
+
  if(errors.length)throw Error(slug+': errores JS '+errors.join(' | '));
  await page.locator('.ds-tour-close').click();
  if(slug!=='diarioshow-dev'){
