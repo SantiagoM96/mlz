@@ -33,7 +33,8 @@ test('tarjetas de Agenda respetan tamaños principales de Figma', async ({ page 
   await expect(card.getByRole('heading', { level: 2 })).toHaveCSS('font-size', '22px');
   await expect(card.locator('[data-material-symbol="event_available"]').first()).toHaveCSS('font-size', '20px');
   await expect(card.locator('[data-material-symbol="schedule"]').first()).toHaveCSS('font-size', '20px');
-  await expect(card.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
+  const cardWithBadge = page.getByTestId('agenda-card').filter({ has: page.locator('[data-agenda-chip="activity"]') }).first();
+  await expect(cardWithBadge.locator('[data-agenda-chip="activity"]').first()).toHaveCSS('min-height', '24px');
   await expect(card.getByText('Actividad pasada')).toHaveCount(0);
 });
 
@@ -208,6 +209,8 @@ test('Más filtros: opciones táctiles separadas sin seleccionar la opción veci
 });
 
 test('portada propia de la Agenda y Home municipal separada', async ({ page }, info) => {
+  // El catálogo es ilustrativo y tiene vigencia acotada: no congelar la prueba en la fecha real de CI.
+  await page.clock.install({ time: new Date('2026-11-12T17:30:00.000Z') });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Municipio de Lomas de Zamora' })).toBeVisible();
   await page.goto(agenda);
@@ -610,14 +613,15 @@ test('mobile: filtros y ordenar usan bottom sheet animado del prototipo Deportes
   await expect(more).toHaveCount(0);
 });
 
-test('el estado sin resultados reproduce la ilustración de Figma', async ({ page }) => {
+test('el estado sin resultados muestra la ilustración 3D nueva', async ({ page }) => {
   await page.goto(activities);
   await page.getByRole('textbox', { name: 'Buscar actividades' }).fill('zzzzz-sin-coincidencias');
   const empty = page.getByTestId('agenda-empty-state');
   const image = empty.locator('img');
   await expect(image).toBeVisible();
-  await expect(image).toHaveJSProperty('naturalWidth', 194);
-  await expect(image).toHaveJSProperty('naturalHeight', 207);
+  await expect(image).toHaveAttribute('src', /\/assets\/agenda\/no-results-mascot\.png$/);
+  await expect(image).toHaveJSProperty('naturalWidth', 388);
+  await expect(image).toHaveJSProperty('naturalHeight', 403);
   await expect(empty.getByRole('heading', { name: 'No encontramos actividades' })).toBeVisible();
   await expect(empty.getByRole('button', { name: 'Limpiar filtros' })).toHaveCSS('height', '48px');
   await empty.getByRole('button', { name: 'Limpiar filtros' }).click();

@@ -1,9 +1,18 @@
 import { Link } from 'react-router-dom';
 import type { AgendaActivity } from '../../data/agenda';
 import { ActivityBadges } from './ActivityBadges';
+import { ActivityScheduleDateTime } from './ActivityScheduleDateTime';
+import { ActivityCharacteristic } from './ActivityCharacteristic';
+import { formatActivityCardAddress } from '../../features/agenda/utils/formatActivityAddress';
+import { getActivitySchedulePresentations } from '../../features/agenda/utils/activitySchedules';
 import { MaterialIcon } from '../ui/MaterialIcon';
 
 export function FeaturedActivityCard({ activity }: { activity: AgendaActivity }) {
+  const firstSchedule = getActivitySchedulePresentations(activity)[0];
+  const venue = firstSchedule?.venue?.trim() || activity.venue?.trim() || 'Lugar a confirmar';
+  const address = firstSchedule?.address || activity.address;
+  const locality = firstSchedule?.locality || activity.locality;
+
   return (
     <article data-testid="agenda-featured" className="grid overflow-hidden rounded-lg border border-[#e7e7e7] bg-white md:grid-cols-2">
       <img src={activity.image} alt="Representación teatral en el escenario" width="924" height="543"
@@ -12,15 +21,26 @@ export function FeaturedActivityCard({ activity }: { activity: AgendaActivity })
         <p className="text-[16px] font-medium uppercase leading-6 text-[#888]">{activity.type}</p>
         <h2 className="text-[30px] leading-9 font-bold text-primary-600">{activity.title}</h2>
         <ActivityBadges badges={activity.badges} />
-        <div className="space-y-3 text-[18px] leading-6 text-grey-900">
-          <p className="flex items-center gap-2 font-bold"><MaterialIcon name="calendar_month" size={20} />{activity.dayLabel}</p>
-          <p className="flex items-center gap-2 font-bold"><MaterialIcon name="schedule" size={20} />{activity.timeLabel}</p>
-          <div className="flex items-start gap-2">
-            <MaterialIcon name="location_on" size={20} className="mt-0.5 shrink-0" />
-            <div><p className="font-bold">{activity.venue}</p><p>{activity.address}</p></div>
-          </div>
+        <div className="flex min-w-0 flex-col gap-4">
+          <ActivityScheduleDateTime schedule={{
+            dateLabel: firstSchedule?.dateLabel ?? activity.dayLabel,
+            periodLabel: firstSchedule?.periodLabel,
+            timeLabel: firstSchedule?.timeLabel ?? activity.timeLabel,
+          }} />
+          <ActivityCharacteristic
+            variant="con-label"
+            icon="location_on"
+            field="place"
+            label={venue}
+            value={formatActivityCardAddress(address, locality)}
+          />
         </div>
-        <Link className="mt-auto inline-flex self-start rounded-sm pt-2 text-[18px] font-medium text-primary-600 hover:underline focus-visible:outline-2" to={`/agenda-de-la-comunidad/actividades/${activity.id}`}>Ver más</Link>
+        <Link
+          className="mt-auto inline-flex min-h-9 items-center gap-2 self-start rounded-sm pt-2 text-[18px] font-medium text-primary-600 no-underline hover:no-underline focus-visible:outline-2 focus-visible:outline-primary-600"
+          to={`/agenda-de-la-comunidad/actividades/${activity.id}`}
+        >
+          Ver más <MaterialIcon name="chevron_right" size={24} />
+        </Link>
       </div>
     </article>
   );

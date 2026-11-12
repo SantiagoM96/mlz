@@ -6,7 +6,8 @@ import { FeaturedActivityCard } from '../../components/agenda/FeaturedActivityCa
 import { AgendaIntro } from '../../features/agenda/components/shared/AgendaIntro';
 import { ActivityCard } from '../../components/agenda/ActivityCard';
 import { AgendaCircuitCard, type AgendaCircuit } from '../../components/agenda/AgendaCircuitCard';
-import { agendaActivities } from '../../data/agenda';
+import { publicAgendaShowcase } from '../../features/agenda/utils/publicAgendaShowcase';
+import { getUpcomingHomeActivities } from '../../features/agenda/utils/homeUpcomingActivities';
 import { featuredActivity } from '../../data/agenda-featured';
 
 const circuits: AgendaCircuit[] = [
@@ -15,6 +16,8 @@ const circuits: AgendaCircuit[] = [
 ];
 
 export function AgendaHomePage() {
+  const upcomingActivities = getUpcomingHomeActivities(publicAgendaShowcase);
+
   useEffect(() => {
     document.title = 'Agenda de la Comunidad | Municipio de Lomas de Zamora';
   }, []);
@@ -35,13 +38,16 @@ export function AgendaHomePage() {
       <section aria-labelledby="proximos-eventos" className="mt-10">
         <div className="mb-10 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
           <h2 id="proximos-eventos" className="text-[32px] leading-10 font-bold text-primary-600">Próximos eventos</h2>
-          <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 hover:underline" to="/agenda-de-la-comunidad/actividades">
-            Ver todas las actividades <MaterialIcon name="chevron_right" size={20} />
+          <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 no-underline hover:no-underline" to="/agenda-de-la-comunidad/actividades">
+            Ver todas las actividades <MaterialIcon name="chevron_right" size={24} />
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3" data-testid="agenda-upcoming">
-          {agendaActivities.slice(0, 3).map(activity => <ActivityCard key={activity.id} activity={activity} />)}
+          {upcomingActivities.map(activity => <ActivityCard key={activity.id} activity={activity} />)}
         </div>
+        {upcomingActivities.length === 0 && (
+          <p className="text-[18px] text-grey-900">Próximamente sumaremos nuevas actividades.</p>
+        )}
       </section>
       <section aria-label="Circuitos de la Comunidad" className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
         {circuits.map(circuit => <AgendaCircuitCard key={circuit.title} circuit={circuit} />)}

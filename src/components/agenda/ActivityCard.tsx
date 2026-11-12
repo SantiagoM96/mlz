@@ -109,7 +109,7 @@ export function ActivityCard({
             {...props}
             action={(
               <button type="button" onClick={onViewDetail}
-                className="inline-flex min-h-9 items-center gap-2 text-[16px] font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600">
+                className="inline-flex min-h-9 items-center gap-2 text-[16px] font-medium text-primary-600 no-underline hover:no-underline focus-visible:outline-2 focus-visible:outline-primary-600">
                 <span>Ver más</span> <MaterialIcon name="chevron_right" size={24} />
               </button>
             )}
