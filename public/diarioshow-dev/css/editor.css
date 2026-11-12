@@ -2603,3 +2603,46 @@ main:has(#dsMobileViewport){overflow-anchor:none}
 /* Misma separación también en la copia contextual bajo la preview mobile. */
 .preview .ds-plate-design-group .ds-logo-layout-row{margin-top:16px!important}
 .preview .ds-plate-design-group .ds-footer-style-field{margin-top:16px!important}
+
+
+/* Tarjetas contextuales mobile: 4 px interiores de seguridad preservan
+   el halo exterior en los cuatro lados sin agrandar el carrusel. */
+@media(max-width:700px){
+ .ds-mobile-track>.preview>.ds-mobile-text-editor,
+ .ds-mobile-track>.preview>.ds-mobile-content-editor{
+  box-sizing:border-box!important;
+  width:100%!important;max-width:540px!important;
+  padding:4px!important;margin:0!important;
+  background:transparent!important;border:0!important;
+  box-shadow:none!important;overflow:visible!important;
+ }
+ .ds-mobile-track>.preview>.ds-mobile-text-editor>.ds-control-card,
+ .ds-mobile-track>.preview>.ds-mobile-content-editor>.ds-control-card{
+  box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+  margin:0!important;border:1px solid #383d46!important;
+  border-radius:10px!important;overflow:visible!important;
+  background:#24262c!important;
+ }
+ .ds-mobile-track>.preview>.ds-mobile-text-editor>.ds-control-card>.ds-control-card-toggle,
+ .ds-mobile-track>.preview>.ds-mobile-content-editor>.ds-control-card>.ds-control-card-toggle{
+  border-radius:9px 9px 0 0!important;
+ }
+ .ds-mobile-track>.preview>.ds-mobile-text-editor>.ds-control-card>.ds-control-card-body,
+ .ds-mobile-track>.preview>.ds-mobile-content-editor>.ds-control-card>.ds-control-card-body{
+  border-radius:0 0 9px 9px!important;background:#202228!important;
+ }
+}
+/* El contorno se dibuja con un solo halo curvo de 2 px.
+   Mantener el borde gris fijo evita el doble trazo y las esquinas torcidas. */
+@keyframes ds-context-card-flash{
+ 0%,85%{border-color:#383d46;box-shadow:0 0 0 2px #e6008d}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
+}
+.editor-panel .ds-control-card.is-preview-context-target{
+ box-sizing:border-box!important;border:1px solid #383d46!important;
+ border-radius:10px!important;
+ animation:ds-context-card-flash 1.05s linear both!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .ds-control-card.is-preview-context-target{animation-duration:.01ms!important}
+}
