@@ -218,13 +218,39 @@ for(const [brand,config] of Object.entries(tests)){
    if(mobile){
     assert(await page.locator('.modern-preview-identity-editor').isVisible()&&await page.locator('.modern-preview-identity-editor .theme-swatches,.modern-preview-identity-editor .cronica-variant-options').count()>0,brand+': no se abre Diseño de placas en mobile');
     assert(await page.locator('.modern-preview-text-editor').isHidden(),brand+': Textos no se oculta');
-   }else assert(await identity.evaluate(el=>el.classList.contains('modern-context-target')),brand+': identidad no se resalta en desktop');
+   }else{
+    assert(await identity.evaluate(el=>el.classList.contains('modern-context-target')),
+     brand+': identidad no se resalta en desktop');
+    if(brand==='cronica'){
+     const sourcePulse=await identity.evaluate(node=>({
+      animation:getComputedStyle(node).animationName,
+      duration:getComputedStyle(node).animationDuration,
+      shadow:getComputedStyle(node).boxShadow,
+      expanded:node.querySelector('.modern-toggle')?.getAttribute('aria-expanded')
+     }));
+     assert(sourcePulse.animation==='editorial-card-pulse'&&sourcePulse.duration==='1.05s'&&
+      sourcePulse.shadow.includes('0px 0px 0px 2px')&&sourcePulse.expanded==='true',
+      'Crónica: clic logo sin pulso rojo '+JSON.stringify(sourcePulse));
+    }
+   }
    await page.locator('.modern-text-hit').click();
    assert(await page.locator('.modern-text-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': titular sin selección');
    if(mobile){
     assert(await page.locator('.modern-preview-text-editor').isVisible(),brand+': no se abre Textos en mobile');
     assert(await page.locator('.modern-preview-identity-editor').isHidden(),brand+': Identidad no se oculta');
-   }else assert(await page.locator('.modern-text-card').first().evaluate(el=>el.classList.contains('modern-context-target')),brand+': Textos no se resalta');
+   }else{
+    assert(await page.locator('.modern-text-card').first().evaluate(el=>el.classList.contains('modern-context-target')),
+     brand+': Textos no se resalta');
+    if(brand==='cronica'){
+     const cardStyle=await page.locator('aside.editor-panel .modern-text-card').first().evaluate(node=>({
+      animation:getComputedStyle(node).animationName,duration:getComputedStyle(node).animationDuration,
+      shadow:getComputedStyle(node).boxShadow,expanded:node.querySelector('.modern-toggle')?.getAttribute('aria-expanded')
+     }));
+     assert(cardStyle.animation==='editorial-card-pulse'&&cardStyle.duration==='1.05s'&&
+      cardStyle.shadow.includes('0px 0px 0px 2px')&&cardStyle.expanded==='true',
+      'Crónica: clic titular sin pulso rojo '+JSON.stringify(cardStyle));
+    }
+   }
    if(mobile){
     // La tarjeta reflejada debe contener TODO el halo, con margen por ambos
     // lados, misma cabecera y cuerpo que el módulo original de Formato.
@@ -284,6 +310,26 @@ for(const [brand,config] of Object.entries(tests)){
   assert(first===config.first,brand+': primer paso incorrecto: '+first);
   for(let n=1;n<=config.steps;n++){
    assert((await tour.locator('#dsTourProgress').textContent())===n+' de '+config.steps,brand+': contador '+n);
+   if(brand==='cronica'&&n<=5){
+    const targetSelectors=['section.carousel-panel','section.cronica-variant-panel',
+     'section.modern-photo-group','section.modern-design-group','section.modern-text-card'];
+    const visual=await tour.evaluate(selector=>{
+     const node=document.querySelector(selector),card=node?.closest('.modern-card');
+     const pulse=card&&getComputedStyle(card);
+     const spotlight=getComputedStyle(document.querySelector('.ds-tour-highlight'));
+     const shade=getComputedStyle(document.querySelector('.ds-tour-shade'));
+     return {expanded:card?.querySelector(':scope > .modern-toggle')?.getAttribute('aria-expanded'),
+      pulseName:pulse?.animationName,pulseDuration:pulse?.animationDuration,
+      shadow:pulse?.boxShadow,rounding:spotlight.borderRadius,mask:spotlight.boxShadow,
+      shadeBg:shade.backgroundColor};
+    },targetSelectors[n-1]);
+    assert(visual.expanded==='true'&&visual.pulseName==='editorial-card-pulse'&&
+     visual.pulseDuration==='1.05s'&&visual.shadow.includes('0px 0px 0px 2px'),
+     'Crónica: el paso '+n+' no pulsa tarjeta ya abierta '+JSON.stringify(visual));
+    assert(visual.rounding==='12px'&&visual.mask.includes('rgba(9, 10, 14, 0.77)')&&
+     visual.shadeBg==='rgba(0, 0, 0, 0)',
+     'Crónica: hueco de onboarding no redondeado '+JSON.stringify(visual));
+   }
    if(n<config.steps)await tour.locator('.ds-tour-next').click();
   }
   assert((await tour.locator('#dsTourTitle').textContent())==='¿Poco espacio?',brand+': modal final incorrecto');
