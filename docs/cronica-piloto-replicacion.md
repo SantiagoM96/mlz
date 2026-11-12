@@ -392,3 +392,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - **Crónica y BAE DEV:** se anulan las transiciones de `left`, `top`, `width` y `height` del resaltado y se desactiva cualquier transición de la tarjeta del onboarding. La máscara se actualiza instantáneamente al cambiar de paso, sin volar por el viewport.
 - La tarjeta glassmorphism, el texto, los pasos y las ilustraciones se conservan; Diario Show DEV no se modifica.
 **Registro acumulativo: 35 cambios.**
+
+## Cambio 36 — Recorrido de módulos y tutorial Shift centrado en la cabecera (2026-11-12)
+- Los pasos de módulos siguen la secuencia física de cada editor: **Crónica** Diseño de placas → Fotografía → Textos; **BAE** Diseño de placas → Fotografía → Importar noticia → Textos → Diseño; **Diario Show** Diseño de placas → Distribución fotográfica → Carga de fotografía → Importar noticias → Textos. Se conserva el paso inicial del carrusel y los pasos posteriores de edición contextual y zoom.
+- Se elimina la duplicación del paso de logo/firma independiente en Crónica y BAE, integrándolo dentro de Diseño de placas.
+- La placa animada **Shift + clic** se ubica inmediatamente después del último módulo de configuración en cada editor y toma como objetivo exclusivamente el botón de cabecera de **Diseño de placas**, no el cuerpo completo. La máscara oscurece el contenido del acordeón y resalta solamente donde se pulsa el encabezado y el chevrón.
+- Se preservan la misma máscara instantánea, los botones del recorrido, su copia y el estado real de cada acordeón; se renueva la versión del onboarding en los tres DEV.
+**Registro acumulativo: 36 cambios.**
