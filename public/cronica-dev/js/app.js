@@ -251,6 +251,17 @@ function renderCarouselNavigation(){
  type.textContent=pageVariant==='cover'?'Portada':'Interior';
  indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
+ // En la barra horizontal de la preview, mantener siempre a la vista
+ // la página seleccionada sin desplazar verticalmente todo el documento.
+ requestAnimationFrame(()=>{
+  const active=list.querySelector('[aria-current="page"]');
+  if(!active||!list.clientWidth)return;
+  const left=active.offsetLeft-list.offsetLeft;
+  const right=left+active.offsetWidth;
+  if(left<list.scrollLeft)list.scrollLeft=Math.max(0,left-4);
+  else if(right>list.scrollLeft+list.clientWidth)
+   list.scrollLeft=right-list.clientWidth+4;
+ });
 }
 function selectPage(index){
  if(index===activePage||index<0||index>=carouselPages.length)return;
