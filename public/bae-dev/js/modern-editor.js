@@ -134,6 +134,13 @@ if(originalContent){
   designSection.classList.add('modern-design-group');
   const fields=[...originalContent.querySelectorAll(':scope > .control-field')];
   for(const field of fields)designSection.append(field);
+  // Mismo layout que Diario Show: logo y posición lado a lado.
+  const logoField=designSection.querySelector('.logo-control-field');
+  const positionField=designSection.querySelector('.editor-logo-position-field');
+  if(logoField&&positionField){
+   const layout=document.createElement('div');layout.className='editor-logo-layout-row';
+   logoField.before(layout);layout.append(logoField,positionField);
+  }
   originalContent.remove();
  }
 }
@@ -383,9 +390,10 @@ if(identityMirror){
   requestAnimationFrame(updateHeight);
  });
  identityMirror.addEventListener('click',event=>{
-  const choice=event.target.closest('[data-logo],[data-footer-style],[data-page-variant],[data-theme]');
+  const choice=event.target.closest('[data-logo],[data-logo-position],[data-footer-style],[data-page-variant],[data-theme]');
   if(!choice)return;
   const selector=choice.dataset.logo!==undefined?'[data-logo="'+choice.dataset.logo+'"]':
+   choice.dataset.logoPosition!==undefined?'[data-logo-position="'+choice.dataset.logoPosition+'"]':
    choice.dataset.footerStyle!==undefined?'[data-footer-style="'+choice.dataset.footerStyle+'"]':
    choice.dataset.pageVariant!==undefined?'[data-page-variant="'+choice.dataset.pageVariant+'"]':
    '[data-theme="'+choice.dataset.theme+'"]';
@@ -395,8 +403,9 @@ if(identityMirror){
 }
 function syncIdentityMirror(){
  if(!identityMirror||!identitySource)return;
- for(const option of identityMirror.querySelectorAll('[data-logo],[data-footer-style],[data-page-variant],[data-theme]')){
+ for(const option of identityMirror.querySelectorAll('[data-logo],[data-logo-position],[data-footer-style],[data-page-variant],[data-theme]')){
   const selector=option.dataset.logo!==undefined?'[data-logo="'+option.dataset.logo+'"]':
+   option.dataset.logoPosition!==undefined?'[data-logo-position="'+option.dataset.logoPosition+'"]':
    option.dataset.footerStyle!==undefined?'[data-footer-style="'+option.dataset.footerStyle+'"]':
    option.dataset.pageVariant!==undefined?'[data-page-variant="'+option.dataset.pageVariant+'"]':
    '[data-theme="'+option.dataset.theme+'"]';
