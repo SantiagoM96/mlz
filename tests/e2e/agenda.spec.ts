@@ -208,6 +208,8 @@ test('Más filtros: opciones táctiles separadas sin seleccionar la opción veci
 });
 
 test('portada propia de la Agenda y Home municipal separada', async ({ page }, info) => {
+  // El catálogo es ilustrativo y tiene vigencia acotada: no congelar la prueba en la fecha real de CI.
+  await page.clock.install({ time: new Date('2026-11-12T17:30:00.000Z') });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Municipio de Lomas de Zamora' })).toBeVisible();
   await page.goto(agenda);
