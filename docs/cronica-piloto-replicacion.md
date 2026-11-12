@@ -442,3 +442,9 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Shift sigue iluminado durante el trayecto y el clic; los acordeones comienzan a desplegarse a continuación, se sostienen abiertos y vuelven a cerrarse, con loop.
 - SVG compartido en Crónica, BAE y Diario Show DEV; versionado de URL para invalidar caché.
 **Registro acumulado: 42 cambios.**
+
+## Cambio 43 — Quitar el aro exterior del botón Siguiente en los tres onboarding (2026-11-12)
+- El botón **Siguiente** se enfoca automáticamente por JavaScript al avanzar, y dependiendo de la modalidad de foco, el selector CSS `:focus-visible` generaba un aro exterior intermitente.
+- En Crónica, BAE y Diario Show DEV se desactiva **outline y box-shadow** tanto en `:focus` como en `:focus-visible` del botón Siguiente. Para uso por teclado se conserva un indicador no externo: subrayado del texto al recibir `:focus-visible`.
+- Se mantienen la gestión de foco, los atajos de teclado, los estados de los restantes controles y el diseño de las tarjetas. Se actualiza la versión del CSS de onboarding para evitar caché.
+**Registro acumulado: 43 cambios.**
