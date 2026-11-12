@@ -2587,3 +2587,19 @@ main:has(#dsMobileViewport){overflow-anchor:none}
 .preview #photoStage:has(>.ds-preview-hit-button:focus-visible) .photo-hover-border{
  opacity:0!important;transition:none!important;
 }
+
+
+/* Diseño de placas ahora agrupa miniaturas, logo/ubicación y firma inferior.
+   Mantener el ritmo interno de Diario Show al mover los controles originales. */
+.editor-panel .ds-plate-design-group .ds-control-card-body>.ds-logo-layout-row{
+ margin-top:16px!important;
+}
+.editor-panel .ds-plate-design-group .ds-control-card-body>.ds-footer-style-field{
+ margin-top:16px!important;
+}
+.editor-panel .ds-plate-design-group .ds-control-card-body>.ds-logo-layout-row>.control-field{
+ margin-top:0!important;
+}
+/* Misma separación también en la copia contextual bajo la preview mobile. */
+.preview .ds-plate-design-group .ds-logo-layout-row{margin-top:16px!important}
+.preview .ds-plate-design-group .ds-footer-style-field{margin-top:16px!important}
