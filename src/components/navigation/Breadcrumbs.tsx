@@ -64,7 +64,7 @@ export function Breadcrumbs({ items, className = '', mobileParentOnly = false }:
               )}
               {item.to && !isLast ? (
                 <Link
-                  className={`${classes} ${linkColor} underline-offset-2 hover:underline
+                  className={`${classes} ${linkColor} no-underline hover:no-underline
                     focus-visible:outline-2 focus-visible:outline-primary-600`}
                   to={item.to}
                 >
