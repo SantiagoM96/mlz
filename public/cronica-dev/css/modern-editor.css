@@ -923,3 +923,25 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
   flex-basis:48px;width:48px!important;height:64px!important;min-height:64px!important;
  }
 }
+
+
+/* CRÓNICA DEV — ajuste 05: controles estables, tipografía y espacio del scroll. */
+.preview>.cronica-preview-pages .carousel-heading>h2{
+ font:600 13px/20px system-ui,Arial,sans-serif!important;
+ letter-spacing:normal!important;text-transform:none!important;
+}
+.preview>.cronica-preview-pages .carousel-pages{
+ box-sizing:border-box;height:84px;min-height:84px;
+ padding:4px 4px 12px;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ box-sizing:border-box;height:84px;min-height:84px;
+ justify-content:flex-start!important;
+}
+.preview>.cronica-preview-pages .carousel-actions #addPage{
+ margin-top:0!important;
+ background:#ed0000;
+}
+.preview>.cronica-preview-pages .carousel-actions #removePage{
+ margin-top:auto!important;
+}
