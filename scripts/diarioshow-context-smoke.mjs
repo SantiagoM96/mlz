@@ -284,7 +284,7 @@ try{
  await pulsePage.goto(url+'?onboarding=off',{waitUntil:'load'});
  // Icono y título no cambian de posición relativa al botón.
  // Medir coordenadas locales evita confundir el plegado con scroll del documento.
- for(const name of ['ds-plate-design-group','ds-photo-layout-group','ds-content-group','ds-texts-group']){
+ for(const name of ['ds-plate-design-group','ds-photo-layout-group','ds-import-group','ds-texts-group']){
   const card=pulsePage.locator('#dsMobileControlsPanel .'+name);
   const toggle=card.locator('.ds-control-card-toggle');
   const read=()=>toggle.evaluate(node=>{
