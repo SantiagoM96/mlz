@@ -23,9 +23,9 @@ if(!bae.designHasToggle||!bae.textHasInput||!bae.firstQuote||!bae.lastSize||
  bae.label!=='14px'||bae.formatHeight!=='43px'||bae.alignHeight!=='43px'||bae.alignShadow==='none')
  throw Error('BAE: estructura/estilos incorrectos '+JSON.stringify(bae));
 await page.locator('#enableQuote').uncheck({force:true});
-if(await page.locator('.modern-quote-input-field').isVisible())throw Error('BAE: textual no se oculta');
+if(await page.locator('.modern-track > .editor-panel .modern-quote-input-field').first().isVisible())throw Error('BAE: textual no se oculta');
 await page.locator('#enableQuote').check({force:true});
-if(!await page.locator('.modern-quote-input-field').isVisible())throw Error('BAE: textual no reaparece');
+if(!await page.locator('.modern-track > .editor-panel .modern-quote-input-field').first().isVisible())throw Error('BAE: textual no reaparece');
 console.log('PASS BAE: switch en Diseño, campo arriba en Textos, tamaño al final, formato y alineación DS');
 await page.goto(url+'diarioshow-dev/?onboarding=off',{waitUntil:'load'});
 for(const variant of ['pink','blue','quote','quote-blue']){
