@@ -3,7 +3,7 @@ import { chromium } from '@playwright/test';
 const browser=await chromium.launch({headless:true});
 const host='http://127.0.0.1:8765';
 const tests={
- cronica:{name:'Crónica',first:'Organizá las páginas',steps:7,identity:'Identidad gráfica'},
+ cronica:{name:'Crónica',first:'Organizá las páginas',steps:7,identity:'Diseño de placas'},
  bae:{name:'BAE',first:'Elegí el diseño de tu placa',steps:8,identity:'Identidad gráfica'}
 };
 function assert(cond,message){if(!cond)throw Error(message)}
@@ -18,7 +18,7 @@ for(const [brand,config] of Object.entries(tests)){
    await page.waitForSelector('.modern-logo-hit',{timeout:10000});
    await page.waitForTimeout(150);
    assert(await page.locator('.modern-card .modern-section-icon').count()>=(brand==='cronica'?5:5),brand+': falta iconografía');
-   assert(await page.locator('aside.editor-panel .modern-identity-group').count()===1,brand+': identidad no separada');
+   assert(await page.locator('aside.editor-panel .modern-design-group').count()===1&&await page.locator('aside.editor-panel .modern-identity-group').count()===0,brand+': diseño no absorbió identidad');
    assert(await page.locator('.modern-photo-group').count()===1,brand+': fotografía no separada');
    if(brand==='bae')assert(await page.locator('.modern-import-group #articleUrl').count()===1,'BAE: falta importar noticia');
    if(brand==='cronica')assert(await page.locator('.carousel-panel').count()===1,'Crónica: falta páginas');
@@ -136,7 +136,7 @@ for(const [brand,config] of Object.entries(tests)){
    await page.locator('.modern-logo-hit').click();
    assert(await page.locator('.modern-logo-hit').evaluate(el=>el.classList.contains('is-hotspot-selected')),brand+': logo sin selección');
    if(mobile){
-    assert(await page.locator('.modern-preview-identity-editor').isVisible(),brand+': no se abre identidad en mobile');
+    assert(await page.locator('.modern-preview-identity-editor').isVisible()&&await page.locator('.modern-preview-identity-editor .theme-swatches,.modern-preview-identity-editor .cronica-variant-options').count()>0,brand+': no se abre Diseño de placas en mobile');
     assert(await page.locator('.modern-preview-text-editor').isHidden(),brand+': Textos no se oculta');
    }else assert(await identity.evaluate(el=>el.classList.contains('modern-context-target')),brand+': identidad no se resalta en desktop');
    await page.locator('.modern-text-hit').click();
