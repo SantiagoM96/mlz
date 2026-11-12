@@ -236,6 +236,14 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .schedule-duration.valid{background:#eaf5fb;color:#236999;font-weight:700}
 .schedule-duration.invalid{background:#fff0f0;color:#a8323e}
 @media(max-width:680px){.schedule-duration{margin-top:10px}}
+
+/* Comisión: tres controles de idéntico ancho y cálculo bidireccional. */
+.schedule-time-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end;gap:12px}
+.schedule-time-row>.field{min-width:0;margin:0}
+.schedule-time-row input[type="time"],.schedule-time-row .schedule-length{width:100%;box-sizing:border-box;height:48px;min-height:48px;padding:10px 12px;border:1px solid #5ba8d5;border-radius:4px;font-size:16px;line-height:24px;background:#fff;color:#3d3d3d}
+.schedule-time-row .schedule-length:focus{outline:0;border-color:#006eff;box-shadow:inset 0 0 0 1px #006eff}
+.schedule-duration{margin-top:12px}
+@media(max-width:680px){.schedule-time-row{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px}.schedule-time-row input[type="time"],.schedule-time-row .schedule-length{padding:8px 6px;font-size:14px}.schedule-time-row .field label{font-size:12px;line-height:17px;min-height:34px}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -465,38 +473,69 @@ function normalizeScheduleDays(text){
  return WEEKDAYS.filter((d,i)=>new RegExp('\\b'+names[i]+'(?:s)?\\b').test(value));
 }
 
-function scheduleDurationLabel(start,end,pending=false){
- if(pending)return 'Horario a confirmar';
- if(!start||!end)return 'Completá las horas para ver la duración';
- const parseTime=v=>{const m=/^(\d{2}):(\d{2})$/.exec(v);return m?Number(m[1])*60+Number(m[2]):NaN};
- const minutes=parseTime(end)-parseTime(start);
- if(!Number.isFinite(minutes)||minutes<=0)return 'Revisá las horas: el fin debe ser posterior al inicio';
+function scheduleMinutes(value){
+ const match=/^(\d{1,2}):([0-5]\d)$/.exec(String(value||'').trim());
+ if(!match)return null;
+ const hours=Number(match[1]),minutes=Number(match[2]);
+ return hours<24?hours*60+minutes:null;
+}
+function durationMinutes(value){
+ const match=/^(\d{1,2}):([0-5]\d)$/.exec(String(value||'').trim());
+ if(!match)return null;
+ const hours=Number(match[1]),minutes=Number(match[2]);
+ const total=hours*60+minutes;
+ return total>0&&total<1440?total:null;
+}
+function timeFromMinutes(total){
+ return String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0');
+}
+function durationDescription(minutes){
+ if(minutes==null)return '';
  const hours=Math.floor(minutes/60),rest=minutes%60;
- return 'Duración: '+[hours?(hours===1?'1 hora':hours+' horas'):'',rest?(rest===1?'1 minuto':rest+' minutos'):''].filter(Boolean).join(' y ');
+ return [hours?(hours===1?'1 hora':hours+' horas'):'',rest?(rest===1?'1 minuto':rest+' minutos'):''].filter(Boolean).join(' y ');
 }
-function updateScheduleDuration(block){
+function syncScheduleTimes(block,changed){
  if(!block)return;
- const status=block.querySelector('.schedule-duration');
- if(!status)return;
- const start=block.querySelector('.schedule-start').value;
- const end=block.querySelector('.schedule-end').value;
- const pending=block.querySelector('.schedule-pending-check').checked;
- const invalid=!pending&&start&&end&&start>=end;
- status.textContent=scheduleDurationLabel(start,end,pending);
- status.classList.toggle('invalid',Boolean(invalid));
- status.classList.toggle('valid',Boolean(!pending&&start&&end&&!invalid));
+ const startInput=block.querySelector('.schedule-start'),endInput=block.querySelector('.schedule-end');
+ const durationInput=block.querySelector('.schedule-length'),hint=block.querySelector('.schedule-duration');
+ const start=scheduleMinutes(startInput.value),end=scheduleMinutes(endInput.value);
+ const rawDuration=durationInput.value.trim(),duration=durationMinutes(rawDuration);
+ if(changed==='end'){block.dataset.timeSource='end';durationInput.value=(start!==null&&end!==null&&end>start)?timeFromMinutes(end-start):'';}
+ if(changed==='duration'){block.dataset.timeSource='duration';if(start!==null&&duration!==null&&start+duration<1440)endInput.value=timeFromMinutes(start+duration);else endInput.value='';}
+ if(changed==='start'){
+  if(block.dataset.timeSource==='duration'&&duration!==null){
+   endInput.value=(start!==null&&start+duration<1440)?timeFromMinutes(start+duration):'';
+  }else{
+   durationInput.value=(start!==null&&end!==null&&end>start)?timeFromMinutes(end-start):'';
+  }
+ }
+ const currentStart=scheduleMinutes(startInput.value),currentEnd=scheduleMinutes(endInput.value);
+ const currentDuration=durationMinutes(durationInput.value);
+ let message='Ingresá la hora de inicio y después la hora de fin o la duración.';
+ let invalid=false;
+ if(currentStart===null){message='La hora de inicio es obligatoria.';}
+ else if(currentEnd!==null&&currentEnd<=currentStart){invalid=true;message='La hora de fin debe ser posterior al inicio.';}
+ else if(currentDuration!==null&&currentStart+currentDuration>=1440){invalid=true;message='La duración debe terminar antes de las 24:00.';}
+ else if(currentEnd!==null&&currentDuration!==null&&currentEnd-currentStart===currentDuration){message='Duración: '+durationDescription(currentDuration);}
+ else if(currentEnd===null&&currentDuration===null){message='Indicá la hora de fin o la duración (hh:mm).';}
+ else{invalid=true;message='Revisá el horario y la duración.';}
+ hint.textContent=message;hint.classList.toggle('invalid',invalid);hint.classList.toggle('valid',message.startsWith('Duración:'));
 }
-
 function scheduleBlock(data={},i=null){
  const id=i??++scheduleCounter;
  const days=Array.isArray(data.selectedDays)?data.selectedDays:normalizeScheduleDays(data.days);
- const pending=data.pending===true||data.start==='A confirmar'||data.end==='A confirmar';
  const start=/^\d{2}:\d{2}$/.test(String(data.start||''))?data.start:'';
  const end=/^\d{2}:\d{2}$/.test(String(data.end||''))?data.end:'';
- return '<div class="schedule-block" data-schedule-block="'+id+'"><div class="schedule-block-heading"><strong>Horario <span class="schedule-block-number"></span></strong><button type="button" class="iconbtn red schedule-remove" title="Eliminar horario" aria-label="Eliminar bloque de días y horarios">'+ic('delete')+'</button></div>'+
+ const minStart=scheduleMinutes(start),minEnd=scheduleMinutes(end);
+ const length=minStart!==null&&minEnd!==null&&minEnd>minStart?timeFromMinutes(minEnd-minStart):'';
+ return '<div class="schedule-block" data-schedule-block="'+id+'" data-time-source="end"><div class="schedule-block-heading"><strong>Horario <span class="schedule-block-number"></span></strong><button type="button" class="iconbtn red schedule-remove" title="Eliminar horario" aria-label="Eliminar bloque de días y horarios">'+ic('delete')+'</button></div>'+
  '<div class="schedule-days" role="group" aria-label="Días de este horario">'+WEEKDAYS.map(day=>'<label class="schedule-day"><input type="checkbox" value="'+day+'" '+(days.includes(day)?'checked':'')+'><span>'+day+'</span></label>').join('')+'</div>'+
- '<div class="schedule-time-row"><div class="field"><label>Desde</label><input type="time" class="schedule-start" value="'+e(start)+'" '+(pending?'disabled':'')+'></div><div class="field"><label>Hasta</label><input type="time" class="schedule-end" value="'+e(end)+'" '+(pending?'disabled':'')+'></div><label class="schedule-pending"><input type="checkbox" class="schedule-pending-check" '+(pending?'checked':'')+'> Horario a confirmar</label></div>'+
- '<div class="schedule-duration" role="status" aria-live="polite">'+e(scheduleDurationLabel(start,end,pending))+'</div>'+ (days.length===0&&data.days?'<p class="hint schedule-legacy">Días originales: '+e(data.days)+'. Seleccioná los días correspondientes.</p>':'')+
+ '<div class="schedule-time-row">'+
+ '<div class="field"><label for="schedule-start-'+id+'">Hora de inicio *</label><input id="schedule-start-'+id+'" type="time" class="schedule-start" step="60" required value="'+e(start)+'"></div>'+
+ '<div class="field"><label for="schedule-end-'+id+'">Hora de fin</label><input id="schedule-end-'+id+'" type="time" class="schedule-end" step="60" value="'+e(end)+'"></div>'+
+ '<div class="field"><label for="schedule-length-'+id+'">Duración (hh:mm)</label><input id="schedule-length-'+id+'" type="text" inputmode="numeric" class="schedule-length" placeholder="01:00" value="'+e(length)+'" maxlength="5" aria-describedby="schedule-duration-'+id+'"></div>'+
+ '</div><p id="schedule-duration-'+id+'" class="schedule-duration" role="status" aria-live="polite"></p>'+
+ (days.length===0&&data.days?'<p class="hint schedule-legacy">Días originales: '+e(data.days)+'. Seleccioná los días correspondientes.</p>':'')+
  '</div>';
 }
 function renumberScheduleBlocks(){
@@ -507,35 +546,40 @@ function bindScheduleEditor(){
  const container=modal.querySelector('#schedule-blocks');if(!container)return;
  scheduleCounter=Math.max(scheduleCounter,...[...container.querySelectorAll('.schedule-block')].map(el=>Number(el.dataset.scheduleBlock)||0));
  container.addEventListener('click',ev=>{
-  const remove=ev.target.closest('.schedule-remove');if(remove){remove.closest('.schedule-block').remove();renumberScheduleBlocks()}
+  const remove=ev.target.closest('.schedule-remove');
+  if(remove){remove.closest('.schedule-block').remove();renumberScheduleBlocks()}
  });
- container.addEventListener('input',ev=>{if(ev.target.matches('.schedule-start,.schedule-end'))updateScheduleDuration(ev.target.closest('.schedule-block'))});
- container.addEventListener('change',ev=>{
-  if(ev.target.matches('.schedule-pending-check')){
-   const block=ev.target.closest('.schedule-block');
-   block.querySelectorAll('.schedule-start,.schedule-end').forEach(input=>{input.disabled=ev.target.checked});
-   updateScheduleDuration(block);
-  }else if(ev.target.matches('.schedule-start,.schedule-end'))updateScheduleDuration(ev.target.closest('.schedule-block'));
- });
+ const handleTime=ev=>{
+  const target=ev.target;
+  if(!target.matches('.schedule-start,.schedule-end,.schedule-length'))return;
+  const changed=target.classList.contains('schedule-start')?'start':target.classList.contains('schedule-end')?'end':'duration';
+  syncScheduleTimes(target.closest('.schedule-block'),changed);
+ };
+ container.addEventListener('input',handleTime);
+ container.addEventListener('change',handleTime);
  modal.querySelector('#schedule-add')?.addEventListener('click',()=>{
   container.insertAdjacentHTML('beforeend',scheduleBlock({selectedDays:[],start:'',end:''}));
   renumberScheduleBlocks();
-  container.lastElementChild?.scrollIntoView({block:'nearest',behavior:'smooth'});
+  const block=container.lastElementChild;syncScheduleTimes(block);
+  block?.scrollIntoView({block:'nearest',behavior:'smooth'});
  });
  renumberScheduleBlocks();
- container.querySelectorAll('.schedule-block').forEach(updateScheduleDuration);
+ container.querySelectorAll('.schedule-block').forEach(block=>syncScheduleTimes(block));
 }
 function readScheduleEditor(){
  const blocks=[...modal.querySelectorAll('.schedule-block')],output=[];
  if(!blocks.length){alert('Agregá al menos un horario.');return null}
  for(let i=0;i<blocks.length;i++){
   const block=blocks[i],days=[...block.querySelectorAll('.schedule-day input:checked')].map(x=>x.value);
-  const pending=block.querySelector('.schedule-pending-check').checked;
   const start=block.querySelector('.schedule-start').value,end=block.querySelector('.schedule-end').value;
+  const minStart=scheduleMinutes(start),minEnd=scheduleMinutes(end);
+  const duration=durationMinutes(block.querySelector('.schedule-length').value);
   if(!days.length){alert('Seleccioná al menos un día en el horario '+(i+1)+'.');return null}
-  if(!pending&&(!start||!end)){alert('Completá las horas de inicio y fin del horario '+(i+1)+'.');return null}
-  if(!pending&&start>=end){alert('La hora de fin debe ser posterior a la hora de inicio en el horario '+(i+1)+'.');return null}
-  output.push({days:days.join(' y '),start:pending?'A confirmar':start,end:pending?'A confirmar':end,estimated:false,pending});
+  if(minStart===null){alert('Completá la hora de inicio del horario '+(i+1)+'.');return null}
+  if(minEnd===null||duration===null||minEnd<=minStart||minEnd-minStart!==duration){
+   alert('Completá una hora de fin o una duración válida en el horario '+(i+1)+'.');return null;
+  }
+  output.push({days:days.join(' y '),start,end,estimated:false,pending:false});
  }
  return output;
 }
