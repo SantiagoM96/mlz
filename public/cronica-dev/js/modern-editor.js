@@ -272,7 +272,8 @@ if(pagesCard){
  const legacyTitle=pagesCard.querySelector(':scope > h2');
  legacyTitle?.remove();
  const heading=pagesCard.querySelector('.carousel-heading');
- heading?.querySelector('h2')?.remove();
+ const title=heading?.querySelector('h2');
+ if(title)title.textContent='Diapositivas';
  pagesCard.setAttribute('aria-label','Navegación de páginas');
  preview.insertBefore(pagesCard,toolbar);
  // Los avisos siguen disponibles para lectores de pantalla y para app.js,
