@@ -1041,3 +1041,30 @@ html[data-cronica-variant="blank"] #showStrapMobile,
 html[data-cronica-variant="blank"] #strapFieldMobile{
  display:none!important;
 }
+
+
+/* CRÓNICA DEV — Cambio 13: editor de texto enriquecido y control contextual. */
+.editor-panel textarea.cronica-rich-source,
+.modern-preview-text-editor textarea.cronica-rich-source{display:none!important;}
+.editor-panel .cronica-rich-headline{
+ box-sizing:border-box;display:block;width:100%;min-height:120px;max-height:240px;
+ overflow-x:hidden;overflow-y:auto;padding:12px 14px;
+ border:1px solid #4a4e56;border-radius:7px;background:#292c32;
+ color:#f2f2f5;font:400 14px/1.5 Inter,Arial,sans-serif;
+ white-space:pre-wrap;overflow-wrap:anywhere;outline:none;cursor:text;
+ scrollbar-width:thin;scrollbar-color:#686d76 transparent;
+}
+.editor-panel .cronica-rich-headline:focus-visible{
+ border-color:#ed0000;outline:1px solid #ed0000;
+}
+.editor-panel .cronica-rich-headline [data-accent="true"]{font-weight:800;}
+.editor-panel .cronica-rich-headline [data-italic="true"]{font-style:italic;}
+.editor-panel .cronica-rich-headline [data-strike="true"]{text-decoration:line-through;}
+.editor-panel .cronica-rich-headline::selection,
+.editor-panel .cronica-rich-headline *::selection{background:#b73140;color:white;}
+/* La volanta debe desaparecer como campo entero incluso si se encuentra
+   físicamente dentro de Diseño de placas (captura del usuario). */
+html[data-cronica-variant="blank"] .modern-design-group .control-field:has(#showStrap),
+html[data-cronica-variant="blank"] .modern-design-group .control-field:has(#strapText),
+html[data-cronica-variant="blank"] .modern-preview-identity-editor .control-field:has(#showStrapIdentityPreview),
+html[data-cronica-variant="blank"] .modern-preview-identity-editor .control-field:has(#strapTextIdentityPreview){display:none!important;}
