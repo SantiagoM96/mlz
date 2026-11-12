@@ -47,6 +47,11 @@ for(const data of cases){
    assert(await page.locator('#strapField').isVisible(), 'Crónica: campo de volanta no reaparece');
    console.log('PASS cronica-dev interruptor en Diseño, texto condicional en Textos');
   }
+  if(data.slug==='cronica-dev'){
+   const icons=await page.locator('.modern-design-group .modern-footer-options [data-footer-style]').evaluateAll(buttons=>buttons.map(b=>({style:b.dataset.footerStyle,icon:b.querySelector('.material-symbols-outlined')?.textContent.trim(),label:b.textContent.trim()})));
+   assert(icons.length===2&&icons.some(b=>b.style==='center'&&b.icon==='format_align_center')&&icons.some(b=>b.style==='carousel'&&b.icon==='view_carousel'),'Crónica: íconos de firma inferior incorrectos '+JSON.stringify(icons));
+   console.log('PASS cronica-dev íconos Material en Firma inferior');
+  }
   console.log('PASS',data.slug,'primera diapositiva con contenido de ejemplo');
   // El punteado de foto utiliza el mismo border CSS que texto/logo,
   // manteniendo el gris editorial y sin superponer el SVG anterior.
