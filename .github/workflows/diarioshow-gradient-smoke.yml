@@ -1,0 +1,30 @@
+name: Diario Show DEV — degradés de miniaturas
+on:
+  push:
+    paths:
+      - 'public/diarioshow-dev/css/editor.css'
+      - 'scripts/diarioshow-gradient-smoke.mjs'
+      - '.github/workflows/diarioshow-gradient-smoke.yml'
+  workflow_dispatch:
+jobs:
+  gradients:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Iniciar DEV local
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public >/tmp/ds-gradient.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/diarioshow-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Verificar colores entre variantes y diapositivas
+        run: node scripts/diarioshow-gradient-smoke.mjs
