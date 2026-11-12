@@ -549,7 +549,7 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 .editor-panel .modern-design-group .logo-choice[aria-pressed=true] .logo-choice-preview,
 .editor-panel .modern-design-group .theme-swatch[aria-pressed=true] .theme-swatch-thumb,
 .editor-panel .modern-design-group .cronica-variant-option[aria-pressed=true] .cronica-variant-thumbnail{
- outline:4px solid var(--editor-accent)!important;
+ outline:2px solid var(--editor-accent)!important;
  outline-offset:2px!important;
  border-color:#565a63!important;
  box-shadow:none!important;
