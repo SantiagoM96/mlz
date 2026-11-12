@@ -300,3 +300,11 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - El botón de mayúsculas conserva su acento rojo institucional de Crónica cuando está activo. No se alteran los listeners del editor de texto enriquecido ni la selección del contenido, ni los demás elementos del panel.
 - En mobile angosto, la alineación baja a una segunda fila para evitar desbordes.
 - **Registro acumulativo:** 22 cambios. Esta transferencia ocurre únicamente en Crónica DEV; BAE no se modifica.
+
+## Cambio 23 — Ubicación horizontal de logo en Crónica y BAE DEV (2026-11-12)
+- Se replica el controlador de Diario Show: **Ubicación logo** con izquierda/derecha y botones segmentados de 39×43 px, estado seleccionado de anillo blanco interior.
+- En Crónica y BAE el control aparece junto al selector de logo dentro de Diseño de placas. Derecha es el valor inicial; izquierda conserva el margen superior y lateral original de cada marca.
+- La posición se guarda por diapositiva y se restaura al navegar; el PNG usa las mismas coordenadas que la preview.
+- Se sincroniza la copia contextual de Diseño de placas con el control original para mobile.
+- En Sin diseño no se muestran ni logo ni ubicación. Diario Show no se modifica.
+**Registro acumulativo: 23 cambios.**
