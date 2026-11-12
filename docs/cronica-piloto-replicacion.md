@@ -70,3 +70,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **QA:** `scripts/editorial-dev-context-smoke.mjs` verifica posición del título y contador, aparición del placeholder, agregado hasta diez diapositivas, altura fija, aparición del botón fijo, añadido y borrado.
 
 **Replicación futura:** depende del cambio 03 y de implementar previamente la arquitectura multi-página en cada editor; no copiar hasta recibir autorización.
+
+## Ajuste 05 — Controles fijos y espacio de desplazamiento (2026-11-12)
+**Estado:** aplicado solo a Crónica DEV, pendiente de validación visual y replicación.
+
+- El botón Eliminar permanece anclado en el extremo inferior derecho, incluso cuando se muestra el botón + de desborde.
+- El botón + rojo aparece únicamente arriba del tacho, sin desplazarlo ni centrar la columna de controles.
+- La pista horizontal conserva altura constante (84 px), agrega espacio inferior respecto de las miniaturas (12 px de padding en vez de 5 px) y mantiene scroll horizontal.
+- La cabecera `Diapositivas` utiliza la misma tipografía que las cabeceras de los acordeones: system-ui, 13 px, peso 600, interlineado 20 px y capitalización normal.
+- No se altera el motor de selección, agregado o eliminación, ni BAE/Diario Show.
+
+**Archivo:** `public/cronica-dev/css/modern-editor.css` y versión de caché de `public/cronica-dev/index.html`.
