@@ -85,9 +85,9 @@ function setSelection(editor,start,end){
 function publish(editor){
  const value=asMarkup(fromDOM(editor));
  editors.forEach(e=>{if(e!==editor)renderChars(e,charsFromMarkup(value))});
- if(source.value!==value){source.value=value;source.dispatchEvent(new Event('input',{bubbles:true}))}
  editor.dataset.currentMarkup=value;
  editors.forEach(e=>e.dataset.currentMarkup=value);
+ if(source.value!==value){source.value=value;source.dispatchEvent(new Event('input',{bubbles:true}))}
 }
 function changeFormat(key,clear=false){
  const selection=window.getSelection();
