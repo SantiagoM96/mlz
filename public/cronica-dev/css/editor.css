@@ -747,3 +747,27 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  .preview .browser-zoom-tip,
  .preview > .browser-zoom-tip:not([hidden]){background:#24252d}
 }
+
+
+/* Páginas: seleccionada conserva la placa roja, borde gris y anillo exterior. */
+.editor-panel .carousel-pages{
+ gap:12px!important;
+ padding:5px 4px 6px!important;
+ overflow:visible!important;
+}
+.editor-panel .carousel-pages .carousel-page-thumb{
+ box-sizing:border-box!important;
+ border:1px solid #555a64!important;
+ outline:0 solid transparent;
+ outline-offset:2px!important;
+ overflow:hidden;
+}
+.editor-panel .carousel-pages .carousel-page-thumb[aria-current="page"]{
+ border-color:#555a64!important;
+ outline:4px solid #ed0000!important;
+ outline-offset:2px!important;
+}
+.editor-panel .carousel-pages .carousel-page-thumb:focus-visible{
+ outline:4px solid #ed0000!important;
+ outline-offset:2px!important;
+}
