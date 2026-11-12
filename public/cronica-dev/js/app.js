@@ -248,12 +248,7 @@ function renderCarouselNavigation(){
   const composition=document.createElement('span');
   composition.className='carousel-design-copy editor-panel';
   composition.setAttribute('aria-hidden','true');
-  if(original){
-   const design=document.createElement('span');
-   design.className='cronica-variant-option carousel-design-source';
-   design.appendChild(original.cloneNode(true));
-   composition.appendChild(design);
-  }
+  if(original)composition.appendChild(original.cloneNode(true));
   const number=document.createElement('span');
   number.className='carousel-page-number';
   number.textContent=String(index+1);
