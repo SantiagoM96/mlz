@@ -95,15 +95,29 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
   throw Error(slug+': no sigue el paso del logo de la preview: '+logoTitle);
  const logo=await page.evaluate(slug=>{
   const selector=slug==='diarioshow-dev'?'#dsLogoHitButton':'.modern-logo-hit';
-  const target=document.querySelector(selector),mask=document.querySelector('.ds-tour-highlight');
-  const t=target?.getBoundingClientRect(),m=mask?.getBoundingClientRect();
-  return {target:t?{x:t.x,y:t.y,width:t.width,height:t.height}:null,
-   mask:m?{x:m.x,y:m.y,width:m.width,height:m.height}:null};
+  const target=document.querySelector(selector),overlay=document.querySelector('.ds-tour-multispot'),layer=document.querySelector('#dsOnboardingLayer');
+  const design=document.querySelector(slug==='diarioshow-dev'?'#dsMobileControlsPanel .ds-plate-design-group':'.editor-panel .modern-design-group');
+  const field=design?.querySelector(slug==='diarioshow-dev'?'.ds-logo-layout-row':'.editor-logo-layout-row');
+  const footer=design?.querySelector(slug==='diarioshow-dev'?'.ds-footer-style-field':'.modern-footer-field');
+  const t=target?.getBoundingClientRect(),f=field?.getBoundingClientRect(),b=footer?.getBoundingClientRect();
+  const path=overlay?.firstElementChild?.getAttribute('d')||'';
+  const n=(path.match(/M/g)||[]).length-1;
+  return {
+   group:layer?.dataset.tourGroup,
+   active:layer?.classList.contains('is-logo-spotlight'),
+   display:overlay?getComputedStyle(overlay).display:null,
+   title:document.querySelector('#dsTourTitle')?.textContent,
+   target:t?{x:t.x,y:t.y,width:t.width,height:t.height}:null,
+   controls:f?{x:f.x,y:f.y,width:f.width,height:f.height}:null,
+   footer:b?{x:b.x,y:b.y,width:b.width,height:b.height}:null,
+   holes:n,path
+  };
  },slug);
- if(!logo.target||!logo.mask||logo.target.width<5||logo.target.height<5||
-  Math.abs(logo.mask.x-logo.target.x)>10||Math.abs(logo.mask.y-logo.target.y)>10||
-  Math.abs(logo.mask.width-logo.target.width)>20||Math.abs(logo.mask.height-logo.target.height)>20)
-  throw Error(slug+': spotlight no está en logo de preview '+JSON.stringify(logo));
+ if(logo.group!=='preview'||!logo.active||logo.display!=='block'||logo.holes!==3||
+  !logo.target||logo.target.width<5||logo.target.height<5||
+  !logo.controls||logo.controls.width<5||logo.controls.height<5||
+  !logo.footer||logo.footer.width<5||logo.footer.height<5)
+  throw Error(slug+': foco doble no recorta logo, controles y firma '+JSON.stringify(logo));
  console.log('PASS spotlight del logo en preview',slug,JSON.stringify(logo));
  await page.locator('.ds-tour-next').click();
  const textTitle=await page.locator('#dsTourTitle').textContent();
