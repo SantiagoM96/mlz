@@ -252,10 +252,34 @@ function progress(range){
 }
 function trackThumb(range,host){
  if(!range||!host)return;
- range.addEventListener('pointerdown',()=>{
-  host.classList.add('is-thumb-engaged','is-adjusting');
+ // Igual que Diario Show: el halo blanco sólo aparece si el cursor está
+ // sobre la bolita, no al hacer clic en cualquier punto de la pista.
+ let engagedPointer=null;
+ const onThumb=event=>{
+  const rect=range.getBoundingClientRect();
+  const min=Number(range.min)||0,max=Number(range.max)||100;
+  const t=max>min?(Number(range.value)-min)/(max-min):0;
+  const radius=7.5;
+  const vertical=rect.height>rect.width;
+  const x=vertical?rect.left+rect.width/2:rect.left+radius+t*Math.max(0,rect.width-radius*2);
+  const y=vertical?rect.bottom-radius-t*Math.max(0,rect.height-radius*2):rect.top+rect.height/2;
+  return Math.abs(event.clientX-x)<=radius+4&&Math.abs(event.clientY-y)<=radius+4;
+ };
+ const hover=event=>{
+  if(engagedPointer!==null)return;
+  host.classList.toggle('is-thumb-hover',onThumb(event));
+ };
+ range.addEventListener('pointerenter',hover);
+ range.addEventListener('pointermove',hover);
+ range.addEventListener('pointerleave',()=>{if(engagedPointer===null)host.classList.remove('is-thumb-hover')});
+ range.addEventListener('pointerdown',event=>{
+  const engaged=onThumb(event);
+  engagedPointer=engaged?event.pointerId:null;
+  host.classList.toggle('is-thumb-engaged',engaged);
+  host.classList.toggle('is-thumb-hover',engaged);
+  host.classList.add('is-adjusting');
  });
- const stop=()=>host.classList.remove('is-thumb-engaged','is-adjusting');
+ const stop=()=>{engagedPointer=null;host.classList.remove('is-thumb-engaged','is-thumb-hover','is-adjusting')};
  window.addEventListener('pointerup',stop);window.addEventListener('pointercancel',stop);
  range.addEventListener('blur',stop);range.addEventListener('input',()=>progress(range));
  progress(range);
