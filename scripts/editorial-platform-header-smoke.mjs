@@ -22,7 +22,7 @@ for(const viewport of [1440,390]){
      const img=n.querySelector('img'),rect=n.getBoundingClientRect(),iRect=img.getBoundingClientRect(),s=getComputedStyle(n);
      return {href:n.getAttribute('href'),active:n.getAttribute('aria-current')==='page',
        color:s.filter,background:s.backgroundColor,logoNatural:img.naturalWidth,
-       x:rect.x,right:rect.right,y:rect.y,w:rect.width,h:rect.height,imgW:iRect.width,imgH:iRect.height};
+       x:n.offsetLeft,right:rect.right,y:n.offsetTop,w:n.offsetWidth,h:n.offsetHeight,imgW:img.offsetWidth,imgH:img.offsetHeight};
     }),
     header:{x:header.x,right:header.right},back:{x:back.x,right:back.right}
    };
