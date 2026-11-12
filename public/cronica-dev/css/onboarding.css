@@ -196,3 +196,25 @@
 /* Identidad visual propia de CRONICA DEV. */
 .ds-onboarding-layer .ds-tour-card{border-color:rgba(255,255,255,.22)}
 .ds-onboarding-layer .ds-tour-next:hover{filter:brightness(1.14)}
+
+
+/* El spotlight usa una sola máscara exterior recortada alrededor de un
+   rectángulo con radio 12 px; las cuatro zonas conservan su geometría y
+   absorben los clics fuera del hueco, pero ya no dibujan esquinas rectas. */
+@media(min-width:701px){
+ .ds-onboarding-layer{overflow:hidden}
+ .ds-onboarding-layer .ds-tour-shade{
+  background:transparent!important;
+ }
+ .ds-onboarding-layer .ds-tour-highlight{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:12px!important;
+  background:transparent!important;
+  box-shadow:0 0 0 200vmax rgba(9,10,14,.77)!important;
+  pointer-events:none;
+ }
+ .ds-onboarding-layer.is-whole-screen .ds-tour-highlight{
+  display:none!important;
+ }
+}
