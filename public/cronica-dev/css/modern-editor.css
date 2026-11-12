@@ -1247,3 +1247,31 @@ html[data-cronica-variant="blank"] .editor-panel .editor-logo-layout-row,
 html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  display:none!important;
 }
+
+/* Cambio 24 — mismo comportamiento que Diario Show: el botón + permanece
+   en una columna fija desde el primer desborde de la pista. La miniatura
+   punteada sigue al final del contenido y puede verse al desplazarse. */
+.preview>.cronica-preview-pages .carousel-compact-row{
+ display:flex!important;align-items:center!important;min-width:0!important;gap:10px!important;
+}
+.preview>.cronica-preview-pages .carousel-pages{
+ box-sizing:border-box!important;flex:1 1 0!important;min-width:0!important;
+ width:0!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+.preview>.cronica-preview-pages .carousel-actions{
+ position:relative!important;z-index:3!important;isolation:isolate;
+ flex:0 0 30px!important;width:30px!important;min-width:30px!important;
+ display:grid!important;grid-template-columns:30px!important;
+ grid-template-rows:30px 30px!important;row-gap:6px!important;
+ background:#24262c!important;
+}
+.preview>.cronica-preview-pages .carousel-actions #addPage{
+ display:flex!important;visibility:hidden!important;pointer-events:none!important;
+ grid-column:1!important;grid-row:1!important;
+}
+.preview>.cronica-preview-pages.carousel-is-overflowing .carousel-actions #addPage{
+ visibility:visible!important;pointer-events:auto!important;
+}
+.preview>.cronica-preview-pages .carousel-actions #removePage{
+ grid-column:1!important;grid-row:2!important;
+}
