@@ -139,3 +139,7 @@ html[data-editor-plate-variant=blank] .preview .ds-photo-hit{display:none!import
  0%,100%{box-shadow:none}
  15%,75%{box-shadow:0 0 0 2px var(--slide-accent)}
 }
+
+html[data-editor-plate-variant=blank] #dsLogoHitButton,
+html[data-editor-plate-variant=blank] #dsHeadlineHitButton,
+html[data-editor-plate-variant=blank] #splitPhotoZones{display:none!important}
