@@ -31,17 +31,21 @@ for(const data of cases){
     const design=document.querySelector('.editor-panel .modern-design-group');
     const switchField=document.getElementById('showStrap')?.closest('.control-field');
     const strapField=document.getElementById('strapText')?.closest('.control-field');
-    const format=text?.querySelector('.typography-row');
-    return {textExists:!!text,insideText:!!(text?.contains(switchField)&&text?.contains(strapField)),
-      outsideDesign:!!design&&!design.contains(switchField),
-      beforeFormat:!!(format&&switchField&&strapField&&
-       (switchField.compareDocumentPosition(format)&Node.DOCUMENT_POSITION_FOLLOWING)&&
-       (strapField.compareDocumentPosition(format)&Node.DOCUMENT_POSITION_FOLLOWING)),
-      cloned:!!document.getElementById('showStrapMobile')};
+    const headline=document.getElementById('headline')?.closest('.control-field');
+    return {switchInDesign:!!design?.contains(switchField),
+      strapInText:!!text?.contains(strapField),
+      strapBeforeHeadline:!!(strapField&&headline&&
+       (strapField.compareDocumentPosition(headline)&Node.DOCUMENT_POSITION_FOLLOWING)),
+      mirrorSwitch:!!document.getElementById('showStrapIdentityPreview'),
+      mirrorText:!!document.getElementById('strapTextMobile')};
    });
-   assert(placement.insideText&&placement.outsideDesign&&placement.beforeFormat&&placement.cloned,
-    'Crónica: volanta no quedó dentro de Textos sobre Formato '+JSON.stringify(placement));
-   console.log('PASS cronica-dev volanta dentro de Textos sobre Formato');
+   assert(placement.switchInDesign&&placement.strapInText&&placement.strapBeforeHeadline&&placement.mirrorSwitch&&placement.mirrorText,
+    'Crónica: interruptor en Diseño y campo sobre Texto principal '+JSON.stringify(placement));
+   await page.locator('#showStrap').uncheck();
+   assert(await page.locator('#strapField').isHidden(), 'Crónica: campo de volanta no se oculta al desactivar');
+   await page.locator('#showStrap').check();
+   assert(await page.locator('#strapField').isVisible(), 'Crónica: campo de volanta no reaparece');
+   console.log('PASS cronica-dev interruptor en Diseño, texto condicional en Textos');
   }
   console.log('PASS',data.slug,'primera diapositiva con contenido de ejemplo');
   // El punteado de foto utiliza el mismo border CSS que texto/logo,
