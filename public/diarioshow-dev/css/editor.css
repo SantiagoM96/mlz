@@ -2646,3 +2646,53 @@ main:has(#dsMobileViewport){overflow-anchor:none}
 @media(prefers-reduced-motion:reduce){
  .editor-panel .ds-control-card.is-preview-context-target{animation-duration:.01ms!important}
 }
+
+
+/* Corrección definitiva de bordes mobile:
+   la pista recorta por diseño al cambiar de pestaña; las tarjetas necesitan
+   espacio interior real en la columna, NO un contorno desplazado hacia afuera. */
+@media(max-width:700px){
+ .ds-mobile-track > #dsMobileControlsPanel{
+  box-sizing:border-box!important;
+  padding:6px 6px 10px!important;
+  background:transparent!important;border:0!important;
+  box-shadow:none!important;overflow:visible!important;
+ }
+ .ds-mobile-track > #dsMobileControlsPanel > .ds-control-card{
+  box-sizing:border-box!important;width:100%!important;
+  max-width:100%!important;margin:0 0 12px!important;
+  border:1px solid #383d46!important;border-radius:10px!important;
+  background:#24262c!important;overflow:visible!important;
+ }
+ /* La misma separación alrededor de la tarjeta contextual; el contorno no
+    queda debajo del borde lateral recortado por el carrusel. */
+ .ds-mobile-track>.preview>.ds-mobile-text-editor,
+ .ds-mobile-track>.preview>.ds-mobile-content-editor{
+  padding:6px!important;
+ }
+}
+/* La cabecera plegada ES la caja entera: las cuatro esquinas redondeadas.
+   Para la expandida, solo las superiores; el cuerpo cierra las inferiores. */
+.editor-panel .ds-control-card > .ds-control-card-toggle[aria-expanded="false"]{
+ border-radius:9px!important;
+}
+.editor-panel .ds-control-card > .ds-control-card-toggle[aria-expanded="true"]{
+ border-radius:9px 9px 0 0!important;
+}
+.editor-panel .ds-control-card > .ds-control-card-body:not([hidden]){
+ border-radius:0 0 9px 9px!important;
+ background:#202228!important;
+}
+@media(max-width:700px){
+ .ds-mobile-track>.preview>.ds-mobile-text-editor>.ds-control-card>.ds-control-card-toggle[aria-expanded="false"],
+ .ds-mobile-track>.preview>.ds-mobile-content-editor>.ds-control-card>.ds-control-card-toggle[aria-expanded="false"]{
+  border-radius:9px!important;
+ }
+ /* No dibujar un segundo outline de teclado por encima del halo cuando
+    se llega a la tarjeta mediante un toque de pantalla. */
+ @media(hover:none){
+  .ds-mobile-track .ds-control-card-toggle:focus-visible{
+   outline:none!important;
+  }
+ }
+}
