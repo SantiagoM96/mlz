@@ -1287,3 +1287,72 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
 }
 @media(max-width:380px){.editor-panel .modern-footer-options button{gap:5px!important;padding:8px 5px!important}}
+
+/* Cambio 26 — Selector editorial de plataformas, piloto en Crónica DEV.
+   Tres logos navegables; el activo se expande sin empujar al resto. */
+.header-inner .editor-platform-switcher{
+ box-sizing:border-box;display:flex;align-items:center;gap:10px;
+ flex:1 1 auto;min-width:0;max-width:620px;padding:6px 0;
+}
+.header-inner .editor-platform-option{
+ position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;
+ flex:0 1 160px;min-width:0;width:160px;height:58px;
+ padding:10px 14px;box-sizing:border-box;border:1px solid transparent;
+ border-radius:12px;background:rgba(255,255,255,.055);
+ text-decoration:none;cursor:pointer;outline-offset:3px;
+ filter:grayscale(1);opacity:.46;transform:scale(.96);
+ transition:opacity .22s ease,filter .22s ease,background .22s ease,
+   border-color .22s ease,transform .32s cubic-bezier(.16,1.4,.35,1),
+   box-shadow .22s ease;
+}
+.header-inner .editor-platform-option img{
+ width:100%;height:100%;max-height:36px;object-fit:contain;
+ display:block;pointer-events:none;
+}
+.header-inner .editor-platform-cronica img{max-height:43px}
+.header-inner .editor-platform-diarioshow img,
+.header-inner .editor-platform-bae img{filter:brightness(0) invert(1)}
+.header-inner .editor-platform-option:hover{
+ opacity:.88;transform:scale(1.035);filter:grayscale(.35);
+ background:rgba(255,255,255,.10);
+}
+.header-inner .editor-platform-option:focus-visible{
+ outline:2px solid #f3f3f5;outline-offset:3px;opacity:1;
+}
+.header-inner .editor-platform-option.is-active{
+ opacity:1;filter:none;transform:scale(1.09);
+ background:rgba(237,0,0,.13);border-color:rgba(237,0,0,.42);
+ box-shadow:0 9px 23px rgba(0,0,0,.16),inset 0 0 0 1px rgba(255,255,255,.05);
+ z-index:1;cursor:default;
+ animation:editor-platform-pop .43s cubic-bezier(.18,1.65,.4,1) both;
+}
+.header-inner .editor-platform-option.is-active img{filter:none}
+@keyframes editor-platform-pop{
+ 0%{transform:scale(.9)}
+ 52%{transform:scale(1.15)}
+ 100%{transform:scale(1.09)}
+}
+.header-inner .editor-platform-option:active:not(.is-active){
+ transform:scale(.94);
+}
+@media(max-width:700px){
+ .header-inner .editor-platform-switcher{
+  flex:1 1 auto;gap:6px;min-width:0;max-width:none;
+ }
+ .header-inner .editor-platform-option{
+  flex:1 1 0;width:auto;min-width:0;height:49px;padding:9px 6px;
+  border-radius:9px;
+ }
+ .header-inner .editor-platform-option img{max-height:29px}
+ .header-inner .editor-platform-cronica img{max-height:35px}
+ .header-inner .editor-platform-option.is-active{transform:scale(1.055)}
+}
+@media(max-width:400px){
+ .header-inner .editor-platform-switcher{gap:4px}
+ .header-inner .editor-platform-option{height:45px;padding:7px 4px}
+ .header-inner .editor-platform-option img{max-height:26px}
+ .header-inner .editor-platform-cronica img{max-height:31px}
+}
+@media(prefers-reduced-motion:reduce){
+ .header-inner .editor-platform-option{animation:none!important;transition:none!important}
+}
