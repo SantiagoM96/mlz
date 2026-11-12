@@ -140,3 +140,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/index.html`.
 **Registro acumulativo:** 10 cambios en Crónica DEV; sin replicar a BAE ni Diario Show.
+
+## Cambio 11 — Sin diseño no tiene controles de volanta (2026-11-12)
+**Estado:** aplicado solo a Crónica DEV; pendiente de validación visual.
+
+- La variante `Sin diseño` muestra únicamente la elección de formato; se ocultan el módulo de Textos, el interruptor `Mostrar volanta`, su campo y los controles de Fotografía/Logo/Firma.
+- En la vista contextual mobile se aplica la misma regla a los campos clonados.
+- Al cambiar de `Sin diseño` a `Portada` o `Interior`, se activa automáticamente `Mostrar volanta` y se recupera el texto explicativo por defecto si estaba vacío.
+- Se mantiene la posibilidad de desactivar manualmente la volanta en las variantes que sí tienen diseño; los valores existentes no se borran.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/js/modern-editor.js`, `public/cronica-dev/css/modern-editor.css`, `public/cronica-dev/index.html`.
+**Registro acumulativo:** 11 cambios solo en Crónica DEV; BAE y Diario Show pendientes de replicación por solicitud expresa.
