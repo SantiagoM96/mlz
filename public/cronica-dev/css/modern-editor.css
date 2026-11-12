@@ -1288,18 +1288,17 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 }
 @media(max-width:380px){.editor-panel .modern-footer-options button{gap:5px!important;padding:8px 5px!important}}
 
-/* Cambio 27 — logos sueltos, sin tarjetas ni tratamientos cromáticos ajenos.
-   Escala de grises sobre el SVG ORIGINAL, jamás brightness/invert.
-   Tamaño visual común, anchos proporcionales por aspecto de cada logo. */
+/* Cambio 28 — ajuste óptico de tamaños por identidad.
+   Se mantiene la relación de aspecto natural de cada SVG. */
 .header-inner .editor-platform-switcher{
  box-sizing:border-box;display:flex;align-items:center;justify-content:flex-start;
- gap:clamp(12px,2.2vw,25px);flex:1 1 auto;min-width:0;max-width:none;
+ gap:clamp(12px,2.2vw,24px);flex:1 1 auto;min-width:0;
  padding:4px 0;overflow:visible;
 }
 .header-inner .editor-platform-option{
  position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;
- flex:0 1 auto;min-width:0;width:auto;height:auto;min-height:46px;
- margin:0;padding:5px 0;box-sizing:border-box;
+ flex:0 1 auto;min-width:0;width:auto;min-height:50px;
+ padding:5px 0;margin:0;box-sizing:border-box;
  border:0!important;border-radius:0!important;
  background:transparent!important;box-shadow:none!important;
  text-decoration:none;cursor:pointer;
@@ -1310,23 +1309,28 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 }
 .header-inner .editor-platform-option img{
  box-sizing:border-box;display:block;flex:none;pointer-events:none;
- width:auto!important;height:32px!important;max-width:100%;max-height:none!important;
+ width:auto!important;height:var(--platform-logo-height)!important;
+ max-width:100%!important;max-height:none!important;
  object-fit:contain;filter:none!important;opacity:1;
 }
-.header-inner .editor-platform-cronica img,
-.header-inner .editor-platform-diarioshow img,
-.header-inner .editor-platform-bae img{filter:none!important}
+/* En el diseño anterior todos medían 32 px de alto.
+   Crónica crece 25%; los logos más apaisados bajan de tamaño. */
+.header-inner .editor-platform-cronica{--platform-logo-height:40px}
+.header-inner .editor-platform-diarioshow{--platform-logo-height:24px}
+.header-inner .editor-platform-bae{--platform-logo-height:18px}
 .header-inner .editor-platform-option.is-active{
  filter:none!important;opacity:1;transform:scale(1.065);
  background:none!important;border:0!important;box-shadow:none!important;
- z-index:1;cursor:default;animation:editor-logo-pop .42s cubic-bezier(.18,1.5,.4,1) both;
+ z-index:1;cursor:default;
+ animation:editor-logo-pop .42s cubic-bezier(.18,1.5,.4,1) both;
 }
 .header-inner .editor-platform-option:hover:not(.is-active){
  filter:grayscale(.25);opacity:.94;transform:scale(1.04);
  background:none!important;box-shadow:none!important;
 }
 .header-inner .editor-platform-option:focus-visible{
- outline:2px solid #f3f3f5;outline-offset:4px;border-radius:4px!important;opacity:1;
+ outline:2px solid #f3f3f5;outline-offset:4px;
+ border-radius:4px!important;opacity:1;
 }
 .header-inner .editor-platform-option:active:not(.is-active){transform:scale(.97)}
 @keyframes editor-logo-pop{
@@ -1334,28 +1338,24 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  55%{transform:scale(1.095)}
  100%{transform:scale(1.065)}
 }
-/* Distribución proporcional por la relación de aspecto real de cada SVG.
-   Ante poco ancho se reduce la altura de TODOS en conjunto, no se deforma ninguno. */
 @media(max-width:900px){
  .header-inner .editor-platform-switcher{gap:clamp(8px,1.7vw,16px)}
- .header-inner .editor-platform-option{flex:0 1 auto;min-height:38px;padding:4px 0}
- .header-inner .editor-platform-option img{height:clamp(15px,2.9vw,27px)!important}
+ .header-inner .editor-platform-option{min-height:42px;padding:4px 0}
+ .header-inner .editor-platform-cronica{--platform-logo-height:clamp(28px,4.4vw,38px)}
+ .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(18px,2.7vw,24px)}
+ .header-inner .editor-platform-bae{--platform-logo-height:clamp(14px,2vw,18px)}
 }
 @media(max-width:700px){
  .header-inner .editor-platform-switcher{flex:1 1 auto;min-width:0;gap:8px}
- .header-inner .editor-platform-option{
-  flex:1 1 0;min-width:0;min-height:38px;padding:3px 0;
- }
- .header-inner .editor-platform-option img{
-  display:block;height:auto!important;max-height:26px!important;
-  width:100%!important;max-width:100%!important;
- }
+ .header-inner .editor-platform-option{flex:0 1 auto;min-width:0;min-height:38px;padding:3px 0}
+ .header-inner .editor-platform-cronica{--platform-logo-height:clamp(19px,5.4vw,27px)}
+ .header-inner .editor-platform-diarioshow{--platform-logo-height:clamp(13px,3.9vw,19px)}
+ .header-inner .editor-platform-bae{--platform-logo-height:clamp(10px,2.9vw,14px)}
  .header-inner .editor-platform-option.is-active{transform:scale(1.045)}
 }
 @media(max-width:400px){
  .header-inner .editor-platform-switcher{gap:6px}
  .header-inner .editor-platform-option{min-height:34px}
- .header-inner .editor-platform-option img{max-height:22px!important}
 }
 @media(prefers-reduced-motion:reduce){
  .header-inner .editor-platform-option{animation:none!important;transition:none!important}
