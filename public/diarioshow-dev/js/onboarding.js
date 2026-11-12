@@ -16,6 +16,8 @@
   {selector:'#photoStage',title:'Editá desde la vista previa',description:'Hacé clic en el logo para abrir Diseño de placas o en el titular para abrir Textos. El editor te lleva al módulo correspondiente.'},
   {selector:'body',title:'¿Poco espacio?',description:'Probá el zoom del navegador al 90% u 80% para aprovechar mejor el espacio de trabajo.',fullScreen:true,showZoomDemo:true}
  ];
+ // La navegación multipágina es ahora el primer paso del recorrido.
+ steps.unshift({selector:'.editor-slide-nav',title:'Organizá las diapositivas',description:'Agregá, seleccioná y eliminá diapositivas. Arrastrá la fila para desplazarte. Cada placa conserva su propio diseño y puede estar Sin diseño.'});
  let index=-1,active=false,layer=null,card=null,highlight=null;
  let shadows=[],lastFocus=null,scheduled=0;
  function completed(){try{return localStorage.getItem(storageKey)==='complete'}catch(e){return false}}
