@@ -1,0 +1,6918 @@
+{
+  "schemaVersion": 1,
+  "description": "Datos 100% sintéticos para prototipo; documentos y contactos no corresponden a personas reales",
+  "registrations": [
+    {
+      "id": "INS-DEMO-0001",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-01",
+      "person": {
+        "nombre": "Alex",
+        "apellido": "Pérez",
+        "dni": "FICTICIO-0001",
+        "nacimiento": "1994-01-01",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-001-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0001"
+    },
+    {
+      "id": "INS-DEMO-0002",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-02",
+      "person": {
+        "nombre": "Ambar",
+        "apellido": "Herrera",
+        "dni": "FICTICIO-0002",
+        "nacimiento": "2020-02-02",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0043"
+    },
+    {
+      "id": "INS-DEMO-0003",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-03",
+      "person": {
+        "nombre": "Camila",
+        "apellido": "Giménez",
+        "dni": "FICTICIO-0003",
+        "nacimiento": "1994-03-03",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0066"
+    },
+    {
+      "id": "INS-DEMO-0004",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-04",
+      "person": {
+        "nombre": "Facundo",
+        "apellido": "Castro",
+        "dni": "FICTICIO-0004",
+        "nacimiento": "1987-04-04",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-044-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0214"
+    },
+    {
+      "id": "INS-DEMO-0005",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-05",
+      "person": {
+        "nombre": "Ramiro",
+        "apellido": "Ponce",
+        "dni": "FICTICIO-0005",
+        "nacimiento": "1994-05-05",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-015-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0039"
+    },
+    {
+      "id": "INS-DEMO-0006",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-06",
+      "person": {
+        "nombre": "Bautista",
+        "apellido": "Luna",
+        "dni": "FICTICIO-0006",
+        "nacimiento": "1994-06-06",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-032-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0061"
+    },
+    {
+      "id": "INS-DEMO-0007",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-07",
+      "person": {
+        "nombre": "Mateo",
+        "apellido": "Sosa",
+        "dni": "FICTICIO-0007",
+        "nacimiento": "1994-07-07",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-049-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0178"
+    },
+    {
+      "id": "INS-DEMO-0008",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-08",
+      "person": {
+        "nombre": "Joaquín",
+        "apellido": "Torres",
+        "dni": "FICTICIO-0008",
+        "nacimiento": "2013-08-08",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-012-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0036"
+    },
+    {
+      "id": "INS-DEMO-0009",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-09",
+      "person": {
+        "nombre": "Olivia",
+        "apellido": "Molina",
+        "dni": "FICTICIO-0009",
+        "nacimiento": "1994-09-09",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-029-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0056"
+    },
+    {
+      "id": "INS-DEMO-0010",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-10",
+      "person": {
+        "nombre": "Sofía",
+        "apellido": "Romero",
+        "dni": "FICTICIO-0010",
+        "nacimiento": "1987-10-10",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-046-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0168"
+    },
+    {
+      "id": "INS-DEMO-0011",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-11",
+      "person": {
+        "nombre": "Candela",
+        "apellido": "Suárez",
+        "dni": "FICTICIO-0011",
+        "nacimiento": "1994-11-11",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-009-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0024"
+    },
+    {
+      "id": "INS-DEMO-0012",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-12",
+      "person": {
+        "nombre": "Catalina",
+        "apellido": "Gómez",
+        "dni": "FICTICIO-0012",
+        "nacimiento": "2012-12-12",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-026-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0053"
+    },
+    {
+      "id": "INS-DEMO-0013",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-13",
+      "person": {
+        "nombre": "Renata",
+        "apellido": "Rojas",
+        "dni": "FICTICIO-0013",
+        "nacimiento": "1987-01-13",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-043-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0124"
+    },
+    {
+      "id": "INS-DEMO-0014",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-14",
+      "person": {
+        "nombre": "Benjamín",
+        "apellido": "Vargas",
+        "dni": "FICTICIO-0014",
+        "nacimiento": "1994-02-14",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-006-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0017"
+    },
+    {
+      "id": "INS-DEMO-0015",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-15",
+      "person": {
+        "nombre": "Emma",
+        "apellido": "Morales",
+        "dni": "FICTICIO-0015",
+        "nacimiento": "1996-03-15",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0050"
+    },
+    {
+      "id": "INS-DEMO-0016",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-16",
+      "person": {
+        "nombre": "Noah",
+        "apellido": "Acosta",
+        "dni": "FICTICIO-0016",
+        "nacimiento": "2010-04-16",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-040-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0083"
+    },
+    {
+      "id": "INS-DEMO-0017",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-17",
+      "person": {
+        "nombre": "Thiago",
+        "apellido": "Medina",
+        "dni": "FICTICIO-0017",
+        "nacimiento": "1994-05-17",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-003-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0011"
+    },
+    {
+      "id": "INS-DEMO-0018",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-18",
+      "person": {
+        "nombre": "Agustina",
+        "apellido": "Méndez",
+        "dni": "FICTICIO-0018",
+        "nacimiento": "2016-06-18",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0046"
+    },
+    {
+      "id": "INS-DEMO-0019",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-19",
+      "person": {
+        "nombre": "Lucía",
+        "apellido": "Ruiz",
+        "dni": "FICTICIO-0019",
+        "nacimiento": "2009-07-19",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0068"
+    },
+    {
+      "id": "INS-DEMO-0020",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-20",
+      "person": {
+        "nombre": "Franco",
+        "apellido": "Silva",
+        "dni": "FICTICIO-0020",
+        "nacimiento": "1994-08-20",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-051-gimnasio-de-alto-rendimiento",
+      "commissionId": "COM-0228"
+    },
+    {
+      "id": "INS-DEMO-0021",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-21",
+      "person": {
+        "nombre": "Gael",
+        "apellido": "Díaz",
+        "dni": "FICTICIO-0021",
+        "nacimiento": "1994-09-21",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0041"
+    },
+    {
+      "id": "INS-DEMO-0022",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-22",
+      "person": {
+        "nombre": "Valentina",
+        "apellido": "Cabrera",
+        "dni": "FICTICIO-0022",
+        "nacimiento": "1994-10-22",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0065"
+    },
+    {
+      "id": "INS-DEMO-0023",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-23",
+      "person": {
+        "nombre": "Bruno",
+        "apellido": "Fernández",
+        "dni": "FICTICIO-0023",
+        "nacimiento": "1987-11-23",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-043-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0204"
+    },
+    {
+      "id": "INS-DEMO-0024",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-24",
+      "person": {
+        "nombre": "Santino",
+        "apellido": "Vega",
+        "dni": "FICTICIO-0024",
+        "nacimiento": "1994-12-24",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-014-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0038"
+    },
+    {
+      "id": "INS-DEMO-0025",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-25",
+      "person": {
+        "nombre": "Emilia",
+        "apellido": "Pérez",
+        "dni": "FICTICIO-0025",
+        "nacimiento": "1994-01-25",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0058"
+    },
+    {
+      "id": "INS-DEMO-0026",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-26",
+      "person": {
+        "nombre": "Abril",
+        "apellido": "Herrera",
+        "dni": "FICTICIO-0026",
+        "nacimiento": "1994-02-01",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-048-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0171"
+    },
+    {
+      "id": "INS-DEMO-0027",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-01",
+      "person": {
+        "nombre": "Luca",
+        "apellido": "Giménez",
+        "dni": "FICTICIO-0027",
+        "nacimiento": "1994-03-02",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-011-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0034"
+    },
+    {
+      "id": "INS-DEMO-0028",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-02",
+      "person": {
+        "nombre": "Juana",
+        "apellido": "Castro",
+        "dni": "FICTICIO-0028",
+        "nacimiento": "2016-04-03",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-028-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0055"
+    },
+    {
+      "id": "INS-DEMO-0029",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-03",
+      "person": {
+        "nombre": "Delfina",
+        "apellido": "Ponce",
+        "dni": "FICTICIO-0029",
+        "nacimiento": "2016-05-04",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-045-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0165"
+    },
+    {
+      "id": "INS-DEMO-0030",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-04",
+      "person": {
+        "nombre": "Milagros",
+        "apellido": "Luna",
+        "dni": "FICTICIO-0030",
+        "nacimiento": "1994-06-05",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-008-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0023"
+    },
+    {
+      "id": "INS-DEMO-0031",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-05",
+      "person": {
+        "nombre": "Victoria",
+        "apellido": "Sosa",
+        "dni": "FICTICIO-0031",
+        "nacimiento": "2010-07-06",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0052"
+    },
+    {
+      "id": "INS-DEMO-0032",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-06",
+      "person": {
+        "nombre": "Martina",
+        "apellido": "Torres",
+        "dni": "FICTICIO-0032",
+        "nacimiento": "2020-08-07",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-042-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0114"
+    },
+    {
+      "id": "INS-DEMO-0033",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-07",
+      "person": {
+        "nombre": "Tomás",
+        "apellido": "Molina",
+        "dni": "FICTICIO-0033",
+        "nacimiento": "1994-09-08",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-005-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0014"
+    },
+    {
+      "id": "INS-DEMO-0034",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-08",
+      "person": {
+        "nombre": "Nicolás",
+        "apellido": "Romero",
+        "dni": "FICTICIO-0034",
+        "nacimiento": "1994-10-09",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-022-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0049"
+    },
+    {
+      "id": "INS-DEMO-0035",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-09",
+      "person": {
+        "nombre": "Mora",
+        "apellido": "Suárez",
+        "dni": "FICTICIO-0035",
+        "nacimiento": "2016-11-10",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-039-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0078"
+    },
+    {
+      "id": "INS-DEMO-0036",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-10",
+      "person": {
+        "nombre": "Simón",
+        "apellido": "Gómez",
+        "dni": "FICTICIO-0036",
+        "nacimiento": "1994-12-11",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-002-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0004"
+    },
+    {
+      "id": "INS-DEMO-0037",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-11",
+      "person": {
+        "nombre": "Alex",
+        "apellido": "Rojas",
+        "dni": "FICTICIO-0037",
+        "nacimiento": "2018-01-12",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0044"
+    },
+    {
+      "id": "INS-DEMO-0038",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-12",
+      "person": {
+        "nombre": "Ambar",
+        "apellido": "Vargas",
+        "dni": "FICTICIO-0038",
+        "nacimiento": "1968-02-13",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-036-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0067"
+    },
+    {
+      "id": "INS-DEMO-0039",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-13",
+      "person": {
+        "nombre": "Camila",
+        "apellido": "Morales",
+        "dni": "FICTICIO-0039",
+        "nacimiento": "1987-03-14",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-050-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0227"
+    },
+    {
+      "id": "INS-DEMO-0040",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-14",
+      "person": {
+        "nombre": "Facundo",
+        "apellido": "Acosta",
+        "dni": "FICTICIO-0040",
+        "nacimiento": "1994-04-15",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0040"
+    },
+    {
+      "id": "INS-DEMO-0041",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-15",
+      "person": {
+        "nombre": "Ramiro",
+        "apellido": "Medina",
+        "dni": "FICTICIO-0041",
+        "nacimiento": "1994-05-16",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-033-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0063"
+    },
+    {
+      "id": "INS-DEMO-0042",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-16",
+      "person": {
+        "nombre": "Bautista",
+        "apellido": "Méndez",
+        "dni": "FICTICIO-0042",
+        "nacimiento": "1987-06-17",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-041-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0182"
+    },
+    {
+      "id": "INS-DEMO-0043",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-17",
+      "person": {
+        "nombre": "Mateo",
+        "apellido": "Ruiz",
+        "dni": "FICTICIO-0043",
+        "nacimiento": "2009-07-18",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-013-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0037"
+    },
+    {
+      "id": "INS-DEMO-0044",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-18",
+      "person": {
+        "nombre": "Joaquín",
+        "apellido": "Silva",
+        "dni": "FICTICIO-0044",
+        "nacimiento": "2011-08-19",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-030-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0057"
+    },
+    {
+      "id": "INS-DEMO-0045",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-19",
+      "person": {
+        "nombre": "Olivia",
+        "apellido": "Díaz",
+        "dni": "FICTICIO-0045",
+        "nacimiento": "1994-09-20",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo / Federado",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-047-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0169"
+    },
+    {
+      "id": "INS-DEMO-0046",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-20",
+      "person": {
+        "nombre": "Sofía",
+        "apellido": "Cabrera",
+        "dni": "FICTICIO-0046",
+        "nacimiento": "1994-10-21",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-010-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0029"
+    },
+    {
+      "id": "INS-DEMO-0047",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-21",
+      "person": {
+        "nombre": "Candela",
+        "apellido": "Fernández",
+        "dni": "FICTICIO-0047",
+        "nacimiento": "2014-11-22",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-027-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0054"
+    },
+    {
+      "id": "INS-DEMO-0048",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-22",
+      "person": {
+        "nombre": "Catalina",
+        "apellido": "Vega",
+        "dni": "FICTICIO-0048",
+        "nacimiento": "1987-12-23",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-044-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0144"
+    },
+    {
+      "id": "INS-DEMO-0049",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-23",
+      "person": {
+        "nombre": "Renata",
+        "apellido": "Pérez",
+        "dni": "FICTICIO-0049",
+        "nacimiento": "1994-01-24",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-007-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0021"
+    },
+    {
+      "id": "INS-DEMO-0050",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-24",
+      "person": {
+        "nombre": "Benjamín",
+        "apellido": "Herrera",
+        "dni": "FICTICIO-0050",
+        "nacimiento": "2008-02-25",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-024-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0051"
+    },
+    {
+      "id": "INS-DEMO-0051",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-25",
+      "person": {
+        "nombre": "Emma",
+        "apellido": "Giménez",
+        "dni": "FICTICIO-0051",
+        "nacimiento": "1987-03-01",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-041-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0088"
+    },
+    {
+      "id": "INS-DEMO-0052",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-26",
+      "person": {
+        "nombre": "Noah",
+        "apellido": "Castro",
+        "dni": "FICTICIO-0052",
+        "nacimiento": "2016-04-02",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-004-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0013"
+    },
+    {
+      "id": "INS-DEMO-0053",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-01",
+      "person": {
+        "nombre": "Thiago",
+        "apellido": "Ponce",
+        "dni": "FICTICIO-0053",
+        "nacimiento": "1968-05-03",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-021-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0047"
+    },
+    {
+      "id": "INS-DEMO-0054",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-02",
+      "person": {
+        "nombre": "Agustina",
+        "apellido": "Luna",
+        "dni": "FICTICIO-0054",
+        "nacimiento": "2016-06-04",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-038-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0070"
+    },
+    {
+      "id": "INS-DEMO-0055",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-03",
+      "person": {
+        "nombre": "Lucía",
+        "apellido": "Sosa",
+        "dni": "FICTICIO-0055",
+        "nacimiento": "1994-07-05",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-001-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0001"
+    },
+    {
+      "id": "INS-DEMO-0056",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-04",
+      "person": {
+        "nombre": "Franco",
+        "apellido": "Torres",
+        "dni": "FICTICIO-0056",
+        "nacimiento": "2020-08-06",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0043"
+    },
+    {
+      "id": "INS-DEMO-0057",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-05",
+      "person": {
+        "nombre": "Gael",
+        "apellido": "Molina",
+        "dni": "FICTICIO-0057",
+        "nacimiento": "1994-09-07",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0066"
+    },
+    {
+      "id": "INS-DEMO-0058",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-06",
+      "person": {
+        "nombre": "Valentina",
+        "apellido": "Romero",
+        "dni": "FICTICIO-0058",
+        "nacimiento": "1987-10-08",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-044-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0218"
+    },
+    {
+      "id": "INS-DEMO-0059",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-07",
+      "person": {
+        "nombre": "Bruno",
+        "apellido": "Suárez",
+        "dni": "FICTICIO-0059",
+        "nacimiento": "1994-11-09",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-015-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0039"
+    },
+    {
+      "id": "INS-DEMO-0060",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-08",
+      "person": {
+        "nombre": "Santino",
+        "apellido": "Gómez",
+        "dni": "FICTICIO-0060",
+        "nacimiento": "1994-12-10",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-032-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0061"
+    },
+    {
+      "id": "INS-DEMO-0061",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-09",
+      "person": {
+        "nombre": "Emilia",
+        "apellido": "Rojas",
+        "dni": "FICTICIO-0061",
+        "nacimiento": "1994-01-11",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-049-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0178"
+    },
+    {
+      "id": "INS-DEMO-0062",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-10",
+      "person": {
+        "nombre": "Abril",
+        "apellido": "Vargas",
+        "dni": "FICTICIO-0062",
+        "nacimiento": "2013-02-12",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-012-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0036"
+    },
+    {
+      "id": "INS-DEMO-0063",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-11",
+      "person": {
+        "nombre": "Luca",
+        "apellido": "Morales",
+        "dni": "FICTICIO-0063",
+        "nacimiento": "1994-03-13",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-029-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0056"
+    },
+    {
+      "id": "INS-DEMO-0064",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-12",
+      "person": {
+        "nombre": "Juana",
+        "apellido": "Acosta",
+        "dni": "FICTICIO-0064",
+        "nacimiento": "1987-04-14",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-046-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0168"
+    },
+    {
+      "id": "INS-DEMO-0065",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-13",
+      "person": {
+        "nombre": "Delfina",
+        "apellido": "Medina",
+        "dni": "FICTICIO-0065",
+        "nacimiento": "1994-05-15",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-009-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0027"
+    },
+    {
+      "id": "INS-DEMO-0066",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-14",
+      "person": {
+        "nombre": "Milagros",
+        "apellido": "Méndez",
+        "dni": "FICTICIO-0066",
+        "nacimiento": "2012-06-16",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-026-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0053"
+    },
+    {
+      "id": "INS-DEMO-0067",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-15",
+      "person": {
+        "nombre": "Victoria",
+        "apellido": "Ruiz",
+        "dni": "FICTICIO-0067",
+        "nacimiento": "1987-07-17",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-043-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0127"
+    },
+    {
+      "id": "INS-DEMO-0068",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-16",
+      "person": {
+        "nombre": "Martina",
+        "apellido": "Silva",
+        "dni": "FICTICIO-0068",
+        "nacimiento": "1994-08-18",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-006-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0020"
+    },
+    {
+      "id": "INS-DEMO-0069",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-17",
+      "person": {
+        "nombre": "Tomás",
+        "apellido": "Díaz",
+        "dni": "FICTICIO-0069",
+        "nacimiento": "1996-09-19",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0050"
+    },
+    {
+      "id": "INS-DEMO-0070",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-18",
+      "person": {
+        "nombre": "Nicolás",
+        "apellido": "Cabrera",
+        "dni": "FICTICIO-0070",
+        "nacimiento": "2010-10-20",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-040-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0086"
+    },
+    {
+      "id": "INS-DEMO-0071",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-19",
+      "person": {
+        "nombre": "Mora",
+        "apellido": "Fernández",
+        "dni": "FICTICIO-0071",
+        "nacimiento": "1994-11-21",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-003-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0011"
+    },
+    {
+      "id": "INS-DEMO-0072",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-20",
+      "person": {
+        "nombre": "Simón",
+        "apellido": "Vega",
+        "dni": "FICTICIO-0072",
+        "nacimiento": "2016-12-22",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0046"
+    },
+    {
+      "id": "INS-DEMO-0073",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-21",
+      "person": {
+        "nombre": "Alex",
+        "apellido": "Pérez",
+        "dni": "FICTICIO-0073",
+        "nacimiento": "2009-01-23",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0068"
+    },
+    {
+      "id": "INS-DEMO-0074",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-22",
+      "person": {
+        "nombre": "Ambar",
+        "apellido": "Herrera",
+        "dni": "FICTICIO-0074",
+        "nacimiento": "1994-02-24",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-051-gimnasio-de-alto-rendimiento",
+      "commissionId": "COM-0228"
+    },
+    {
+      "id": "INS-DEMO-0075",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-23",
+      "person": {
+        "nombre": "Camila",
+        "apellido": "Giménez",
+        "dni": "FICTICIO-0075",
+        "nacimiento": "1994-03-25",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0041"
+    },
+    {
+      "id": "INS-DEMO-0076",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-24",
+      "person": {
+        "nombre": "Facundo",
+        "apellido": "Castro",
+        "dni": "FICTICIO-0076",
+        "nacimiento": "1994-04-01",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0065"
+    },
+    {
+      "id": "INS-DEMO-0077",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-25",
+      "person": {
+        "nombre": "Ramiro",
+        "apellido": "Ponce",
+        "dni": "FICTICIO-0077",
+        "nacimiento": "1987-05-02",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-043-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0198"
+    },
+    {
+      "id": "INS-DEMO-0078",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-26",
+      "person": {
+        "nombre": "Bautista",
+        "apellido": "Luna",
+        "dni": "FICTICIO-0078",
+        "nacimiento": "1994-06-03",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-014-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0038"
+    },
+    {
+      "id": "INS-DEMO-0079",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-01",
+      "person": {
+        "nombre": "Mateo",
+        "apellido": "Sosa",
+        "dni": "FICTICIO-0079",
+        "nacimiento": "1994-07-04",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0058"
+    },
+    {
+      "id": "INS-DEMO-0080",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-02",
+      "person": {
+        "nombre": "Joaquín",
+        "apellido": "Torres",
+        "dni": "FICTICIO-0080",
+        "nacimiento": "1994-08-05",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Competitivo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-048-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0171"
+    },
+    {
+      "id": "INS-DEMO-0081",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-03",
+      "person": {
+        "nombre": "Olivia",
+        "apellido": "Molina",
+        "dni": "FICTICIO-0081",
+        "nacimiento": "1994-09-06",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-011-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0034"
+    },
+    {
+      "id": "INS-DEMO-0082",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-11-04",
+      "person": {
+        "nombre": "Sofía",
+        "apellido": "Romero",
+        "dni": "FICTICIO-0082",
+        "nacimiento": "2016-10-07",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-028-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0055"
+    },
+    {
+      "id": "INS-DEMO-0083",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-05",
+      "person": {
+        "nombre": "Candela",
+        "apellido": "Suárez",
+        "dni": "FICTICIO-0083",
+        "nacimiento": "2016-11-08",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-045-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0165"
+    },
+    {
+      "id": "INS-DEMO-0084",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-06",
+      "person": {
+        "nombre": "Catalina",
+        "apellido": "Gómez",
+        "dni": "FICTICIO-0084",
+        "nacimiento": "1994-12-09",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-008-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0023"
+    },
+    {
+      "id": "INS-DEMO-0085",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-07",
+      "person": {
+        "nombre": "Renata",
+        "apellido": "Rojas",
+        "dni": "FICTICIO-0085",
+        "nacimiento": "2010-01-10",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0052"
+    },
+    {
+      "id": "INS-DEMO-0086",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-08",
+      "person": {
+        "nombre": "Benjamín",
+        "apellido": "Vargas",
+        "dni": "FICTICIO-0086",
+        "nacimiento": "2020-02-11",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-042-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0114"
+    },
+    {
+      "id": "INS-DEMO-0087",
+      "synthetic": true,
+      "status": "En revisión",
+      "createdAt": "2026-10-09",
+      "person": {
+        "nombre": "Emma",
+        "apellido": "Morales",
+        "dni": "FICTICIO-0087",
+        "nacimiento": "1994-03-12",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-005-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0014"
+    },
+    {
+      "id": "INS-DEMO-0088",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-10",
+      "person": {
+        "nombre": "Noah",
+        "apellido": "Acosta",
+        "dni": "FICTICIO-0088",
+        "nacimiento": "1994-04-13",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Principiante",
+        "cud": "Sí"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-022-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0049"
+    },
+    {
+      "id": "INS-DEMO-0089",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-10-11",
+      "person": {
+        "nombre": "Thiago",
+        "apellido": "Medina",
+        "dni": "FICTICIO-0089",
+        "nacimiento": "2016-05-14",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-039-natatorio-jorge-omar-rossi",
+      "commissionId": "COM-0078"
+    },
+    {
+      "id": "INS-DEMO-0090",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-12",
+      "person": {
+        "nombre": "Agustina",
+        "apellido": "Méndez",
+        "dni": "FICTICIO-0090",
+        "nacimiento": "1994-06-15",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "San José",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-002-gimnasio-de-deportes-de-combate",
+      "commissionId": "COM-0004"
+    },
+    {
+      "id": "INS-DEMO-0091",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-13",
+      "person": {
+        "nombre": "Lucía",
+        "apellido": "Ruiz",
+        "dni": "FICTICIO-0091",
+        "nacimiento": "2018-07-16",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Villa Fiorito",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": true
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0044"
+    },
+    {
+      "id": "INS-DEMO-0092",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-14",
+      "person": {
+        "nombre": "Franco",
+        "apellido": "Silva",
+        "dni": "FICTICIO-0092",
+        "nacimiento": "1968-08-17",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Lomas de Zamora",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-036-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0067"
+    },
+    {
+      "id": "INS-DEMO-0093",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-15",
+      "person": {
+        "nombre": "Gael",
+        "apellido": "Díaz",
+        "dni": "FICTICIO-0093",
+        "nacimiento": "1987-09-18",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Banfield",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-050-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0227"
+    },
+    {
+      "id": "INS-DEMO-0094",
+      "synthetic": true,
+      "status": "Lista de espera",
+      "createdAt": "2026-11-16",
+      "person": {
+        "nombre": "Valentina",
+        "apellido": "Cabrera",
+        "dni": "FICTICIO-0094",
+        "nacimiento": "1994-10-19",
+        "genero": "Femenino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Temperley",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Principiante",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0040"
+    },
+    {
+      "id": "INS-DEMO-0095",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-10-17",
+      "person": {
+        "nombre": "Bruno",
+        "apellido": "Fernández",
+        "dni": "FICTICIO-0095",
+        "nacimiento": "1994-11-20",
+        "genero": "Masculino",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Llavallol",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "Sí",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo / Competitivo / Federado",
+        "condicion": "Intermedio",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-033-parque-de-lomas-parque-municipal-eva-per-n",
+      "commissionId": "COM-0063"
+    },
+    {
+      "id": "INS-DEMO-0096",
+      "synthetic": true,
+      "status": "Confirmada",
+      "createdAt": "2026-11-18",
+      "person": {
+        "nombre": "Santino",
+        "apellido": "Vega",
+        "dni": "FICTICIO-0096",
+        "nacimiento": "1987-12-21",
+        "genero": "No binario",
+        "telefono": "No informado",
+        "telefonoAlternativo": "No informado",
+        "email": "sin-correo@ejemplo.invalid",
+        "localidad": "Turdera",
+        "calle": "Dato ficticio",
+        "altura": "—",
+        "piso": "",
+        "departamento": "",
+        "imagenAutorizacion": "No",
+        "menor": false
+      },
+      "sport": {
+        "tipo": "Recreativo",
+        "condicion": "Avanzado",
+        "cud": "No"
+      },
+      "emergency": {
+        "nombre": "Contacto",
+        "apellido": "Ficticio",
+        "telefono": "No informado"
+      },
+      "medical": {
+        "altura": "No informado",
+        "peso": "No informado",
+        "tension": "No informado",
+        "pulso": "No informado",
+        "sangre": "No informado",
+        "rh": "No informado",
+        "diagnostico": "No informado",
+        "indicaciones": "No informado",
+        "urgencia": "Sí",
+        "patologias": [],
+        "alergias": "No informado",
+        "otros": "No informado",
+        "cirugias": "No informado",
+        "intolerancia": "No informado",
+        "medicamentos": "No informado",
+        "limitacion": "No informado",
+        "marcha": "No informado"
+      },
+      "documents": [
+        {
+          "tipo": "DNI frente",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "DNI dorso",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "CUD",
+          "estado": "No adjuntado"
+        },
+        {
+          "tipo": "Apto médico",
+          "estado": "No adjuntado"
+        }
+      ],
+      "activityId": "act-041-natatorio-gregorio-guyo-sember",
+      "commissionId": "COM-0183"
+    }
+  ]
+}
