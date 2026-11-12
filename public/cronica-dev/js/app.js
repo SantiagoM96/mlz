@@ -112,6 +112,19 @@ function drawPhoto(height,includeHover=true){
 }
 function render(includeHover=true){
  try{
+  if(pageVariant==='blank'){
+   // Placa neutra completa; no se dibuja foto, logo, volanta ni textos.
+   ctx.clearRect(0,0,W,H);
+   ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
+   photoBottom=H;
+   window.__editorialHotspotBounds={text:{left:0,top:0,right:0,bottom:0},logo:{left:0,top:0,right:0,bottom:0}};
+   updatePhotoDropzone();
+   el('sizeLabel').textContent=el('size').value;
+   el('zoomLabel').textContent=Math.round(zoom*100)+' %';
+   el('photoZoom').value=Math.round(zoom*100);
+   el('status').textContent='Sin diseño · Elegí Portada o Interior para aplicar una composición.';
+   return;
+  }
   const cover=pageVariant==='cover',requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
   const availableBottom=cover?footerTop-50:H-EDGE;
@@ -194,14 +207,14 @@ const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato pri
 const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
 function newBlankPage(){
  return {headline:INTERNAL_HEADLINE,strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
-  image:null,zoom:1,offsetX:0,offsetY:0,variant:'internal'};
+  image:null,zoom:1,offsetX:0,offsetY:0,variant:'blank'};
 }
 function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
 function syncVariantUI(){
  document.querySelectorAll('.cronica-variant-option').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pageVariant===pageVariant)));
 }
 function loadPage(page){
- pageVariant=page.variant==='cover'?'cover':'internal';syncVariantUI();
+ pageVariant=['blank','cover','internal'].includes(page.variant)?page.variant:'blank';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
@@ -217,11 +230,12 @@ function renderCarouselNavigation(){
  carouselPages.forEach((page,index)=>{
   const button=document.createElement('button');button.type='button';
   button.setAttribute('aria-current',index===activePage?'page':'false');
-  const isCover=page.variant==='cover';
-  button.setAttribute('aria-label','Página '+(index+1)+', '+(isCover?'portada':'interior'));
-  button.setAttribute('title','Página '+(index+1)+' · '+(isCover?'Portada':'Interior'));
+  const variant=['blank','cover','internal'].includes(page.variant)?page.variant:'blank';
+  const variantName={blank:'Sin diseño',cover:'Portada',internal:'Interior'}[variant];
+  button.setAttribute('aria-label','Página '+(index+1)+', '+variantName.toLowerCase());
+  button.setAttribute('title','Página '+(index+1)+' · '+variantName);
   button.className='carousel-page-thumb';
-  button.dataset.variant=isCover?'cover':'internal';
+  button.dataset.variant=variant;
   const composition=document.createElement('span');
   composition.className='carousel-page-art';
   composition.setAttribute('aria-hidden','true');
@@ -259,8 +273,8 @@ function renderCarouselNavigation(){
  count.className='carousel-indicator-count';
  count.textContent=(activePage+1)+' de '+carouselPages.length;
  const type=document.createElement('span');
- type.className='carousel-indicator-type '+(pageVariant==='cover'?'is-cover':'is-internal');
- type.textContent=pageVariant==='cover'?'Portada':'Interior';
+ type.className='carousel-indicator-type is-'+pageVariant;
+ type.textContent={blank:'Sin diseño',cover:'Portada',internal:'Interior'}[pageVariant];
  indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
  // Con espacio libre, la miniatura punteada es el botón de agregar.
@@ -292,7 +306,39 @@ function selectPage(index){
  if(index===activePage||index<0||index>=carouselPages.length)return;
  saveActivePage();activePage=index;loadPage(carouselPages[index]);renderCarouselNavigation();
 }
+function installCarouselDragScroll(){
+ const track=el('carouselPages');
+ let drag=null,suppressClick=false;
+ track.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='touch'||event.button!==0)return;
+  drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,scrollX:track.scrollLeft,moved:false};
+ });
+ track.addEventListener('pointermove',event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+  if(!drag.moved&&Math.abs(dx)<5)return;
+  if(!drag.moved&&Math.abs(dy)>Math.abs(dx))return;
+  if(!drag.moved){drag.moved=true;track.classList.add('is-dragging');track.setPointerCapture(event.pointerId)}
+  track.scrollLeft=drag.scrollX-dx;
+  event.preventDefault();
+ });
+ const stop=event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  if(drag.moved){suppressClick=true;track.classList.remove('is-dragging');}
+  drag=null;
+ };
+ track.addEventListener('pointerup',stop);
+ track.addEventListener('pointercancel',stop);
+ track.addEventListener('lostpointercapture',stop);
+ track.addEventListener('click',event=>{
+  if(!suppressClick)return;
+  suppressClick=false;event.preventDefault();event.stopImmediatePropagation();
+ },true);
+ // Cada interacción nueva sin arrastre debe poder seleccionar las miniaturas.
+ track.addEventListener('pointerdown',()=>{suppressClick=false},true);
+}
 function initializeCarousel(){
+ installCarouselDragScroll();
  carouselPages=[readCurrentPage()];activePage=0;renderCarouselNavigation();
  el('addPage').addEventListener('click',()=>{
   saveActivePage();const index=activePage+1;carouselPages.splice(index,0,newBlankPage());
@@ -357,7 +403,7 @@ window.addEventListener('resize',updateHoverBorderGeometry);
 function updatePhotoDropzone(){
  const zone=el('photoDropzone'),stage=el('photoStage');
  if(!zone||!stage)return;
- zone.hidden=Boolean(image);
+ zone.hidden=Boolean(image)||pageVariant==='blank';
  stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
  updateHoverBorderGeometry();
  canvas.style.cursor=image?'grab':'default';
@@ -405,7 +451,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- const initial=newBlankPage();initial.variant=pageVariant;if(activePage===0){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ const initial=newBlankPage();initial.variant=pageVariant;if(pageVariant==='cover'){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
  loadPage(initial);saveActivePage();
 });
 // Exportar una placa o todo el carrusel sin perder el estado de edición.
