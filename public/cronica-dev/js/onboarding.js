@@ -67,22 +67,35 @@
   const right=last?vw:Math.min(vw-8,rect.right+8),bottom=last?vh:Math.min(vh-8,rect.bottom+8);
   const w=Math.max(16,right-x),h=Math.max(16,bottom-y);
   rectStyle(highlight,x,y,w,h);
+  // Todas las aberturas de la máscara tienen esquinas de exactamente 8px.
+  const roundedHole=(l,t,r,b)=>{
+   const rad=Math.min(8,(r-l)/2,(b-t)/2);
+   return 'M'+(l+rad)+' '+t+' H'+(r-rad)+
+    ' Q'+r+' '+t+' '+r+' '+(t+rad)+
+    ' V'+(b-rad)+' Q'+r+' '+b+' '+(r-rad)+' '+b+
+    ' H'+(l+rad)+' Q'+l+' '+b+' '+l+' '+(b-rad)+
+    ' V'+(t+rad)+' Q'+l+' '+t+' '+(l+rad)+' '+t+' Z';
+  };
+  const outer='M0 0 H'+vw+' V'+vh+' H0 Z';
+  const multi=layer.querySelector('.ds-tour-multispot');
+  multi.setAttribute('viewBox','0 0 '+vw+' '+vh);
+  if(!steps[index].logoControls&&!last){
+   multi.firstChild.setAttribute('d',outer+' '+roundedHole(x,y,right,bottom));
+  }
   if(steps[index].logoControls){
    const design=qs('section.modern-design-group');
    const controlSelectors=['.editor-logo-layout-row','.modern-footer-field'];
    const holes=[target,...controlSelectors.map(sel=>design?.querySelector(sel)).filter(Boolean)];
    const clamp=(n,min,max)=>Math.min(max,Math.max(min,n));
-   const d=['M0 0 H'+vw+' V'+vh+' H0 Z'];
+   const d=[outer];
    for(const node of holes){
     const box=node.getBoundingClientRect();
     const margin=node===target?8:5;
     const l=clamp(box.left-margin,0,vw),t=clamp(box.top-margin,0,vh);
     const r=clamp(box.right+margin,0,vw),b=clamp(box.bottom+margin,0,vh);
     if(r-l<8||b-t<8)continue;
-    d.push('M'+l+' '+t+' H'+r+' V'+b+' H'+l+' Z');
+    d.push(roundedHole(l,t,r,b));
    }
-   const multi=layer.querySelector('.ds-tour-multispot');
-   multi.setAttribute('viewBox','0 0 '+vw+' '+vh);
    multi.firstChild.setAttribute('d',d.join(' '));
   }
   rectStyle(shadows[0],0,0,vw,y);
@@ -91,15 +104,18 @@
   rectStyle(shadows[3],0,bottom,vw,vh-bottom);
   // Desktop: posicionar la tarjeta a un lado; si no entra, debajo o arriba.
   const cw=Math.min(last?345:325,vw-32),ch=card.offsetHeight||230;
-  const fitsRight=right+18+cw<=vw-16;
-  const fitsLeft=x-18-cw>=16;
+  // El paso del titular aumenta exclusivamente un 30% la separación.
+  const tipGap=steps[index].selector==='.modern-text-hit'?23.4:18;
+  const fitsRight=right+tipGap+cw<=vw-16;
+  const fitsLeft=x-tipGap-cw>=16;
   let cx,cy;
   if(last){cx=(vw-cw)/2;cy=(vh-ch)/2}
-  else if(fitsRight){cx=right+18;cy=y+(h-ch)/2}
-  else if(fitsLeft){cx=x-18-cw;cy=y+(h-ch)/2}
+  else if(fitsRight){cx=right+tipGap;cy=y+(h-ch)/2}
+  else if(fitsLeft){cx=x-tipGap-cw;cy=y+(h-ch)/2}
   else{
    cx=Math.max(16,Math.min(vw-cw-16,x+(w-cw)/2));
-   cy=bottom+12+ch<=vh-12?bottom+12:Math.max(12,y-ch-12);
+   const fallbackGap=steps[index].selector==='.modern-text-hit'?15.6:12;
+   cy=bottom+fallbackGap+ch<=vh-12?bottom+fallbackGap:Math.max(12,y-ch-fallbackGap);
   }
   cx=Math.max(16,Math.min(vw-cw-16,cx));
   cy=Math.max(12,Math.min(vh-ch-12,cy));
@@ -130,6 +146,7 @@
    if(existing)demoSlot.appendChild(existing.cloneNode(true));
   }
   layer.classList.toggle('is-logo-spotlight',Boolean(step.logoControls));
+  layer.classList.toggle('is-rounded-spotlight',!step.logoControls&&!step.fullScreen);
   layer.dataset.tourGroup=step.group||'panel';
   if(step.logoControls){
    const design=qs('section.modern-design-group');
