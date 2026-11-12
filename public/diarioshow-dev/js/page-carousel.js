@@ -170,6 +170,7 @@ document.addEventListener('click',event=>{
  const variantButton=event.target.closest(variantSelector);
  if(!variantButton)return;
  const variant=isDS?variantButton.dataset.variant:variantButton.dataset.theme;
+ const previousVariant=pages[active]?.variant;
  const shouldSeed=pages[active]?.variant==='blank'&&pages[active]?.samplePending;
  if(pages[active]?.variant==='blank')editor.setBlank(false);
  // Ejecutar luego del listener nativo de cada marca para no sobrescribir
@@ -180,6 +181,18 @@ document.addEventListener('click',event=>{
    const sample=sampleForVariant(variant);
    editor.setPageState({...current,...sample,variant,theme:variant});
    pages[active].samplePending=false;
+  }else if(isDS&&previousVariant!==variant){
+   // Si el usuario todavía conserva nuestro ejemplo, adaptarlo al nuevo
+   // formato; nunca sustituir un título escrito a mano.
+   const current=editor.getPageState();
+   const generic=sampleForVariant('pink');
+   const quote=sampleForVariant('quote');
+   const unchanged=[generic.headline,quote.headline,''].includes(current.headline);
+   const wasQuote=['quote','quote-blue'].includes(previousVariant);
+   const isQuote=['quote','quote-blue'].includes(variant);
+   if(unchanged&&wasQuote!==isQuote){
+    editor.setPageState({...current,...sampleForVariant(variant),variant,theme:variant});
+   }
   }
   save();draw();
  },0);
