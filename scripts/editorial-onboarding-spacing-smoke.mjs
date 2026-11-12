@@ -68,7 +68,7 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
    if(!visible||!image.loaded||!image.src.includes('shift-click-demo.svg'))
     throw Error(slug+': falta imagen Shift '+JSON.stringify({visible,image}));
    const illustration=await page.evaluate(async()=>{
-    const response=await fetch('../shared/shift-click-demo.svg?v=shift-pointer-v40-20261112');
+    const response=await fetch('../shared/shift-click-demo.svg?v=shift-hand-mouse-v42-20261112');
     const svg=await response.text();
     const parsed=new DOMParser().parseFromString(svg,'image/svg+xml');
     return {
@@ -76,8 +76,11 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
      panels:parsed.querySelectorAll('#modules .module').length,
      expandedHeights:[...parsed.querySelectorAll('#modules .module animate[attributeName="height"]')].map(x=>x.getAttribute('values')),
      shift:parsed.querySelector('#shift-key .shift')?.getAttribute('x'),
-     pointer:parsed.querySelector('#mouse-pointer animateTransform')?.getAttribute('values'),
-     pointerPath:parsed.querySelector('#mouse-pointer .cursor-arrow')?.getAttribute('d'),
+     pointer:parsed.querySelector('#mouse-pointer animateMotion')?.getAttribute('path'),
+     pointerPath:parsed.querySelector('#mouse-pointer .cursor-hand')?.getAttribute('d'),
+     mouse:!!parsed.querySelector('#mouse-button .mouse'),
+     mouseClick:!!parsed.querySelector('#mouse-button .mouse-button animate'),
+     behindShift:(()=>{const hand=parsed.querySelector('#mouse-pointer'),shift=parsed.querySelector('#shift-key');return hand&&shift&&!!(hand.compareDocumentPosition(shift)&Node.DOCUMENT_POSITION_FOLLOWING)})(),
      clickX:parsed.querySelector('.click-ring')?.getAttribute('cx'),
      hasBottomCaption:svg.includes('Mantené presionada Shift'),
      hasEquals:svg.includes('> = </text>')||svg.includes('>=</text>'),
@@ -87,7 +90,7 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
    });
    if(illustration.status!==200||illustration.panels!==3||
       illustration.expandedHeights.some(v=>!v?.includes('36;36;66;66;36'))||
-      !(Number(illustration.shift)>320&&illustration.pointer?.includes('293 40')&&illustration.pointer?.includes('494 160')&&illustration.pointerPath&&illustration.clickX==='293')||
+      !(Number(illustration.shift)>320&&illustration.pointer?.includes('C486 230 437 213 401 192')&&illustration.pointer?.endsWith('293 40')&&illustration.pointerPath&&illustration.mouse&&illustration.mouseClick&&illustration.behindShift&&illustration.clickX==='293')||
       illustration.hasBottomCaption||illustration.hasEquals||
       illustration.shiftKeyBoxCount!==1||!illustration.lightBackground)
     throw Error(slug+': SVG Shift no coincide con diseño aprobado '+JSON.stringify(illustration));
