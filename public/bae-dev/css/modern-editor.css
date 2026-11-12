@@ -627,3 +627,50 @@ main .modern-track>.editor-panel:not(.modern-preview-text-editor):not(.modern-pr
 @media(max-width:480px){
  .editor-panel .modern-import-group .import-row #importArticle{min-width:76px;padding:0 10px}
 }
+
+
+/* Preview contextual en mobile: misma tarjeta y mismo pulso que Formato desktop.
+   El margen de seguridad de 4 px mantiene el halo completo en ambos lados,
+   incluso dentro del carrusel que recorta su contenido. */
+@media(max-width:700px){
+ .modern-track>.preview>.modern-preview-text-editor,
+ .modern-track>.preview>.modern-preview-identity-editor{
+  box-sizing:border-box!important;
+  width:100%!important;max-width:540px!important;
+  padding:4px!important;margin:0!important;
+  background:transparent!important;border:0!important;
+  box-shadow:none!important;overflow:visible!important;
+ }
+ .modern-track>.preview>.modern-preview-text-editor>.modern-card,
+ .modern-track>.preview>.modern-preview-identity-editor>.modern-card{
+  box-sizing:border-box!important;width:100%!important;max-width:100%!important;
+  margin:0!important;border:1px solid #383d46!important;
+  border-radius:10px!important;overflow:visible!important;
+  background:#24262c!important;
+ }
+ .modern-track>.preview>.modern-preview-text-editor>.modern-card>.modern-toggle,
+ .modern-track>.preview>.modern-preview-identity-editor>.modern-card>.modern-toggle{
+  border-radius:9px 9px 0 0!important;
+ }
+ .modern-track>.preview>.modern-preview-text-editor>.modern-card>.modern-body,
+ .modern-track>.preview>.modern-preview-identity-editor>.modern-card>.modern-body{
+  border-radius:0 0 9px 9px!important;
+  background:#202228!important;
+ }
+}
+/* Tanto desktop como mobile usan exactamente 1,05 s y 2 px de halo.
+   Borde base gris constante: evita el doble trazo irregular en las esquinas. */
+@keyframes editorial-card-pulse{
+ 0%,85%{border-color:#383d46;box-shadow:0 0 0 2px var(--editor-accent)}
+ 100%{border-color:#383d46;box-shadow:0 0 0 0 transparent}
+}
+.editor-panel .modern-card.modern-context-target,
+.editor-panel .modern-card.modern-card-flash{
+ border:1px solid #383d46!important;border-radius:10px!important;
+ box-sizing:border-box!important;
+ animation:editorial-card-pulse 1.05s linear both!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .editor-panel .modern-card.modern-context-target,
+ .editor-panel .modern-card.modern-card-flash{animation-duration:.01ms!important}
+}
