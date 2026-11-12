@@ -369,10 +369,18 @@ for(const [brand,config] of Object.entries(tests)){
      await tour.locator('.ds-tour-back').click();
      const restarted=await tour.locator('.preview > .cronica-preview-pages').evaluate(node=>{
       const style=getComputedStyle(node);
-      return {shadow:style.boxShadow,name:style.animationName};
+      const animations=node.getAnimations();
+      const pulse=animations.find(a=>a.animationName==='editorial-card-pulse');
+      const frames=pulse?.effect?.getKeyframes()||[];
+      return {name:style.animationName,hasClass:node.classList.contains('modern-card-flash'),
+       duration:style.animationDuration,frames:frames.map(f=>f.boxShadow).filter(Boolean)};
      });
-     assert(restarted.name==='editorial-card-pulse'&&restarted.shadow.includes('0px 0px 0px 2px'),
-      'Crónica: al volver a Páginas no reinicia pulso '+JSON.stringify(restarted));
+     // Las transiciones de posición del onboarding pueden consumir el segundo
+     // de duración mientras Playwright espera la estabilidad del botón.
+     // Validar la reactivación de la clase y los keyframes, no un instante.
+     assert(restarted.hasClass&&restarted.name==='editorial-card-pulse'&&
+      restarted.duration==='1.05s'&&restarted.frames.some(v=>v.includes('2px')),
+      'Crónica: al volver a Páginas falta el pulso '+JSON.stringify(restarted));
     }else assert(visual.expanded==='true'&&visual.pulseName==='editorial-card-pulse'&&
      visual.pulseDuration==='1.05s'&&visual.shadow.includes('0px 0px 0px 2px'),
      'Crónica: el paso '+n+' no pulsa tarjeta ya abierta '+JSON.stringify(visual));
