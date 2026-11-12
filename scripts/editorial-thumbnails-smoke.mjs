@@ -22,6 +22,13 @@ for(const data of cases){
     const back=document.querySelector('.dashboard-back-link').getBoundingClientRect();
     return {barWidth:bar.width,links:links.map(n=>({left:n.left,right:n.right,top:n.top,bottom:n.bottom})),backLeft:back.left,backRight:back.right};
    });
+   const visual=await page.locator('.editor-platform-switcher .editor-platform-option').evaluateAll(nodes=>nodes.map(n=>{
+    const cs=getComputedStyle(n),img=getComputedStyle(n.querySelector('img'));
+    return {filter:cs.filter,background:cs.backgroundColor,border:cs.borderTopWidth,shadow:cs.boxShadow,
+      imgFilter:img.filter,active:n.classList.contains('is-active')};
+   }));
+   assert(visual.length===3&&visual.every(x=>x.background==='rgba(0, 0, 0, 0)'&&x.border==='0px'&&x.shadow==='none'&&x.imgFilter==='none')&&visual[0].filter==='none'&&visual.slice(1).every(x=>x.filter.includes('grayscale(1)')),
+    'Crónica: logos no están sueltos o conservan filtros anteriores '+JSON.stringify(visual));
    const desktop=await checkLayout();
    assert(desktop.links.every((x,i)=>i===0||x.left>=desktop.links[i-1].right-2)&&desktop.links[2].right<desktop.backLeft+4, 'Crónica: selector se superpone en desktop '+JSON.stringify(desktop));
    await page.setViewportSize({width:390,height:844});
