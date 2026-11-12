@@ -345,3 +345,10 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Permanecen el estado activo a color, los inactivos en grises, la expansión del activo, la navegación entre entornos DEV y el botón Volver.
 - Pendiente de aprobación visual antes de replicar el header a BAE y Diario Show.
 **Registro acumulativo: 28 cambios.**
+
+## Cambio 29 — Aumentar Diario Show y BAE un 20 % en el header (2026-11-12)
+- **Crónica DEV únicamente.** Crónica permanece en 40 px; Diario Show aumenta **24 → 28,8 px** y BAE Negocios **18 → 21,6 px** en desktop.
+- Se aumenta también un **20 %** la escala de Diario Show y BAE en las reglas responsive, respetando siempre la proporción intrínseca de los SVG.
+- No se alteran la animación, el color original del logo activo, la escala de grises de inactivos ni las rutas de navegación.
+- BAE DEV y Diario Show DEV todavía conservan sus headers propios, a la espera de aprobación del piloto.
+**Registro acumulativo: 29 cambios.**
