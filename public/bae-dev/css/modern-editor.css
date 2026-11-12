@@ -903,3 +903,51 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
   padding:15px 12px!important;
  }
 }
+
+/* Cambio 45 — Herramientas de Textos según referencia visual Diario Show. */
+.editor-panel .modern-text-card .typography-row .help-label-row>label{
+ font-size:14px!important;font-weight:600!important;line-height:20px!important;
+}
+.editor-panel .modern-text-card .typography-row .help-label-row{
+ height:20px!important;min-height:20px!important;margin-bottom:9px!important;
+}
+.editor-panel .modern-text-card .typography-row .format-buttons button,
+.editor-panel .modern-text-card .typography-row .align-buttons button{
+ height:43px!important;min-height:43px!important;
+}
+.editor-panel .modern-text-card .typography-row .format-buttons button{
+ width:39px!important;min-width:39px!important;flex-basis:39px!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons{
+ display:inline-flex!important;align-items:stretch!important;gap:0!important;
+ height:43px!important;border-radius:7px!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons button{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ position:relative!important;flex:0 0 39px!important;width:39px!important;min-width:39px!important;
+ padding:0!important;border:1px solid #4a4e56!important;border-radius:0!important;
+ background:#292c32!important;color:#f4f4f4!important;box-shadow:none!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons button:first-child{
+ border-radius:7px 0 0 7px!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons button:last-child{
+ border-radius:0 7px 7px 0!important;border-left:0!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons button[aria-pressed="true"]{
+ background:#3b3f46!important;color:#fff!important;
+ box-shadow:inset 0 0 0 1.5px #f4f4f4!important;z-index:1!important;
+}
+.editor-panel .modern-text-card .typography-row .align-buttons button:hover:not([aria-pressed="true"]){
+ background:#343841!important;
+}
+.editor-panel .modern-text-card .modern-body > .modern-quote-input-field{
+ margin:0 0 16px!important;
+}
+.editor-panel .modern-text-card .modern-body > .modern-quote-input-field[hidden]{
+ display:none!important;
+}
+.editor-panel .modern-text-card .modern-body > .modern-quote-input-field > label{
+ display:block;margin-bottom:8px;
+}
+.editor-panel .modern-design-group .modern-quote-toggle-field{margin-top:16px!important}
