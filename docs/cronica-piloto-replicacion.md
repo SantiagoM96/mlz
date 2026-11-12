@@ -245,3 +245,13 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Registro acumulado:** 16 cambios; el Cambio 16 se aplica a los tres DEV, sin modificar producción.
 
 **Verificación del Cambio 16 (Chromium, 12/11/2026): APROBADA.** [Prueba automatizada](https://github.com/SantiagoM96/mlz/actions/runs/43150967560): creación de diapositiva Sin diseño, elección de plantilla, contenido inicial para Crónica/BAE/Diario Show, volanta activa, textual de BAE, autor de cita de Diario Show y persistencia de modificaciones manuales. El ajuste adicional de Diario Show contempla el cambio entre una placa de titular y una de cita, adaptando los ejemplos solo si no se editaron. [Publicación DEV](https://github.com/SantiagoM96/mlz/actions/runs/43150967690) completada. Los tests heredados de contexto/onboarding continúan con incidencias independientes.
+
+## Cambio 17 — Primera página con ejemplos y Sin diseño sin módulos (2026-11-12)
+**Alcance:** Crónica DEV, BAE DEV y Diario Show DEV.
+- **Causa de textos antiguos:** el Cambio 16 inicializaba nuevas diapositivas al seleccionar un formato, pero la primera diapositiva continuaba usando el contenido histórico hardcodeado en cada `index.html`. Se actualizaron los textos iniciales del HTML para que coincidan con los ejemplos del generador.
+- **Crónica:** primera portada con volanta `CULTURA EN LA CIUDAD` y titular ficticio de espacio cultural.
+- **BAE:** primera placa con titular ficticio de inversiones, textual activado y ejemplo sobre empleo. No se borran los textos editados por el usuario.
+- **Diario Show:** primera placa con titular ficticio de una artista, autor ficticio `Una artista invitada`; se retiró la condición antigua del motor que sustituía un titular histórico por una cita ajena al ejemplo al seleccionar la variante 3/4.
+- **Sin diseño:** refuerzo CSS del estado `data-editor-plate-variant="blank"` para ocultar en Diario Show todos los módulos del panel de Formato salvo `Diseño de placas`, el editor contextual de identidad/logo, el editor contextual de texto y los hotspots de logo/fotografía; BAE conserva únicamente el selector de variantes. Crónica mantiene sus controles contextuales anteriores.
+- **QA:** ampliada `scripts/editorial-thumbnails-smoke.mjs` para verificar el texto inicial, el textual de BAE, la volanta de Crónica, el autor de Diario Show y que el estado vacío no muestre los módulos restantes. Pendiente de resultado de ejecución en Chromium.
+- **Registro acumulado:** 17 cambios. Aplicados solamente a los tres DEV, sin modificar producción.
