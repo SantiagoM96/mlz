@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="250" viewBox="0 0 600 250" role="img" aria-labelledby="title desc">
+<title id="title">Shift más clic para expandir o contraer todos los módulos</title>
+<desc id="desc">La tecla Shift se ilumina mientras un mouse hace clic sobre la cabecera de un acordeón. Tres módulos cambian de estado juntos.</desc>
+<style>
+ .key,.mouse,.panel{fill:#2a2d37;stroke:#777b89;stroke-width:2}
+ .shift{fill:#30343f;stroke:#8b91a1;stroke-width:2}
+ .type{fill:#edf0f5;font:700 22px system-ui,sans-serif}
+ .small{fill:#c6cbd6;font:600 14px system-ui,sans-serif}
+ .detail{fill:#858b98}
+ .tap{fill:#fff;opacity:0}
+ .mouseButton{fill:#414754}
+ .rule{fill:#8d93a0}
+ .rule2{fill:#a4a9b4;opacity:.6}
+ .keyPulse{animation:shiftPulse 3.6s ease-in-out infinite}
+ .mouseTap{animation:mouseTap 3.6s ease-in-out infinite;transform-origin:235px 99px}
+ .panelBody{animation:accordionPulse 3.6s ease-in-out infinite;transform-box:fill-box;transform-origin:top center}
+ .clickPulse{animation:clickPulse 3.6s ease-in-out infinite;transform-origin:244px 75px}
+ @keyframes shiftPulse{0%,12%,74%,100%{fill:#30343f;stroke:#8b91a1}22%,65%{fill:#e9edf6;stroke:#fff}}
+ @keyframes mouseTap{0%,29%,50%,100%{transform:translateY(0)}34%,42%{transform:translateY(5px)}}
+ @keyframes accordionPulse{0%,30%,74%,100%{transform:scaleY(.12);opacity:.15}41%,65%{transform:scaleY(1);opacity:1}}
+ @keyframes clickPulse{0%,28%,47%,100%{opacity:0;transform:scale(.5)}34%{opacity:.65;transform:scale(1)}44%{opacity:0;transform:scale(1.5)}}
+ @media(prefers-reduced-motion:reduce){*{animation:none!important}.panelBody{transform:scaleY(1);opacity:1}}
+</style>
+<rect x="1" y="1" width="598" height="248" rx="18" fill="#20232c" stroke="#444a58" stroke-width="2"/>
+<rect x="28" y="64" width="161" height="82" rx="13" class="key"/>
+<rect x="39" y="75" width="139" height="60" rx="9" class="shift keyPulse"/>
+<path d="M62 109V96l-8 8m8-8 8 8" fill="none" stroke="#b7c0d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="83" y="112" class="type">Shift</text>
+<text x="202" y="114" class="type">+</text>
+<g class="mouseTap">
+ <rect x="233" y="60" width="60" height="86" rx="29" class="mouse"/>
+ <path d="M263 60V98" fill="none" stroke="#777b89" stroke-width="2"/>
+ <path d="M263 98H234" stroke="#777b89" stroke-width="2"/>
+ <rect x="250" y="71" width="8" height="20" rx="4" class="mouseButton"/>
+</g>
+<circle class="clickPulse" cx="251" cy="74" r="20" fill="none" stroke="#fff" stroke-width="3"/>
+<text x="309" y="114" class="type">=</text>
+<g>
+ <rect x="353" y="28" width="218" height="60" rx="8" class="panel"/>
+ <rect x="353" y="97" width="218" height="60" rx="8" class="panel"/>
+ <rect x="353" y="166" width="218" height="60" rx="8" class="panel"/>
+ <text x="366" y="49" class="small">Diseño de placas</text>
+ <text x="366" y="118" class="small">Fotografía</text>
+ <text x="366" y="187" class="small">Textos</text>
+ <path d="M548 46l6 6 6-6M548 115l6 6 6-6M548 184l6 6 6-6" fill="none" stroke="#f0f0f4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+ <g class="panelBody">
+  <path d="M368 62h115M368 70h75M368 78h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
+  <path d="M368 131h115M368 139h75M368 147h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
+  <path d="M368 200h115M368 208h75M368 216h95" stroke="#9ca2ae" stroke-width="3" stroke-linecap="round"/>
+ </g>
+</g>
+<text x="30" y="203" class="small">Mantené presionada Shift</text>
+<text x="30" y="224" class="small">y hacé clic en una cabecera</text>
+</svg>
