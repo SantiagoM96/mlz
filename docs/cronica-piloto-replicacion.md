@@ -454,3 +454,5 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - El degradado replica el comportamiento del render: transición del mismo RGB desde **0% a 100% de opacidad** sobre el fondo fotográfico neutro `#aeb4bc`, en lugar de los antiguos colores oscuros de miniatura `#A30065` y `#008FBE`.
 - **Diseño de placas y Diapositivas** se actualizan automáticamente: la navegación de páginas clona las miniaturas originales con las mismas clases y estilos. Sin cambios de colores en las placas exportadas ni en Crónica/BAE.
 **Registro acumulativo: 44 cambios.**
+
+**QA Cambio 44: APROBADA** — [Chromium / GitHub Actions](https://github.com/SantiagoM96/mlz/actions/runs/43160878649). Se seleccionaron ambas variantes de cita en Diario Show DEV y se comprobó que los estilos computados de sus miniaturas en «Diseño de placas» y sus clones en «Diapositivas» son idénticos. Colores de los degradés finales: fucsia RGB (230,0,141) y celeste RGB (0,166,217), desde alfa 0 a alfa 1.
