@@ -88,6 +88,26 @@ for(const [brand,config] of Object.entries(tests)){
     brand+': clic normal afectó más de un módulo');
    await firstToggle.click();
    console.log('PASS '+brand+' '+(mobile?'mobile':'desktop')+': Shift + clic global y clic normal local');
+   // El anillo exterior debe replicar exactamente a Diario Show: 2 px
+   // de outline con 2 px de offset, borde gris propio de la miniatura.
+   const selectedThumb=page.locator('aside.editor-panel .modern-design-group .cronica-variant-option[aria-pressed=true] .cronica-variant-thumbnail, aside.editor-panel .modern-design-group .theme-swatch[aria-pressed=true] .theme-swatch-thumb').first();
+   const miniStyle=await selectedThumb.evaluate(el=>{
+    const css=getComputedStyle(el);
+    return {outlineWidth:css.outlineWidth,outlineOffset:css.outlineOffset,
+     outlineColor:css.outlineColor,borderColor:css.borderTopColor};
+   });
+   const color=brand==='cronica'?'rgb(237, 0, 0)':'rgb(216, 38, 38)';
+   assert(miniStyle.outlineWidth==='2px'&&miniStyle.outlineOffset==='2px'&&
+    miniStyle.outlineColor===color&&miniStyle.borderColor==='rgb(86, 90, 99)',
+    brand+': aro de miniatura distinto a Diario Show '+JSON.stringify(miniStyle));
+   if(brand==='cronica'){
+    const pageRing=await page.locator('.carousel-pages .carousel-page-thumb[aria-current="page"]').first().evaluate(el=>{
+     const css=getComputedStyle(el);
+     return {width:css.outlineWidth,offset:css.outlineOffset,border:css.borderTopColor};
+    });
+    assert(pageRing.width==='2px'&&pageRing.offset==='2px'&&pageRing.border==='rgb(85, 90, 100)',
+     'Crónica: aro de Páginas incorrecto '+JSON.stringify(pageRing));
+   }
    const identity=page.locator('aside.editor-panel .modern-design-group').first();
    const before=await page.locator('#art').evaluate(c=>c.toDataURL());
    const target=brand==='cronica'?'center':'carousel';
