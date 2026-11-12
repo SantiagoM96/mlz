@@ -41,7 +41,7 @@ for(const variant of ['pink','blue','quote','quote-blue']){
    firstAuthor:text?.firstElementChild===authorField,
    authorVisible:!authorField.hidden,
    switchVisible:!switchField.hidden,
-   sizeAfterHeadline:headline?.contains(size),
+   sizeAfterHeadline:headline?.closest('.ds-headline-field')?.contains(size),
    inputVisible:!document.querySelector('#quoteAuthorInputField').hidden,
    theme:document.querySelector('#theme').value};
  });
