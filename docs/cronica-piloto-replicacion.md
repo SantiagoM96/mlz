@@ -230,3 +230,16 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - **QA:** análisis sintáctico de scripts correcto; prueba automatizada en Chromium iniciada. El resultado debe consultarse antes de confirmar la validación visual.
 
 **QA final del Cambio 15 (Chromium, 12/11/2026): APROBADO.** El workflow [Miniaturas DEV — geometría visual](https://github.com/SantiagoM96/mlz/actions/runs/43146913962) verificó las 12 variantes de los tres editores, dimensiones exactas 48×64 px, coincidencia de origen de miniatura y tarjeta, número centrado, actualización inmediata de variante y la creación de una nueva diapositiva `Sin diseño`. Se corrigió además el desfase temporal de selección en BAE/Diario Show mediante sincronización posterior al evento de selección. La publicación de GitHub Pages terminó correctamente en el run `43146913993`. **Nota:** los workflows antiguos de pruebas de contexto/onboarding siguen con fallos ajenos a esta geometría y necesitan una actualización independiente de sus expectativas.
+
+## Cambio 16 — Contenido de muestra en nuevas diapositivas (2026-11-12)
+**Estado:** implementado únicamente en Crónica DEV, BAE DEV y Diario Show DEV; pendiente de comprobación interactiva.
+
+- Regla transversal: `Sin diseño` continúa siendo visualmente gris y sin elementos. Cada diapositiva nueva guarda una marca `samplePending` hasta su primera selección de diseño; **en ese momento** se cargan textos ficticios, editables y de longitud adecuada para el lienzo. No se sustituyen textos ya editados al cambiar otra vez de variante.
+- **Crónica Portada:** volanta `CULTURA EN LA CIUDAD` y titular `Un nuevo espacio cultural abrió sus puertas y presentó actividades para toda la comunidad` (con destacado en espacio cultural).
+- **Crónica Interior:** volanta `NUEVAS ACTIVIDADES` y texto `El espacio ofrecerá talleres, muestras y espectáculos durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.` (con destacado).
+- **BAE Negro/Blanco/Rojo:** titular ficticio sobre inversiones de una empresa argentina; textual ficticio `El objetivo es generar más empleo durante el próximo año`. El textual se activa al asignar la primera plantilla para que también se muestre, sin cambiar la identidad gráfica del diseño.
+- **Diario Show variantes 1/2:** titular ficticio sobre una artista que sorprendió con un anuncio; variantes 3/4: frase de ejemplo con autor ficticio identificado como `Una artista invitada`, con autor activado.
+- Se mantienen la exportación original y las configuraciones/ediciones posteriores de cada página. No se introduce fotografía de ejemplo ni se afirma que los hechos ficticios sean noticias reales.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/bae-dev/js/page-carousel.js`, `public/diarioshow-dev/js/page-carousel.js`.
+**Registro acumulado:** 16 cambios; el Cambio 16 se aplica a los tres DEV, sin modificar producción.
