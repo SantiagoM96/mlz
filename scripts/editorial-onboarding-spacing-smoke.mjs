@@ -15,10 +15,41 @@ for(const slug of ['cronica-dev','bae-dev','diarioshow-dev']){
    throw Error(slug+': máscara no igualada a Diario Show '+JSON.stringify(mask));
   console.log('PASS máscara instantánea',slug);
  }
+ const expected=slug==='cronica-dev'
+  ?['Elegí el diseño de cada placa','Agregá una fotografía','Editá los textos']
+  :slug==='bae-dev'
+   ?['Elegí el diseño de tu placa','Agregá una fotografía','Importá una noticia','Editá los textos','Ajustá el diseño']
+   :['Elegí el diseño de tu placa','Definí la distribución fotográfica','Agregá tus fotografías','Importá y personalizá tu placa','Editá los textos'];
  let found=false;
+ const titles=[];
  for(let i=0;i<13;i++){
   const title=await page.locator('#dsTourTitle').textContent();
+  titles.push(title);
   if(title?.includes('Abrí o cerrá todos los módulos')){
+   const before=titles.slice(0,-1);
+   let cursor=-1;
+   for(const name of expected){
+    const idx=before.indexOf(name);
+    if(idx<=cursor)throw Error(slug+': módulos no aparecen en orden: '+JSON.stringify(titles));
+    cursor=idx;
+   }
+   const geometry=await page.evaluate(slug=>{
+    const header=document.querySelector(slug==='diarioshow-dev'
+     ?'#dsMobileControlsPanel .ds-plate-design-group > .ds-control-card-toggle'
+     :'section.modern-design-group > .modern-toggle');
+    const highlight=document.querySelector('.ds-tour-highlight');
+    const box=header?.getBoundingClientRect(),mask=highlight?.getBoundingClientRect();
+    const whole=header?.parentElement?.getBoundingClientRect();
+    return {header:box?{top:box.top,height:box.height}:null,
+     mask:mask?{top:mask.top,height:mask.height}:null,
+     whole:whole?{height:whole.height}:null};
+   },slug);
+   if(!geometry.header||!geometry.mask||geometry.mask.height>geometry.header.height+18||
+      Math.abs(geometry.mask.top-geometry.header.top)>9||
+      (geometry.whole.height>geometry.header.height+35&&geometry.mask.height>=geometry.whole.height))
+    throw Error(slug+': la máscara no señala solo la cabecera '+JSON.stringify(geometry));
+   console.log('PASS orden y spotlight cabecera',slug,JSON.stringify(titles));
+
    found=true;
    const visible=await page.locator('#dsTourShiftDemo').isVisible();
    const image=await page.locator('#dsTourShiftDemo img').evaluate(el=>({
