@@ -336,6 +336,34 @@ try{
   }
  }
  console.log('PASS: cabeceras Diario Show sin saltos de icono y título al abrir/cerrar');
+ // Todos los módulos de Formato deben conservar margen suficiente
+ // para mostrar el halo cuando el carrusel mobile recorta en los bordes.
+ const mobileFormat=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await mobileFormat.goto(url+'?onboarding=off',{waitUntil:'load'});
+ await mobileFormat.locator('#dsMobileControlsTab').click();
+ const formatGeometry=await mobileFormat.evaluate(()=>{
+  const panel=document.getElementById('dsMobileControlsPanel').getBoundingClientRect();
+  const cards=[...document.querySelectorAll('#dsMobileControlsPanel > .ds-control-card:not([hidden])')];
+  return cards.map(card=>{
+   const rect=card.getBoundingClientRect(),css=getComputedStyle(card);
+   return {left:rect.left-panel.left,right:panel.right-rect.right,
+    border:css.borderTopWidth,radius:css.borderTopLeftRadius};
+  });
+ });
+ requireState(formatGeometry.length>=3&&formatGeometry.every(rect=>
+  rect.left>=5&&rect.right>=5&&rect.border==='1px'&&rect.radius==='10px'),
+  'MOBILE FORMAT GLOW CROPPED '+JSON.stringify(formatGeometry));
+ const collapse=mobileFormat.locator('#dsMobileControlsPanel .ds-plate-design-group>.ds-control-card-toggle');
+ await collapse.click();
+ const corners=await collapse.evaluate(node=>({
+  expanded:node.getAttribute('aria-expanded'),
+  bottomLeft:getComputedStyle(node).borderBottomLeftRadius,
+  bottomRight:getComputedStyle(node).borderBottomRightRadius
+ }));
+ requireState(corners.expanded==='false'&&corners.bottomLeft==='9px'&&corners.bottomRight==='9px',
+  'MOBILE COLLAPSED HEADER HAS SQUARE BOTTOM '+JSON.stringify(corners));
+ console.log('PASS: mobile Formato con margen para halo y esquinas plegadas redondeadas');
+ await mobileFormat.close();
  // Shift + clic controla todos los módulos visibles de Formato.
  const allCards=pulsePage.locator('#dsMobileControlsPanel > .ds-control-card:visible');
  const allStates=()=>allCards.locator(':scope > .ds-control-card-toggle').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('aria-expanded')));
