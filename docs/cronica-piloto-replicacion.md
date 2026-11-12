@@ -328,3 +328,12 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 - Responsive: las tres marcas permanecen en una fila con anchos flexibles en mobile y se respeta la preferencia `prefers-reduced-motion`.
 - Este header se evalúa en Crónica antes de aplicar el mismo sistema en BAE y Diario Show; al navegar a estos últimos se sigue viendo por ahora su header anterior.
 **Registro acumulativo: 26 cambios.**
+
+## Cambio 27 — Header con logos sueltos y colores originales (2026-11-12)
+**Piloto exclusivo de Crónica DEV**, pendiente de aceptación para replicar a BAE y Diario Show.
+- Se eliminan las tres tarjetas, el fondo rojo activo, sombras, marcos y fondos de hover: quedan únicamente los tres SVG originales separados por espacio.
+- Los SVG se mantienen sin filtros cromáticos internos. La desaturación de inactivos es `filter: grayscale(1)` aplicada al enlace completo, **sin** `brightness(0) invert(1)` (que convertía incorrectamente el logo de Diario Show en blanco).
+- Activo: logo a color, un poco más grande y con animación breve; inactivos: escala de grises y opacidad moderada. Al pasar el cursor aumenta su legibilidad.
+- Altura común de imágenes de escritorio 32 px y anchos proporcionales a los SVG; las vistas angostas reducen el espacio disponible y el tamaño sin deformar el logo.
+- Se conservan las rutas entre los 3 DEV y el botón Volver; BAE DEV y Diario Show DEV no se modifican todavía.
+**Registro acumulativo: 27 cambios.**
