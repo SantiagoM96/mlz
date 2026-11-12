@@ -38,7 +38,7 @@ export function AgendaHomePage() {
       <section aria-labelledby="proximos-eventos" className="mt-10">
         <div className="mb-10 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
           <h2 id="proximos-eventos" className="text-[32px] leading-10 font-bold text-primary-600">Próximos eventos</h2>
-          <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 hover:no-underline" to="/agenda-de-la-comunidad/actividades">
+          <Link className="inline-flex min-h-7 items-center gap-2 text-[18px] font-bold text-primary-600 no-underline hover:no-underline" to="/agenda-de-la-comunidad/actividades">
             Ver todas las actividades <MaterialIcon name="chevron_right" size={24} />
           </Link>
         </div>
