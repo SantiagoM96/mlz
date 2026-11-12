@@ -128,3 +128,15 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 
 **Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/index.html`.
 **Registro acumulativo:** 9 cambios en Crónica DEV; pendientes de evaluación/adaptación en BAE y Diario Show, sin replicar todavía.
+
+## Cambio 10 — Volanta más alta y tipografía ampliada (2026-11-12)
+**Estado:** aplicado solo en Crónica DEV; pendiente de validación visual en navegador.
+
+- Altura de volanta: **Portada 52 → 68 px** (aprox. +30,8 %) e **Interior 50 → 65 px** (+30 %), sin variar el ancho ni los márgenes laterales.
+- Tamaño inicial del texto: **Portada 34 → 37 px**; **Interior 32 → 35 px**. Se conserva el autoajuste de fuente para textos largos.
+- Portada: la volanta se mantiene centrada sobre el borde entre la foto y la caja blanca; el espacio inferior entre volanta y titular continúa siendo 50 px.
+- Interior: se recalcula la posición superior de la caja para mantener la separación con el titular al crecer la volanta.
+- El ajuste se dibuja en el mismo canvas que se exporta a PNG, por lo que preview y exportación usan medidas idénticas.
+
+**Archivos:** `public/cronica-dev/js/app.js`, `public/cronica-dev/index.html`.
+**Registro acumulativo:** 10 cambios en Crónica DEV; sin replicar a BAE ni Diario Show.
