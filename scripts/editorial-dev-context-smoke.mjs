@@ -83,6 +83,42 @@ for(const [brand,config] of Object.entries(tests)){
      brand+': cabecera plegada sin esquinas inferiores redondas '+JSON.stringify(corners));
     await toggle.click();
    }
+   if(brand==='cronica'&&!mobile){
+    // Matriz de regresión: foco previo de mouse + Shift al pasar el
+    // puntero, Shift antes del clic, cambio entre acordeones y retorno.
+    const headers=page.locator('aside.editor-panel > .modern-card:visible > .modern-toggle');
+    const cases=[headers.first(),headers.nth(1)];
+    const noSecondOutline=async(name,target)=>{
+     const v=await target.evaluate(node=>{
+      const css=getComputedStyle(node);
+      return {outline:css.outlineWidth,style:css.outlineStyle,
+       pointerOrigin:node.hasAttribute('data-pointer-origin'),
+       visible:node.matches(':focus-visible')};
+     });
+     assert(v.outline==='0px'||v.style==='none',
+      'Crónica: marco rectangular de foco en '+name+' '+JSON.stringify(v));
+    };
+    for(let i=0;i<cases.length;i++){
+     const target=cases[i];
+     await target.click(); // Foco de mouse sobre tarjeta previamente abierta.
+     await page.keyboard.down('Shift');
+     await target.hover(); // El mero hover con Shift NO debe dibujar outline.
+     await noSecondOutline('Shift al pasar mouse '+i,target);
+     await target.click(); // Shift + clic sobre tarjeta cerrada: abre todas.
+     await noSecondOutline('Shift + clic luego de foco de mouse '+i,target);
+     await page.keyboard.up('Shift');
+     await target.click(); // Volver a cerrar solo esta tarjeta.
+     await page.keyboard.down('Shift');
+     await target.click(); // Shift + clic sobre tarjeta cerrada: abrir todas.
+     await noSecondOutline('Shift antes del clic '+i,target);
+     await page.keyboard.up('Shift');
+    }
+    // Foco accesible verdadero: Tab restaura el outline para teclado.
+    await page.keyboard.press('Tab');
+    const pointerFlags=await page.locator('.modern-toggle[data-pointer-origin]').count();
+    assert(pointerFlags===0,'Crónica: el teclado no recuperó el foco accesible');
+    console.log('PASS Crónica: sin segundo marco con Shift, hover, foco previo y cambio de módulos');
+   }
    // Shift + clic debe afectar TODOS los acordeones visibles de Formato.
    // El clic normal debe continuar alterando un único módulo.
    const allToggles=page.locator('aside.editor-panel > .modern-card:visible > .modern-toggle');
