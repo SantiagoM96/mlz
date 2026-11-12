@@ -66,6 +66,21 @@ function makeCard(section,title,isText=false){
  });
  return section;
 }
+// Evitar el falso :focus-visible al mantener Shift sobre un acordeón
+// previamente enfocado con el mouse. Solo la navegación real por teclado
+// habilita nuevamente el anillo accesible de foco.
+const clearPointerOrigin=()=>document.querySelectorAll('.modern-toggle[data-pointer-origin]').forEach(
+ button=>button.removeAttribute('data-pointer-origin')
+);
+document.addEventListener('pointerdown',event=>{
+ const button=event.target.closest?.('.modern-toggle');
+ if(button)button.setAttribute('data-pointer-origin','');
+},true);
+document.addEventListener('keydown',event=>{
+ if(event.key==='Tab'||event.key==='Enter'||event.key===' '||event.key.startsWith('Arrow')){
+  clearPointerOrigin();
+ }
+},true);
 // Preserve original nodes and handlers by moving only, never recreating controls.
 const sections=[...panel.querySelectorAll(':scope > section.panel-group')];
 let textPanel;
