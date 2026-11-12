@@ -225,3 +225,15 @@
  }
  .ds-onboarding-layer.is-whole-screen .ds-tour-shade{display:none!important}
 }
+
+/* Cambio 39: máscara de tres ventanas independientes.
+   La vista previa y sólo los controles de logo/posición y firma quedan libres. */
+.ds-onboarding-layer .ds-tour-multispot{
+ position:fixed;inset:0;width:100vw;height:100vh;z-index:0;
+ pointer-events:auto;display:none;
+}
+.ds-onboarding-layer.is-logo-spotlight .ds-tour-multispot{display:block}
+.ds-onboarding-layer.is-logo-spotlight .ds-tour-shade,
+.ds-onboarding-layer.is-logo-spotlight .ds-tour-highlight{display:none!important}
+.ds-onboarding-layer .ds-tour-multispot path{fill:rgba(9,10,14,.77);fill-rule:evenodd}
+.ds-onboarding-layer.is-logo-spotlight .ds-tour-card{z-index:1}
