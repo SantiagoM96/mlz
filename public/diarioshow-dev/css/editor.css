@@ -2872,3 +2872,21 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
 
 .preview #photoStage>.ds-circle-photo-hit .material-icons{font-size:40px;pointer-events:none;color:#f4f4f5}
 .preview #photoStage>.ds-circle-photo-hit.is-editing{cursor:move;outline:2px dashed #fff;outline-offset:4px}
+
+/* Foto bolita: mismo switch y cargador que el resto del editor. */
+.preview #photoStage>.ds-circle-photo-hit .material-icons{color:#41464e}
+.ds-circle-photo-field>.switch-row{margin-bottom:12px!important}
+.ds-circle-upload-row{--circle-input-height:44px;display:grid;grid-template-columns:minmax(0,1fr) var(--circle-input-height) var(--circle-input-height);gap:8px;align-items:start}
+.editor-panel .ds-circle-upload-row .ds-photo-picker-surface{height:var(--circle-input-height);min-height:var(--circle-input-height);padding:7px 10px}
+.ds-circle-upload-row .ds-photo-picker-clickable{width:100%;min-width:0}
+.ds-circle-upload-row .ds-photo-picker-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-panel .ds-circle-color-swatch{
+ box-sizing:border-box;width:var(--circle-input-height);height:var(--circle-input-height);
+ min-height:var(--circle-input-height);margin:0;padding:0;border:1px solid #777c87;border-radius:7px;
+ display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.editor-panel .ds-circle-color-swatch.is-white{background:#fff;color:#24262b}
+.editor-panel .ds-circle-color-swatch.is-brand{background:#e6008d;color:#fff}
+.editor-panel .ds-circle-color-swatch .material-icons{font-size:20px;visibility:hidden}
+.editor-panel .ds-circle-color-swatch[aria-pressed="true"] .material-icons{visibility:visible}
+.editor-panel .ds-circle-color-swatch:focus-visible{outline:2px solid #e6008d;outline-offset:2px}
