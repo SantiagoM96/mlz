@@ -2953,3 +2953,9 @@ html[data-editor-plate-variant="blank"] body .preview #photoStage>#dsHeadlineHit
 }
 .preview #photoStage>.ds-circle-photo-hit>.material-icons{position:relative;z-index:1}
 .preview #photoStage>.ds-circle-photo-hit>.material-icons[hidden]{display:none!important}
+
+/* El canvas de Fotobolita no hereda la sombra del lienzo principal. */
+.preview #photoStage>.ds-circle-photo-hit,
+.preview #photoStage>.ds-circle-photo-hit>.ds-circle-preview-canvas{
+ box-shadow:none!important;filter:none!important;
+}
