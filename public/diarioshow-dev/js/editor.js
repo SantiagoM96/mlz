@@ -2,9 +2,9 @@
 (function(){
 'use strict';
 
-const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=8;
-const newCirclePhoto=()=>({enabled:false,image:null,x:80,y:400,color:'white'});
-let circlePhoto=newCirclePhoto(),circleHit=null,circleControls=[];
+const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=12;
+const newCirclePhoto=()=>({enabled:false,image:null,x:80,y:400,color:'white',zoom:1,offsetX:0,offsetY:0});
+let circlePhoto=newCirclePhoto(),circleHit=null,circleControls=[],circleEditing=false,circlePhotoClickTimer=null;
 function circlePhotoGeometry(state,bottom){
  const fits=bottom>=CIRCLE_SIZE+CIRCLE_MARGIN*2;
  const x=Math.max(CIRCLE_MARGIN,Math.min(W-CIRCLE_MARGIN-CIRCLE_SIZE,state.x));
@@ -12,6 +12,18 @@ function circlePhotoGeometry(state,bottom){
  return {x,y,fits};
 }
 function circlePhotoAllowed(){return !pageBlank&&['pink','blue'].includes(el('theme').value)}
+
+function circlePhotoCrop(photo,state){
+ const scale=Math.max(CIRCLE_SIZE/photo.naturalWidth,CIRCLE_SIZE/photo.naturalHeight)*(state.zoom||1);
+ const width=photo.naturalWidth*scale,height=photo.naturalHeight*scale;
+ return {width,height,x:Math.max(-(width-CIRCLE_SIZE)/2,Math.min((width-CIRCLE_SIZE)/2,state.offsetX||0)),
+  y:Math.max(-(height-CIRCLE_SIZE)/2,Math.min((height-CIRCLE_SIZE)/2,state.offsetY||0))};
+}
+function setCircleEditing(active){
+ clearTimeout(circlePhotoClickTimer);
+ circleEditing=Boolean(active&&circlePhoto.image?.complete&&circlePhoto.image.naturalWidth&&circlePhotoAllowed()&&circlePhoto.enabled);
+ syncPhotoZoom();render();
+}
 function drawCirclePhoto(includeHover){
  if(!circlePhotoAllowed()||!circlePhoto.enabled)return;
  const geometry=circlePhotoGeometry(circlePhoto,photoBottom);
@@ -21,11 +33,11 @@ function drawCirclePhoto(includeHover){
  if(!ready&&!includeHover)return;
  const cx=geometry.x+CIRCLE_SIZE/2,cy=geometry.y+CIRCLE_SIZE/2,r=(CIRCLE_SIZE-CIRCLE_STROKE)/2;
  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
- ctx.fillStyle='#565a63';ctx.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
+ ctx.fillStyle='#808791';ctx.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
  if(ready){
-  const scale=Math.max(CIRCLE_SIZE/photo.naturalWidth,CIRCLE_SIZE/photo.naturalHeight);
-  const width=photo.naturalWidth*scale,height=photo.naturalHeight*scale;
-  ctx.drawImage(photo,cx-width/2,cy-height/2,width,height);
+  const crop=circlePhotoCrop(photo,circlePhoto);
+  circlePhoto.offsetX=crop.x;circlePhoto.offsetY=crop.y;
+  ctx.drawImage(photo,cx-crop.width/2+crop.x,cy-crop.height/2+crop.y,crop.width,crop.height);
  }
  ctx.restore();
  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
@@ -33,6 +45,7 @@ function drawCirclePhoto(includeHover){
 }
 function syncCirclePhotoUI(){
  const allowed=circlePhotoAllowed(),geometry=circlePhotoGeometry(circlePhoto,photoBottom);
+ if(circleEditing&&(!allowed||!circlePhoto.enabled||!geometry.fits)){circleEditing=false;syncPhotoZoom()}
  for(const ui of circleControls){
   ui.field.hidden=!allowed;
   ui.options.hidden=!circlePhoto.enabled;
@@ -46,13 +59,18 @@ function syncCirclePhotoUI(){
  if(circleHit.hidden)return;
  circleHit.style.left=geometry.x/W*100+'%';circleHit.style.top=geometry.y/H*100+'%';
  circleHit.style.width=CIRCLE_SIZE/W*100+'%';circleHit.style.height=CIRCLE_SIZE/H*100+'%';
- circleHit.textContent=circlePhoto.image?'':'＋';
- circleHit.setAttribute('aria-label',circlePhoto.image?'Mover foto bolita. Usá las flechas del teclado para desplazarla.':'Cargar foto bolita o arrastrar para moverla');
+ circleHit.innerHTML=circlePhoto.image?'':'<span class="material-icons" aria-hidden="true">add_photo_alternate</span>';
+ circleHit.classList.toggle('is-editing',circleEditing);
+ circleHit.setAttribute('aria-pressed',String(circleEditing));
+ el('photoZoom').setAttribute('aria-label',circleEditing?'Zoom de la foto bolita':'Zoom de la fotografía');
+ if(circleEditing)el('status').textContent='Foto bolita · Usá el zoom lateral y arrastrá la imagen para reencuadrar. Hacé clic afuera para terminar.';
+ circleHit.setAttribute('aria-label',circlePhoto.image?(circleEditing?'Reencuadrar foto bolita. Hacé clic afuera para terminar.':'Mover foto bolita. Doble clic para reencuadrar y usar el zoom lateral.'):'Cargar foto bolita o arrastrar para moverla');
 }
 function loadCirclePhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
+ circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
  circlePhoto.image=photo;
  photo.onload=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo)render()};
  photo.onerror=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo){circlePhoto.image=null;el('status').textContent='No se pudo cargar la foto bolita.';render()}};
@@ -77,11 +95,11 @@ function installCirclePhoto(){
  if(typeof previewContentBody!=='undefined')makeControls(previewContentBody,'Preview');
  circleHit=document.createElement('button');circleHit.type='button';circleHit.className='ds-circle-photo-hit';circleHit.hidden=true;
  el('photoStage').append(circleHit);
- let drag=null,suppressClick=false;
+ let drag=null,suppressClick=false,lastTouchTap=0;
  circleHit.addEventListener('pointerdown',event=>{
   if(event.button!==0&&event.pointerType!=='touch')return;
-  event.preventDefault();event.stopPropagation();suppressClick=false;
-  drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:circlePhoto.x,startY:circlePhoto.y,moved:false};
+  event.preventDefault();event.stopPropagation();suppressClick=false;clearTimeout(circlePhotoClickTimer);
+  drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:circleEditing?circlePhoto.offsetX:circlePhoto.x,startY:circleEditing?circlePhoto.offsetY:circlePhoto.y,crop:circleEditing,moved:false};
   circleHit.setPointerCapture(event.pointerId);
  });
  circleHit.addEventListener('pointermove',event=>{
@@ -90,23 +108,50 @@ function installCirclePhoto(){
   const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
   if(!drag.moved&&Math.hypot(dx,dy)<4)return;
   drag.moved=true;const scale=W/el('art').getBoundingClientRect().width;
-  const next=circlePhotoGeometry({x:drag.startX+dx*scale,y:drag.startY+dy*scale},photoBottom);
-  circlePhoto.x=next.x;circlePhoto.y=next.y;render();
+  if(drag.crop){
+   circlePhoto.offsetX=drag.startX+dx*scale;circlePhoto.offsetY=drag.startY+dy*scale;
+  }else{
+   const next=circlePhotoGeometry({x:drag.startX+dx*scale,y:drag.startY+dy*scale},photoBottom);
+   circlePhoto.x=next.x;circlePhoto.y=next.y;
+  }
+  render();
  });
  for(const type of ['pointerup','pointercancel','lostpointercapture'])circleHit.addEventListener(type,event=>{
   event.stopPropagation();if(!drag||drag.id!==event.pointerId)return;
-  suppressClick=drag.moved||type!=='pointerup';drag=null;
+  suppressClick=drag.moved||type!=='pointerup';
+  if(type==='pointerup'&&!drag.moved&&event.pointerType==='touch'&&circlePhoto.image){
+   const now=performance.now();
+   if(lastTouchTap&&now-lastTouchTap<350){setCircleEditing(true);lastTouchTap=0}else lastTouchTap=now;
+  }else if(drag.moved)lastTouchTap=0;
+  drag=null;
  });
  circleHit.addEventListener('click',event=>{
   event.preventDefault();event.stopPropagation();
   if(suppressClick){suppressClick=false;return}
   if(!circlePhoto.image)circleControls[0]?.input.click();
+  else if(!circleEditing){
+   clearTimeout(circlePhotoClickTimer);
+   const selectedPhoto=circlePhoto.image;
+   if(event.detail<2)circlePhotoClickTimer=setTimeout(()=>{
+    if(!circleEditing&&circlePhoto.image===selectedPhoto&&circlePhoto.enabled&&circlePhotoAllowed())circleControls[0]?.input.click();
+   },350);
+  }
  });
+ circleHit.addEventListener('dblclick',event=>{
+  event.preventDefault();event.stopPropagation();setCircleEditing(true);
+ });
+ document.addEventListener('pointerdown',event=>{
+  if(circleHit.contains(event.target)||el('photoZoom').closest('.preview-zoom')?.contains(event.target))return;
+  clearTimeout(circlePhotoClickTimer);
+  if(circleEditing)setCircleEditing(false);
+ },true);
+ document.addEventListener('keydown',event=>{if(circleEditing&&event.key==='Escape'){event.preventDefault();setCircleEditing(false)}});
  circleHit.addEventListener('keydown',event=>{
   const deltas={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]},delta=deltas[event.key];
   if(!delta)return;event.preventDefault();event.stopPropagation();
-  const next=circlePhotoGeometry({x:circlePhoto.x+delta[0],y:circlePhoto.y+delta[1]},photoBottom);
-  circlePhoto.x=next.x;circlePhoto.y=next.y;render();
+  if(circleEditing){circlePhoto.offsetX+=delta[0];circlePhoto.offsetY+=delta[1]}
+  else{const next=circlePhotoGeometry({x:circlePhoto.x+delta[0],y:circlePhoto.y+delta[1]},photoBottom);circlePhoto.x=next.x;circlePhoto.y=next.y}
+  render();
  });
  syncCirclePhotoUI();
 }
@@ -119,7 +164,7 @@ let photoLayout='single',activePhotoSide='left';
 let headlineHitRegions=[];
 const splitPhotos={left:{image:null,zoom:1,x:0,y:0,revision:0},right:{image:null,zoom:1,x:0,y:0,revision:0}};
 function activePhoto(){return splitPhotos[activePhotoSide]}
-function syncPhotoZoom(){const current=photoLayout==='split'?activePhoto().zoom:zoom;const slider=el('photoZoom');slider.value=Math.round(current*100);el('zoomLabel').textContent=Math.round(current*100)+' %';const min=Number(slider.min),max=Number(slider.max);slider.style.setProperty('--ds-zoom-progress',(max>min?(Number(slider.value)-min)/(max-min)*100:0)+'%')}
+function syncPhotoZoom(){const current=circleEditing?circlePhoto.zoom:photoLayout==='split'?activePhoto().zoom:zoom;const slider=el('photoZoom');slider.value=Math.round(current*100);el('zoomLabel').textContent=Math.round(current*100)+' %';const min=Number(slider.min),max=Number(slider.max);slider.style.setProperty('--ds-zoom-progress',(max>min?(Number(slider.value)-min)/(max-min)*100:0)+'%')}
 function drawSplitPhotos(height){
  for(const side of ['left','right']){
   const photo=splitPhotos[side],left=side==='left'?0:W/2,width=W/2;
@@ -703,7 +748,7 @@ photoStage.addEventListener('drop',event=>{
  event.preventDefault();
  if(photoLayout==='split'){const r=photoStage.getBoundingClientRect();const side=event.clientX<r.left+r.width/2?'left':'right';setPhotoSide(side);loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],side)}else loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0],null);
 });
-el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
+el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zoom=Number(event.target.value)/100;else if(photoLayout==='split')activePhoto().zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
 // Los botones visibles del logo y del titular viven SOBRE el canvas.
  // El gesto sobre fotografía permanece exclusivamente en el canvas.
  canvas.addEventListener('pointerdown',event=>{
@@ -733,7 +778,7 @@ el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')active
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
 el('clearAll').addEventListener('click',()=>{
- circlePhoto=newCirclePhoto();
+ circleEditing=false;circlePhoto=newCirclePhoto();
  el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
@@ -1299,7 +1344,7 @@ window.DiarioShowEditor={
  splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
  selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
  setPageState(s){
-  circlePhoto={...newCirclePhoto(),...s.circlePhoto};
+  clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto={...newCirclePhoto(),...s.circlePhoto};
   setVariant(s.theme||'pink');
   pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
   el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
