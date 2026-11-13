@@ -1411,4 +1411,20 @@ document.addEventListener('change',event=>{
 });
 window.addEventListener('modern:render',syncCarouselCoverSwitches);
 syncCarouselCoverSwitches();
+
+function resetMobilePageContext(blank=pageBlank){
+ if(!mobileTabViewport.matches)return;
+ const textToggle=mobileTextModule.querySelector('.ds-control-card-toggle'),textBody=mobileTextModule.querySelector('.ds-control-card-body');
+ textToggle?.setAttribute('aria-expanded','false');if(textBody)textBody.hidden=true;
+ previewContentToggle.setAttribute('aria-expanded',String(blank));previewContentBody.hidden=!blank;
+ setPreviewContext(blank?'logo':'text');
+ if(blank)syncPreviewContentEditor();
+}
+window.addEventListener('editorial:page-selected',event=>resetMobilePageContext(event.detail.blank));
+window.addEventListener('modern:render',()=>{if(pageBlank&&mobileTabViewport.matches)resetMobilePageContext(true)});
+document.addEventListener('pointerdown',event=>{
+ if(!mobileTabViewport.matches||el('photoStage').contains(event.target)||mobileTextHost.contains(event.target)||previewContentHost.contains(event.target))return;
+ resetMobilePageContext();
+},true);
+resetMobilePageContext();
 })();
