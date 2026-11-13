@@ -807,6 +807,7 @@ el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zo
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
 el('clearAll').addEventListener('click',()=>{
+ footerStyle='center';document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  circleEditing=false;circlePhoto=newCirclePhoto();
  el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
@@ -1398,4 +1399,16 @@ window.DiarioShowEditor={
  },
  setBlank(active){pageBlank=Boolean(active);document.documentElement.dataset.editorPlateVariant=pageBlank?'blank':el('theme').value;render();},
  setImporting(active){importingArticle=active;render()},getPhotoRevision(){return photoRevision},setImage(img){photoRevision++;if(photoLayout==='split'){const p=splitPhotos[activePhotoSide];p.image=img;p.zoom=1;p.x=0;p.y=0;p.revision=photoRevision}else{image=img;zoom=1;offsetX=0;offsetY=0}render()},refresh:render};render();document.fonts.ready.then(render);
+
+function syncCarouselCoverSwitches(){
+ document.querySelectorAll('[data-carousel-cover-switch]').forEach(input=>input.checked=footerStyle==='carousel');
+}
+document.addEventListener('change',event=>{
+ const input=event.target.closest?.('[data-carousel-cover-switch]');
+ if(!input)return;
+ document.querySelector('#dsMobileControlsPanel [data-footer-style="'+(input.checked?'carousel':'center')+'"]')?.click();
+ syncCarouselCoverSwitches();
+});
+window.addEventListener('modern:render',syncCarouselCoverSwitches);
+syncCarouselCoverSwitches();
 })();
