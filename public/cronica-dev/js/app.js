@@ -900,4 +900,9 @@ el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').h
 scheduleBrowserZoomTipPosition();
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
 document.addEventListener('DOMContentLoaded',()=>{installCirclePhoto();render()},{once:true});
+
+window.addEventListener('editorial:preview-snapshot',event=>{
+ render(false);
+ try{event.detail.capture(canvas)}finally{render()}
+});
 })();
