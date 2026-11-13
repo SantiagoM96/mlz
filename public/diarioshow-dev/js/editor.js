@@ -426,7 +426,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
    ctx.font=(part.italic?'italic ':'')+'700 '+size+'px "Poppins",Arial,sans-serif';
    ctx.textAlign='left';ctx.fillStyle='#FFFFFF';ctx.fillText(part.text,x,baselines[i]);
    if(part.strike){
-    ctx.strokeStyle='#FFFFFF';ctx.lineWidth=Math.max(2,Math.round(size*.045))*2;
+    ctx.strokeStyle='#FFFFFF';ctx.lineWidth=Math.max(2,Math.round(size*.045))*6;
     const y=baselines[i]-Math.round(size*.32);
     ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke();
    }
@@ -576,7 +576,7 @@ for(let i=0;i<lines.length;i++){
   ctx.font=((line.quote||part.italic)?'italic ':'')+'700 '+size+'px "Poppins",Arial,sans-serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
   ctx.fillText(part.text,x,baselines[i]);
-  if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045)*2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
+  if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045)*6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
   x+=part.width;
  }
 }

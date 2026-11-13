@@ -320,7 +320,7 @@ for(let i=0;i<lines.length;i++){
    visibleTextBottom=Math.max(visibleTextBottom,baselines[i]+glyphMetrics.actualBoundingBoxDescent);
   }
   ctx.fillText(part.text,x,baselines[i]);
-  if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045)*2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
+  if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045)*6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
   x+=part.width;
  }
 }
