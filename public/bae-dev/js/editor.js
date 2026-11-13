@@ -105,6 +105,7 @@ ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){
 }ctx.restore();
 ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-DIVIDER_HEIGHT,W,DIVIDER_HEIGHT);
 const centered=textAlignment==='center';
+let visibleTextTop=Infinity,visibleTextBottom=-Infinity;
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
  const line=lines[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
@@ -112,6 +113,11 @@ for(let i=0;i<lines.length;i++){
  for(const part of line.parts){
   ctx.font=((line.quote||part.italic)?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
+  const glyphMetrics=ctx.measureText(part.text);
+  if(part.text.trim()){
+   visibleTextTop=Math.min(visibleTextTop,baselines[i]-glyphMetrics.actualBoundingBoxAscent);
+   visibleTextBottom=Math.max(visibleTextBottom,baselines[i]+glyphMetrics.actualBoundingBoxDescent);
+  }
   ctx.fillText(part.text,x,baselines[i]);
   if(part.strike&&!line.quote){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,size*.045);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
   x+=part.width;
@@ -129,11 +135,16 @@ ctx.textAlign='left';
 const widths=lines.map(line=>line.parts.reduce((sum,p)=>sum+p.width,0));
 const minX=centered?Math.min(...widths.map(w=>(W-w)/2)):80;
 const maxX=centered?Math.max(...widths.map(w=>(W+w)/2)):Math.max(...widths.map(w=>80+w));
+// Conservar el tamaño del recuadro, centrando su altura sobre los glifos reales.
+const estimatedTop=(baselines[0]??footerTop)-size*1.05-10;
+const estimatedBottom=(baselines.at(-1)??footerTop)+size*.28+10;
+const textOffsetY=Number.isFinite(visibleTextTop)&&Number.isFinite(visibleTextBottom)
+ ?(visibleTextTop+visibleTextBottom-estimatedTop-estimatedBottom)/2:0;
 window.__editorialHotspotBounds={
- // Igual a Diario Show: 14+12 px horizontales, alto 1.05/.28 del tamaño y 10 px exteriores.
+ // Los márgenes laterales se conservan; solo se corrige el centrado vertical.
  text:{left:Math.max(0,minX-26),right:Math.min(W,maxX+26),
-  top:Math.max(0,(baselines[0]??footerTop)-size*1.05-10),
-  bottom:Math.min(H,(baselines.at(-1)??footerTop)+size*.28+10)},
+  top:Math.max(0,estimatedTop+textOffsetY),
+  bottom:Math.min(H,estimatedBottom+textOffsetY)},
  logo:{left:(logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH)-54,top:LOGO_MARGIN-54,
   right:(logoPosition==='left'?LOGO_MARGIN:W-LOGO_MARGIN-LOGO_WIDTH)+LOGO_WIDTH+54,bottom:LOGO_MARGIN+LOGO_HEIGHT+54}
 };
