@@ -954,3 +954,15 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 
 /* Barra antigua: el zoom vive dentro de la preview; conservar #status para el motor. */
 .modern-track>.preview>.preview-toolbar{display:none!important}
+
+/* Un solo módulo contextual bajo la preview mobile; hidden gana a los layouts. */
+@media(max-width:700px){
+ html body main .modern-track>.preview>.modern-preview-text-editor[hidden],
+ html body main .modern-track>.preview>.modern-preview-identity-editor[hidden]{
+  display:none!important;
+ }
+ html body main .modern-track>.preview>.modern-preview-text-editor .modern-body[hidden],
+ html body main .modern-track>.preview>.modern-preview-identity-editor .modern-body[hidden]{
+  display:none!important;
+ }
+}
