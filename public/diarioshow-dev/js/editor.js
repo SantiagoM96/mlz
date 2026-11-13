@@ -4,7 +4,7 @@
 
 const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=12;
 const newCirclePhoto=()=>({enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0});
-let circlePhoto=newCirclePhoto(),circleHit=null,circleControls=[],circleEditing=false,circlePhotoClickTimer=null;
+let circlePhoto=newCirclePhoto(),circleHit=null,circlePreviewCanvas=null,circleControls=[],circleEditing=false,circlePhotoClickTimer=null;
 function circlePhotoGeometry(state,bottom){
  const fits=bottom>=CIRCLE_SIZE+CIRCLE_MARGIN*2;
  const x=Math.max(CIRCLE_MARGIN,Math.min(W-CIRCLE_MARGIN-CIRCLE_SIZE,state.x));
@@ -38,7 +38,7 @@ function initializeCirclePhotoPosition(state,bottom){
  state.y=bottom-CIRCLE_MARGIN-CIRCLE_SIZE;
  state.positioned=true;
 }
-function drawCirclePhoto(includeHover){
+function drawCirclePhoto(includeHover,paint=ctx){
  if(!circlePhotoAllowed()||!circlePhoto.enabled)return;
  initializeCirclePhotoPosition(circlePhoto,photoBottom);
  const geometry=circlePhotoGeometry(circlePhoto,photoBottom);
@@ -47,18 +47,18 @@ function drawCirclePhoto(includeHover){
  const photo=circlePhoto.image,ready=photo?.complete&&photo.naturalWidth>0;
  if(!ready&&!includeHover)return;
  const cx=geometry.x+CIRCLE_SIZE/2,cy=geometry.y+CIRCLE_SIZE/2,r=(CIRCLE_SIZE-CIRCLE_STROKE)/2;
- ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
- ctx.fillStyle='#808791';ctx.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
+ paint.save();paint.beginPath();paint.arc(cx,cy,r,0,Math.PI*2);paint.clip();
+ paint.fillStyle='#808791';paint.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
  if(ready){
   const crop=circlePhotoCrop(photo,circlePhoto);
   circlePhoto.offsetX=crop.x;circlePhoto.offsetY=crop.y;
-  ctx.translate(cx,cy);
-  ctx.rotate(circlePhotoRotation(geometry.x)*Math.PI/180);
-  ctx.drawImage(photo,-crop.width/2+crop.x,-crop.height/2+crop.y,crop.width,crop.height);
+  paint.translate(cx,cy);
+  paint.rotate(circlePhotoRotation(geometry.x)*Math.PI/180);
+  paint.drawImage(photo,-crop.width/2+crop.x,-crop.height/2+crop.y,crop.width,crop.height);
  }
- ctx.restore();
- ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
- ctx.strokeStyle=circlePhoto.color==='brand'?'#E6008D':'#fff';ctx.lineWidth=CIRCLE_STROKE;ctx.stroke();ctx.restore();
+ paint.restore();
+ paint.save();paint.beginPath();paint.arc(cx,cy,r,0,Math.PI*2);
+ paint.strokeStyle=circlePhoto.color==='brand'?'#E6008D':'#fff';paint.lineWidth=CIRCLE_STROKE;paint.stroke();paint.restore();
 }
 function syncCirclePhotoUI(){
  const allowed=circlePhotoAllowed(),geometry=circlePhotoGeometry(circlePhoto,photoBottom);
@@ -78,7 +78,14 @@ function syncCirclePhotoUI(){
  if(circleHit.hidden)return;
  circleHit.style.left=geometry.x/W*100+'%';circleHit.style.top=geometry.y/H*100+'%';
  circleHit.style.width=CIRCLE_SIZE/W*100+'%';circleHit.style.height=CIRCLE_SIZE/H*100+'%';
- circleHit.innerHTML=circlePhoto.image?'':'<span class="material-icons" aria-hidden="true">add_photo_alternate</span>';
+ const icon=circleHit.querySelector('.material-icons');
+ if(icon)icon.hidden=Boolean(circlePhoto.image);
+ if(circlePreviewCanvas){
+  circlePreviewCanvas.width=CIRCLE_SIZE;circlePreviewCanvas.height=CIRCLE_SIZE;
+  const paint=circlePreviewCanvas.getContext('2d');
+  paint.translate(-geometry.x,-geometry.y);
+  drawCirclePhoto(true,paint);
+ }
  circleHit.classList.toggle('is-editing',circleEditing);
  circleHit.setAttribute('aria-pressed',String(circleEditing));
  el('photoZoom').setAttribute('aria-label',circleEditing?'Zoom de la foto bolita':'Zoom de la fotografía');
@@ -122,6 +129,9 @@ function installCirclePhoto(){
  const host=document.querySelector('#dsMobileControlsPanel .ds-photo-layout-group .ds-control-card-body');
  if(host)makeControls(host,'Main');
  circleHit=document.createElement('button');circleHit.type='button';circleHit.className='ds-circle-photo-hit';circleHit.hidden=true;
+ circlePreviewCanvas=document.createElement('canvas');circlePreviewCanvas.className='ds-circle-preview-canvas';circlePreviewCanvas.setAttribute('aria-hidden','true');
+ const placeholderIcon=document.createElement('span');placeholderIcon.className='material-icons';placeholderIcon.textContent='add_photo_alternate';placeholderIcon.setAttribute('aria-hidden','true');
+ circleHit.append(circlePreviewCanvas,placeholderIcon);
  el('photoStage').append(circleHit);
  let drag=null,suppressClick=false,lastTouchTap=0;
  circleHit.addEventListener('pointerdown',event=>{
