@@ -12,37 +12,39 @@ actions.insertBefore(opener,clear);
 const dialog=document.createElement('dialog');dialog.className='editorial-mobile-preview-dialog';
 dialog.setAttribute('aria-label','Vista previa ampliada de la placa');
 const close=document.createElement('button');close.type='button';close.className='secondary clear-button editorial-mobile-preview-close';
-close.setAttribute('aria-label','Volver al editor');close.textContent='Volver';
+close.setAttribute('aria-label','Cerrar vista previa');close.textContent='Cerrar';
 const frame=document.createElement('div');frame.className='editorial-mobile-preview-frame';
 const picture=document.createElement('canvas');picture.setAttribute('role','img');
 picture.setAttribute('aria-label','Imagen final de la diapositiva actual');
 frame.append(picture);dialog.append(close,frame);document.body.append(dialog);
-let oldOverflow='',opening=false,anchorY=0,anchorHeight=1;
+let oldOverflow='',opening=false;
 function fitSize(width,height,availableWidth,availableHeight){
  const scale=Math.min(availableWidth/width,availableHeight/height);
  return {width:width*scale,height:height*scale};
 }
-function backButtonTop(centerY,height,buttonHeight,paddingTop,paddingBottom){
- const maxTop=Math.max(paddingTop,height-paddingBottom-buttonHeight);
- const minTop=Math.min(maxTop,paddingTop+60);
- return Math.max(minTop,Math.min(maxTop,centerY-buttonHeight/2));
+function previewLayout(width,height,viewportWidth,viewportHeight,padding){
+ const gap=32,buttonHeight=44;
+ const availableWidth=Math.max(0,viewportWidth-padding.left-padding.right);
+ const availableHeight=Math.max(0,viewportHeight-padding.top-padding.bottom);
+ const size=fitSize(width,height,availableWidth,Math.max(0,availableHeight-gap-buttonHeight));
+ const top=padding.top+(availableHeight-size.height-gap-buttonHeight)/2;
+ return {width:size.width,height:size.height,top,buttonTop:top+size.height+gap,
+  centerX:padding.left+availableWidth/2,frameWidth:availableWidth};
 }
 function fit(){
  if(!dialog.open)return;
  const bounds=dialog.getBoundingClientRect(),style=getComputedStyle(dialog);
- const topPadding=parseFloat(style.paddingTop)||12,bottomPadding=parseFloat(style.paddingBottom)||12;
- const rightPadding=parseFloat(style.paddingRight)||12;
- const top=backButtonTop(anchorY*bounds.height/anchorHeight,bounds.height,44,topPadding,bottomPadding);
- close.style.top=top+'px';
- frame.style.height=Math.max(0,top-topPadding-12)+'px';
- const rect=frame.getBoundingClientRect();
- const size=fitSize(picture.width,picture.height,rect.width,rect.height);
- picture.style.width=size.width+'px';picture.style.height=size.height+'px';
- close.style.right=(rightPadding+Math.max(0,(rect.width-size.width)/2))+'px';
+ const layout=previewLayout(picture.width,picture.height,bounds.width,bounds.height,{
+  top:parseFloat(style.paddingTop)||12,bottom:parseFloat(style.paddingBottom)||12,
+  left:parseFloat(style.paddingLeft)||12,right:parseFloat(style.paddingRight)||12
+ });
+ frame.style.top=layout.top+'px';frame.style.left=(parseFloat(style.paddingLeft)||12)+'px';
+ frame.style.width=layout.frameWidth+'px';frame.style.height=layout.height+'px';
+ picture.style.width=layout.width+'px';picture.style.height=layout.height+'px';
+ close.style.top=layout.buttonTop+'px';close.style.left=layout.centerX+'px';
 }
 opener.addEventListener('click',async()=>{
  if(!mobile.matches||opening||dialog.open)return;
- const origin=opener.getBoundingClientRect();anchorY=origin.top+origin.height/2;anchorHeight=window.innerHeight;
  opening=true;opener.disabled=true;opener.setAttribute('aria-busy','true');
  try{
   if(document.fonts)await document.fonts.ready;
