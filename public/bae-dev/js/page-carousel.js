@@ -41,7 +41,7 @@ function sampleForVariant(variant){
  return {
   headline:'Una empresa argentina anunció *nuevas inversiones* para ampliar su producción',
   quote:'“El objetivo es generar más empleo durante el próximo año”',
-  enableQuote:true,size:'70',alignment:'left'
+  enableQuote:false,size:'70',alignment:'left'
  };
 }
 function blankPage(){
