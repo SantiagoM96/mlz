@@ -1137,7 +1137,26 @@ let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filte
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
-function action(type,id,index){if(type==='sort-activities'){activitySort=activitySort.key===id?{key:id,direction:activitySort.direction==='asc'?'desc':'asc'}:{key:id,direction:'asc'};page=0;render();return}if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
+function action(type,id,index){if(type==='sort-activities'){
+ const scrollX=window.scrollX,scrollY=window.scrollY;
+ const tableScroll=app.querySelector('.activity-admin-table')?.scrollLeft||0;
+ const previousAnchor=document.documentElement.style.overflowAnchor;
+ // Evita que el navegador reposicione el viewport al sustituir las filas.
+ document.documentElement.style.overflowAnchor='none';
+ activitySort=activitySort.key===id?{key:id,direction:activitySort.direction==='asc'?'desc':'asc'}:{key:id,direction:'asc'};
+ page=0;
+ render();
+ const sortedButton=[...app.querySelectorAll('.activity-sort-button')].find(button=>button.dataset.id===id);
+ if(sortedButton)sortedButton.focus({preventScroll:true});
+ const table=app.querySelector('.activity-admin-table');
+ if(table)table.scrollLeft=tableScroll;
+ window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});
+ requestAnimationFrame(()=>{
+  window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});
+  document.documentElement.style.overflowAnchor=previousAnchor;
+ });
+ return;
+}if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='registration-detail'){registrationDetailsId=id;modalType='registration-detail';renderModal();return}
 if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
 if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
