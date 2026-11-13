@@ -687,3 +687,17 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .editor-panel .theme-swatch-thumb:not(.editor-blank-thumb)::before{top:52%;height:3px}
 .editor-panel .theme-swatch-art i:first-child{width:84%;height:5px;flex:0 0 5px;background:var(--thumb-ink)}
 .editor-panel .theme-swatch-art i:nth-child(2){width:60%;height:3px;flex:0 0 3px;background:var(--thumb-accent)}
+
+/* Foco, selección y estado contextual del editor enriquecido: color de marca. */
+body{--rich-editor-accent:#d82626;--rich-editor-selection:#a51d1d}
+html body .cronica-rich-headline:focus,
+html body .cronica-rich-headline:focus-visible{
+ border-color:var(--rich-editor-accent)!important;
+ outline:1px solid var(--rich-editor-accent)!important;
+}
+html body .cronica-rich-headline::selection,
+html body .cronica-rich-headline *::selection{background:var(--rich-editor-selection)!important;color:#fff!important}
+html body .cronica-rich-headline.uppercase-preview{text-transform:uppercase!important}
+html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[id^="formatStrike"])[aria-pressed="true"]{
+ background:var(--rich-editor-accent)!important;border-color:var(--rich-editor-accent)!important;color:#fff!important;
+}
