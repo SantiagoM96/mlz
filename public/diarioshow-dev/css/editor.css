@@ -2926,3 +2926,14 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
  html body .preview #dsMobileTextEditor .ds-control-card-body[hidden],
  html body .preview #dsMobileContentEditor .ds-control-card-body[hidden]{display:none!important}
 }
+
+/* Sin diseño: el único contenido configurable es el selector de plantillas.
+   Aplica al panel fuente y al contextual, sin media query. */
+
+html[data-editor-plate-variant="blank"] body .editor-panel .ds-plate-design-group>.ds-control-card-body>:not(.ds-variant-field):not(select),
+html[data-editor-plate-variant="blank"] body #dsMobileControlsPanel>.ds-control-card:not(.ds-plate-design-group){display:none!important}
+
+html[data-editor-plate-variant="blank"] body .preview .modern-logo-hit,
+html[data-editor-plate-variant="blank"] body .preview .modern-text-hit,
+html[data-editor-plate-variant="blank"] body .preview .ds-preview-hit-button,
+html[data-editor-plate-variant="blank"] body .preview .preview-zoom{display:none!important}

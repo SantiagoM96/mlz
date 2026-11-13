@@ -817,3 +817,14 @@ html body .preview .canvas-stage>.modern-text-hit:focus-visible,
 html body .preview .canvas-stage>.modern-text-hit.is-hotspot-selected{
  border-color:var(--text-hotspot-accent,var(--editor-accent))!important;
 }
+
+/* Sin diseño: el único contenido configurable es el selector de plantillas.
+   Aplica al panel fuente y al contextual, sin media query. */
+
+html[data-cronica-variant="blank"] body .editor-panel .modern-design-group>.modern-body>:not(:has(.cronica-variant-options,.theme-swatches)),
+html[data-cronica-variant="blank"] body .editor-panel>.modern-card:not(.modern-design-group){display:none!important}
+
+html[data-cronica-variant="blank"] body .preview .modern-logo-hit,
+html[data-cronica-variant="blank"] body .preview .modern-text-hit,
+html[data-cronica-variant="blank"] body .preview .ds-preview-hit-button,
+html[data-cronica-variant="blank"] body .preview .preview-zoom{display:none!important}
