@@ -83,8 +83,8 @@ function drawStrap(y,isCover){
  const textWidth=ctx.measureText(content).width,barHeight=isCover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT;
  const width=isCover?Math.min(maxWidth,Math.ceil(textWidth+44)):W;
  const left=isCover?(W-width)/2:0;
- ctx.fillStyle=RED;ctx.fillRect(left,y,width,barHeight);
- if(content){ctx.font='800 '+size+'px Inter,Arial,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
+ ctx.fillStyle=pageVariant==='red'?'#fff':RED;ctx.fillRect(left,y,width,barHeight);
+ if(content){ctx.font='800 '+size+'px Inter,Arial,sans-serif';ctx.fillStyle=pageVariant==='red'?RED:'#fff';ctx.textAlign='center';
  ctx.fillText(content,W/2,y+barHeight/2,maxWidth-24)}
  ctx.textAlign='left';ctx.textBaseline='alphabetic';
 }
@@ -95,7 +95,7 @@ function drawText(lines,size,baselines){
   const total=line.reduce((sum,p)=>sum+p.width,0);
   let x=centered?(W-total)/2:EDGE;
   for(const part of line){
-   ctx.font=fontFor(size,part);ctx.fillStyle=part.accent?RED:BLACK;
+   ctx.font=fontFor(size,part);ctx.fillStyle=pageVariant==='red'?'#fff':part.accent?RED:BLACK;
    ctx.fillText(part.text,x,baselines[i]);
    if(part.strike){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
    x+=part.width;
@@ -135,9 +135,9 @@ function render(includeHover=true){
    el('status').textContent='Sin diseño · Elegí Portada o Interior para aplicar una composición.';
    return;
   }
-  const cover=pageVariant==='cover',requestedSize=Number(el('size').value);
+  const cover=pageVariant==='cover',red=pageVariant==='red',requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
-  const availableBottom=cover?footerTop-50:H-EDGE;
+  const availableBottom=(cover||red)?footerTop-50:H-EDGE;
   const desired=forceUppercase?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value;
   let size=requestedSize,lines=wrappedLines(desired,size);
   const lineHeight=()=>Math.round(size*1.09);
@@ -165,10 +165,15 @@ function render(includeHover=true){
   ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
   drawPhoto(imageBottom,includeHover);
   drawBrandLogo();
-  ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
+  if(red){
+   const background=ctx.createLinearGradient(0,panelTop,W,H);
+   background.addColorStop(0,'#bf0000');background.addColorStop(1,'#ed0000');
+   ctx.fillStyle=background;
+  }else ctx.fillStyle='#fff';
+  ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
-  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-DIVIDER_HEIGHT/2,W,DIVIDER_HEIGHT);
+  ctx.fillStyle=red?'#fff':RED;ctx.fillRect(0,panelTop-DIVIDER_HEIGHT/2,W,DIVIDER_HEIGHT);
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
   // Ubicaciones en píxeles reales de la placa, usadas solo por el overlay HTML.
@@ -185,11 +190,11 @@ function render(includeHover=true){
    right:logoX+LOGO_WIDTH+54,bottom:EDGE+LOGO_HEIGHT+54};
   window.__editorialHotspotBounds={text:textRect,logo:logoRect};
 
-  if(cover){
+  if(cover||red){
    // Pie: texto en caja baja y flecha alineados por su centro vertical.
    const footerCenterY=H-EDGE-16;
    ctx.save();
-   ctx.fillStyle=RED;ctx.textBaseline='middle';
+   ctx.fillStyle=red?'#fff':RED;ctx.textBaseline='middle';
    ctx.font='500 30px Inter,Arial,sans-serif';
    ctx.textAlign=footerStyle==='center'?'center':'left';
    ctx.fillText('cronica.com.ar',footerStyle==='center'?W/2:EDGE,footerCenterY);
@@ -210,7 +215,7 @@ finally{window.dispatchEvent(new Event('modern:render'))}
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant};
+  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant,footerStyle};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
 const COVER_STRAP="CULTURA EN LA CIUDAD";
@@ -234,9 +239,11 @@ function syncVariantUI(){
  document.querySelectorAll('.cronica-variant-option').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pageVariant===pageVariant)));
 }
 function loadPage(page){
- pageVariant=['blank','cover','internal'].includes(page.variant)?page.variant:'blank';syncVariantUI();
+ pageVariant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
+ footerStyle=page.footerStyle||'carousel';
+ document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
  selectedLogo=page.logo||'primary';syncLogoChoices();logoPosition=page.logoPosition||'right';syncLogoPosition();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
@@ -250,8 +257,8 @@ function renderCarouselNavigation(){
  carouselPages.forEach((page,index)=>{
   const button=document.createElement('button');button.type='button';
   button.setAttribute('aria-current',index===activePage?'page':'false');
-  const variant=['blank','cover','internal'].includes(page.variant)?page.variant:'blank';
-  const variantName={blank:'Sin diseño',cover:'Portada',internal:'Interior'}[variant];
+  const variant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';
+  const variantName={blank:'Sin diseño',cover:'Portada',internal:'Interior',red:'Variante 1'}[variant];
   button.setAttribute('aria-label','Página '+(index+1)+', '+variantName.toLowerCase());
   button.setAttribute('title','Página '+(index+1)+' · '+variantName);
   button.className='carousel-page-thumb';
@@ -287,7 +294,7 @@ function renderCarouselNavigation(){
  count.textContent=(activePage+1)+' de '+carouselPages.length;
  const type=document.createElement('span');
  type.className='carousel-indicator-type is-'+pageVariant;
- type.textContent={blank:'Sin diseño',cover:'Portada',internal:'Interior'}[pageVariant];
+ type.textContent={blank:'Sin diseño',cover:'Portada',internal:'Interior',red:'Variante 1'}[pageVariant];
  indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
  // Con espacio libre, la miniatura punteada es el botón de agregar.
@@ -374,6 +381,9 @@ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addE
  if(next===pageVariant)return;
  const previous=pageVariant;
  pageVariant=next;
+ if(next==='red'){
+  el('showStrap').checked=false;el('strapField').hidden=true;
+ }
  // Una placa sin diseño no muestra volanta. Al aplicar Portada o Interior,
  // el usuario comienza con la volanta activa y su texto de ejemplo.
  if(previous==='blank'&&next!=='blank'){
@@ -389,9 +399,9 @@ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addE
    el('alignCenter').setAttribute('aria-pressed',String(textAlignment==='center'));
    current.samplePending=false;
   }
-  el('showStrap').checked=true;
+  el('showStrap').checked=next!=='red';
   if(!el('strapText').value.trim())el('strapText').value=next==='cover'?COVER_STRAP:INTERNAL_STRAP;
-  el('strapField').hidden=false;
+  el('strapField').hidden=next==='red';
  }
  syncVariantUI();saveActivePage();renderCarouselNavigation();render();
 }));
@@ -491,6 +501,7 @@ canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener(
 el('clearAll').addEventListener('click',()=>{
  const initial=newBlankPage();initial.variant=pageVariant;initial.samplePending=false;
  if(pageVariant==='cover'){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ if(pageVariant==='red'){initial.showStrap=false;initial.footerStyle='carousel'}
  if(pageVariant==='internal'){initial.headline=INTERNAL_HEADLINE;initial.strapText=INTERNAL_STRAP;initial.showStrap=true}
  loadPage(initial);saveActivePage();
 });
