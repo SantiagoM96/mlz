@@ -114,6 +114,16 @@ function publish(editor){
  if(source.value!==value){source.value=value;source.dispatchEvent(new Event('input',{bubbles:true}))}
 }
 function changeFormat(key,clear=false){
+ if(clear){
+  const plain=charsFromMarkup(source.value).map(ch=>ch.c).join('');
+  source.value=plain;
+  for(const editor of editors){
+   renderChars(editor,charsFromMarkup(plain));editor.dataset.currentMarkup=plain;
+  }
+  source.dispatchEvent(new Event('input',{bubbles:true}));
+  syncToolbar();
+  return;
+ }
  const selection=window.getSelection();
  const editor=editors.find(e=>selection?.anchorNode&&e.contains(selection.anchorNode));
  if(!editor){editors[0]?.focus();return}
