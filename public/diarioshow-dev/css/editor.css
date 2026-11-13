@@ -2937,3 +2937,11 @@ html[data-editor-plate-variant="blank"] body .preview .modern-logo-hit,
 html[data-editor-plate-variant="blank"] body .preview .modern-text-hit,
 html[data-editor-plate-variant="blank"] body .preview .ds-preview-hit-button,
 html[data-editor-plate-variant="blank"] body .preview .preview-zoom{display:none!important}
+
+/* Las reglas de hotspot con #photoStage no deben reactivar una placa vacía. */
+html[data-editor-plate-variant="blank"] body .preview #photoStage>#dsLogoHitButton,
+html[data-editor-plate-variant="blank"] body .preview #photoStage>#dsHeadlineHitButton,
+.preview #photoStage>#dsLogoHitButton[hidden],
+.preview #photoStage>#dsHeadlineHitButton[hidden]{
+ display:none!important;visibility:hidden!important;pointer-events:none!important;
+}

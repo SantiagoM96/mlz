@@ -649,6 +649,16 @@ function updatePreviewHitOverlays(){
  const logoHit=document.getElementById('dsLogoHitButton');
  const textHit=document.getElementById('dsHeadlineHitButton');
  if(!logoHit||!textHit)return;
+ for(const node of [logoHit,textHit]){
+  node.hidden=pageBlank;
+  node.disabled=pageBlank;
+  node.tabIndex=pageBlank?-1:0;
+  if(pageBlank){
+   node.classList.remove('is-hotspot-selected');
+   node.setAttribute('aria-pressed','false');
+  }
+ }
+ if(pageBlank)return;
  function place(node,l,t,r,b){
   node.style.left=(Math.max(0,l)/W*100)+'%';
   node.style.top=(Math.max(0,t)/H*100)+'%';
