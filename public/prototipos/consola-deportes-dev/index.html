@@ -628,12 +628,23 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .workspace .panel > .tablewrap tbody tr:last-child td:first-child{border-bottom-left-radius:7px}
 .workspace .panel > .tablewrap tbody tr:last-child td:last-child{border-bottom-right-radius:7px}
 .workspace .activity-admin-table .activity-check-cell{width:42px;min-width:42px;text-align:center;padding:8px 10px}
-.workspace .activity-admin-table .activity-selection-checkbox{
- width:19px;height:19px;accent-color:var(--deportes-info);
- vertical-align:middle;cursor:pointer;
+.workspace .activity-admin-table .activity-checkbox-control{
+ display:inline-flex;align-items:center;justify-content:center;
+ position:relative;width:24px;height:24px;cursor:pointer;vertical-align:middle;
 }
+.workspace .activity-admin-table .activity-selection-checkbox{
+ position:absolute;inset:0;width:100%;height:100%;margin:0;
+ opacity:0;cursor:pointer;
+}
+.workspace .activity-admin-table .activity-checkbox-icon{
+ font-family:"Material Symbols Outlined";font-size:23px;line-height:1;
+ color:var(--deportes-info);pointer-events:none;
+}
+.workspace .activity-admin-table .activity-checkbox-icon::before{content:"check_box_outline_blank"}
+.workspace .activity-admin-table .activity-selection-checkbox:checked + .activity-checkbox-icon::before{content:"check_box"}
+.workspace .activity-admin-table .activity-selection-checkbox:indeterminate + .activity-checkbox-icon::before{content:"indeterminate_check_box"}
 .workspace .activity-admin-table .activity-sort-button{
- display:inline-flex;align-items:center;justify-content:flex-start;gap:5px;
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
  width:100%;border:0;background:transparent;color:inherit;padding:2px 0;
  font-weight:700;font-size:13px;text-align:left;white-space:nowrap;cursor:pointer;
 }
@@ -787,10 +798,10 @@ function sortColumnHeader(label,key){
  const active=activitySort.key===key;
  const direction=active?activitySort.direction:'none';
  const next=active&&direction==='asc'?'desc':'asc';
- return '<th aria-sort="'+(active?(direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-activities" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':'descendente')+'"><span>'+label+'</span>'+ic(active?(direction==='asc'?'arrow_upward':'arrow_downward'):'unfold_more')+'</button></th>';
+ return '<th aria-sort="'+(active?(direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-activities" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':'descendente')+'"><span>'+label+'</span>'+ic(active?(direction==='asc'?'arrow_upward':'arrow_downward'):'swap_vert')+'</button></th>';
 }
 function selectionCheckbox(id,checked,label){
- return '<input class="activity-selection-checkbox" type="checkbox" '+(id?'data-activity-select="'+e(id)+'"':'id="select-visible-activities"')+' aria-label="'+e(label)+'" '+(checked?'checked':'')+'>';
+ return '<label class="activity-checkbox-control"><input class="activity-selection-checkbox" type="checkbox" '+(id?'data-activity-select="'+e(id)+'"':'id="select-visible-activities"')+' aria-label="'+e(label)+'" '+(checked?'checked':'')+'><span class="mi activity-checkbox-icon" aria-hidden="true"></span></label>';
 }
 function listView(){let items=records.filter(x=>(!filterText||(x.name+' '+x.sourceId+' '+x.categoriaTipoGlobal).toLowerCase().includes(filterText.toLowerCase()))&&(!filterVenue||x.venue===filterVenue)&&(!filterState||status(x)===filterState));sortActivityRecords(items);let shown=items.slice(page*10,page*10+10);const allVisible=shown.length>0&&shown.every(a=>selectedActivityIds.has(a.id));return '<nav class="console-breadcrumb" aria-label="Ruta de navegación"><a href="#" data-action="list">Inicio</a><span class="mi" aria-hidden="true">chevron_right</span><span class="last" aria-current="page">Administrador de actividades</span></nav><div class="heading console-page-header"><div><h1>Administrador de actividades</h1><p class="sub">Gestioná actividades, sedes, horarios y comisiones deportivas.</p></div><div class="actions">'+btn(ic('settings')+' Configuración','settings')+btn(ic('person_add')+' Nueva inscripción','enroll-new')+btn(ic('assignment')+' Inscripciones','registrations')+btn(ic('open_in_new')+' Ver agenda pública','public')+btn(ic('add')+' Agregar actividad','new','primary')+'</div></div><div class="stats"><div class="stat">Actividades<b>'+records.length+'</b></div><div class="stat">Comisiones<b>'+records.reduce((n,a)=>n+(a.commissions||[]).length,0)+'</b></div><div class="stat">Sedes<b>'+venues().length+'</b></div><div class="stat">Actividades visibles<b>'+records.filter(a=>!a._hidden).length+'</b></div></div><section class="panel"><div class="panelhead"><h2>Actividades deportivas</h2><span class="pill">Datos del prototipo público de Deportes</span></div><div class="panelbody"><div class="filters"><div class="field search"><label for="query">Buscar actividad</label><input id="query" placeholder="Buscar por nombre o categoría" value="'+e(filterText)+'"></div><div class="field"><label for="venue">Sede</label><select id="venue"><option value="">Todas las sedes</option>'+options(venues(),filterVenue)+'</select></div><div class="field"><label for="state">Estado</label><select id="state"><option value="">Todos los estados</option>'+options(['Activa','Oculta'],filterState)+'</select></div>'+'<div class="filter-action"><span class="filter-label-spacer" aria-hidden="true">&nbsp;</span>'+btn('Limpiar','clear')+'</div>'+'</div></div><div class="tablewrap activity-admin-table"><table><thead><tr><th class="activity-check-cell">'+selectionCheckbox('',allVisible,'Seleccionar todas las actividades visibles')+'</th>'+sortColumnHeader('Actividad','activity')+sortColumnHeader('Lugar','venue')+sortColumnHeader('Rango de edades','age')+sortColumnHeader('Comisiones','commissions')+sortColumnHeader('Estado','status')+'<th>Acciones</th></tr></thead><tbody>'+(shown.length?shown.map(a=>'<tr><td class="activity-check-cell">'+selectionCheckbox(a.id,selectedActivityIds.has(a.id),'Seleccionar '+a.name)+'</td><td><a href="#" class="activity-name-link" data-action="edit" data-id="'+e(a.id)+'" aria-label="Abrir actividad '+e(a.name)+'">'+e(a.name)+'</a><small>'+e(a.sourceId)+'</small></td><td>'+e(a.venue)+'</td><td>'+e(a.ageLabel||(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades'))+'</td><td>'+a.commissions.length+'</td><td><span class="tag activity-status-chip '+(a._hidden?'off':'')+'">'+status(a)+'</span></td><td class="row-actions"><button class="iconbtn" title="Inscribir persona" aria-label="Inscribir persona" data-action="enroll-activity" data-id="'+e(a.id)+'">'+ic('person_add')+'</button><button class="iconbtn" title="Duplicar" aria-label="Duplicar '+e(a.name)+'" data-action="duplicate" data-id="'+e(a.id)+'">'+ic('content_copy')+'</button><button class="iconbtn red" title="Eliminar" aria-label="Eliminar '+e(a.name)+'" data-action="delete" data-id="'+e(a.id)+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">No encontramos actividades con esos filtros.</td></tr>')+'</tbody></table></div><div class="foot"><span>Mostrando '+(items.length?page*10+1:0)+'–'+Math.min((page+1)*10,items.length)+' de '+items.length+' actividades</span><span>'+btn(ic('chevron_left')+' Anterior','prev')+' '+btn('Siguiente '+ic('chevron_right'),'next')+'</span></div></section><p class="hint">Entorno de desarrollo. Los cambios de este prototipo se guardan únicamente en tu navegador; no modifican la agenda pública ni registran inscripciones reales.</p>'}
 
