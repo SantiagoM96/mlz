@@ -315,16 +315,18 @@ function renderCarouselNavigation(){
   list.dataset.resizeObserved='true';
   new ResizeObserver(recalc).observe(list);
  }
- // En la barra horizontal de la preview, mantener siempre a la vista
- // la página seleccionada sin desplazar verticalmente todo el documento.
+ // Mostrar la acción punteada junto a la última diapositiva, como Diario Show.
  requestAnimationFrame(()=>{
   const active=list.querySelector('[aria-current="page"]');
   if(!active||!list.clientWidth)return;
-  const left=active.offsetLeft-list.offsetLeft;
-  const right=left+active.offsetWidth;
-  if(left<list.scrollLeft)list.scrollLeft=Math.max(0,left-4);
-  else if(right>list.scrollLeft+list.clientWidth)
-   list.scrollLeft=right-list.clientWidth+4;
+  if(activePage===carouselPages.length-1){
+   list.scrollLeft=Math.max(0,list.scrollWidth-list.clientWidth);
+   return;
+  }
+  // Comparar coordenadas del viewport evita mezclar offsetParents distintos.
+  const viewport=list.getBoundingClientRect(),item=active.getBoundingClientRect();
+  if(item.left<viewport.left+4)list.scrollLeft+=item.left-viewport.left-4;
+  else if(item.right>viewport.right-4)list.scrollLeft+=item.right-viewport.right+4;
  });
 }
 function selectPage(index){
