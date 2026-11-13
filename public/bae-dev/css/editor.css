@@ -682,3 +682,8 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
 .preview .photo-hover-border>.photo-hover-outline{
  display:none!important;
 }
+
+/* Miniaturas: geometría base común 60 × 80; las diapositivas escalan a 80 %. */
+.editor-panel .theme-swatch-thumb:not(.editor-blank-thumb)::before{top:52%;height:3px}
+.editor-panel .theme-swatch-art i:first-child{width:84%;height:5px;flex:0 0 5px;background:var(--thumb-ink)}
+.editor-panel .theme-swatch-art i:nth-child(2){width:60%;height:3px;flex:0 0 3px;background:var(--thumb-accent)}
