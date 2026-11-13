@@ -11,6 +11,14 @@ function circlePhotoGeometry(state,bottom){
  const y=Math.max(CIRCLE_MARGIN,Math.min(bottom-CIRCLE_MARGIN-CIRCLE_SIZE,state.y));
  return {x,y,fits};
 }
+function circlePhotoRotation(x){
+ const left=CIRCLE_MARGIN,right=W-CIRCLE_MARGIN-CIRCLE_SIZE;
+ return (Math.max(left,Math.min(right,x))-left)/(right-left)*20-10;
+}
+function circlePhotoReframeDelta(dx,dy,x){
+ const angle=circlePhotoRotation(x)*Math.PI/180;
+ return {x:dx*Math.cos(angle)+dy*Math.sin(angle),y:-dx*Math.sin(angle)+dy*Math.cos(angle)};
+}
 function circlePhotoAllowed(){return !pageBlank&&['pink','blue'].includes(el('theme').value)}
 
 function circlePhotoCrop(photo,state){
@@ -37,7 +45,9 @@ function drawCirclePhoto(includeHover){
  if(ready){
   const crop=circlePhotoCrop(photo,circlePhoto);
   circlePhoto.offsetX=crop.x;circlePhoto.offsetY=crop.y;
-  ctx.drawImage(photo,cx-crop.width/2+crop.x,cy-crop.height/2+crop.y,crop.width,crop.height);
+  ctx.translate(cx,cy);
+  ctx.rotate(circlePhotoRotation(geometry.x)*Math.PI/180);
+  ctx.drawImage(photo,-crop.width/2+crop.x,-crop.height/2+crop.y,crop.width,crop.height);
  }
  ctx.restore();
  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
@@ -121,7 +131,8 @@ function installCirclePhoto(){
   if(!drag.moved&&Math.hypot(dx,dy)<4)return;
   drag.moved=true;const scale=W/el('art').getBoundingClientRect().width;
   if(drag.crop){
-   circlePhoto.offsetX=drag.startX+dx*scale;circlePhoto.offsetY=drag.startY+dy*scale;
+   const delta=circlePhotoReframeDelta(dx*scale,dy*scale,circlePhoto.x);
+   circlePhoto.offsetX=drag.startX+delta.x;circlePhoto.offsetY=drag.startY+delta.y;
   }else{
    const next=circlePhotoGeometry({x:drag.startX+dx*scale,y:drag.startY+dy*scale},photoBottom);
    circlePhoto.x=next.x;circlePhoto.y=next.y;
@@ -161,7 +172,7 @@ function installCirclePhoto(){
  circleHit.addEventListener('keydown',event=>{
   const deltas={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]},delta=deltas[event.key];
   if(!delta)return;event.preventDefault();event.stopPropagation();
-  if(circleEditing){circlePhoto.offsetX+=delta[0];circlePhoto.offsetY+=delta[1]}
+  if(circleEditing){const local=circlePhotoReframeDelta(delta[0],delta[1],circlePhoto.x);circlePhoto.offsetX+=local.x;circlePhoto.offsetY+=local.y}
   else{const next=circlePhotoGeometry({x:circlePhoto.x+delta[0],y:circlePhoto.y+delta[1]},photoBottom);circlePhoto.x=next.x;circlePhoto.y=next.y}
   render();
  });
