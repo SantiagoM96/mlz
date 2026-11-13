@@ -46,7 +46,7 @@ function sampleForVariant(variant){
 }
 function blankPage(){
  const initial=editor.getPageState();
- return {...initial,variant:'blank',samplePending:true,footerStyle:'center',headline:'',image:null,zoom:1,offsetX:0,offsetY:0,
+ return {...initial,variant:'blank',samplePending:true,footerStyle:'center',headline:'',circlePhoto:{enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0},image:null,zoom:1,offsetX:0,offsetY:0,
   quote:'',enableQuote:false,quoteAuthor:'',showQuoteAuthor:false,
   photoLayout:'single',splitPhotos:{left:{image:null,zoom:1,x:0,y:0},right:{image:null,zoom:1,x:0,y:0}}};
 }
@@ -199,7 +199,7 @@ function close(){dialog.hidden=true}
 dialog.addEventListener('click',event=>{if(event.target===dialog)close()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!dialog.hidden)close()});
 const clock=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0'),String(d.getHours()).padStart(2,'0'),String(d.getMinutes()).padStart(2,'0'),String(d.getSeconds()).padStart(2,'0')].join('-')};
-const pngBlob=()=>new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('No se pudo exportar el PNG')),'image/png'));
+const pngBlob=()=>new Promise((resolve,reject)=>{editor.refresh(false);canvas.toBlob(b=>b?resolve(b):reject(new Error('No se pudo exportar el PNG')),'image/png')});
 function download(blob,name){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;
  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
