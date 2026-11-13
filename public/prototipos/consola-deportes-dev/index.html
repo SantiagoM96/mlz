@@ -747,6 +747,31 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .workspace .activity-admin-table th[aria-sort="descending"] .activity-sort-button:hover .mi{
  color:var(--deportes-info,#006eff);
 }
+
+/* Anchos de columna ajustables, con wrapping y altura automática de filas. */
+.workspace .activity-admin-table thead th{position:relative}
+.workspace .activity-admin-table .activity-column-resize{
+ position:absolute;right:-4px;top:5px;bottom:5px;width:9px;
+ z-index:2;cursor:col-resize;touch-action:none;
+}
+.workspace .activity-admin-table .activity-column-resize::after{
+ content:"";position:absolute;top:25%;bottom:25%;left:4px;
+ width:2px;border-radius:2px;background:transparent;
+}
+.workspace .activity-admin-table .activity-column-resize:hover::after,
+.workspace .activity-admin-table .activity-column-resize:focus-visible::after{background:#006eff}
+.workspace .activity-admin-table th,.workspace .activity-admin-table td{
+ white-space:normal;overflow-wrap:anywhere;word-break:normal;
+}
+.workspace .activity-admin-table .activity-sort-button{white-space:normal;min-width:0}
+.workspace .activity-admin-table .activity-sort-button>span:first-child{
+ min-width:0;white-space:normal;overflow-wrap:anywhere;
+}
+.workspace .activity-admin-table .activity-sort-button>.mi{flex:0 0 auto}
+.workspace .activity-admin-table td.row-actions{white-space:normal}
+body.activity-column-dragging,body.activity-column-dragging *{
+ cursor:col-resize!important;user-select:none!important
+}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
@@ -852,6 +877,9 @@ let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDon
 let view='list',editId=null,filterText='',filterVenue='',filterState='',page=0,modalType=null,modalIndex=-1,draft=null,registrationFilter='';
 let activitySort={key:'',direction:'asc'};
 const selectedActivityIds=new Set();
+const ACTIVITY_COLUMN_KEYS=['select','activity','venue','age','commissions','status','actions'];
+const activityColumnWidths={};
+try{Object.assign(activityColumnWidths,JSON.parse(localStorage.getItem('mlz-activity-column-widths-v1')||'{}'))}catch{}
 const app=document.getElementById('app'),modal=document.getElementById('modal');
 function load(){try{
  let synced=JSON.parse(localStorage.getItem(SHARED_SPORTS_KEY));
@@ -890,12 +918,12 @@ function sortColumnHeader(label,key){
  const active=activitySort.key===key;
  const direction=active?activitySort.direction:'none';
  const next=active&&direction==='asc'?'desc':'asc';
- return '<th aria-sort="'+(active?(direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-activities" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':'descendente')+'"><span>'+label.toLocaleUpperCase('es')+'</span>'+ic(active?(direction==='asc'?'arrow_upward':'arrow_downward'):'swap_vert')+'</button></th>';
+ return '<th data-col="'+key+'" aria-sort="'+(active?(direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-activities" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':'descendente')+'"><span>'+label.toLocaleUpperCase('es')+'</span>'+ic(active?(direction==='asc'?'arrow_upward':'arrow_downward'):'swap_vert')+'</button><span class="activity-column-resize" role="separator" aria-orientation="vertical" tabindex="0" aria-label="Cambiar ancho de '+label+'" data-resize-col="'+key+'"></span></th>';
 }
 function selectionCheckbox(id,checked,label){
  return '<label class="activity-checkbox-control"><input class="activity-selection-checkbox" type="checkbox" '+(id?'data-activity-select="'+e(id)+'"':'id="select-visible-activities"')+' aria-label="'+e(label)+'" '+(checked?'checked':'')+'><span class="mi activity-checkbox-icon" aria-hidden="true"></span></label>';
 }
-function listView(){let items=records.filter(x=>(!filterText||(x.name+' '+x.sourceId+' '+x.categoriaTipoGlobal).toLowerCase().includes(filterText.toLowerCase()))&&(!filterVenue||x.venue===filterVenue)&&(!filterState||status(x)===filterState));sortActivityRecords(items);let shown=items.slice(page*10,page*10+10);const allVisible=shown.length>0&&shown.every(a=>selectedActivityIds.has(a.id));return '<nav class="console-breadcrumb" aria-label="Ruta de navegación"><a href="#" data-action="list">Inicio</a><span class="mi" aria-hidden="true">chevron_right</span><span class="last" aria-current="page">Administrador de actividades</span></nav><div class="heading console-page-header"><div><h1>Administrador de actividades</h1><p class="sub">Gestioná actividades, sedes, horarios y comisiones deportivas.</p></div><div class="actions">'+btn(ic('settings')+' Configuración','settings')+btn(ic('person_add')+' Nueva inscripción','enroll-new')+btn(ic('assignment')+' Inscripciones','registrations')+btn(ic('open_in_new')+' Ver agenda pública','public')+btn(ic('add')+' Agregar actividad','new','primary')+'</div></div><div class="stats"><div class="stat">Actividades<b>'+records.length+'</b></div><div class="stat">Comisiones<b>'+records.reduce((n,a)=>n+(a.commissions||[]).length,0)+'</b></div><div class="stat">Sedes<b>'+venues().length+'</b></div><div class="stat">Actividades visibles<b>'+records.filter(a=>!a._hidden).length+'</b></div></div><section class="panel"><div class="panelhead"><h2>Actividades deportivas</h2><span class="pill">Datos del prototipo público de Deportes</span></div><div class="panelbody"><div class="filters"><div class="field search"><label for="query">Buscar actividad</label><input id="query" placeholder="Buscar por nombre o categoría" value="'+e(filterText)+'"></div><div class="field"><label for="venue">Sede</label><select id="venue"><option value="">Todas las sedes</option>'+options(venues(),filterVenue)+'</select></div><div class="field"><label for="state">Estado</label><select id="state"><option value="">Todos los estados</option>'+options(['Activa','Oculta'],filterState)+'</select></div>'+'<div class="filter-action"><span class="filter-label-spacer" aria-hidden="true">&nbsp;</span>'+btn('Limpiar','clear')+'</div>'+'</div></div><div class="tablewrap activity-admin-table"><table><thead><tr><th class="activity-check-cell">'+selectionCheckbox('',allVisible,'Seleccionar todas las actividades visibles')+'</th>'+sortColumnHeader('Actividad','activity')+sortColumnHeader('Lugar','venue')+sortColumnHeader('Rango de edades','age')+sortColumnHeader('Comisiones','commissions')+sortColumnHeader('Estado','status')+'<th>Acciones</th></tr></thead><tbody>'+(shown.length?shown.map(a=>'<tr><td class="activity-check-cell">'+selectionCheckbox(a.id,selectedActivityIds.has(a.id),'Seleccionar '+a.name)+'</td><td><a href="#" class="activity-name-link" data-action="edit" data-id="'+e(a.id)+'" aria-label="Abrir actividad '+e(a.name)+'">'+e(a.name)+'</a><small>'+e(a.sourceId)+'</small></td><td>'+e(a.venue)+'</td><td>'+e(a.ageLabel||(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades'))+'</td><td>'+a.commissions.length+'</td><td><span class="tag activity-status-chip '+(a._hidden?'off':'')+'">'+status(a)+'</span></td><td class="row-actions"><button class="iconbtn" title="Inscribir persona" aria-label="Inscribir persona" data-action="enroll-activity" data-id="'+e(a.id)+'">'+ic('person_add')+'</button><button class="iconbtn" title="Duplicar" aria-label="Duplicar '+e(a.name)+'" data-action="duplicate" data-id="'+e(a.id)+'">'+ic('content_copy')+'</button><button class="iconbtn red" title="Eliminar" aria-label="Eliminar '+e(a.name)+'" data-action="delete" data-id="'+e(a.id)+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">No encontramos actividades con esos filtros.</td></tr>')+'</tbody></table></div><div class="foot"><span>Mostrando '+(items.length?page*10+1:0)+'–'+Math.min((page+1)*10,items.length)+' de '+items.length+' actividades</span><span>'+btn(ic('chevron_left')+' Anterior','prev')+' '+btn('Siguiente '+ic('chevron_right'),'next')+'</span></div></section><p class="hint">Entorno de desarrollo. Los cambios de este prototipo se guardan únicamente en tu navegador; no modifican la agenda pública ni registran inscripciones reales.</p>'}
+function listView(){let items=records.filter(x=>(!filterText||(x.name+' '+x.sourceId+' '+x.categoriaTipoGlobal).toLowerCase().includes(filterText.toLowerCase()))&&(!filterVenue||x.venue===filterVenue)&&(!filterState||status(x)===filterState));sortActivityRecords(items);let shown=items.slice(page*10,page*10+10);const allVisible=shown.length>0&&shown.every(a=>selectedActivityIds.has(a.id));return '<nav class="console-breadcrumb" aria-label="Ruta de navegación"><a href="#" data-action="list">Inicio</a><span class="mi" aria-hidden="true">chevron_right</span><span class="last" aria-current="page">Administrador de actividades</span></nav><div class="heading console-page-header"><div><h1>Administrador de actividades</h1><p class="sub">Gestioná actividades, sedes, horarios y comisiones deportivas.</p></div><div class="actions">'+btn(ic('settings')+' Configuración','settings')+btn(ic('person_add')+' Nueva inscripción','enroll-new')+btn(ic('assignment')+' Inscripciones','registrations')+btn(ic('open_in_new')+' Ver agenda pública','public')+btn(ic('add')+' Agregar actividad','new','primary')+'</div></div><div class="stats"><div class="stat">Actividades<b>'+records.length+'</b></div><div class="stat">Comisiones<b>'+records.reduce((n,a)=>n+(a.commissions||[]).length,0)+'</b></div><div class="stat">Sedes<b>'+venues().length+'</b></div><div class="stat">Actividades visibles<b>'+records.filter(a=>!a._hidden).length+'</b></div></div><section class="panel"><div class="panelhead"><h2>Actividades deportivas</h2><span class="pill">Datos del prototipo público de Deportes</span></div><div class="panelbody"><div class="filters"><div class="field search"><label for="query">Buscar actividad</label><input id="query" placeholder="Buscar por nombre o categoría" value="'+e(filterText)+'"></div><div class="field"><label for="venue">Sede</label><select id="venue"><option value="">Todas las sedes</option>'+options(venues(),filterVenue)+'</select></div><div class="field"><label for="state">Estado</label><select id="state"><option value="">Todos los estados</option>'+options(['Activa','Oculta'],filterState)+'</select></div>'+'<div class="filter-action"><span class="filter-label-spacer" aria-hidden="true">&nbsp;</span>'+btn('Limpiar','clear')+'</div>'+'</div></div><div class="tablewrap activity-admin-table"><table><colgroup>'+ACTIVITY_COLUMN_KEYS.map(key=>'<col data-col-width="'+key+'">').join('')+'</colgroup><thead><tr><th class="activity-check-cell" data-col="select">'+selectionCheckbox('',allVisible,'Seleccionar todas las actividades visibles')+'</th>'+sortColumnHeader('Actividad','activity')+sortColumnHeader('Lugar','venue')+sortColumnHeader('Rango de edades','age')+sortColumnHeader('Comisiones','commissions')+sortColumnHeader('Estado','status')+'<th data-col="actions">ACCIONES</th></tr></thead><tbody>'+(shown.length?shown.map(a=>'<tr><td class="activity-check-cell">'+selectionCheckbox(a.id,selectedActivityIds.has(a.id),'Seleccionar '+a.name)+'</td><td><a href="#" class="activity-name-link" data-action="edit" data-id="'+e(a.id)+'" aria-label="Abrir actividad '+e(a.name)+'">'+e(a.name)+'</a><small>'+e(a.sourceId)+'</small></td><td>'+e(a.venue)+'</td><td>'+e(a.ageLabel||(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades'))+'</td><td>'+a.commissions.length+'</td><td><span class="tag activity-status-chip '+(a._hidden?'off':'')+'">'+status(a)+'</span></td><td class="row-actions"><button class="iconbtn" title="Inscribir persona" aria-label="Inscribir persona" data-action="enroll-activity" data-id="'+e(a.id)+'">'+ic('person_add')+'</button><button class="iconbtn" title="Duplicar" aria-label="Duplicar '+e(a.name)+'" data-action="duplicate" data-id="'+e(a.id)+'">'+ic('content_copy')+'</button><button class="iconbtn red" title="Eliminar" aria-label="Eliminar '+e(a.name)+'" data-action="delete" data-id="'+e(a.id)+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">No encontramos actividades con esos filtros.</td></tr>')+'</tbody></table></div><div class="foot"><span>Mostrando '+(items.length?page*10+1:0)+'–'+Math.min((page+1)*10,items.length)+' de '+items.length+' actividades</span><span>'+btn(ic('chevron_left')+' Anterior','prev')+' '+btn('Siguiente '+ic('chevron_right'),'next')+'</span></div></section><p class="hint">Entorno de desarrollo. Los cambios de este prototipo se guardan únicamente en tu navegador; no modifican la agenda pública ni registran inscripciones reales.</p>'}
 
 function renderPhotos(a){
  const photos=Array.isArray(a.photos)?a.photos:[];
@@ -1155,6 +1183,60 @@ function catalogUsage(type,name){
  return count+' '+(type==='profesores'?'comisiones':'actividades');
 }
 function overviewView(){return listView()}
+
+function initActivityColumnResize(container){
+ if(!container)return;
+ const table=container.querySelector('table');
+ if(!table)return;
+ const cols=[...table.querySelectorAll('colgroup col')];
+ const headers=[...table.querySelectorAll('thead th')];
+ if(cols.length!==ACTIVITY_COLUMN_KEYS.length||headers.length!==cols.length)return;
+ const measured=headers.map(th=>Math.round(th.getBoundingClientRect().width));
+ const widths=ACTIVITY_COLUMN_KEYS.map((key,i)=>{
+  const custom=Number(activityColumnWidths[key]);
+  return Number.isFinite(custom)&&custom>=48?custom:Math.max(key==='select'?44:key==='actions'?105:80,measured[i]||100);
+ });
+ function apply(){
+  cols.forEach((col,i)=>{col.style.width=widths[i]+'px'});
+  table.style.tableLayout='fixed';
+  table.style.width=widths.reduce((sum,w)=>sum+w,0)+'px';
+  table.style.minWidth='0';
+ }
+ apply();
+ container.querySelectorAll('[data-resize-col]').forEach(handle=>{
+  const idx=ACTIVITY_COLUMN_KEYS.indexOf(handle.dataset.resizeCol);
+  if(idx<0)return;
+  const min=70;
+  const setWidth=value=>{
+   widths[idx]=Math.max(min,Math.round(value));
+   activityColumnWidths[ACTIVITY_COLUMN_KEYS[idx]]=widths[idx];
+   apply();
+  };
+  const persist=()=>{try{localStorage.setItem('mlz-activity-column-widths-v1',JSON.stringify(activityColumnWidths))}catch{}};
+  handle.addEventListener('pointerdown',event=>{
+   if(event.button!==0)return;
+   event.preventDefault();event.stopPropagation();
+   const origin=event.clientX,start=widths[idx];
+   handle.setPointerCapture(event.pointerId);
+   document.body.classList.add('activity-column-dragging');
+   const move=ev=>{setWidth(start+ev.clientX-origin)};
+   const finish=()=>{
+    handle.removeEventListener('pointermove',move);
+    document.body.classList.remove('activity-column-dragging');
+    persist();
+   };
+   handle.addEventListener('pointermove',move);
+   handle.addEventListener('pointerup',finish,{once:true});
+   handle.addEventListener('pointercancel',finish,{once:true});
+  });
+  handle.addEventListener('keydown',event=>{
+   if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+   event.preventDefault();event.stopPropagation();
+   setWidth(widths[idx]+(event.key==='ArrowRight'?10:-10));
+   persist();
+  });
+ });
+}
 function bindActivityTableCheckboxes(table){
  if(!table)return;
  const selectAll=table.querySelector('#select-visible-activities');
@@ -1173,6 +1255,7 @@ function bindActivityTableCheckboxes(table){
 }
 function bind(){
  bindActivityTableCheckboxes(app.querySelector('.activity-admin-table'));
+ initActivityColumnResize(app.querySelector('.activity-admin-table'));
  app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let regSearch=document.getElementById('registrationSearch');
 if(regSearch)regSearch.addEventListener('input',event=>{registrationSearch=event.target.value;const pos=event.target.selectionStart;render();let next=document.getElementById('registrationSearch');next?.focus();next?.setSelectionRange(pos,pos)});
 for(const key of ['registrationActivity','registrationStatus']){const select=document.getElementById(key);if(select)select.addEventListener('change',()=>{if(key==='registrationActivity')registrationActivity=select.value;else registrationStatus=select.value;render()})}
@@ -1194,6 +1277,7 @@ function action(type,id,index){if(type==='sort-activities'){
  current.tBodies[0].innerHTML=updated.tBodies[0].innerHTML;
  const tableContainer=current.closest('.activity-admin-table');
  bindActivityTableCheckboxes(tableContainer);
+ initActivityColumnResize(tableContainer);
  tableContainer.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{
   if(el.tagName==='A')event.preventDefault();
   action(el.dataset.action,el.dataset.id,Number(el.dataset.index));
