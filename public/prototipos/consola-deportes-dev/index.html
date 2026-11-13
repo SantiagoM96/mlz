@@ -708,6 +708,14 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .workspace .activity-admin-table th[aria-sort="descending"] .activity-sort-button{
  color:#236999;
 }
+
+/* El ordenamiento no debe usar las filas como punto de anclaje de scroll. */
+.workspace .activity-admin-table{overflow-anchor:none}
+.workspace .activity-admin-table .activity-checkbox-icon{color:var(--deportes-primary-600,#236999)}
+.workspace .activity-admin-table .activity-selection-checkbox:checked + .activity-checkbox-icon,
+.workspace .activity-admin-table .activity-selection-checkbox:indeterminate + .activity-checkbox-icon{
+ color:var(--deportes-info,#006eff);
+}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
@@ -1116,9 +1124,10 @@ function catalogUsage(type,name){
  return count+' '+(type==='profesores'?'comisiones':'actividades');
 }
 function overviewView(){return listView()}
-function bind(){
- const selectAll=app.querySelector('#select-visible-activities');
- const rowChecks=[...app.querySelectorAll('[data-activity-select]')];
+function bindActivityTableCheckboxes(table){
+ if(!table)return;
+ const selectAll=table.querySelector('#select-visible-activities');
+ const rowChecks=[...table.querySelectorAll('[data-activity-select]')];
  if(selectAll){
   selectAll.indeterminate=rowChecks.some(input=>input.checked)&&!rowChecks.every(input=>input.checked);
   selectAll.addEventListener('change',()=>{
@@ -1130,6 +1139,9 @@ function bind(){
   if(input.checked)selectedActivityIds.add(input.dataset.activitySelect);else selectedActivityIds.delete(input.dataset.activitySelect);
   if(selectAll){selectAll.checked=rowChecks.length>0&&rowChecks.every(x=>x.checked);selectAll.indeterminate=rowChecks.some(x=>x.checked)&&!selectAll.checked}
  }));
+}
+function bind(){
+ bindActivityTableCheckboxes(app.querySelector('.activity-admin-table'));
  app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let regSearch=document.getElementById('registrationSearch');
 if(regSearch)regSearch.addEventListener('input',event=>{registrationSearch=event.target.value;const pos=event.target.selectionStart;render();let next=document.getElementById('registrationSearch');next?.focus();next?.setSelectionRange(pos,pos)});
 for(const key of ['registrationActivity','registrationStatus']){const select=document.getElementById(key);if(select)select.addEventListener('change',()=>{if(key==='registrationActivity')registrationActivity=select.value;else registrationStatus=select.value;render()})}
@@ -1138,23 +1150,23 @@ app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
 function action(type,id,index){if(type==='sort-activities'){
- const scrollX=window.scrollX,scrollY=window.scrollY;
- const tableScroll=app.querySelector('.activity-admin-table')?.scrollLeft||0;
- const previousAnchor=document.documentElement.style.overflowAnchor;
- // Evita que el navegador reposicione el viewport al sustituir las filas.
- document.documentElement.style.overflowAnchor='none';
  activitySort=activitySort.key===id?{key:id,direction:activitySort.direction==='asc'?'desc':'asc'}:{key:id,direction:'asc'};
- page=0;
- render();
- const sortedButton=[...app.querySelectorAll('.activity-sort-button')].find(button=>button.dataset.id===id);
- if(sortedButton)sortedButton.focus({preventScroll:true});
- const table=app.querySelector('.activity-admin-table');
- if(table)table.scrollLeft=tableScroll;
- window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});
- requestAnimationFrame(()=>{
-  window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});
-  document.documentElement.style.overflowAnchor=previousAnchor;
- });
+ // Se actualiza solamente la tabla: no se reconstruyen filtros, paneles
+ // ni controles superiores; así se conserva el viewport y su anclaje.
+ const current=app.querySelector('.activity-admin-table table');
+ if(!current){render();return}
+ const markup=document.createElement('template');
+ markup.innerHTML=listView();
+ const updated=markup.content.querySelector('.activity-admin-table table');
+ if(!updated){render();return}
+ current.tHead.innerHTML=updated.tHead.innerHTML;
+ current.tBodies[0].innerHTML=updated.tBodies[0].innerHTML;
+ const tableContainer=current.closest('.activity-admin-table');
+ bindActivityTableCheckboxes(tableContainer);
+ tableContainer.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{
+  if(el.tagName==='A')event.preventDefault();
+  action(el.dataset.action,el.dataset.id,Number(el.dataset.index));
+ }));
  return;
 }if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='registration-detail'){registrationDetailsId=id;modalType='registration-detail';renderModal();return}
