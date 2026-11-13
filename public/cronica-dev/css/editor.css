@@ -809,3 +809,11 @@ html body .cronica-rich-headline.uppercase-preview{text-transform:uppercase!impo
 html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[id^="formatStrike"])[aria-pressed="true"]{
  background:var(--rich-editor-accent)!important;border-color:var(--rich-editor-accent)!important;color:#fff!important;
 }
+
+/* El contorno interactivo del titular necesita contraste sobre fondos rojos. */
+html[data-cronica-variant="red"] .preview .canvas-stage{--text-hotspot-accent:#fff}
+html body .preview .canvas-stage>.modern-text-hit:hover,
+html body .preview .canvas-stage>.modern-text-hit:focus-visible,
+html body .preview .canvas-stage>.modern-text-hit.is-hotspot-selected{
+ border-color:var(--text-hotspot-accent,var(--editor-accent))!important;
+}
