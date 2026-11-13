@@ -7,6 +7,7 @@ let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBo
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 // Volantas un 30 % más altas; las mismas medidas se usan en preview y PNG.
 const COVER_STRAP_HEIGHT=68,INTERNAL_STRAP_HEIGHT=65;
+const DIVIDER_HEIGHT=24;
 let footerStyle='carousel';
 document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
@@ -152,8 +153,8 @@ function render(includeHover=true){
   let panelTop,barY;
   if(cover){
    // La distancia desde el borde inferior de la volanta hasta el texto es 50 px.
-   // Sin volanta, se mide desde el borde inferior de la línea roja de 13 px.
-   panelTop=Math.max(160,top-(showBar?50+COVER_STRAP_HEIGHT/2:56.5));
+   // Sin volanta, se mide desde el borde inferior de la línea roja de 24 px.
+   panelTop=Math.max(160,top-(showBar?50+COVER_STRAP_HEIGHT/2:50+DIVIDER_HEIGHT/2));
    barY=panelTop-COVER_STRAP_HEIGHT/2;
   }else{
    panelTop=Math.max(160,top-50-(showBar?barHeight:0));
@@ -167,7 +168,7 @@ function render(includeHover=true){
   ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
-  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-6.5,W,13);
+  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-DIVIDER_HEIGHT/2,W,DIVIDER_HEIGHT);
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
   // Ubicaciones en píxeles reales de la placa, usadas solo por el overlay HTML.
