@@ -163,9 +163,7 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .sports-form-layout{align-items:stretch!important}.sports-form-aside{align-self:stretch!important;min-height:100%;overflow:visible}
 .sports-preview-sticky{position:sticky!important;top:86px!important;max-height:calc(100vh - 100px);overflow:auto;overscroll-behavior:contain}
 .sports-preview-sticky .catalog-card{border:1px solid #e7e7e7;border-radius:8px;min-height:344px;display:flex;flex-direction:column;overflow:hidden;background:#fff;color:#3d3d3d}
-.sports-preview-sticky .catalog-card .card-art{display:block;flex:0 0 34px;height:34px;background:linear-gradient(115deg,#208fb8,#2ba2c9 45%,#66b8da)}
-.sports-preview-sticky .catalog-card .card-art.image-art{height:auto;aspect-ratio:2/1;flex:initial}
-.sports-preview-sticky .catalog-card .card-art img{width:100%;aspect-ratio:2/1;object-fit:cover;display:block}
+.sports-preview-sticky .catalog-card .card-art{display:block;flex:0 0 34px;height:34px;min-height:34px;background:linear-gradient(115deg,#208fb8 0%,#2ba2c9 45%,#66b8da 100%)}
 .sports-preview-sticky .catalog-card .card-body{padding:16px 24px 20px;display:flex;flex-direction:column;gap:12px;flex:1;min-width:0}
 .sports-preview-sticky .catalog-card .card-cat{color:#888;font-size:14px;font-weight:500;line-height:20px;text-transform:uppercase;overflow-wrap:anywhere}
 .sports-preview-sticky .catalog-card .card-name{color:#236999;font-size:22px;line-height:28px;font-weight:700;margin:0;overflow-wrap:anywhere}
@@ -410,8 +408,8 @@ async function uploadPhotos(files){
 function activityCatalogPreview(a){
  const name=a.name||'Nombre de la actividad';
  const age=a.ageLabel||(a.min!==undefined&&a.max!==undefined?'De '+a.min+' a '+a.max+' años':'Todas las edades');
- const img=a.photos?.[0]?.data;
- const art=img?'<div class="card-art image-art"><img src="'+e(img)+'" alt=""></div>':'<div class="card-art" aria-hidden="true"></div>';
+ // La tarjeta pública siempre usa una franja celeste. La portada se muestra en la ficha de detalle.
+ const art='<div class="card-art" aria-hidden="true"></div>';
  const tags=(a.pcd||a.previousTest)?'<div class="card-demographic">'+(a.pcd?'<span class="meta-tag is-pcd">Personas con discapacidad</span>':'')+(a.previousTest?'<span class="meta-tag is-test">Prueba previa</span>':'')+'</div>':'';
  return '<div class="catalog-card">'+art+'<div class="card-body"><div class="card-cat">'+e(a.categoriaTipoGlobal||'Deporte')+'</div><h3 class="card-name">'+e(name)+'</h3>'+tags+'<div class="card-info"><span class="ico">'+ic('groups')+'</span><span>'+e(age)+'</span></div><div class="card-info"><span class="ico">'+ic('location_on')+'</span><span>'+e(a.venue||'Sede por definir')+'<span class="sub">'+e(a.address||'Dirección por definir')+'</span></span></div><div class="card-modalities">'+e(String(a.tipo||'').split('/').map(x=>x.trim()).join(' - '))+'</div><span class="card-link">Ver más</span></div></div>';
 }
