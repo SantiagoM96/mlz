@@ -984,7 +984,7 @@ function reconcileDemoRecords(list){
 }
 let records=reconcileDemoRecords(load());
 let demoRegistrations=[],registrationSearch='',registrationActivity='',registrationStatus='',registrationDetailsId='',demoLoadError=false;
-let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDone=false;
+let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDone=false,enrollActivityLocked=false;
 let view='list',editId=null,filterText='',filterVenue='',filterState='',page=0,modalType=null,modalIndex=-1,draft=null,registrationFilter='';
 let activitySort={key:'',direction:'asc'};
 const selectedActivityIds=new Set();
@@ -1314,7 +1314,7 @@ function enrollmentPage(){
  if(enrollDone)return bread+'<div class="en-result"><span class="mi">task_alt</span><h1>Simulación finalizada</h1><p>Se validó el formulario, pero no se registró ninguna inscripción ni se almacenaron datos personales o médicos.</p>'+btn('Nueva inscripción','enroll-new','primary')+' '+btn('Volver','registrations')+'</div>';
  if(enrollStep===1){
  const matches=records.filter(x=>!x._hidden&&x.commissions.length&&(!enrollSearch||(x.name+' '+x.categoriaTipoGlobal+' '+x.venue).toLowerCase().includes(enrollSearch.toLowerCase())));
- return bread+'<div class="heading"><div><h1>Inscribir persona</h1><p class="sub">Paso 1 de 2 · Seleccioná una actividad y una sola comisión.</p></div>'+btn('Volver','registrations')+'</div><section class="en-panel"><h2>Seleccionar actividad</h2><div class="field"><label for="en-search">Buscar actividad, categoría o sede</label><input id="en-search" placeholder="Buscar actividad" value="'+e(enrollSearch)+'"></div><div class="en-list">'+(matches.length?matches.map(x=>'<button type="button" class="en-item '+(x.id===enrollActivity?'chosen':'')+'" data-action="en-pick" data-id="'+e(x.id)+'"><span><strong>'+e(x.name)+'</strong><small>'+e(x.categoriaTipoGlobal)+' · '+e(x.venue)+'</small></span><span>'+x.commissions.length+' comisiones</span>'+ic('chevron_right')+'</button>').join(''):'<p class="empty">No hay coincidencias.</p>')+'</div></section>'+
+ return bread+'<div class="heading"><div><h1>Inscribir persona</h1><p class="sub">'+(enrollActivityLocked?'Paso 1 de 2 · Seleccioná una comisión.':'Paso 1 de 2 · Seleccioná una actividad y una sola comisión.')+'</p></div>'+btn('Volver',enrollActivityLocked?'list':'registrations')+'</div>'+(enrollActivityLocked?'':'<section class="en-panel"><h2>Seleccionar actividad</h2><div class="field"><label for="en-search">Buscar actividad, categoría o sede</label><input id="en-search" placeholder="Buscar actividad" value="'+e(enrollSearch)+'"></div><div class="en-list">'+(matches.length?matches.map(x=>'<button type="button" class="en-item '+(x.id===enrollActivity?'chosen':'')+'" data-action="en-pick" data-id="'+e(x.id)+'"><span><strong>'+e(x.name)+'</strong><small>'+e(x.categoriaTipoGlobal)+' · '+e(x.venue)+'</small></span><span>'+x.commissions.length+' comisiones</span>'+ic('chevron_right')+'</button>').join(''):'<p class="empty">No hay coincidencias.</p>')+'</div></section>')+
  (a?'<section class="en-panel"><h2>Seleccionar comisión de '+e(a.name)+'</h2><p class="sub">Elegí una opción. Seleccioná una única comisión para continuar.</p><div class="en-list" role="radiogroup" aria-label="Comisiones">'+a.commissions.map(x=>'<label class="en-radio-row '+(x.id===enrollCommission?'chosen':'')+'"><input type="radio" name="en-option" value="'+e(x.id)+'" '+(x.id===enrollCommission?'checked':'')+'><span><strong>'+e(x.prof)+'</strong><small>'+e(x.schedule.map(y=>y.days+' · '+y.start+' a '+y.end).join(' / '))+'</small></span><span class="tag">'+e(x.cupos)+' cupos</span></label>').join('')+'</div><div class="en-buttons">'+btn('Cancelar','registrations')+'<button type="button" class="btn primary" data-action="en-next" '+(c?'':'disabled')+'>Continuar '+ic('arrow_forward')+'</button></div></section>':'');
  }
  if(!a||!c)return bread+btn('Volver','en-back');
@@ -1525,9 +1525,9 @@ function action(type,id,index){if(type==='sort-commissions'){
  return;
 }if(type==='list'){view='list';editId=null;draft=null;render();return}if(type==='registrations'){view='registrations';render();return}
 if(type==='registration-detail'){registrationDetailsId=id;modalType='registration-detail';renderModal();return}
-if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
-if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;view='enroll';render();return}
-if(type==='en-pick'){enrollActivity=id;enrollCommission='';render();return}
+if(type==='enroll-new'){enrollActivity='';enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;enrollActivityLocked=false;view='enroll';render();return}
+if(type==='enroll-activity'){enrollActivity=id;enrollCommission='';enrollSearch='';enrollStep=1;enrollDone=false;enrollActivityLocked=true;view='enroll';render();return}
+if(type==='en-pick'){if(enrollActivityLocked)return;enrollActivity=id;enrollCommission='';render();return}
 if(type==='en-next'){if(records.find(x=>x.id===enrollActivity)?.commissions.some(x=>x.id===enrollCommission)){enrollStep=2;render()}return}
 if(type==='en-back'){enrollStep=1;enrollDone=false;render();return}if(type==='settings'){view='settings';catalogTab='profesores';render();return}
 if(type==='catalog-tab'){catalogTab=id;render();return}
