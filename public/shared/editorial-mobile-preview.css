@@ -29,3 +29,7 @@
  background:#34373e;color:#f4f4f5;font:600 13px/20px system-ui,Arial,sans-serif;cursor:pointer;
 }
 .editorial-mobile-preview-close:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+.editorial-mobile-preview-frame{position:absolute}
+.editorial-mobile-preview-close{right:auto;transform:translateX(-50%)}
+.editorial-mobile-preview-close:active{transform:translateX(-50%)}
