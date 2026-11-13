@@ -547,6 +547,46 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .activity-toggle-card .activity-leading-icon{font-size:22px;color:#236999;flex:none}
 .activity-toggle-card .activity-toggle-text{flex:1}
 @media(max-width:600px){.sports-boolean-row .activity-toggle-card{flex-basis:100%}}
+
+/* Estados base Primario 600 y foco sin anillo exterior en toda la consola. */
+:root{--deportes-primary-600:#236999}
+.activity-modality-options label,
+.sports-boolean-row .activity-toggle-card{
+ color:var(--deportes-primary-600);
+}
+.activity-modality-options label .outlined-check,
+.sports-boolean-row .activity-toggle-card .outlined-check,
+.sports-boolean-row .activity-toggle-card .activity-leading-icon,
+.sports-boolean-row .activity-toggle-card .activity-toggle-text{
+ color:var(--deportes-primary-600);
+}
+/* Mantener exactamente el tratamiento activo existente. */
+.activity-modality-options label:has(input:checked)>.outlined-check,
+.sports-boolean-row .activity-toggle-card:has(input:checked)>.outlined-check{
+ color:#006eff;
+}
+/* Sin halos exteriores de foco: ni controles, ni tarjetas, ni enlaces. */
+.shell :is(button,input,select,textarea,a,[tabindex],label):focus,
+.shell :is(button,input,select,textarea,a,[tabindex],label):focus-visible,
+.shell :is(label,.activity-modality-options label,.activity-toggle-card,.schedule-day):focus-within,
+.dialog :is(button,input,select,textarea,a,[tabindex],label):focus,
+.dialog :is(button,input,select,textarea,a,[tabindex],label):focus-visible,
+.dialog :is(label,.schedule-day):focus-within{
+ outline:none!important;outline-offset:0!important;
+}
+/* Foco de teclado perceptible, únicamente sobre el borde interior. */
+.shell :is(button,.deportes-select-trigger):focus-visible,
+.dialog button:focus-visible{
+ box-shadow:inset 0 0 0 2px var(--deportes-info);
+}
+.shell .activity-modality-options label:focus-within,
+.shell .sports-boolean-row .activity-toggle-card:focus-within{
+ box-shadow:inset 0 0 0 2px var(--deportes-info);
+}
+.shell .activity-modality-options label:has(input:checked):focus-within,
+.shell .sports-boolean-row .activity-toggle-card:has(input:checked):focus-within{
+ box-shadow:inset 0 0 0 2px var(--deportes-info);
+}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
