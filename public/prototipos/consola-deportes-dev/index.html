@@ -825,6 +825,26 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .workspace .tablewrap thead .activity-selection-checkbox:indeterminate + .activity-checkbox-icon{
  color:var(--deportes-info,#006eff);
 }
+
+/* Tabla Comisiones y horarios: mismo DS que el resto de tablas administrativas. */
+.workspace .sports-form-section > .commission-admin-table{
+ margin-top:20px;
+ border:1px solid #e1e7eb;
+ border-radius:8px;
+ overflow:auto;
+ overflow-anchor:none;
+}
+.workspace .commission-admin-table table.sports-data-table{
+ width:100%;min-width:660px;border:0;
+ border-collapse:separate;border-spacing:0;
+}
+.workspace .commission-admin-table thead th.commission-actions-header{
+ font-size:13px;line-height:20px;font-weight:700;color:#212121;
+}
+.workspace .commission-admin-table thead th:first-child{border-top-left-radius:7px}
+.workspace .commission-admin-table thead th:last-child{border-top-right-radius:7px}
+.workspace .commission-admin-table tbody tr:last-child td:first-child{border-bottom-left-radius:7px}
+.workspace .commission-admin-table tbody tr:last-child td:last-child{border-bottom-right-radius:7px}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
@@ -934,6 +954,8 @@ let registrationSort={key:'',direction:'asc'};
 const selectedRegistrationIds=new Set();
 const catalogSortState={profesores:{key:'',direction:'asc'},categorias:{key:'',direction:'asc'},sedes:{key:'',direction:'asc'}};
 const selectedCatalogRows={profesores:new Set(),categorias:new Set(),sedes:new Set()};
+let commissionSort={key:'',direction:'asc'};
+const selectedCommissionIndices=new Set();
 const app=document.getElementById('app'),modal=document.getElementById('modal');
 function load(){try{
  let synced=JSON.parse(localStorage.getItem(SHARED_SPORTS_KEY));
@@ -1110,6 +1132,34 @@ function ageValues(data,previous){
 }
 function applyAgeFromForm(data,target){Object.assign(target,ageValues(data,target))}
 
+
+function sortedCommissionRows(a){
+ const entries=(a.commissions||[]).map((commission,index)=>({commission,index}));
+ if(!commissionSort.key)return entries;
+ const collator=new Intl.Collator('es',{numeric:true,sensitivity:'base'});
+ const extract=c=>commissionSort.key==='prof'?c.prof:
+ commissionSort.key==='schedule'?(c.schedule||[]).map(s=>s.days+' '+s.start+' '+s.end).join(' / '):
+ Number(c.cupos)||0;
+ return entries.sort((a,b)=>{
+  const left=extract(a.commission),right=extract(b.commission);
+  const diff=typeof left==='number'?left-right:collator.compare(String(left||''),String(right||''));
+  return (commissionSort.direction==='desc'?-1:1)*diff||a.index-b.index;
+ });
+}
+function commissionSortHeader(label,key){
+ const active=commissionSort.key===key;
+ const next=!active?'asc':commissionSort.direction==='asc'?'desc':'none';
+ return '<th aria-sort="'+(active?(commissionSort.direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-commissions" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':next==='desc'?'descendente':'sin orden')+'"><span>'+label.toLocaleUpperCase('es')+'</span>'+ic(active?(commissionSort.direction==='asc'?'arrow_upward':'arrow_downward'):'swap_vert')+'</button></th>';
+}
+function commissionCheckbox(index,checked,label){
+ return '<label class="activity-checkbox-control"><input class="activity-selection-checkbox" type="checkbox" '+(index===null?'id="select-visible-commissions"':'data-commission-select="'+index+'"')+' aria-label="'+e(label)+'" '+(checked?'checked':'')+'><span class="mi activity-checkbox-icon" aria-hidden="true"></span></label>';
+}
+function commissionTableHTML(a){
+ const rows=sortedCommissionRows(a);
+ return '<div class="tablewrap commission-admin-table activity-admin-table"><table class="sports-data-table"><thead><tr><th class="activity-check-cell">'+commissionCheckbox(null,rows.length>0&&rows.every(x=>selectedCommissionIndices.has(x.index)),'Seleccionar todas las comisiones')+'</th>'+commissionSortHeader('Profesor/a','prof')+commissionSortHeader('Días y horarios','schedule')+commissionSortHeader('Cupos','cupos')+'<th class="commission-actions-header">ACCIONES</th></tr></thead><tbody>'+
+ (rows.length?rows.map(({commission:c,index:i})=>'<tr><td class="activity-check-cell">'+commissionCheckbox(i,selectedCommissionIndices.has(i),'Seleccionar comisión de '+c.prof)+'</td><td><strong>'+e(c.prof)+'</strong><small>'+e(c.id)+'</small></td><td>'+e((c.schedule||[]).map(t=>t.days+' · '+t.start+' a '+t.end).join(' / ')||'A confirmar')+'</td><td>'+e(c.cupos)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Editar comisión" data-action="edit-commission" data-index="'+i+'">'+ic('edit')+'</button><button type="button" class="iconbtn" title="Duplicar comisión" data-action="dup-commission" data-index="'+i+'">'+ic('content_copy')+'</button><button type="button" class="iconbtn red" title="Eliminar comisión" data-action="remove-commission" data-index="'+i+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="5" class="empty">Todavía no hay comisiones. Agregá una para empezar.</td></tr>')+
+ '</tbody></table></div>';
+}
 function editView(){
  const a=draft, edit=Boolean(editId);
  const card=activityCatalogPreview(a);
@@ -1128,9 +1178,7 @@ function editView(){
  '<div class="sports-boolean-row"><label class="activity-toggle-card"><input id="pcd" name="pcd" type="checkbox" '+(a.pcd?'checked':'')+'><span class="mi activity-leading-icon" aria-hidden="true">accessible</span><span class="activity-toggle-text">Actividad para personas con discapacidad</span><span class="mi outlined-check" aria-hidden="true"></span></label><label class="activity-toggle-card"><input id="previousTest" name="previousTest" type="checkbox" '+(a.previousTest?'checked':'')+'><span class="mi activity-leading-icon" aria-hidden="true">fact_check</span><span class="activity-toggle-text">Requiere prueba previa</span><span class="mi outlined-check" aria-hidden="true"></span></label></div>'+
  '</section>'+
  '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Comisiones y horarios</h2><p class="sub">Profesores, días, horarios y cupos de cada comisión.</p></div>'+btn(ic('add')+' Agregar comisión','add-commission','primary')+'</div>'+
- '<div class="tablewrap"><table class="sports-data-table"><thead><tr><th>Profesor/a</th><th>Días y horarios</th><th>Cupos</th><th>Acciones</th></tr></thead><tbody>'+
- (a.commissions.length?a.commissions.map((c,i)=>'<tr><td><strong>'+e(c.prof)+'</strong><small>'+e(c.id)+'</small></td><td>'+e((c.schedule||[]).map(t=>t.days+' · '+t.start+' a '+t.end).join(' / ')||'A confirmar')+'</td><td>'+e(c.cupos)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Editar comisión" data-action="edit-commission" data-index="'+i+'">'+ic('edit')+'</button><button type="button" class="iconbtn" title="Duplicar comisión" data-action="dup-commission" data-index="'+i+'">'+ic('content_copy')+'</button><button type="button" class="iconbtn red" title="Eliminar comisión" data-action="remove-commission" data-index="'+i+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="4" class="empty">Todavía no hay comisiones. Agregá una para empezar.</td></tr>')+
- '</tbody></table></div></section>'+
+ commissionTableHTML(a)+'</section>'+
  '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Imágenes y portada</h2><p class="sub">Agregá fotos para mostrar en la ficha de la actividad.</p></div></div>'+
  '<div class="sports-photo-drop"><div id="photo-gallery">'+renderPhotos(a)+'</div><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden aria-label="Seleccionar imágenes"></div>'+
  '<p class="hint">Hasta 6 fotografías · JPG, PNG o WebP · Recomendado 2:1. La primera imagen es la portada. Se guardan solo en este navegador.</p>'+
@@ -1335,10 +1383,29 @@ function bindCatalogCheckboxes(table){
   if(all){all.checked=rows.length>0&&rows.every(x=>x.checked);all.indeterminate=rows.some(x=>x.checked)&&!all.checked}
  }));
 }
+
+function bindCommissionCheckboxes(table){
+ if(!table)return;
+ const all=table.querySelector('#select-visible-commissions');
+ const rows=[...table.querySelectorAll('[data-commission-select]')];
+ if(all){
+  all.indeterminate=rows.some(x=>x.checked)&&!rows.every(x=>x.checked);
+  all.addEventListener('change',()=>{
+   rows.forEach(input=>{input.checked=all.checked;const index=Number(input.dataset.commissionSelect);if(input.checked)selectedCommissionIndices.add(index);else selectedCommissionIndices.delete(index)});
+   all.indeterminate=false;
+  });
+ }
+ rows.forEach(input=>input.addEventListener('change',()=>{
+  const index=Number(input.dataset.commissionSelect);
+  if(input.checked)selectedCommissionIndices.add(index);else selectedCommissionIndices.delete(index);
+  if(all){all.checked=rows.length>0&&rows.every(x=>x.checked);all.indeterminate=rows.some(x=>x.checked)&&!all.checked}
+ }));
+}
 function bind(){
  bindActivityTableCheckboxes(app.querySelector('.activity-admin-table:not(.registration-admin-table)'));
  bindRegistrationCheckboxes(app.querySelector('.registration-admin-table'));
  bindCatalogCheckboxes(app.querySelector('.catalog-admin-table'));
+ bindCommissionCheckboxes(app.querySelector('.commission-admin-table'));
  app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let regSearch=document.getElementById('registrationSearch');
 if(regSearch)regSearch.addEventListener('input',event=>{registrationSearch=event.target.value;const pos=event.target.selectionStart;render();let next=document.getElementById('registrationSearch');next?.focus();next?.setSelectionRange(pos,pos)});
 for(const key of ['registrationActivity','registrationStatus']){const select=document.getElementById(key);if(select)select.addEventListener('change',()=>{if(key==='registrationActivity')registrationActivity=select.value;else registrationStatus=select.value;render()})}
@@ -1346,7 +1413,24 @@ let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filte
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
-function action(type,id,index){if(type==='sort-catalog'){
+function action(type,id,index){if(type==='sort-commissions'){
+ commissionSort=commissionSort.key===id?(commissionSort.direction==='asc'?{key:id,direction:'desc'}:{key:'',direction:'asc'}):{key:id,direction:'asc'};
+ const container=app.querySelector('.commission-admin-table');
+ const current=container?.querySelector('table');
+ if(!current){render();return}
+ const template=document.createElement('template');
+ template.innerHTML=commissionTableHTML(draft);
+ const updated=template.content.querySelector('table');
+ if(!updated)return;
+ current.tHead.innerHTML=updated.tHead.innerHTML;
+ current.tBodies[0].innerHTML=updated.tBodies[0].innerHTML;
+ bindCommissionCheckboxes(container);
+ container.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{
+  if(el.tagName==='A')event.preventDefault();
+  action(el.dataset.action,el.dataset.id,Number(el.dataset.index));
+ }));
+ return;
+}if(type==='sort-catalog'){
  const state=catalogSortState[catalogTab];
  catalogSortState[catalogTab]=state.key===id?(state.direction==='asc'?{key:id,direction:'desc'}:{key:'',direction:'asc'}):{key:id,direction:'asc'};
  // Actualización parcial: evita salto vertical y conserva las pestañas.
