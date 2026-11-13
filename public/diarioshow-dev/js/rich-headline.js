@@ -181,7 +181,7 @@ if(mobile)makeEditor(mobile);
 for(const [id,key] of [['formatAccent','accent'],['formatItalic','italic'],['formatStrike','strike'],['formatClear','clear']]){
  for(const suffix of ['', 'Mobile']){
   const button=document.getElementById(id+suffix);if(!button)continue;
-  button.title={accent:'Destacar o quitar destacado de la selección',italic:'Aplicar o quitar cursiva',strike:'Aplicar o quitar tachado',clear:'Quitar todos los formatos de la selección'}[key];
+  button.title={accent:'Destacar o quitar destacado de la selección',italic:'Aplicar o quitar cursiva',strike:'Aplicar o quitar tachado',clear:'Quitar todos los formatos del texto principal'}[key];
  }
 }
 // Captura previa a los handlers antiguos para que no se inserten símbolos.
