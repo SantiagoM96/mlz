@@ -91,6 +91,7 @@ function save(){
 }
 function load(index){
  active=index;editor.setPageState(pages[index]);syncBlankOptions();draw();
+ window.dispatchEvent(new CustomEvent('editorial:page-selected',{detail:{blank:pages[index].variant==='blank'}}));
 }
 function select(index){if(index===active)return;save();load(index)}
 function add(){save();pages.splice(active+1,0,blankPage());load(active+1)}
@@ -128,10 +129,15 @@ function draw(){
  syncBlankOptions();
  requestAnimationFrame(()=>{
   updateOverflow();
+  if(active===pages.length-1){
+   track.scrollLeft=Math.max(0,track.scrollWidth-track.clientWidth);
+   return;
+  }
   const current=track.querySelector('[aria-current="true"]');
-  if(current&&current.offsetLeft<track.scrollLeft)track.scrollLeft=current.offsetLeft-5;
-  if(current&&current.offsetLeft+current.offsetWidth>track.scrollLeft+track.clientWidth)
-   track.scrollLeft=current.offsetLeft+current.offsetWidth-track.clientWidth+5;
+  if(!current)return;
+  const view=track.getBoundingClientRect(),item=current.getBoundingClientRect();
+  if(item.left<view.left+5)track.scrollLeft+=item.left-view.left-5;
+  else if(item.right>view.right-5)track.scrollLeft+=item.right-view.right+5;
  });
 }
 $('.editor-slide-add-fixed').addEventListener('click',add);

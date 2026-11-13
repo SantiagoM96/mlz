@@ -251,6 +251,7 @@ function loadPage(page){
  el('alignLeft').setAttribute('aria-pressed',String(page.alignment==='left'));
  el('alignCenter').setAttribute('aria-pressed',String(page.alignment==='center'));
  render();
+ window.dispatchEvent(new CustomEvent('editorial:page-selected',{detail:{blank:pageVariant==='blank'}}));
 }
 function renderCarouselNavigation(){
  const list=el('carouselPages');list.replaceChildren();

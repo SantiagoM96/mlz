@@ -538,10 +538,16 @@ function syncIdentityMirror(){
 function applyMobilePreviewContext(){
  if(!narrow.matches)return;
  const variant=isCronica?document.documentElement.dataset.cronicaVariant:document.documentElement.dataset.editorPlateVariant;
- const blank=variant==='blank',isLogo=mobilePreviewContext==='logo';
- host.hidden=blank||isLogo;
+ const blank=variant==='blank';
+ if(blank){
+  mobilePreviewContext='logo';
+  identityMirror?.querySelector('.modern-toggle')?.setAttribute('aria-expanded','true');
+  const body=identityMirror?.querySelector('.modern-body');if(body)body.hidden=false;
+ }
+ const isLogo=mobilePreviewContext==='logo';
+ host.hidden=isLogo;
  host.setAttribute('aria-hidden',String(host.hidden));
- if(identityHost){identityHost.hidden=blank||!isLogo;identityHost.setAttribute('aria-hidden',String(identityHost.hidden))}
+ if(identityHost){identityHost.hidden=!isLogo;identityHost.setAttribute('aria-hidden',String(identityHost.hidden))}
  main.dataset.previewContext=mobilePreviewContext;
 }
 function resetMobilePreviewContext(){
@@ -713,4 +719,8 @@ document.addEventListener('pointerdown',event=>{
 window.addEventListener('modern:render',applyMobilePreviewContext);
 narrow.addEventListener('change',()=>{applyMobilePreviewContext();updateHeight()});
 resetMobilePreviewContext();
+window.addEventListener('editorial:page-selected',()=>{
+ if(!narrow.matches)return;
+ resetMobilePreviewContext();
+});
 })();

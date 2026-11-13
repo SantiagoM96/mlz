@@ -1431,3 +1431,8 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
   display:none!important;
  }
 }
+
+/* La placa vacía muestra el selector contextual de Diseño en mobile. */
+@media(max-width:700px){
+ html body main .modern-track>.preview>.modern-preview-identity-editor:not([hidden]){display:block!important}
+}
