@@ -555,4 +555,9 @@ window.BAEEditor={
  setBlank(active){pageBlank=Boolean(active);document.documentElement.dataset.editorPlateVariant=pageBlank?'blank':el('theme').value;render();},
  setImporting(active){importingArticle=active;render()},setImage(img){image=img;zoom=1;offsetX=0;offsetY=0;render()},refresh:render};render();document.fonts.ready.then(render);
 document.addEventListener('DOMContentLoaded',()=>{installCirclePhoto();render()},{once:true});
+
+window.addEventListener('editorial:preview-snapshot',event=>{
+ render(false);
+ try{event.detail.capture(canvas)}finally{render()}
+});
 })();
