@@ -26,6 +26,30 @@ const asMarkup=chars=>{
  return out;
 };
 const editors=[];
+let selectionControlsActive=false;
+
+function formatsForRange(chars){
+ return Object.fromEntries(flags.map(flag=>[flag,chars.length>0&&chars.every(ch=>ch[flag])]));
+}
+function syncToolbar(){
+ const selection=window.getSelection();
+ const editor=editors.find(e=>selection?.anchorNode&&e.contains(selection.anchorNode));
+ const focused=selectionControlsActive&&editor&&(document.activeElement===editor||editor.contains(document.activeElement));
+ const bounds=focused?offsets(editor):null;
+ const selected=bounds&&bounds[0]!==bounds[1]?fromDOM(editor).slice(bounds[0],bounds[1]):[];
+ const states=formatsForRange(selected);
+ for(const [id,key] of [['formatAccent','accent'],['formatItalic','italic'],['formatStrike','strike']]){
+  for(const suffix of ['', 'Mobile']){
+   const button=document.getElementById(id+suffix);
+   if(button)button.setAttribute('aria-pressed',String(states[key]));
+  }
+ }
+}
+function syncUppercaseEditors(){
+ const upper=document.getElementById('formatUppercase')?.getAttribute('aria-pressed')==='true';
+ editors.forEach(editor=>editor.classList.toggle('uppercase-preview',upper));
+}
+
 function fromDOM(editor){
  const items=[];
  const walk=(node,state)=>{
@@ -102,7 +126,7 @@ function changeFormat(key,clear=false){
   if(clear)for(const f of flags)chars[i][f]=false;
   else chars[i][key]=next;
  }
- renderChars(editor,chars);editor.focus({preventScroll:true});setSelection(editor,start,end);publish(editor);
+ renderChars(editor,chars);editor.focus({preventScroll:true});setSelection(editor,start,end);publish(editor);syncToolbar();
 }
 function makeEditor(textarea){
  const editor=document.createElement('div');
@@ -116,6 +140,8 @@ function makeEditor(textarea){
  editors.push(editor);
  renderChars(editor,charsFromMarkup(source.value));editor.dataset.currentMarkup=source.value;
  editor.addEventListener('input',()=>publish(editor));
+ editor.addEventListener('focus',()=>{selectionControlsActive=true;syncToolbar()});
+ editor.addEventListener('pointerdown',()=>{selectionControlsActive=true;queueMicrotask(syncToolbar)});
  editor.addEventListener('paste',event=>{
   event.preventDefault();
   const value=event.clipboardData?.getData('text/plain')||'';
@@ -133,6 +159,7 @@ function makeEditor(textarea){
  return editor;
 }
 function syncFromSource(){
+ syncUppercaseEditors();
  const val=source.value;
  for(const editor of editors)if(editor.dataset.currentMarkup!==val){
   renderChars(editor,charsFromMarkup(val));editor.dataset.currentMarkup=val;
@@ -160,5 +187,19 @@ document.addEventListener('click',event=>{
  event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
  changeFormat(key,key==='clear');
 },true);
-window.addEventListener('modern:render',syncFromSource);
+
+document.addEventListener('selectionchange',syncToolbar);
+document.addEventListener('focusin',syncToolbar);
+document.addEventListener('focusout',()=>queueMicrotask(syncToolbar));
+document.addEventListener('pointerdown',event=>{
+ if(!event.target.closest('.cronica-rich-headline,[id^="formatAccent"],[id^="formatItalic"],[id^="formatStrike"],[id^="formatClear"]')){
+  selectionControlsActive=false;
+  for(const id of ['formatAccent','formatItalic','formatStrike'])for(const suffix of ['', 'Mobile'])
+   document.getElementById(id+suffix)?.setAttribute('aria-pressed','false');
+ }
+},true);
+const uppercaseButton=document.getElementById('formatUppercase');
+if(uppercaseButton)new MutationObserver(syncUppercaseEditors).observe(uppercaseButton,{attributes:true,attributeFilter:['aria-pressed']});
+window.addEventListener('modern:render',()=>{syncFromSource();syncToolbar()});
+syncUppercaseEditors();syncToolbar();
 })();
