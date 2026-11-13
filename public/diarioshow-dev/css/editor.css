@@ -2945,3 +2945,11 @@ html[data-editor-plate-variant="blank"] body .preview #photoStage>#dsHeadlineHit
 .preview #photoStage>#dsHeadlineHitButton[hidden]{
  display:none!important;visibility:hidden!important;pointer-events:none!important;
 }
+
+/* La foto circular se pinta sobre el placeholder HTML de la fotografía. */
+.preview #photoStage>.ds-circle-photo-hit>.ds-circle-preview-canvas{
+ position:absolute;inset:0;width:100%!important;height:100%!important;
+ display:block;margin:0;border:0;border-radius:50%;pointer-events:none;
+}
+.preview #photoStage>.ds-circle-photo-hit>.material-icons{position:relative;z-index:1}
+.preview #photoStage>.ds-circle-photo-hit>.material-icons[hidden]{display:none!important}
