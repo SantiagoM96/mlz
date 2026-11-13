@@ -1436,3 +1436,14 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
 @media(max-width:700px){
  html body main .modern-track>.preview>.modern-preview-identity-editor:not([hidden]){display:block!important}
 }
+
+/* Mismo sticky mobile que Diario Show: tope 0 y resguardo inferior de 24 px. */
+@media(max-width:700px){
+ main:has(>.modern-mobile-tabs){overflow:visible!important}
+ main>.modern-mobile-tabs{
+  position:sticky;top:0;z-index:80;align-self:start;isolation:isolate;
+  box-sizing:border-box;margin:0!important;padding:0 0 24px;
+  border-bottom:0;background:#101114;
+ }
+ main>.modern-mobile-tabs button[aria-selected="true"]::after{bottom:0}
+}
