@@ -1443,4 +1443,9 @@ function resetMobilePageContext(blank=pageBlank){
 window.addEventListener('editorial:page-selected',event=>resetMobilePageContext(event.detail.blank));
 window.addEventListener('modern:render',()=>{if(pageBlank&&mobileTabViewport.matches&&selectedPreviewContext!=='logo')resetMobilePageContext(true)});
 resetMobilePageContext();
+
+window.addEventListener('editorial:preview-snapshot',event=>{
+ render(false);
+ try{event.detail.capture(canvas)}finally{render()}
+});
 })();
