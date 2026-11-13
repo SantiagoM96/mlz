@@ -269,6 +269,17 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .workspace .activity-name-link{display:inline-block;color:#236999;font-weight:700;text-decoration:none;line-height:1.4;cursor:pointer}
 .workspace .activity-name-link:hover{text-decoration:underline;color:#006eff}
 .workspace .activity-name-link:focus-visible{outline:2px solid #006eff;outline-offset:3px;border-radius:2px}
+
+/* Las fotos ocupan tarjetas consecutivas; Agregar foto siempre es la última tarjeta. */
+.sports-photo-drop{display:block}
+.sports-photo-drop #photo-gallery{width:100%;min-width:0}
+.sports-photo-drop .sports-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;margin:0;align-items:stretch}
+.sports-photo-grid .photo-card{display:flex;flex-direction:column;min-width:0;min-height:190px;box-sizing:border-box}
+.sports-photo-grid .photo-card .photo-actions{margin-top:auto}
+.sports-photo-grid .sports-add-photo{box-sizing:border-box;min-width:0;width:100%;height:100%;min-height:190px;border-radius:8px;border:1px dashed #7baecb;background:#f8fbfd;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;color:#236999;font-size:14px;font-weight:700;cursor:pointer}
+.sports-photo-grid .sports-add-photo:hover{background:#edf6fc;border-color:#236999}
+.sports-photo-grid .sports-add-photo:focus-visible{outline:2px solid #006eff;outline-offset:3px}
+@media(max-width:600px){.sports-photo-drop .sports-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sports-photo-grid .photo-card,.sports-photo-grid .sports-add-photo{min-height:180px}}
 </style></head>
 <body><div class="shell"><aside class="side"><div class="brand"><span class="mi">account_balance</span><strong>Gobierno de la Comunidad<small>Municipalidad de Lomas de Zamora</small></strong></div><nav class="nav" aria-label="Navegación municipal"><button><span class="mi">home</span><span>Inicio</span></button><button><span class="mi">folder</span><span>Documentación</span></button><button><span class="mi">health_and_safety</span><span>Salud</span></button><button><span class="mi">payments</span><span>Pagos</span></button><button><span class="mi">storefront</span><span>Comercios</span></button><button class="active"><span class="mi">sports_soccer</span><span>Actividades deportivas y recreativas</span></button><button><span class="mi">school</span><span>Educación y Empleo</span></button><button><span class="mi">groups</span><span>Participación de la Comunidad</span></button><button><span class="mi">construction</span><span>Obras particulares</span></button><button><span class="mi">support_agent</span><span>Defensa al consumidor</span></button></nav></aside><div><header class="top"><div style="display:flex;gap:9px;align-items:center"><span class="mi">menu</span><span style="font-size:12px">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">ML</span><span>Usuario de prueba</span></div></header><main class="workspace" id="app"></main></div></div><div id="modal"></div>
 <script>
@@ -362,8 +373,9 @@ function listView(){let items=records.filter(x=>(!filterText||(x.name+' '+x.sour
 
 function renderPhotos(a){
  const photos=Array.isArray(a.photos)?a.photos:[];
- if(!photos.length)return '<p class="photo-empty">Todavía no hay fotografías cargadas para esta actividad.</p>';
- return '<div class="photo-grid">'+photos.map((p,i)=>'<div class="photo-card"><img src="'+e(p.data)+'" alt="Imagen '+(i+1)+' de '+e(a.name||'actividad')+'"><p class="photo-name" title="'+e(p.name)+'">'+e(p.name)+'</p><div class="photo-actions">'+(i===0?'<span class="photo-status">'+ic('star')+' Portada</span>':'<button type="button" class="btn" data-action="photo-cover" data-index="'+i+'">Portada</button>')+'<button type="button" class="iconbtn red" aria-label="Quitar imagen '+(i+1)+'" title="Quitar imagen" data-action="photo-remove" data-index="'+i+'">'+ic('delete')+'</button></div></div>').join('')+'</div>';
+ const cards=photos.map((p,i)=>'<div class="photo-card"><img src="'+e(p.data)+'" alt="Imagen '+(i+1)+' de '+e(a.name||'actividad')+'"><p class="photo-name" title="'+e(p.name)+'">'+e(p.name)+'</p><div class="photo-actions">'+(i===0?'<span class="photo-status">'+ic('star')+' Portada</span>':'<button type="button" class="btn" data-action="photo-cover" data-index="'+i+'">Portada</button>')+'<button type="button" class="iconbtn red" aria-label="Quitar imagen '+(i+1)+'" title="Quitar imagen" data-action="photo-remove" data-index="'+i+'">'+ic('delete')+'</button></div></div>').join('');
+ const add=photos.length<6?'<button type="button" class="sports-add-photo" data-action="photo-upload" aria-label="Agregar foto">'+ic('add_circle')+'<span>Agregar foto</span></button>':'';
+ return '<div class="photo-grid sports-photo-grid">'+cards+add+'</div>';
 }
 async function photoToData(file){
  if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Formato no admitido: '+file.name);
@@ -512,7 +524,7 @@ function editView(){
  (a.commissions.length?a.commissions.map((c,i)=>'<tr><td><strong>'+e(c.prof)+'</strong><small>'+e(c.id)+'</small></td><td>'+e((c.schedule||[]).map(t=>t.days+' · '+t.start+' a '+t.end).join(' / ')||'A confirmar')+'</td><td>'+e(c.cupos)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Editar comisión" data-action="edit-commission" data-index="'+i+'">'+ic('edit')+'</button><button type="button" class="iconbtn" title="Duplicar comisión" data-action="dup-commission" data-index="'+i+'">'+ic('content_copy')+'</button><button type="button" class="iconbtn red" title="Eliminar comisión" data-action="remove-commission" data-index="'+i+'">'+ic('delete')+'</button></td></tr>').join(''):'<tr><td colspan="4" class="empty">Todavía no hay comisiones. Agregá una para empezar.</td></tr>')+
  '</tbody></table></div></section>'+
  '<section class="sports-form-section"><div class="sports-section-heading"><div><h2>Imágenes y portada</h2><p class="sub">Agregá fotos para mostrar en la ficha de la actividad.</p></div></div>'+
- '<div class="sports-photo-drop"><button type="button" class="sports-add-photo" data-action="photo-upload">'+ic('add_circle')+'<span>Agregar foto</span></button><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden aria-label="Seleccionar imágenes"><div id="photo-gallery">'+renderPhotos(a)+'</div></div>'+
+ '<div class="sports-photo-drop"><div id="photo-gallery">'+renderPhotos(a)+'</div><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden aria-label="Seleccionar imágenes"></div>'+
  '<p class="hint">Hasta 6 fotografías · JPG, PNG o WebP · Recomendado 2:1. La primera imagen es la portada. Se guardan solo en este navegador.</p>'+
  '</section>'+
  '<div class="sports-form-footer">'+btn('Cancelar','list')+btn(ic('save')+' '+(edit?'Guardar cambios':'Crear actividad'),'save-activity','primary')+'</div>'+
