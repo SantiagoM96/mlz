@@ -2899,3 +2899,22 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
  background:#e6008d26;color:#ff9dd9;font:600 10px/14px Inter,Arial,sans-serif;
  white-space:nowrap;
 }
+
+/* Una misma línea central para label, chip y switch de Fotobolita. */
+.ds-circle-photo-field>.switch-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 38px;
+ align-items:center!important;min-height:24px;line-height:22px;
+}
+.ds-circle-photo-field .ds-circle-label{
+ display:flex!important;align-items:center!important;gap:8px;
+ min-height:22px;line-height:22px;margin:0;padding:0;
+}
+.ds-circle-photo-field .ds-new-chip{
+ box-sizing:border-box;height:20px;align-self:center;
+ margin:0;line-height:14px;padding:2px 6px;
+}
+.ds-circle-photo-field>.switch-row>.switch{
+ display:flex;align-items:center;align-self:center;
+ height:22px;line-height:0;margin:0;padding:0;
+}
+.ds-circle-photo-field .switch-track{display:block}
