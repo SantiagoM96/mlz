@@ -951,3 +951,6 @@ html[data-editor-plate-variant="blank"] .editor-panel .editor-logo-layout-row{
  display:block;margin-bottom:8px;
 }
 .editor-panel .modern-design-group .modern-quote-toggle-field{margin-top:16px!important}
+
+/* Barra antigua: el zoom vive dentro de la preview; conservar #status para el motor. */
+.modern-track>.preview>.preview-toolbar{display:none!important}
