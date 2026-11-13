@@ -754,6 +754,12 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
  line-height:20px;
  font-weight:700;
 }
+
+/* Historial de inscripciones: misma jerarquía, controles y estado que Actividades. */
+.workspace .registration-admin-table thead th.registration-actions-header{
+ font-size:13px;line-height:20px;font-weight:700;
+}
+.workspace .registration-admin-table{overflow-anchor:none}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
@@ -859,6 +865,8 @@ let enrollActivity='',enrollCommission='',enrollSearch='',enrollStep=1,enrollDon
 let view='list',editId=null,filterText='',filterVenue='',filterState='',page=0,modalType=null,modalIndex=-1,draft=null,registrationFilter='';
 let activitySort={key:'',direction:'asc'};
 const selectedActivityIds=new Set();
+let registrationSort={key:'',direction:'asc'};
+const selectedRegistrationIds=new Set();
 const app=document.getElementById('app'),modal=document.getElementById('modal');
 function load(){try{
  let synced=JSON.parse(localStorage.getItem(SHARED_SPORTS_KEY));
@@ -1072,8 +1080,32 @@ function regFiltered(){
  return (!registrationSearch||needle.includes(registrationSearch.toLocaleLowerCase('es')))&&(!registrationActivity||r.activityId===registrationActivity)&&(!registrationStatus||r.status===registrationStatus);
  });
 }
+
+function sortRegistrationRecords(rows){
+ if(!registrationSort.key)return rows;
+ const field=registrationSort.key;
+ const value=r=>field==='person'?r.person.nombre+' '+r.person.apellido:
+ field==='activity'?(regActivity(r)?.name||''):
+ field==='commission'?(regCommission(r)?.prof||r.commissionId):
+ field==='status'?r.status:r.createdAt;
+ const collator=new Intl.Collator('es',{numeric:true,sensitivity:'base'});
+ return rows.sort((a,b)=>{
+  const va=value(a),vb=value(b);
+  const delta=field==='date'?(Date.parse(va)||0)-(Date.parse(vb)||0):collator.compare(String(va||''),String(vb||''));
+  return (registrationSort.direction==='desc'?-1:1)*delta;
+ });
+}
+function registrationSortHeader(label,key){
+ const active=registrationSort.key===key;
+ const direction=active?registrationSort.direction:'none';
+ const next=!active?'asc':direction==='asc'?'desc':'none';
+ return '<th aria-sort="'+(active?(direction==='asc'?'ascending':'descending'):'none')+'"><button type="button" class="activity-sort-button" data-action="sort-registrations" data-id="'+key+'" aria-label="Ordenar '+label+' '+(next==='asc'?'ascendente':next==='desc'?'descendente':'sin orden')+'"><span>'+label.toLocaleUpperCase('es')+'</span>'+ic(active?(direction==='asc'?'arrow_upward':'arrow_downward'):'swap_vert')+'</button></th>';
+}
+function registrationCheckbox(id,checked,label){
+ return '<label class="activity-checkbox-control"><input class="activity-selection-checkbox" type="checkbox" '+(id?'data-registration-select="'+e(id)+'"':'id="select-visible-registrations"')+' aria-label="'+e(label)+'" '+(checked?'checked':'')+'><span class="mi activity-checkbox-icon" aria-hidden="true"></span></label>';
+}
 function registrationsView(){
- const filtered=regFiltered(),counts={
+ const filtered=sortRegistrationRecords(regFiltered()),counts={
  confirmed:demoRegistrations.filter(r=>r.status==='Confirmada').length,
  review:demoRegistrations.filter(r=>r.status==='En revisión').length,
  wait:demoRegistrations.filter(r=>r.status==='Lista de espera').length
@@ -1087,8 +1119,8 @@ function registrationsView(){
  '<div class="panelbody"><div class="filters"><div class="field search"><label for="registrationSearch">Buscar persona</label><input id="registrationSearch" placeholder="Nombre, apellido o código ficticio" value="'+e(registrationSearch)+'"></div>'+
  '<div class="field"><label for="registrationActivity">Actividad</label><select id="registrationActivity"><option value="">Todas las actividades</option>'+activities.map(([id,name])=>'<option value="'+e(id)+'" '+(registrationActivity===id?'selected':'')+'>'+e(name)+'</option>').join('')+'</select></div>'+
  '<div class="field"><label for="registrationStatus">Estado</label><select id="registrationStatus"><option value="">Todos los estados</option>'+['Confirmada','En revisión','Lista de espera'].map(status=>'<option value="'+e(status)+'" '+(registrationStatus===status?'selected':'')+'>'+e(status)+'</option>').join('')+'</select></div></div></div>'+
- '<div class="tablewrap"><table><thead><tr><th>Persona</th><th>Actividad</th><th>Comisión</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>'+
- (filtered.length?filtered.map(r=>'<tr><td><strong>'+e(r.person.nombre+' '+r.person.apellido)+'</strong><small>'+e(r.person.dni)+'</small></td><td>'+e(regActivity(r)?.name||'Actividad no encontrada')+'</td><td>'+e(regCommission(r)?.prof||r.commissionId)+'</td><td><span class="registration-status '+(r.status==='Confirmada'?'confirmed':r.status==='Lista de espera'?'waiting':'review')+'">'+e(r.status)+'</span></td><td>'+e(r.createdAt)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Ver ficha de inscripción" aria-label="Ver ficha de '+e(r.person.nombre+' '+r.person.apellido)+'" data-action="registration-detail" data-id="'+e(r.id)+'">'+ic('visibility')+'</button></td></tr>').join(''):'<tr><td colspan="6" class="empty">'+(demoLoadError?'No se pudo cargar el archivo de inscripciones ficticias.':'No se encontraron inscripciones.')+'</td></tr>')+
+ '<div class="tablewrap registration-admin-table activity-admin-table"><table><thead><tr><th class="activity-check-cell">'+registrationCheckbox('',filtered.length>0&&filtered.every(r=>selectedRegistrationIds.has(r.id)),'Seleccionar todas las inscripciones visibles')+'</th>'+registrationSortHeader('Persona','person')+registrationSortHeader('Actividad','activity')+registrationSortHeader('Comisión','commission')+registrationSortHeader('Estado','status')+registrationSortHeader('Fecha','date')+'<th class="registration-actions-header">ACCIONES</th></tr></thead><tbody>'+
+ (filtered.length?filtered.map(r=>'<tr><td class="activity-check-cell">'+registrationCheckbox(r.id,selectedRegistrationIds.has(r.id),'Seleccionar inscripción de '+r.person.nombre+' '+r.person.apellido)+'</td><td><strong>'+e(r.person.nombre+' '+r.person.apellido)+'</strong><small>'+e(r.person.dni)+'</small></td><td>'+e(regActivity(r)?.name||'Actividad no encontrada')+'</td><td>'+e(regCommission(r)?.prof||r.commissionId)+'</td><td><span class="registration-status '+(r.status==='Confirmada'?'confirmed':r.status==='Lista de espera'?'waiting':'review')+'">'+e(r.status)+'</span></td><td>'+e(r.createdAt)+'</td><td class="row-actions"><button type="button" class="iconbtn" title="Ver ficha de inscripción" aria-label="Ver ficha de '+e(r.person.nombre+' '+r.person.apellido)+'" data-action="registration-detail" data-id="'+e(r.id)+'">'+ic('visibility')+'</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">'+(demoLoadError?'No se pudo cargar el archivo de inscripciones ficticias.':'No se encontraron inscripciones.')+'</td></tr>')+
  '</tbody></table></div><p class="registration-counter">Mostrando '+filtered.length+' de '+demoRegistrations.length+' inscripciones ficticias.</p></section>';
 }
 function registrationDetailView(r){
@@ -1178,8 +1210,26 @@ function bindActivityTableCheckboxes(table){
   if(selectAll){selectAll.checked=rowChecks.length>0&&rowChecks.every(x=>x.checked);selectAll.indeterminate=rowChecks.some(x=>x.checked)&&!selectAll.checked}
  }));
 }
+
+function bindRegistrationCheckboxes(table){
+ if(!table)return;
+ const all=table.querySelector('#select-visible-registrations');
+ const rows=[...table.querySelectorAll('[data-registration-select]')];
+ if(all){
+  all.indeterminate=rows.some(x=>x.checked)&&!rows.every(x=>x.checked);
+  all.addEventListener('change',()=>{
+   rows.forEach(input=>{input.checked=all.checked;if(input.checked)selectedRegistrationIds.add(input.dataset.registrationSelect);else selectedRegistrationIds.delete(input.dataset.registrationSelect)});
+   all.indeterminate=false;
+  });
+ }
+ rows.forEach(input=>input.addEventListener('change',()=>{
+  if(input.checked)selectedRegistrationIds.add(input.dataset.registrationSelect);else selectedRegistrationIds.delete(input.dataset.registrationSelect);
+  if(all){all.checked=rows.length>0&&rows.every(x=>x.checked);all.indeterminate=rows.some(x=>x.checked)&&!all.checked}
+ }));
+}
 function bind(){
- bindActivityTableCheckboxes(app.querySelector('.activity-admin-table'));
+ bindActivityTableCheckboxes(app.querySelector('.activity-admin-table:not(.registration-admin-table)'));
+ bindRegistrationCheckboxes(app.querySelector('.registration-admin-table'));
  app.querySelectorAll('[data-action]').forEach(el=>el.addEventListener('click',event=>{if(el.tagName==='A')event.preventDefault();action(el.dataset.action,el.dataset.id,Number(el.dataset.index))}));let regSearch=document.getElementById('registrationSearch');
 if(regSearch)regSearch.addEventListener('input',event=>{registrationSearch=event.target.value;const pos=event.target.selectionStart;render();let next=document.getElementById('registrationSearch');next?.focus();next?.setSelectionRange(pos,pos)});
 for(const key of ['registrationActivity','registrationStatus']){const select=document.getElementById(key);if(select)select.addEventListener('change',()=>{if(key==='registrationActivity')registrationActivity=select.value;else registrationStatus=select.value;render()})}
@@ -1187,7 +1237,23 @@ let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filte
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
-function action(type,id,index){if(type==='sort-activities'){
+function action(type,id,index){if(type==='sort-registrations'){
+ registrationSort=registrationSort.key===id?(registrationSort.direction==='asc'?{key:id,direction:'desc'}:{key:'',direction:'asc'}):{key:id,direction:'asc'};
+ const current=app.querySelector('.registration-admin-table table');
+ if(!current){render();return}
+ const template=document.createElement('template');
+ template.innerHTML=registrationsView();
+ const updated=template.content.querySelector('.registration-admin-table table');
+ if(!updated){render();return}
+ current.tHead.innerHTML=updated.tHead.innerHTML;
+ current.tBodies[0].innerHTML=updated.tBodies[0].innerHTML;
+ bindRegistrationCheckboxes(app.querySelector('.registration-admin-table'));
+ app.querySelectorAll('.registration-admin-table [data-action]').forEach(el=>el.addEventListener('click',event=>{
+  if(el.tagName==='A')event.preventDefault();
+  action(el.dataset.action,el.dataset.id,Number(el.dataset.index));
+ }));
+ return;
+}if(type==='sort-activities'){
  activitySort=activitySort.key===id?(activitySort.direction==='asc'?{key:id,direction:'desc'}:{key:'',direction:'asc'}):{key:id,direction:'asc'};
  // Se actualiza solamente la tabla: no se reconstruyen filtros, paneles
  // ni controles superiores; así se conserva el viewport y su anclaje.
