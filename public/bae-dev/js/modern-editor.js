@@ -93,7 +93,7 @@ if(originalContent){
  // Firma inferior: dos presentaciones, sin alterar su diseño inicial.
  const footerField=document.createElement('div');
  footerField.className='control-field modern-footer-field';
- footerField.innerHTML='<label>Firma inferior</label><div class="modern-footer-options" role="group" aria-label="Firma inferior"><button type="button" data-footer-style="center" aria-pressed="'+String(!isCronica)+'">Centrada</button><button type="button" data-footer-style="carousel" aria-pressed="'+String(isCronica)+'">Carrusel</button></div>';
+ footerField.innerHTML="<label class=\"switch-row\" for=\"carouselCoverSwitch\"><span>Portada carrusel</span><span class=\"switch\"><input id=\"carouselCoverSwitch\" type=\"checkbox\" role=\"switch\" data-carousel-cover-switch><span class=\"switch-track\"></span></span></label><div class=\"modern-footer-options\" style=\"display:none!important\" aria-hidden=\"true\"><button type=\"button\" data-footer-style=\"center\" aria-pressed=\"true\">Centrada</button><button type=\"button\" data-footer-style=\"carousel\" aria-pressed=\"false\">Carrusel</button></div>";
  originalContent.append(footerField);
  footerField.addEventListener('click',event=>{
   const button=event.target.closest('[data-footer-style]');
@@ -603,4 +603,17 @@ textHit.addEventListener('keydown',e=>{
   showPreviewContext('text');
  }
 });
+
+function syncCarouselCoverSwitches(){
+ const active=panel.querySelector('[data-footer-style="carousel"]')?.getAttribute('aria-pressed')==='true';
+ document.querySelectorAll('[data-carousel-cover-switch]').forEach(input=>input.checked=active);
+}
+document.addEventListener('change',event=>{
+ const input=event.target.closest?.('[data-carousel-cover-switch]');
+ if(!input)return;
+ panel.querySelector('[data-footer-style="'+(input.checked?'carousel':'center')+'"]')?.click();
+ syncCarouselCoverSwitches();
+});
+window.addEventListener('modern:render',syncCarouselCoverSwitches);
+syncCarouselCoverSwitches();
 })();

@@ -225,7 +225,7 @@ const COVER_HEADLINE="Un nuevo *espacio cultural* abrió sus puertas y presentó
 const INTERNAL_HEADLINE="El espacio ofrecerá *talleres, muestras y espectáculos* durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.";
 const INTERNAL_STRAP="NUEVAS ACTIVIDADES";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:true,logo:'primary',logoPosition:'right',
+ return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:true,footerStyle:'center',logo:'primary',logoPosition:'right',
   image:null,zoom:1,offsetX:0,offsetY:0,logoPosition:'right',variant:'blank',samplePending:true};
 }
 function saveActivePage(){
@@ -242,7 +242,7 @@ function loadPage(page){
  pageVariant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
- footerStyle=page.footerStyle||'carousel';
+ footerStyle=page.footerStyle||(page.variant==='cover'?'carousel':'center');
  document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  forceUppercase=page.forceUppercase!==false;syncUppercaseUI();
  selectedLogo=page.logo||'primary';syncLogoChoices();logoPosition=page.logoPosition||'right';syncLogoPosition();
@@ -383,6 +383,8 @@ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addE
  if(next===pageVariant)return;
  const previous=pageVariant;
  pageVariant=next;
+ footerStyle=next==='cover'?'carousel':'center';
+ document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  if(next==='red'){
   el('showStrap').checked=false;el('strapField').hidden=true;
  }
@@ -502,8 +504,8 @@ canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
  const initial=newBlankPage();initial.variant=pageVariant;initial.samplePending=false;
- if(pageVariant==='cover'){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
- if(pageVariant==='red'){initial.showStrap=false;initial.footerStyle='carousel'}
+ if(pageVariant==='cover'){initial.footerStyle='carousel';initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ if(pageVariant==='red'){initial.showStrap=false;initial.footerStyle='center'}
  if(pageVariant==='internal'){initial.headline=INTERNAL_HEADLINE;initial.strapText=INTERNAL_STRAP;initial.showStrap=true}
  loadPage(initial);saveActivePage();
 });

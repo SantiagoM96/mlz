@@ -46,7 +46,7 @@ function sampleForVariant(variant){
 }
 function blankPage(){
  const initial=editor.getPageState();
- return {...initial,variant:'blank',samplePending:true,headline:'',image:null,zoom:1,offsetX:0,offsetY:0,
+ return {...initial,variant:'blank',samplePending:true,footerStyle:'center',headline:'',image:null,zoom:1,offsetX:0,offsetY:0,
   quote:'',enableQuote:false,quoteAuthor:'',showQuoteAuthor:false,
   circlePhoto:{enabled:false,image:null,x:380,y:80,positioned:false,color:'white'},
   photoLayout:'single',splitPhotos:{left:{image:null,zoom:1,x:0,y:0},right:{image:null,zoom:1,x:0,y:0}}};
