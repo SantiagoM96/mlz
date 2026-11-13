@@ -2918,3 +2918,11 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
  height:22px;line-height:0;margin:0;padding:0;
 }
 .ds-circle-photo-field .switch-track{display:block}
+
+@media(max-width:700px){
+ html body .preview #dsMobileContentEditor:not([hidden]){display:block!important}
+ html body .preview #dsMobileContentEditor[hidden],
+ html body .preview #dsMobileTextEditor[hidden]{display:none!important}
+ html body .preview #dsMobileTextEditor .ds-control-card-body[hidden],
+ html body .preview #dsMobileContentEditor .ds-control-card-body[hidden]{display:none!important}
+}
