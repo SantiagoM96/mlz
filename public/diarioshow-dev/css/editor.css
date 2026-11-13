@@ -2890,3 +2890,12 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
 .editor-panel .ds-circle-color-swatch .material-icons{font-size:20px;visibility:hidden}
 .editor-panel .ds-circle-color-swatch[aria-pressed="true"] .material-icons{visibility:visible}
 .editor-panel .ds-circle-color-swatch:focus-visible{outline:2px solid #e6008d;outline-offset:2px}
+
+/* Identificación discreta de funciones nuevas. */
+.ds-circle-label{display:inline-flex;align-items:center;gap:8px}
+.ds-new-chip{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:2px 6px;border:1px solid #e6008d;border-radius:99px;
+ background:#e6008d26;color:#ff9dd9;font:600 10px/14px Inter,Arial,sans-serif;
+ white-space:nowrap;
+}
