@@ -47,7 +47,7 @@ function drawCirclePhoto(includeHover,paint=ctx){
  if(!ready&&!includeHover)return;
  const cx=geometry.x+CIRCLE_SIZE/2,cy=geometry.y+CIRCLE_SIZE/2,r=(CIRCLE_SIZE-CIRCLE_STROKE)/2;
  paint.save();paint.beginPath();paint.arc(cx,cy,r,0,Math.PI*2);paint.clip();
- paint.fillStyle='#808791';paint.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
+ paint.fillStyle='#a4abb3';paint.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
  if(ready){
   const crop=circlePhotoCrop(photo,circlePhoto);
   circlePhoto.offsetX=crop.x;circlePhoto.offsetY=crop.y;
