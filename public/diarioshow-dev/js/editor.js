@@ -3,7 +3,7 @@
 'use strict';
 
 const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=12;
-const newCirclePhoto=()=>({enabled:false,image:null,x:80,y:400,color:'white',zoom:1,offsetX:0,offsetY:0});
+const newCirclePhoto=()=>({enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0});
 let circlePhoto=newCirclePhoto(),circleHit=null,circleControls=[],circleEditing=false,circlePhotoClickTimer=null;
 function circlePhotoGeometry(state,bottom){
  const fits=bottom>=CIRCLE_SIZE+CIRCLE_MARGIN*2;
@@ -32,8 +32,15 @@ function setCircleEditing(active){
  circleEditing=Boolean(active&&circlePhoto.image?.complete&&circlePhoto.image.naturalWidth&&circlePhotoAllowed()&&circlePhoto.enabled);
  syncPhotoZoom();render();
 }
+function initializeCirclePhotoPosition(state,bottom){
+ if(state.positioned!==false||bottom<CIRCLE_SIZE+CIRCLE_MARGIN*2)return;
+ state.x=(W-CIRCLE_SIZE)/2;
+ state.y=bottom-CIRCLE_MARGIN-CIRCLE_SIZE;
+ state.positioned=true;
+}
 function drawCirclePhoto(includeHover){
  if(!circlePhotoAllowed()||!circlePhoto.enabled)return;
+ initializeCirclePhotoPosition(circlePhoto,photoBottom);
  const geometry=circlePhotoGeometry(circlePhoto,photoBottom);
  if(!geometry.fits)return;
  circlePhoto.x=geometry.x;circlePhoto.y=geometry.y;
@@ -1368,6 +1375,7 @@ window.DiarioShowEditor={
  selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
  setPageState(s){
   clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto={...newCirclePhoto(),...s.circlePhoto};
+  if(s.circlePhoto&&s.circlePhoto.positioned===undefined)circlePhoto.positioned=true;
   setVariant(s.theme||'pink');
   pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
   el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
