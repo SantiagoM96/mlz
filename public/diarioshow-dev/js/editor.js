@@ -1431,10 +1431,6 @@ function resetMobilePageContext(blank=pageBlank){
  if(blank)syncPreviewContentEditor();
 }
 window.addEventListener('editorial:page-selected',event=>resetMobilePageContext(event.detail.blank));
-window.addEventListener('modern:render',()=>{if(pageBlank&&mobileTabViewport.matches)resetMobilePageContext(true)});
-document.addEventListener('pointerdown',event=>{
- if(!mobileTabViewport.matches||el('photoStage').contains(event.target)||mobileTextHost.contains(event.target)||previewContentHost.contains(event.target))return;
- resetMobilePageContext();
-},true);
+window.addEventListener('modern:render',()=>{if(pageBlank&&mobileTabViewport.matches&&selectedPreviewContext!=='logo')resetMobilePageContext(true)});
 resetMobilePageContext();
 })();

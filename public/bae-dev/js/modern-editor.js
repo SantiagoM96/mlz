@@ -470,11 +470,7 @@ function applyMobilePreviewContext(){
  if(!narrow.matches)return;
  const variant=isCronica?document.documentElement.dataset.cronicaVariant:document.documentElement.dataset.editorPlateVariant;
  const blank=variant==='blank';
- if(blank){
-  mobilePreviewContext='logo';
-  identityMirror?.querySelector('.modern-toggle')?.setAttribute('aria-expanded','true');
-  const body=identityMirror?.querySelector('.modern-body');if(body)body.hidden=false;
- }
+ if(blank)mobilePreviewContext='logo';
  const isLogo=mobilePreviewContext==='logo';
  host.hidden=isLogo;
  host.setAttribute('aria-hidden',String(host.hidden));
@@ -487,7 +483,12 @@ function resetMobilePreviewContext(){
  mirrorToggle?.setAttribute('aria-expanded','false');if(mirrorBody)mirrorBody.hidden=true;
  const toggle=identityMirror?.querySelector('.modern-toggle'),body=identityMirror?.querySelector('.modern-body');
  toggle?.setAttribute('aria-expanded','false');if(body)body.hidden=true;
- applyMobilePreviewContext();updateHeight();
+ applyMobilePreviewContext();
+ const variant=isCronica?document.documentElement.dataset.cronicaVariant:document.documentElement.dataset.editorPlateVariant;
+ if(variant==='blank'){
+  toggle?.setAttribute('aria-expanded','true');if(body)body.hidden=false;
+ }
+ updateHeight();
 }
 
 function showPreviewContext(which){
@@ -643,10 +644,6 @@ document.addEventListener('change',event=>{
 window.addEventListener('modern:render',syncCarouselCoverSwitches);
 syncCarouselCoverSwitches();
 
-document.addEventListener('pointerdown',event=>{
- if(!narrow.matches||stage.contains(event.target)||host.contains(event.target)||identityHost?.contains(event.target))return;
- resetMobilePreviewContext();
-},true);
 window.addEventListener('modern:render',applyMobilePreviewContext);
 narrow.addEventListener('change',()=>{applyMobilePreviewContext();updateHeight()});
 resetMobilePreviewContext();
