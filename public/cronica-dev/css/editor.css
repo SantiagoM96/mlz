@@ -788,3 +788,10 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  content:'';position:absolute;left:50%;top:0;width:52%;height:3px;
  transform:translateX(-50%);background:#fff;border-radius:10px;
 }
+
+/* Variante 1: misma estructura que Interior, paleta blanca sobre degradé rojo. */
+.editor-panel .cronica-variant-thumbnail-red .cronica-variant-thumb-textbox{background:linear-gradient(135deg,#bf0000,#ed0000)}
+.editor-panel .cronica-variant-thumbnail-red .cronica-variant-thumb-strap{background:#fff}
+.editor-panel .cronica-variant-thumbnail-red .cronica-variant-thumb-lines i:first-child,
+.editor-panel .cronica-variant-thumbnail-red .cronica-variant-thumb-lines i:nth-child(2){background:#fff}
+html[data-cronica-variant="red"] [id^="formatAccent"]{display:none!important}
