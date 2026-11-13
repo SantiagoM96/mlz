@@ -352,70 +352,63 @@ padding-bottom:max(env(safe-area-inset-bottom),8px);animation:deportes-rise .2s 
 .sidebar-scrim:not([hidden]){display:block;position:fixed;inset:0;width:100%;height:100%;padding:0;background:#0515247a;border:0;z-index:100}
 }
 
-/* Marca municipal: tres SVG reales e independientes, sin máscaras ni recortes. */
-.shell .brand,
-.shell.sidebar-collapsed .brand{
-  height:90px;min-height:90px;box-sizing:border-box;padding:12px 14px;
-  display:flex;align-items:center;justify-content:center;overflow:hidden;
+/* Tres SVG institucionales independientes. El isotipo mantiene un anclaje horizontal fijo
+   para evitar el vaivén al contraer la barra. Marca expandida al 70%. */
+.shell .brand,.shell.sidebar-collapsed .brand{
+ height:90px;min-height:90px;box-sizing:border-box;padding:12px 15px;
+ display:flex;align-items:center;justify-content:flex-start;overflow:hidden;
 }
 .shell .municipal-brand-lockup{
-  width:100%;height:66px;display:flex;align-items:center;
-  justify-content:center;gap:8px;min-width:0;
+ width:100%;height:66px;min-width:0;display:flex;align-items:center;
+ justify-content:flex-start;gap:0;
 }
 .shell .municipal-isotipo{
-  display:block;width:46px;height:60px;flex:0 0 46px;
-  object-fit:contain;position:relative;z-index:2;
-  transition:width .38s cubic-bezier(.22,1,.36,1),height .38s cubic-bezier(.22,1,.36,1),flex-basis .38s cubic-bezier(.22,1,.36,1);
+ display:block;width:42px;height:54px;flex:0 0 42px;object-fit:contain;
+ transform:scale(.76667);transform-origin:center;position:relative;z-index:2;
+ transition:transform .28s ease;
 }
 .shell .municipal-divider{
-  display:block;width:2px;height:57px;flex:0 0 2px;object-fit:fill;
-  opacity:1;transform:translateX(0) scaleY(1);transform-origin:center;
-  transition:opacity .22s ease .12s,transform .38s cubic-bezier(.22,1,.36,1),width .38s cubic-bezier(.22,1,.36,1),flex-basis .38s cubic-bezier(.22,1,.36,1);
+ display:block;width:1.4px;height:40px;flex:0 0 1.4px;margin-left:5px;
+ object-fit:fill;opacity:1;transform:scaleY(1);transform-origin:center;
+ transition:opacity .2s ease .06s,transform .26s ease,width .26s ease,flex-basis .26s ease,margin-left .26s ease;
 }
 .shell .municipal-wordmark{
-  display:block;width:146px;height:53px;flex:0 0 146px;
-  object-fit:contain;object-position:left center;opacity:1;transform:translateX(0);
-  transition:opacity .24s ease .12s,transform .38s cubic-bezier(.22,1,.36,1),width .38s cubic-bezier(.22,1,.36,1),flex-basis .38s cubic-bezier(.22,1,.36,1);
+ display:block;width:102px;height:37px;flex:0 0 102px;margin-left:5px;
+ object-fit:contain;object-position:left center;opacity:1;transform:translateX(0);
+ transition:opacity .2s ease .06s,transform .26s ease,width .26s ease,flex-basis .26s ease,margin-left .26s ease;
 }
-/* En estado contraído, el isotipo completo permanece centrado y visible. */
-.shell.sidebar-collapsed .brand{padding:12px 8px}
-.shell.sidebar-collapsed .municipal-brand-lockup{gap:0}
-.shell.sidebar-collapsed .municipal-isotipo{width:42px;height:54px;flex-basis:42px}
+.shell.sidebar-collapsed .municipal-isotipo{transform:scale(1)}
 .shell.sidebar-collapsed .municipal-divider{
-  width:0;flex-basis:0;opacity:0;transform:translateX(-8px) scaleY(.35);
-  transition-delay:0s;
+ width:0;flex-basis:0;margin-left:0;opacity:0;transform:scaleY(.75);
+ transition-delay:0s;
 }
 .shell.sidebar-collapsed .municipal-wordmark{
-  width:0;flex-basis:0;opacity:0;transform:translateX(-16px);
-  transition-delay:0s;
+ width:0;flex-basis:0;margin-left:0;opacity:0;transform:translateX(-5px);
+ transition-delay:0s;
 }
 .shell .municipal-logo,.shell .brand-compact{display:none!important}
-/* En tablet la barra lateral permanece compacta, aun sin clase collapsed. */
 @media(max-width:900px) and (min-width:681px){
-  .shell .brand,.shell.sidebar-collapsed .brand{padding:12px 8px}
-  .shell .municipal-brand-lockup,.shell.sidebar-collapsed .municipal-brand-lockup{gap:0}
-  .shell .municipal-isotipo,.shell.sidebar-collapsed .municipal-isotipo{width:42px;height:54px;flex-basis:42px}
-  .shell .municipal-divider,.shell.sidebar-collapsed .municipal-divider{
-    width:0;flex-basis:0;opacity:0;transform:translateX(-8px) scaleY(.35)
-  }
-  .shell .municipal-wordmark,.shell.sidebar-collapsed .municipal-wordmark{
-    width:0;flex-basis:0;opacity:0;transform:translateX(-16px)
-  }
+ .shell .brand,.shell.sidebar-collapsed .brand{padding:12px 15px}
+ .shell .municipal-isotipo,.shell.sidebar-collapsed .municipal-isotipo{transform:scale(1)}
+ .shell .municipal-divider,.shell.sidebar-collapsed .municipal-divider{
+  width:0;flex-basis:0;margin-left:0;opacity:0;transform:scaleY(.75)
+ }
+ .shell .municipal-wordmark,.shell.sidebar-collapsed .municipal-wordmark{
+  width:0;flex-basis:0;margin-left:0;opacity:0;transform:translateX(-5px)
+ }
 }
-/* El drawer móvil se abre siempre con el logotipo completo. */
 @media(max-width:680px){
-  .shell .brand,.shell.sidebar-collapsed .brand{padding:12px 14px}
-  .shell .municipal-brand-lockup,.shell.sidebar-collapsed .municipal-brand-lockup{gap:8px}
-  .shell .municipal-isotipo,.shell.sidebar-collapsed .municipal-isotipo{width:46px;height:60px;flex-basis:46px}
-  .shell .municipal-divider,.shell.sidebar-collapsed .municipal-divider{
-    width:2px;flex-basis:2px;opacity:1;transform:none
-  }
-  .shell .municipal-wordmark,.shell.sidebar-collapsed .municipal-wordmark{
-    width:146px;flex-basis:146px;opacity:1;transform:none
-  }
+ .shell .brand,.shell.sidebar-collapsed .brand{padding:12px 15px}
+ .shell .municipal-isotipo,.shell.sidebar-collapsed .municipal-isotipo{transform:scale(.76667)}
+ .shell .municipal-divider,.shell.sidebar-collapsed .municipal-divider{
+  width:1.4px;flex-basis:1.4px;margin-left:5px;opacity:1;transform:none
+ }
+ .shell .municipal-wordmark,.shell.sidebar-collapsed .municipal-wordmark{
+  width:102px;flex-basis:102px;margin-left:5px;opacity:1;transform:none
+ }
 }
 @media(prefers-reduced-motion:reduce){
-  .shell .municipal-isotipo,.shell .municipal-divider,.shell .municipal-wordmark{transition:none!important}
+ .shell .municipal-isotipo,.shell .municipal-divider,.shell .municipal-wordmark{transition:none!important}
 }
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav></aside><div class="main-column"><header class="top"><div class="top-start"><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">menu_open</span></button><span class="top-section">Consola municipal</span></div><div class="user"><span class="devflag">DESARROLLO</span><span class="avatar">EW</span><span class="user-name">EquipoWeb</span></div></header><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
