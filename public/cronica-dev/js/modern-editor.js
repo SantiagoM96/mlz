@@ -404,6 +404,7 @@ clone.removeAttribute('aria-label');clone.classList.add('modern-mirror-card');
 clone.querySelectorAll('[id]').forEach(n=>n.id+='Mobile');
 clone.querySelectorAll('[for]').forEach(n=>n.setAttribute('for',n.getAttribute('for')+'Mobile'));
 clone.querySelectorAll('[aria-controls]').forEach(n=>n.setAttribute('aria-controls',n.getAttribute('aria-controls')+'Mobile'));
+let mobilePreviewContext='text';
 const host=document.createElement('div');
 host.className='editor-panel modern-preview-text-editor';
 host.setAttribute('aria-label','Editar textos desde Vista previa');
@@ -411,6 +412,7 @@ host.append(clone);preview.insertBefore(host,preview.querySelector('.preview-act
 const mirrorId=id=>$(id+'Mobile');
 const mirrorToggle=clone.querySelector('.modern-toggle');
 const mirrorBody=clone.querySelector('.modern-body');
+mirrorToggle?.setAttribute('aria-expanded','false');if(mirrorBody)mirrorBody.hidden=true;
 mirrorToggle?.addEventListener('click',()=>{
  const expanded=mirrorToggle.getAttribute('aria-expanded')!=='true';
  mirrorToggle.setAttribute('aria-expanded',String(expanded));mirrorBody.hidden=!expanded;
@@ -508,7 +510,7 @@ function syncVariantDependentControls(){
  const photoPanel=panel.querySelector('.modern-photo-group');
  if(photoPanel)photoPanel.hidden=!designed;
  if(textPanel)textPanel.hidden=!designed;
- if(host)host.hidden=!designed;
+ applyMobilePreviewContext();
  // El contenido de la volanta solo aparece en Textos si el switch
  // de Diseño de placas está habilitado.
  for(const card of [textPanel,clone].filter(Boolean)){
@@ -532,6 +534,25 @@ function syncIdentityMirror(){
  if(switchMirror)switchMirror.checked=Boolean($('showStrap')?.checked);
  syncVariantDependentControls();
 }
+
+function applyMobilePreviewContext(){
+ if(!narrow.matches)return;
+ const variant=isCronica?document.documentElement.dataset.cronicaVariant:document.documentElement.dataset.editorPlateVariant;
+ const blank=variant==='blank',isLogo=mobilePreviewContext==='logo';
+ host.hidden=blank||isLogo;
+ host.setAttribute('aria-hidden',String(host.hidden));
+ if(identityHost){identityHost.hidden=blank||!isLogo;identityHost.setAttribute('aria-hidden',String(identityHost.hidden))}
+ main.dataset.previewContext=mobilePreviewContext;
+}
+function resetMobilePreviewContext(){
+ if(!narrow.matches)return;
+ mobilePreviewContext='text';
+ mirrorToggle?.setAttribute('aria-expanded','false');if(mirrorBody)mirrorBody.hidden=true;
+ const toggle=identityMirror?.querySelector('.modern-toggle'),body=identityMirror?.querySelector('.modern-body');
+ toggle?.setAttribute('aria-expanded','false');if(body)body.hidden=true;
+ applyMobilePreviewContext();updateHeight();
+}
+
 function showPreviewContext(which){
  const isLogo=which==='logo';
  stage.querySelector('.modern-logo-hit')?.classList.toggle('is-hotspot-selected',isLogo);
@@ -540,9 +561,8 @@ function showPreviewContext(which){
  const mirrored=isLogo?identityMirror:clone;
  if(!source||!mirrored)return;
  if(narrow.matches){
-  host.hidden=isLogo;
-  if(identityHost)identityHost.hidden=!isLogo;
-  main.dataset.previewContext=which;
+  mobilePreviewContext=which;
+  applyMobilePreviewContext();
   const toggle=mirrored.querySelector('.modern-toggle'),body=mirrored.querySelector('.modern-body');
   toggle.setAttribute('aria-expanded','true');body.hidden=false;
   if(isLogo)syncIdentityMirror();else syncMirror();
@@ -685,4 +705,12 @@ document.addEventListener('change',event=>{
 });
 window.addEventListener('modern:render',syncCarouselCoverSwitches);
 syncCarouselCoverSwitches();
+
+document.addEventListener('pointerdown',event=>{
+ if(!narrow.matches||stage.contains(event.target)||host.contains(event.target)||identityHost?.contains(event.target))return;
+ resetMobilePreviewContext();
+},true);
+window.addEventListener('modern:render',applyMobilePreviewContext);
+narrow.addEventListener('change',()=>{applyMobilePreviewContext();updateHeight()});
+resetMobilePreviewContext();
 })();
