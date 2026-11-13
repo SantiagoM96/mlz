@@ -119,9 +119,8 @@ function installCirclePhoto(){
   });
   host.append(field);circleControls.push({field,options,upload,caption,picker,toggle,notice,input});
  }
- const host=document.querySelector('#dsMobileControlsPanel .ds-plate-design-group .ds-control-card-body');
+ const host=document.querySelector('#dsMobileControlsPanel .ds-photo-layout-group .ds-control-card-body');
  if(host)makeControls(host,'Main');
- if(typeof previewContentBody!=='undefined')makeControls(previewContentBody,'Preview');
  circleHit=document.createElement('button');circleHit.type='button';circleHit.className='ds-circle-photo-hit';circleHit.hidden=true;
  el('photoStage').append(circleHit);
  let drag=null,suppressClick=false,lastTouchTap=0;
