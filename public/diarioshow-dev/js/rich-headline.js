@@ -114,6 +114,16 @@ function publish(editor){
  if(source.value!==value){source.value=value;source.dispatchEvent(new Event('input',{bubbles:true}))}
 }
 function changeFormat(key,clear=false){
+ if(clear){
+  const plain=charsFromMarkup(source.value).map(ch=>ch.c).join('');
+  source.value=plain;
+  for(const editor of editors){
+   renderChars(editor,charsFromMarkup(plain));editor.dataset.currentMarkup=plain;
+  }
+  source.dispatchEvent(new Event('input',{bubbles:true}));
+  syncToolbar();
+  return;
+ }
  const selection=window.getSelection();
  const editor=editors.find(e=>selection?.anchorNode&&e.contains(selection.anchorNode));
  if(!editor){editors[0]?.focus();return}
@@ -171,7 +181,7 @@ if(mobile)makeEditor(mobile);
 for(const [id,key] of [['formatAccent','accent'],['formatItalic','italic'],['formatStrike','strike'],['formatClear','clear']]){
  for(const suffix of ['', 'Mobile']){
   const button=document.getElementById(id+suffix);if(!button)continue;
-  button.title={accent:'Destacar o quitar destacado de la selección',italic:'Aplicar o quitar cursiva',strike:'Aplicar o quitar tachado',clear:'Quitar todos los formatos de la selección'}[key];
+  button.title={accent:'Destacar o quitar destacado de la selección',italic:'Aplicar o quitar cursiva',strike:'Aplicar o quitar tachado',clear:'Quitar todos los formatos del texto principal'}[key];
  }
 }
 // Captura previa a los handlers antiguos para que no se inserten símbolos.
