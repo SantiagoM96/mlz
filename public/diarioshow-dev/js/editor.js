@@ -49,9 +49,11 @@ function syncCirclePhotoUI(){
  for(const ui of circleControls){
   ui.field.hidden=!allowed;
   ui.options.hidden=!circlePhoto.enabled;
-  for(const input of ui.field.querySelectorAll('[data-circle-enabled]'))input.checked=(input.value==='on')===circlePhoto.enabled;
-  for(const input of ui.field.querySelectorAll('[data-circle-color]'))input.checked=input.value===circlePhoto.color;
-  ui.upload.textContent=circlePhoto.image?'Cambiar foto bolita':'Cargar foto bolita';
+  ui.toggle.checked=circlePhoto.enabled;
+  for(const button of ui.field.querySelectorAll('[data-circle-color]'))button.setAttribute('aria-pressed',String(button.dataset.circleColor===circlePhoto.color));
+  ui.upload.textContent=circlePhoto.image?'Cambiar':'Seleccioná';
+  ui.caption.textContent=circlePhoto.image?(circlePhoto.filename||'foto bolita'):'una foto bolita';
+  ui.picker.classList.toggle('has-photo',Boolean(circlePhoto.image));
   ui.notice.hidden=!circlePhoto.enabled||geometry.fits;
  }
  if(!circleHit)return;
@@ -71,6 +73,7 @@ function loadCirclePhoto(file){
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
  circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
+ circlePhoto.filename=file.name;
  circlePhoto.image=photo;
  photo.onload=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo)render()};
  photo.onerror=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo){circlePhoto.image=null;el('status').textContent='No se pudo cargar la foto bolita.';render()}};
@@ -79,16 +82,25 @@ function loadCirclePhoto(file){
 function installCirclePhoto(){
  function makeControls(host,suffix){
   const field=document.createElement('div');field.className='control-field ds-circle-photo-field';
-  field.innerHTML='<label>Foto bolita</label><div class="ds-circle-choices"><label><input type="radio" name="circleEnabled'+suffix+'" value="off" data-circle-enabled checked> Sin foto bolita</label><label><input type="radio" name="circleEnabled'+suffix+'" value="on" data-circle-enabled> Con foto bolita</label></div><div class="ds-circle-photo-options"><button type="button" class="ds-circle-upload">Cargar foto bolita</button><input type="file" accept="image/*" hidden><label>Color del anillo</label><div class="ds-circle-choices"><label><input type="radio" name="circleColor'+suffix+'" value="white" data-circle-color checked> Blanco</label><label><input type="radio" name="circleColor'+suffix+'" value="brand" data-circle-color> Fucsia</label></div><p class="hint ds-circle-notice" hidden>No hay espacio suficiente para la foto bolita y sus márgenes de 80 px. Reducí el texto o su tamaño.</p></div>';
-  const options=field.querySelector('.ds-circle-photo-options'),upload=field.querySelector('button'),input=field.querySelector('input[type=file]'),notice=field.querySelector('.ds-circle-notice');
-  upload.addEventListener('click',()=>input.click());
+  const inputId='circlePhotoInput'+suffix,toggleId='circlePhotoEnabled'+suffix;
+  field.innerHTML='<label class="switch-row" for="'+toggleId+'"><span>Foto bolita</span><span class="switch"><input id="'+toggleId+'" type="checkbox" role="switch" data-circle-enabled><span class="switch-track"></span></span></label><div class="ds-circle-photo-options"><div class="ds-circle-upload-row"><div class="ds-photo-picker"><input id="'+inputId+'" type="file" accept="image/*" class="ds-photo-picker-native"><div class="ds-photo-picker-surface"><label for="'+inputId+'" class="ds-photo-picker-clickable"><span class="material-symbols-outlined ds-photo-picker-icon" aria-hidden="true">add_photo_alternate</span><span class="ds-photo-picker-text"><strong class="ds-photo-picker-action">Seleccioná</strong> <span class="ds-photo-picker-caption">una foto bolita</span></span></label></div></div><button type="button" class="ds-circle-color-swatch is-white" data-circle-color="white" aria-label="Anillo blanco" aria-pressed="true" title="Anillo blanco"><span class="material-icons" aria-hidden="true">check</span></button><button type="button" class="ds-circle-color-swatch is-brand" data-circle-color="brand" aria-label="Anillo fucsia" aria-pressed="false" title="Anillo fucsia"><span class="material-icons" aria-hidden="true">check</span></button></div><p class="hint ds-circle-notice" hidden>No hay espacio suficiente para la foto bolita y sus márgenes de 80 px. Reducí el texto o su tamaño.</p></div>';
+  const options=field.querySelector('.ds-circle-photo-options'),picker=field.querySelector('.ds-photo-picker'),
+   upload=field.querySelector('.ds-photo-picker-action'),caption=field.querySelector('.ds-photo-picker-caption'),
+   input=field.querySelector('input[type=file]'),toggle=field.querySelector('[data-circle-enabled]'),notice=field.querySelector('.ds-circle-notice');
   input.addEventListener('change',()=>{loadCirclePhoto(input.files[0]);input.value=''});
-  field.addEventListener('change',event=>{
-   if(event.target.matches('[data-circle-enabled]'))circlePhoto.enabled=event.target.value==='on';
-   if(event.target.matches('[data-circle-color]'))circlePhoto.color=event.target.value;
-   render();
+  toggle.addEventListener('change',()=>{circlePhoto.enabled=toggle.checked;render()});
+  field.addEventListener('click',event=>{
+   const button=event.target.closest('[data-circle-color]');
+   if(!button)return;
+   circlePhoto.color=button.dataset.circleColor;render();
   });
-  host.append(field);circleControls.push({field,options,upload,notice,input});
+  picker.addEventListener('dragover',event=>{event.preventDefault();picker.classList.add('is-drag-over')});
+  picker.addEventListener('dragleave',event=>{if(!picker.contains(event.relatedTarget))picker.classList.remove('is-drag-over')});
+  picker.addEventListener('drop',event=>{
+   event.preventDefault();event.stopPropagation();picker.classList.remove('is-drag-over');
+   loadCirclePhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/')));
+  });
+  host.append(field);circleControls.push({field,options,upload,caption,picker,toggle,notice,input});
  }
  const host=document.querySelector('#dsMobileControlsPanel .ds-plate-design-group .ds-control-card-body');
  if(host)makeControls(host,'Main');
