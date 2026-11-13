@@ -495,7 +495,7 @@ function syncVariantDependentControls(){
  if(!isCronica||!identitySource)return;
  const variant=identitySource.querySelector('[data-page-variant][aria-pressed="true"]')?.dataset.pageVariant||'cover';
  const designed=variant!=='blank';
- const footerAllowed=variant==='cover';
+ const footerAllowed=variant==='cover'||variant==='red';
  // El panel original y su espejo contextual siguen la misma regla.
  for(const card of [identitySource,identityMirror].filter(Boolean)){
   const logo=card.querySelector('.logo-control-field');
