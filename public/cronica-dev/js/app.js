@@ -3,7 +3,7 @@
 'use strict';
 
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',logoPosition='right',photoHover=false,pageVariant='cover';
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=true,selectedLogo='primary',logoPosition='right',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
 // Volantas un 30 % más altas; las mismas medidas se usan en preview y PNG.
 const COVER_STRAP_HEIGHT=68,INTERNAL_STRAP_HEIGHT=65;
@@ -225,7 +225,7 @@ const COVER_HEADLINE="Un nuevo *espacio cultural* abrió sus puertas y presentó
 const INTERNAL_HEADLINE="El espacio ofrecerá *talleres, muestras y espectáculos* durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.";
 const INTERNAL_STRAP="NUEVAS ACTIVIDADES";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:false,logo:'primary',logoPosition:'right',
+ return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:true,logo:'primary',logoPosition:'right',
   image:null,zoom:1,offsetX:0,offsetY:0,logoPosition:'right',variant:'blank',samplePending:true};
 }
 function saveActivePage(){
@@ -244,7 +244,7 @@ function loadPage(page){
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  footerStyle=page.footerStyle||'carousel';
  document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
- forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
+ forceUppercase=page.forceUppercase!==false;syncUppercaseUI();
  selectedLogo=page.logo||'primary';syncLogoChoices();logoPosition=page.logoPosition||'right';syncLogoPosition();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
  el('file').value='';dragging=false;
