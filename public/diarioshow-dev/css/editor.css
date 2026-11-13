@@ -2838,3 +2838,17 @@ main:has(#dsMobileViewport){overflow-anchor:none}
 .editor-panel #photoLayoutOptions .photo-layout-art{height:calc(52% - 8px)!important}
 .editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines{top:52%!important;height:48%!important}
 .editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines::before{height:3px!important}
+
+/* Foco, selección y estado contextual del editor enriquecido: color de marca. */
+body{--rich-editor-accent:#e6008d;--rich-editor-selection:#a30065}
+html body .cronica-rich-headline:focus,
+html body .cronica-rich-headline:focus-visible{
+ border-color:var(--rich-editor-accent)!important;
+ outline:1px solid var(--rich-editor-accent)!important;
+}
+html body .cronica-rich-headline::selection,
+html body .cronica-rich-headline *::selection{background:var(--rich-editor-selection)!important;color:#fff!important}
+html body .cronica-rich-headline.uppercase-preview{text-transform:uppercase!important}
+html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[id^="formatStrike"])[aria-pressed="true"]{
+ background:var(--rich-editor-accent)!important;border-color:var(--rich-editor-accent)!important;color:#fff!important;
+}
