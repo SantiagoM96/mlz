@@ -298,7 +298,7 @@ function drawText(lines,size,baselines){
   for(const part of line){
    ctx.font=fontFor(size,part);ctx.fillStyle=pageVariant==='red'?'#fff':part.accent?RED:BLACK;
    ctx.fillText(part.text,x,baselines[i]);
-   if(part.strike){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
+   if(part.strike){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=18;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
    x+=part.width;
   }
  });
