@@ -2823,3 +2823,18 @@ main:has(#dsMobileViewport){overflow-anchor:none}
  display:block;margin-bottom:8px;
 }
 .editor-panel .ds-texts-group #quoteAuthorInputField[hidden]{display:none!important}
+
+/* Separador y fotografía iguales a BAE y Crónica; citas conservan su degradé. */
+.editor-panel .ds-variant-preview-pink,
+.editor-panel .ds-variant-preview-blue{background:linear-gradient(to bottom,transparent 52%,#fff 52%),#aeb4bc}
+.editor-panel .ds-variant-preview-pink::before,
+.editor-panel .ds-variant-preview-blue::before{top:52%;height:3px}
+.editor-panel .ds-variant-preview i:first-child{width:84%;height:5px}
+.editor-panel .ds-variant-preview i:nth-child(2){width:60%;height:3px}
+/* Distribución fotográfica reutiliza las mismas proporciones. */
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail.ds-variant-preview{
+ background:linear-gradient(to bottom,transparent 52%,#fff 52%),#aeb4bc!important;
+}
+.editor-panel #photoLayoutOptions .photo-layout-art{height:calc(52% - 8px)!important}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines{top:52%!important;height:48%!important}
+.editor-panel #photoLayoutOptions .photo-layout-thumbnail-lines::before{height:3px!important}

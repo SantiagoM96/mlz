@@ -771,3 +771,20 @@ html::-webkit-scrollbar-thumb:hover{background:#747b88}
  outline:2px solid #ed0000!important;
  outline-offset:2px!important;
 }
+
+/* Misma foto, separador y jerarquía de trazos que las otras marcas. */
+.editor-panel .cronica-variant-thumb-photo{flex:0 0 52%}
+.editor-panel .cronica-variant-thumb-strap,
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap{height:3px;flex:0 0 3px;margin-bottom:4px}
+.editor-panel .cronica-variant-thumb-lines i:first-child,
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines i:first-child{width:84%;height:5px;flex:0 0 5px;background:#171717}
+.editor-panel .cronica-variant-thumb-lines i:nth-child(2),
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-lines i:nth-child(2){width:60%;height:3px;flex:0 0 3px;background:#ed0000}
+/* La chapita se superpone a la línea continua; no la reemplaza. */
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap::before{
+ content:'';position:absolute;left:12%;right:12%;top:-3px;height:9px;background:#ed0000;
+}
+.editor-panel .cronica-variant-thumbnail-cover .cronica-variant-thumb-strap::after{
+ content:'';position:absolute;left:50%;top:0;width:52%;height:3px;
+ transform:translateX(-50%);background:#fff;border-radius:10px;
+}
