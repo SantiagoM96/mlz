@@ -2871,7 +2871,7 @@ html body .format-buttons button:is([id^="formatAccent"],[id^="formatItalic"],[i
 .ds-circle-notice{font-size:12px;line-height:1.5}
 
 .preview #photoStage>.ds-circle-photo-hit .material-icons{font-size:40px;pointer-events:none;color:#f4f4f5}
-.preview #photoStage>.ds-circle-photo-hit.is-editing{cursor:move;outline:2px dashed #fff;outline-offset:4px}
+.preview #photoStage>.ds-circle-photo-hit.is-editing{cursor:move;outline:2px dashed #e6008d;outline-offset:8px}
 
 /* Foto bolita: mismo switch y cargador que el resto del editor. */
 .preview #photoStage>.ds-circle-photo-hit .material-icons{color:#41464e}
