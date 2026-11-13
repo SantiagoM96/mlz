@@ -1,6 +1,116 @@
 
 (function(){
 'use strict';
+
+const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=8;
+const newCirclePhoto=()=>({enabled:false,image:null,x:80,y:400,color:'white'});
+let circlePhoto=newCirclePhoto(),circleHit=null,circleControls=[];
+function circlePhotoGeometry(state,bottom){
+ const fits=bottom>=CIRCLE_SIZE+CIRCLE_MARGIN*2;
+ const x=Math.max(CIRCLE_MARGIN,Math.min(W-CIRCLE_MARGIN-CIRCLE_SIZE,state.x));
+ const y=Math.max(CIRCLE_MARGIN,Math.min(bottom-CIRCLE_MARGIN-CIRCLE_SIZE,state.y));
+ return {x,y,fits};
+}
+function circlePhotoAllowed(){return !pageBlank&&['pink','blue'].includes(el('theme').value)}
+function drawCirclePhoto(includeHover){
+ if(!circlePhotoAllowed()||!circlePhoto.enabled)return;
+ const geometry=circlePhotoGeometry(circlePhoto,photoBottom);
+ if(!geometry.fits)return;
+ circlePhoto.x=geometry.x;circlePhoto.y=geometry.y;
+ const photo=circlePhoto.image,ready=photo?.complete&&photo.naturalWidth>0;
+ if(!ready&&!includeHover)return;
+ const cx=geometry.x+CIRCLE_SIZE/2,cy=geometry.y+CIRCLE_SIZE/2,r=(CIRCLE_SIZE-CIRCLE_STROKE)/2;
+ ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+ ctx.fillStyle='#565a63';ctx.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
+ if(ready){
+  const scale=Math.max(CIRCLE_SIZE/photo.naturalWidth,CIRCLE_SIZE/photo.naturalHeight);
+  const width=photo.naturalWidth*scale,height=photo.naturalHeight*scale;
+  ctx.drawImage(photo,cx-width/2,cy-height/2,width,height);
+ }
+ ctx.restore();
+ ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+ ctx.strokeStyle=circlePhoto.color==='brand'?'#E6008D':'#fff';ctx.lineWidth=CIRCLE_STROKE;ctx.stroke();ctx.restore();
+}
+function syncCirclePhotoUI(){
+ const allowed=circlePhotoAllowed(),geometry=circlePhotoGeometry(circlePhoto,photoBottom);
+ for(const ui of circleControls){
+  ui.field.hidden=!allowed;
+  ui.options.hidden=!circlePhoto.enabled;
+  for(const input of ui.field.querySelectorAll('[data-circle-enabled]'))input.checked=(input.value==='on')===circlePhoto.enabled;
+  for(const input of ui.field.querySelectorAll('[data-circle-color]'))input.checked=input.value===circlePhoto.color;
+  ui.upload.textContent=circlePhoto.image?'Cambiar foto bolita':'Cargar foto bolita';
+  ui.notice.hidden=!circlePhoto.enabled||geometry.fits;
+ }
+ if(!circleHit)return;
+ circleHit.hidden=!allowed||!circlePhoto.enabled||!geometry.fits;
+ if(circleHit.hidden)return;
+ circleHit.style.left=geometry.x/W*100+'%';circleHit.style.top=geometry.y/H*100+'%';
+ circleHit.style.width=CIRCLE_SIZE/W*100+'%';circleHit.style.height=CIRCLE_SIZE/H*100+'%';
+ circleHit.textContent=circlePhoto.image?'':'＋';
+ circleHit.setAttribute('aria-label',circlePhoto.image?'Mover foto bolita. Usá las flechas del teclado para desplazarla.':'Cargar foto bolita o arrastrar para moverla');
+}
+function loadCirclePhoto(file){
+ if(!file)return;
+ if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
+ const photo=new Image(),url=URL.createObjectURL(file);
+ circlePhoto.image=photo;
+ photo.onload=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo)render()};
+ photo.onerror=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo){circlePhoto.image=null;el('status').textContent='No se pudo cargar la foto bolita.';render()}};
+ photo.src=url;render();
+}
+function installCirclePhoto(){
+ function makeControls(host,suffix){
+  const field=document.createElement('div');field.className='control-field ds-circle-photo-field';
+  field.innerHTML='<label>Foto bolita</label><div class="ds-circle-choices"><label><input type="radio" name="circleEnabled'+suffix+'" value="off" data-circle-enabled checked> Sin foto bolita</label><label><input type="radio" name="circleEnabled'+suffix+'" value="on" data-circle-enabled> Con foto bolita</label></div><div class="ds-circle-photo-options"><button type="button" class="ds-circle-upload">Cargar foto bolita</button><input type="file" accept="image/*" hidden><label>Color del anillo</label><div class="ds-circle-choices"><label><input type="radio" name="circleColor'+suffix+'" value="white" data-circle-color checked> Blanco</label><label><input type="radio" name="circleColor'+suffix+'" value="brand" data-circle-color> Fucsia</label></div><p class="hint ds-circle-notice" hidden>No hay espacio suficiente para la foto bolita y sus márgenes de 80 px. Reducí el texto o su tamaño.</p></div>';
+  const options=field.querySelector('.ds-circle-photo-options'),upload=field.querySelector('button'),input=field.querySelector('input[type=file]'),notice=field.querySelector('.ds-circle-notice');
+  upload.addEventListener('click',()=>input.click());
+  input.addEventListener('change',()=>{loadCirclePhoto(input.files[0]);input.value=''});
+  field.addEventListener('change',event=>{
+   if(event.target.matches('[data-circle-enabled]'))circlePhoto.enabled=event.target.value==='on';
+   if(event.target.matches('[data-circle-color]'))circlePhoto.color=event.target.value;
+   render();
+  });
+  host.append(field);circleControls.push({field,options,upload,notice,input});
+ }
+ const host=document.querySelector('#dsMobileControlsPanel .ds-plate-design-group .ds-control-card-body');
+ if(host)makeControls(host,'Main');
+ if(typeof previewContentBody!=='undefined')makeControls(previewContentBody,'Preview');
+ circleHit=document.createElement('button');circleHit.type='button';circleHit.className='ds-circle-photo-hit';circleHit.hidden=true;
+ el('photoStage').append(circleHit);
+ let drag=null,suppressClick=false;
+ circleHit.addEventListener('pointerdown',event=>{
+  if(event.button!==0&&event.pointerType!=='touch')return;
+  event.preventDefault();event.stopPropagation();suppressClick=false;
+  drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:circlePhoto.x,startY:circlePhoto.y,moved:false};
+  circleHit.setPointerCapture(event.pointerId);
+ });
+ circleHit.addEventListener('pointermove',event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  event.preventDefault();event.stopPropagation();
+  const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+  if(!drag.moved&&Math.hypot(dx,dy)<4)return;
+  drag.moved=true;const scale=W/el('art').getBoundingClientRect().width;
+  const next=circlePhotoGeometry({x:drag.startX+dx*scale,y:drag.startY+dy*scale},photoBottom);
+  circlePhoto.x=next.x;circlePhoto.y=next.y;render();
+ });
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])circleHit.addEventListener(type,event=>{
+  event.stopPropagation();if(!drag||drag.id!==event.pointerId)return;
+  suppressClick=drag.moved||type!=='pointerup';drag=null;
+ });
+ circleHit.addEventListener('click',event=>{
+  event.preventDefault();event.stopPropagation();
+  if(suppressClick){suppressClick=false;return}
+  if(!circlePhoto.image)circleControls[0]?.input.click();
+ });
+ circleHit.addEventListener('keydown',event=>{
+  const deltas={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]},delta=deltas[event.key];
+  if(!delta)return;event.preventDefault();event.stopPropagation();
+  const next=circlePhotoGeometry({x:circlePhoto.x+delta[0],y:circlePhoto.y+delta[1]},photoBottom);
+  circlePhoto.x=next.x;circlePhoto.y=next.y;render();
+ });
+ syncCirclePhotoUI();
+}
+
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let photoRevision=0;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-editable.svg?v=2');loadTexture('2','../bae/halftone-2.svg?v=1');let textAlignment='center',forceUppercase=false,pageBlank=false;let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,photoHover=false;
 // Foto compartida: dos recortes independientes dentro del área fotográfica.
@@ -364,6 +474,7 @@ const maxX=Math.max(0,(iw-W)/2),maxY=Math.max(0,(ih-photoBottom)/2);
 offsetX=Math.max(-maxX,Math.min(maxX,offsetX));offsetY=Math.max(-maxY,Math.min(maxY,offsetY));
 ctx.save();ctx.beginPath();ctx.rect(0,0,W,photoBottom);ctx.clip();ctx.drawImage(image,(W-iw)/2+offsetX,(photoBottom-ih)/2+offsetY,iw,ih);ctx.restore();
 } // El aviso de carga es HTML interactivo, no forma parte del PNG.
+drawCirclePhoto(includeHover);
 drawBrandLogo();
 ctx.fillStyle=colors.bg;ctx.fillRect(0,boxTop,W,H-boxTop);
 // Variantes Diario Show: caja blanca sin semitonos y barra de 24 px (50 % más alta que la anterior).
@@ -388,7 +499,7 @@ for(let i=0;i<lines.length;i++){
 drawFooter(colors.text,footerBaseline);
 const overlay=el('importOverlay');if(overlay){overlay.style.height=(photoBottom/H*100)+'%';}updatePhotoStage();el('dotsLabel').textContent=el('dots').value+'%';el('sizeLabel').textContent=size;syncPhotoZoom();el('status').textContent=boxTop<=80?'Texto demasiado largo: reducí el tamaño.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
 }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
-finally{syncMobileTextEditor();updatePreviewHitOverlays();if(document.getElementById('dsMobileContentEditor'))syncPreviewContentEditor();window.dispatchEvent(new Event('modern:render'))}
+finally{syncCirclePhotoUI();syncMobileTextEditor();updatePreviewHitOverlays();if(document.getElementById('dsMobileContentEditor'))syncPreviewContentEditor();window.dispatchEvent(new Event('modern:render'))}
 }
 // Algunos navegadores restauran el valor anterior del slider aunque el HTML diga 5.
 function resetDefaultHalftone(){el('dots').value='5';el('dotsLabel').textContent='5%';render()}
@@ -622,6 +733,7 @@ el('photoZoom').addEventListener('input',event=>{if(photoLayout==='split')active
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
 el('clearAll').addEventListener('click',()=>{
+ circlePhoto=newCirclePhoto();
  el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
@@ -1178,14 +1290,16 @@ if(typeof ResizeObserver!=='undefined'){
 }
 syncMobileTabViewport();
 setPreviewContext('text');
+installCirclePhoto();
 window.DiarioShowEditor={
  getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
  headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,showQuoteAuthor:el('showQuoteAuthor').checked,
  size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
  image,zoom,offsetX,offsetY,photoLayout,activePhotoSide,
  splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
- selectedLogo,logoPosition,footerStyle,selectedTexture};},
+ selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
  setPageState(s){
+  circlePhoto={...newCirclePhoto(),...s.circlePhoto};
   setVariant(s.theme||'pink');
   pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
   el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
