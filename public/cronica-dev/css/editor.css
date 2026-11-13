@@ -828,3 +828,43 @@ html[data-cronica-variant="blank"] body .preview .modern-logo-hit,
 html[data-cronica-variant="blank"] body .preview .modern-text-hit,
 html[data-cronica-variant="blank"] body .preview .ds-preview-hit-button,
 html[data-cronica-variant="blank"] body .preview .preview-zoom{display:none!important}
+
+/* Fotobolita: mismo recurso y controles de Diario Show, con acento de marca. */
+.preview #photoStage>.ds-circle-photo-hit{
+ position:absolute;z-index:12;display:flex;align-items:center;justify-content:center;
+ padding:0;border:0;border-radius:50%;background:transparent;color:#41464e;
+ cursor:grab;touch-action:none;user-select:none;box-shadow:none;
+}
+.preview #photoStage>.ds-circle-photo-hit:active{cursor:grabbing;transform:none}
+.preview #photoStage>.ds-circle-photo-hit:focus-visible,
+.preview #photoStage>.ds-circle-photo-hit.is-editing{outline:2px dashed #ed0000;outline-offset:8px}
+.preview #photoStage>.ds-circle-photo-hit.is-editing{cursor:move}
+.preview #photoStage>.ds-circle-photo-hit .material-icons{font-size:40px;color:#41464e;pointer-events:none}
+.preview #photoStage>.ds-circle-photo-hit[hidden],
+.ds-circle-photo-field[hidden],.ds-circle-photo-options[hidden],.ds-circle-notice[hidden]{display:none!important}
+.ds-circle-photo-field>.switch-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 38px;align-items:center!important;
+ min-height:24px;line-height:22px;margin-bottom:12px!important;
+}
+.ds-circle-label{display:flex;align-items:center;gap:8px;min-height:22px;line-height:22px}
+.ds-circle-photo-field .switch{display:flex;align-items:center;align-self:center;height:22px;line-height:0;margin:0;padding:0}
+.ds-circle-photo-field .switch-track{display:block}
+.ds-new-chip{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:20px;padding:2px 6px;border:1px solid #ed0000;border-radius:99px;background:#ed000026;color:#ffaaaa;font:600 10px/14px Inter,Arial,sans-serif;white-space:nowrap}
+.ds-circle-upload-row{--circle-input-height:44px;display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:8px;align-items:start}
+.ds-circle-photo-field .ds-photo-picker{position:relative;min-width:0;width:100%}
+.ds-circle-photo-field .ds-photo-picker-native{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:0!important;opacity:0!important;clip-path:inset(50%)!important;pointer-events:none!important}
+.ds-circle-photo-field .ds-photo-picker-surface{display:flex;align-items:center;height:44px;box-sizing:border-box;padding:7px 10px;border:1px dashed #777c87;border-radius:10px;background:#25272d}
+.ds-circle-photo-field .ds-photo-picker-clickable{display:flex!important;align-items:center;gap:6px;min-width:0;width:100%;margin:0!important;cursor:pointer;font:400 13px/20px system-ui,Arial,sans-serif}
+.ds-circle-photo-field .ds-photo-picker-icon{flex:none;font-size:22px;color:#fff}
+.ds-circle-photo-field .ds-photo-picker-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ds-circle-photo-field .ds-photo-picker-action{color:#f1f2f6}
+.ds-circle-photo-field .ds-photo-picker-caption{color:#aeb4bf}
+.ds-circle-photo-field .ds-photo-picker-surface:hover,.ds-circle-photo-field .is-drag-over .ds-photo-picker-surface{background:#30323a;border-color:#fff}
+.ds-circle-photo-field .ds-photo-picker-native:focus-visible+.ds-photo-picker-surface{outline:2px solid #ed0000;outline-offset:2px}
+.editor-panel .ds-circle-photo-field .ds-circle-color-swatch{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:44px;height:44px;min-height:44px;margin:0;padding:0;border:1px solid #777c87;border-radius:7px;cursor:pointer}
+.editor-panel .ds-circle-photo-field .ds-circle-color-swatch.is-white{background:#fff;color:#24262b}
+.editor-panel .ds-circle-photo-field .ds-circle-color-swatch.is-brand{background:#ed0000;color:#fff}
+.ds-circle-color-swatch .material-icons{font-size:20px;visibility:hidden}
+.ds-circle-color-swatch[aria-pressed="true"] .material-icons{visibility:visible}
+.ds-circle-color-swatch:focus-visible{outline:2px solid #ed0000;outline-offset:2px}
+.ds-circle-notice{font-size:12px;line-height:1.5}
