@@ -2,6 +2,7 @@
 (function(){
 'use strict';
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
+const DIVIDER_HEIGHT=24;
 let halftone=null;const halftoneLayer=document.createElement('canvas');halftoneLayer.width=1080;halftoneLayer.height=1236;const halftoneCtx=halftoneLayer.getContext('2d');let importingArticle=false;let selectedTexture='1';const halftoneAssets={};function loadTexture(id,path){const asset=new Image();asset.onload=()=>{halftoneAssets[id]=asset;if(selectedTexture===id){halftone=asset;render()}};asset.onerror=()=>console.error('No se pudo cargar '+path);asset.src=path}loadTexture('1','../bae/halftone-2.svg?v=1');loadTexture('2','./textures/punteado-grises-ajustados.svg?v=1');let textAlignment='left';let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820;
 const LOGO_MARGIN=80,LOGO_WIDTH=123.75*1.15,LOGO_HEIGHT=LOGO_WIDTH*192/358;
 let selectedLogo='primary',logoPosition='right',footerStyle='center',pageBlank=false;
@@ -68,7 +69,7 @@ if(lines.length){
 const firstBaseline=baselines[0]??footerTop-50;
 const firstAscent=lineMetrics[0]?.ascent??size;
 const boxTop=Math.max(80,firstBaseline-firstAscent-50);
-photoBottom=boxTop-16;
+photoBottom=boxTop-DIVIDER_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
 if(image){
@@ -102,7 +103,7 @@ ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){
   ctx.drawImage(halftoneLayer,0,115,1080,1121,0,boxTop,1080,1121);
  }
 }ctx.restore();
-ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-16,W,16);
+ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-DIVIDER_HEIGHT,W,DIVIDER_HEIGHT);
 const centered=textAlignment==='center';
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
