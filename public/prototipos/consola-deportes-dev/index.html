@@ -1020,6 +1020,15 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
  .workspace .settings-page-header{flex-direction:column;align-items:stretch}
  .workspace .settings-page-header .actions{justify-content:flex-start}
 }
+
+/* Conexión de datos compartidos y autenticación del administrador. */
+.workspace .mlz-access-panel{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;margin-bottom:22px;border:1px solid #dce5ec;border-radius:8px;background:#f7fafc;font-size:12px;color:#3d3d3d}
+.workspace .mlz-access-panel>span{display:inline-flex;align-items:center;gap:8px;color:#236999;font-weight:600}
+.workspace .mlz-access-panel p{margin:4px 0 0;color:#626e79}
+.workspace .mlz-access-panel .mlz-access-error{color:#b5223c}
+.workspace .mlz-login-form{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.workspace .mlz-login-form input{width:180px;min-height:36px;border:1px solid #c8d4dd;border-radius:6px;padding:7px 9px;font:inherit}
+@media(max-width:680px){.workspace .mlz-login-form input{width:100%}}
 </style></head>
 <body><div class="shell" id="municipalShell"><aside class="side" id="municipalSidebar" aria-label="Menú municipal"><div class="brand"><div class="municipal-brand-lockup" role="img" aria-label="Municipio de Lomas de Zamora · Gobierno de la Comunidad"><img class="municipal-isotipo" src="./assets/municipio-isotipo.svg" alt=""><img class="municipal-divider" src="./assets/municipio-divisor.svg" alt=""><img class="municipal-wordmark" src="./assets/municipio-texto.svg" alt=""></div></div><nav class="nav municipal-nav" aria-label="Secciones municipales"><div class="municipal-nav-item" title="Noticias"><span class="mi nav-symbol" aria-hidden="true">article</span><span class="nav-label">Noticias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Denuncias"><span class="mi nav-symbol" aria-hidden="true">campaign</span><span class="nav-label">Denuncias</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Carreras Médicas"><span class="mi nav-symbol" aria-hidden="true">medical_services</span><span class="nav-label">Carreras Médicas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cementerio"><span class="mi nav-symbol" aria-hidden="true">account_balance</span><span class="nav-label">Cementerio</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Cortes"><span class="mi nav-symbol" aria-hidden="true">traffic</span><span class="nav-label">Cortes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Piletas Albertina"><span class="mi nav-symbol" aria-hidden="true">pool</span><span class="nav-label">Piletas Albertina</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Boletín Oficial"><span class="mi nav-symbol" aria-hidden="true">newspaper</span><span class="nav-label">Boletín Oficial</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Inscriptos RSC"><span class="mi nav-symbol" aria-hidden="true">how_to_reg</span><span class="nav-label">Inscriptos RSC</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Pedí tu Semilla"><span class="mi nav-symbol" aria-hidden="true">eco</span><span class="nav-label">Pedí tu Semilla</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Vehículos a compactar"><span class="mi nav-symbol" aria-hidden="true">directions_car</span><span class="nav-label">Vehículos a compactar</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre de Azul"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre de Azul</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="QR"><span class="mi nav-symbol" aria-hidden="true">qr_code_2</span><span class="nav-label">QR</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="IMPTCE"><span class="mi nav-symbol" aria-hidden="true">badge</span><span class="nav-label">IMPTCE</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Reclamos Edesur"><span class="mi nav-symbol" aria-hidden="true">support_agent</span><span class="nav-label">Reclamos Edesur</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Teatro Municipal"><span class="mi nav-symbol" aria-hidden="true">theater_comedy</span><span class="nav-label">Teatro Municipal</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item is-active" title="Deportes" aria-current="page"><span class="mi nav-symbol" aria-hidden="true">sports_soccer</span><span class="nav-label">Deportes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Puntos Jóvenes"><span class="mi nav-symbol" aria-hidden="true">location_on</span><span class="nav-label">Puntos Jóvenes</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Newsletter"><span class="mi nav-symbol" aria-hidden="true">mail</span><span class="nav-label">Newsletter</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Propuestas Ciudadanas"><span class="mi nav-symbol" aria-hidden="true">groups</span><span class="nav-label">Propuestas Ciudadanas</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Contra el Bullying"><span class="mi nav-symbol" aria-hidden="true">shield</span><span class="nav-label">Lomas Contra el Bullying</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div><div class="municipal-nav-item" title="Lomas Corre en Comunidad"><span class="mi nav-symbol" aria-hidden="true">directions_run</span><span class="nav-label">Lomas Corre en Comunidad</span><span class="mi nav-chevron" aria-hidden="true">expand_more</span></div></nav><div class="municipal-sidebar-footer"><div class="municipal-utility-links"><div class="municipal-nav-item" title="Settings"><span class="mi nav-symbol" aria-hidden="true">settings</span><span class="nav-label">Settings</span></div><div class="municipal-nav-item" title="Logout"><span class="mi nav-symbol" aria-hidden="true">logout</span><span class="nav-label">Logout</span></div></div><div class="municipal-account" title="EquipoWeb"><span class="avatar">EW</span><span class="municipal-account-info"><strong>EquipoWeb</strong><small>Usuario municipal</small></span><span class="mi municipal-account-menu" aria-hidden="true">more_vert</span></div></div></aside><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-controls="municipalSidebar" aria-expanded="true" aria-label="Contraer menú" title="Contraer menú"><span class="mi" aria-hidden="true">chevron_left</span></button><div class="main-column"><main class="workspace" id="app"></main></div></div><button id="sidebarScrim" class="sidebar-scrim" type="button" hidden aria-label="Cerrar menú"></button><div id="modal"></div>
 <script>
@@ -1091,7 +1100,7 @@ function loadCatalog(){
  return initial;
 }
 let catalogs=loadCatalog(),catalogTab='profesores',catalogEdit=-1,catalogDelete=-1;
-function persistCatalog(){try{localStorage.setItem(CATALOG_KEY,JSON.stringify(catalogs))}catch{alert('No se pudo guardar el catálogo en este navegador.')}}
+function persistCatalog(){return mlzQueueSave()}
 function catalogNames(type){return catalogs[type].map(x=>x.name)}
 function selectedCatalog(type,value){return [...new Set([...catalogNames(type),...(value&&!catalogNames(type).includes(value)?[value]:[])])]}
 function safeCatalogOption(type,value){return selectedCatalog(type,value)}
@@ -1137,11 +1146,7 @@ function load(){try{
  if(synced&&synced.schemaVersion===1&&Array.isArray(synced.activities)&&synced.activities.length)return structuredClone(synced.activities);
  let data=JSON.parse(localStorage.getItem(KEY));return Array.isArray(data)?data:structuredClone(INITIAL);
  }catch{return structuredClone(INITIAL)}}
-function save(){try{
- localStorage.setItem(SHARED_SPORTS_KEY,JSON.stringify({schemaVersion:1,updatedAt:new Date().toISOString(),activities:records}));
- localStorage.setItem(KEY,JSON.stringify(records));
- return true;
- }catch{alert('No se pudieron guardar los cambios en este navegador.');return false}}
+function save(){return mlzQueueSave()}
 function e(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ic(x){return '<span class="mi">'+x+'</span>'}
 function btn(label,action='none',style=''){return '<button type="button" class="btn '+style+'" data-action="'+action+'">'+label+'</button>'}
@@ -1153,7 +1158,96 @@ function sel(label,name,items,value){return '<div class="field"><label for="'+na
 window.addEventListener('storage',event=>{
  if(event.key===SHARED_SPORTS_KEY&&view!=='edit'&&!modalType){records=reconcileDemoRecords(load());render()}
 });
-function render(){closeDeportesSelect();app.innerHTML=view==='list'?listView():view==='edit'?editView():view==='registrations'?registrationsView():view==='enroll'?enrollmentPage():view==='settings'?settingsView():overviewView();bind();enhanceDeportesSelects(app);renderModal()}
+
+// Supabase: fuente compartida de prueba MLZ (solo catálogo ficticio).
+const MLZ_SUPABASE_URL='https://vupmiisamdlgrsjjzwrs.supabase.co';
+const MLZ_SUPABASE_KEY='sb_publishable_XVikkslIpV0SJlTqu3En2g__ZChZzuv';
+let mlzConnected=false,mlzRevision=0,mlzAccessToken='',mlzRefreshToken='',mlzAdmin=false,mlzAccount='',mlzBusy=false,mlzError='',mlzWriteQueue=Promise.resolve();
+function mlzHeaders(auth=false){
+ return {'apikey':MLZ_SUPABASE_KEY,'Authorization':'Bearer '+(auth&&mlzAccessToken?mlzAccessToken:MLZ_SUPABASE_KEY),'Content-Type':'application/json'};
+}
+async function mlzApi(endpoint,options={},auth=false){
+ const response=await fetch(MLZ_SUPABASE_URL+endpoint,{...options,headers:{...mlzHeaders(auth),...(options.headers||{})},cache:'no-store'});
+ if(!response.ok){let detail='';try{const info=await response.json();detail=info.message||info.msg||info.error_description||info.code||''}catch{}throw Error('Supabase HTTP '+response.status+(detail?' · '+detail:''))}
+ return response.status===204?null:response.json();
+}
+async function mlzLoadShared(){
+ const result=await mlzApi('/rest/v1/mlz_sports_state?id=eq.deportes&select=activities,catalogs,revision');
+ if(!Array.isArray(result)||!result[0]||!Array.isArray(result[0].activities))throw Error('No hay catálogo compartido disponible');
+ records=reconcileDemoRecords(result[0].activities);
+ if(result[0].catalogs&&typeof result[0].catalogs==='object')catalogs=result[0].catalogs;
+ mlzRevision=Number(result[0].revision)||1;
+ mlzConnected=true;mlzError='';
+}
+async function mlzCheckAdmin(){
+ if(!mlzAccessToken){mlzAdmin=false;return}
+ try{
+  const account=await mlzApi('/auth/v1/user',{},true);
+  mlzAccount=account.email||'';
+  const admin=await mlzApi('/rest/v1/mlz_sports_admins?user_id=eq.'+encodeURIComponent(account.id)+'&select=user_id',{},true);
+  mlzAdmin=Array.isArray(admin)&&admin.length>0;
+ }catch(error){mlzAdmin=false;mlzError=error.message}
+}
+async function mlzBootstrap(){
+ try{await mlzLoadShared()}catch(error){mlzConnected=false;mlzError='No se pudieron cargar los datos compartidos: '+error.message}
+ try{
+  const stored=JSON.parse(sessionStorage.getItem('mlz_sports_session')||'null');
+  if(stored?.access_token){mlzAccessToken=stored.access_token;mlzRefreshToken=stored.refresh_token||'';await mlzCheckAdmin()}
+ }catch{}
+ render();
+}
+async function mlzLogin(event){
+ event.preventDefault();
+ const data=new FormData(event.currentTarget);
+ const email=String(data.get('mlz_email')||'').trim(),password=String(data.get('mlz_password')||'');
+ const create=event.submitter?.value==='signup';
+ if(!email||!password)return;
+ mlzBusy=true;render();
+ try{
+  if(create){
+   await mlzApi('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password})});
+   alert('Cuenta solicitada. Revisá tu correo para confirmar el acceso y luego iniciá sesión. La cuenta también debe ser autorizada como administradora.');
+  }else{
+   const tokens=await mlzApi('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+   mlzAccessToken=tokens.access_token;
+   mlzRefreshToken=tokens.refresh_token||'';
+   sessionStorage.setItem('mlz_sports_session',JSON.stringify(tokens));
+   await mlzCheckAdmin();
+   if(!mlzAdmin)alert('Sesión iniciada, pero esta cuenta todavía no tiene permisos de edición. Solicitá la autorización del administrador del proyecto.');
+  }
+  mlzError='';
+ }catch(error){mlzError=error.message;alert('No se pudo ingresar: '+error.message)}
+ mlzBusy=false;render();
+}
+function mlzSignOut(){mlzAccessToken='';mlzRefreshToken='';mlzAdmin=false;mlzAccount='';sessionStorage.removeItem('mlz_sports_session');render()}
+function mlzRequireEditor(){
+ if(mlzConnected&&mlzAdmin&&mlzAccessToken)return true;
+ alert('Para modificar datos compartidos iniciá sesión con una cuenta administradora de MLZ Deportes.');
+ document.querySelector('#mlz-access-panel')?.scrollIntoView({behavior:'smooth',block:'center'});
+ return false;
+}
+function mlzQueueSave(){
+ if(!mlzRequireEditor())return false;
+ const snapshot={activities:structuredClone(records),catalogs:structuredClone(catalogs)};
+ mlzWriteQueue=mlzWriteQueue.then(async()=>{
+  const revision=mlzRevision;
+  try{
+   const updated=await mlzApi('/rest/v1/mlz_sports_state?id=eq.deportes&revision=eq.'+revision+'&select=revision',
+    {method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({...snapshot,revision:revision+1,updated_at:new Date().toISOString()})},true);
+   if(!Array.isArray(updated)||updated.length!==1)throw Error('Otra sesión modificó los datos. Recargá la página antes de guardar nuevamente.');
+   mlzRevision=Number(updated[0].revision);
+   mlzError='';
+  }catch(error){mlzError='No se guardaron los cambios: '+error.message;alert(mlzError);await mlzLoadShared().catch(()=>{});render()}
+ }).catch(error=>{mlzError=error.message;console.error('MLZ sync',error)});
+ return true;
+}
+function mlzAccessPanel(){
+ const status=mlzConnected?'Datos conectados a Supabase · Revisión '+mlzRevision:'Sin conexión a Supabase · No se pueden guardar cambios';
+ if(mlzAdmin)return '<div class="mlz-access-panel" id="mlz-access-panel"><span>'+ic('cloud_done')+' '+e(status)+' · '+e(mlzAccount)+'</span><button type="button" class="btn" data-action="mlz-logout">Cerrar sesión</button></div>';
+ return '<div class="mlz-access-panel" id="mlz-access-panel"><div><strong>'+e(status)+'</strong><p>Para editar, ingresá con una cuenta autorizada. La agenda pública puede consultarse sin iniciar sesión.</p>'+(mlzError?'<p class="mlz-access-error">'+e(mlzError)+'</p>':'')+'</div><form id="mlz-login-form" class="mlz-login-form"><input name="mlz_email" type="email" placeholder="Correo de administrador" aria-label="Correo de administrador" required autocomplete="username"><input name="mlz_password" type="password" placeholder="Contraseña" aria-label="Contraseña" required autocomplete="current-password" minlength="6"><button type="submit" class="btn primary" name="intent" value="login">Ingresar</button><button type="submit" class="btn" name="intent" value="signup">Crear cuenta</button></form>'+(mlzAccount?'<small>Sesión: '+e(mlzAccount)+' · Sin autorización para editar <button type="button" class="btn" data-action="mlz-logout">Salir</button></small>':'')+'</div>';
+}
+
+function render(){closeDeportesSelect();app.innerHTML=mlzAccessPanel()+view==='list'?listView():view==='edit'?editView():view==='registrations'?registrationsView():view==='enroll'?enrollmentPage():view==='settings'?settingsView():overviewView();bind();enhanceDeportesSelects(app);renderModal()}
 function sortActivityRecords(items){
  if(!activitySort.key)return items;
  const field=activitySort.key;
@@ -1604,6 +1698,7 @@ function bindCommissionCheckboxes(table){
  }));
 }
 function bind(){
+ app.querySelector('#mlz-login-form')?.addEventListener('submit',mlzLogin);
  bindActivityTableCheckboxes(app.querySelector('.activity-admin-table:not(.registration-admin-table)'));
  bindRegistrationCheckboxes(app.querySelector('.registration-admin-table'));
  bindCatalogCheckboxes(app.querySelector('.catalog-admin-table'));
@@ -1615,7 +1710,9 @@ let q=document.getElementById('query');if(q)q.addEventListener('input',x=>{filte
 app.querySelectorAll('[name="en-option"]').forEach(input=>input.addEventListener('change',()=>{enrollCommission=input.value;render()}));
 const enrollmentForm=document.getElementById('en-form');if(enrollmentForm)enrollmentForm.addEventListener('submit',ev=>{ev.preventDefault();if(!enrollmentForm.reportValidity())return;const birth=enrollmentForm.querySelector('[name="nacimiento"]').value;if(new Date(birth)>new Date()){alert('La fecha de nacimiento no puede ser futura.');return}enrollmentForm.reset();enrollDone=true;render()});
 if(view==='edit'){const form=document.getElementById('activity-form');form?.addEventListener('input',refreshActivityCatalogPreview);form?.addEventListener('change',refreshActivityCatalogPreview);toggleAgeControls();const unit=document.getElementById('ageUnit');if(unit){unit.dataset.lastUnit=unit.value;unit.addEventListener('change',handleAgeUnitChange)}document.getElementById('ageMode')?.addEventListener('change',()=>{toggleAgeControls();refreshActivityCatalogPreview()});}const photoInput=document.getElementById('photoInput');if(photoInput)photoInput.addEventListener('change',ev=>uploadPhotos(ev.target.files));for(const id of (view==='list'?['venue','state']:[])){let el=document.getElementById(id);if(el)el.addEventListener('change',()=>{if(id==='venue')filterVenue=el.value;else filterState=el.value;page=0;render()})}}
-function action(type,id,index){if(type==='sort-commissions'){
+function action(type,id,index){if(type==='mlz-logout'){mlzSignOut();return}
+ if(['edit','new','duplicate','toggle','delete','catalog-new','catalog-edit','catalog-delete','photo-upload','photo-cover','photo-remove','save-activity','save-catalog','confirm-delete','confirm-catalog-delete','add-commission','edit-commission','dup-commission','remove-commission'].includes(type)&&!mlzRequireEditor())return;
+ if(type==='sort-commissions'){
  commissionSort=commissionSort.key===id?(commissionSort.direction==='asc'?{key:id,direction:'desc'}:{key:'',direction:'asc'}):{key:id,direction:'asc'};
  const container=app.querySelector('.commission-admin-table');
  const current=container?.querySelector('table');
@@ -1862,7 +1959,8 @@ if(modalType==='catalog-delete'){
  footer=btn('Cancelar','close')+btn('Eliminar','confirm-catalog-delete','danger');
 }
 modal.innerHTML='<div class="backdrop" role="presentation"><div class="dialog '+wide+'" role="dialog" aria-modal="true" aria-labelledby="dialog-heading"><div class="dialog-title"><h2 id="dialog-heading">'+title+'</h2><button class="iconbtn" data-modal="close" aria-label="Cerrar">'+ic('close')+'</button></div><div class="dialog-content">'+body+'</div><div class="dialog-footer">'+footer+'</div></div></div>';modal.querySelectorAll('[data-action],[data-modal]').forEach(x=>x.addEventListener('click',()=>modalAction(x.dataset.action||x.dataset.modal)));let b=modal.querySelector('.backdrop');b.addEventListener('click',ev=>{if(ev.target===b)modalAction('close')});enhanceDeportesSelects(modal);bindScheduleEditor();modal.querySelector('input')?.focus()}
-function modalAction(t){if(t==='close'){modalType=null;renderModal();return}if(t==='confirm-delete'){records.splice(modalIndex,1);save();modalType=null;render();return}if(t==='save-catalog'){
+function modalAction(t){if(['confirm-delete','save-catalog','confirm-catalog-delete','save-commission'].includes(t)&&!mlzRequireEditor())return;
+ if(t==='close'){modalType=null;renderModal();return}if(t==='confirm-delete'){records.splice(modalIndex,1);save();modalType=null;render();return}if(t==='save-catalog'){
  const form=document.getElementById('catalog-form');if(!form.reportValidity())return;
  const data=new FormData(form),name=String(data.get('catalogName')||'').trim();
  if(!name)return;
@@ -1967,5 +2065,6 @@ document.addEventListener('change',event=>{
 });
 
 render();
+mlzBootstrap();
 loadDemoRegistrations();
 </script></body></html>
