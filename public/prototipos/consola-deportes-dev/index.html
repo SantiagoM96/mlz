@@ -1164,7 +1164,7 @@ const MLZ_SUPABASE_URL='https://vupmiisamdlgrsjjzwrs.supabase.co';
 const MLZ_SUPABASE_KEY='sb_publishable_XVikkslIpV0SJlTqu3En2g__ZChZzuv';
 let mlzConnected=false,mlzRevision=0,mlzAccessToken='',mlzRefreshToken='',mlzAdmin=false,mlzAccount='',mlzBusy=false,mlzError='',mlzWriteQueue=Promise.resolve();
 function mlzHeaders(auth=false){
- return {'apikey':MLZ_SUPABASE_KEY,'Authorization':'Bearer '+(auth&&mlzAccessToken?mlzAccessToken:MLZ_SUPABASE_KEY),'Content-Type':'application/json'};
+ return {'apikey':MLZ_SUPABASE_KEY,...(auth&&mlzAccessToken?{'Authorization':'Bearer '+mlzAccessToken}:{}),'Content-Type':'application/json'};
 }
 async function mlzApi(endpoint,options={},auth=false){
  const response=await fetch(MLZ_SUPABASE_URL+endpoint,{...options,headers:{...mlzHeaders(auth),...(options.headers||{})},cache:'no-store'});
@@ -1247,7 +1247,7 @@ function mlzAccessPanel(){
  return '<div class="mlz-access-panel" id="mlz-access-panel"><div><strong>'+e(status)+'</strong><p>Para editar, ingresá con una cuenta autorizada. La agenda pública puede consultarse sin iniciar sesión.</p>'+(mlzError?'<p class="mlz-access-error">'+e(mlzError)+'</p>':'')+'</div><form id="mlz-login-form" class="mlz-login-form"><input name="mlz_email" type="email" placeholder="Correo de administrador" aria-label="Correo de administrador" required autocomplete="username"><input name="mlz_password" type="password" placeholder="Contraseña" aria-label="Contraseña" required autocomplete="current-password" minlength="6"><button type="submit" class="btn primary" name="intent" value="login">Ingresar</button><button type="submit" class="btn" name="intent" value="signup">Crear cuenta</button></form>'+(mlzAccount?'<small>Sesión: '+e(mlzAccount)+' · Sin autorización para editar <button type="button" class="btn" data-action="mlz-logout">Salir</button></small>':'')+'</div>';
 }
 
-function render(){closeDeportesSelect();app.innerHTML=mlzAccessPanel()+view==='list'?listView():view==='edit'?editView():view==='registrations'?registrationsView():view==='enroll'?enrollmentPage():view==='settings'?settingsView():overviewView();bind();enhanceDeportesSelects(app);renderModal()}
+function render(){closeDeportesSelect();app.innerHTML=mlzAccessPanel()+(view==='list'?listView():view==='edit'?editView():view==='registrations'?registrationsView():view==='enroll'?enrollmentPage():view==='settings'?settingsView():overviewView());bind();enhanceDeportesSelects(app);renderModal()}
 function sortActivityRecords(items){
  if(!activitySort.key)return items;
  const field=activitySort.key;
