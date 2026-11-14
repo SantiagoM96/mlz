@@ -4551,7 +4551,11 @@ window.addEventListener('hashchange',()=>{renderRoute();window.scrollTo(0,0)});
 renderRoute();
 loadSharedActivities();
 window.addEventListener('pageshow',()=>loadSharedActivities());
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadSharedActivities()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden && !location.hash.startsWith('#03_formulario_inscripcion.html'))loadSharedActivities()});
+// Se consultan cambios de la consola en sesiones abiertas, sin reiniciar formularios de inscripción.
+window.setInterval(()=>{
+ if(!document.hidden && !location.hash.startsWith('#03_formulario_inscripcion.html'))loadSharedActivities();
+},15000);
 
 /* Material Symbols de Google; SVG Material Icons como fallback sin red. */
 if(document.fonts && document.fonts.load){
