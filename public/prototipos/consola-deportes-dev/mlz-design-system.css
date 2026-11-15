@@ -253,3 +253,111 @@ body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
 .dialog-footer .btn:has(> .mi:first-child){padding-left:18px}
 .workspace .sports-form-footer .btn:has(> .mi:last-child),
 .dialog-footer .btn:has(> .mi:last-child){padding-right:18px}
+
+
+/* Checkboxes de MODALIDAD, INTENSIDAD, DISCAPACIDAD y PRUEBA PREVIA
+   no son tarjetas de selección: mostrar SOLO el control y su etiqueta.
+   Se mantiene el <input> original, su name/value/checked y listeners. */
+.shell .workspace .activity-modality-options{
+ display:flex;
+ align-items:flex-start;
+ flex-wrap:wrap;
+ gap:var(--mlz-space-12) var(--mlz-space-24);
+}
+.shell .workspace .activity-modality-options label,
+.shell .workspace .sports-boolean-row .activity-toggle-card,
+.shell .workspace .activity-modality-options label:has(input:checked),
+.shell .workspace .sports-boolean-row .activity-toggle-card:has(input:checked){
+ display:inline-flex;
+ align-items:center;
+ justify-content:flex-start;
+ width:auto;
+ min-width:0;
+ min-height:40px;
+ flex:0 1 auto;
+ gap:var(--mlz-space-10);
+ padding:var(--mlz-space-4) 0;
+ margin:0;
+ border:0!important;
+ border-radius:0;
+ background:transparent!important;
+ box-shadow:none!important;
+ outline:0;
+ color:var(--mlz-text);
+ font-size:16px;
+ line-height:24px;
+ font-weight:400;
+ cursor:pointer;
+}
+.shell .workspace .sports-boolean-row{gap:var(--mlz-space-12) var(--mlz-space-24);padding-top:var(--mlz-space-16)}
+.shell .workspace .sports-boolean-row .activity-toggle-card{flex:0 1 auto}
+.shell .workspace .activity-modality-options label>span:not(.outlined-check),
+.shell .workspace .sports-boolean-row .activity-toggle-text{flex:initial;color:var(--mlz-text);font-size:16px;line-height:24px}
+.shell .workspace .activity-modality-options label>.outlined-check,
+.shell .workspace .sports-boolean-row .activity-toggle-card>.outlined-check{
+ order:-1;
+ margin:0;
+ width:24px;height:24px;
+ flex:0 0 24px;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ color:var(--mlz-primary-600)!important;
+ font-size:24px;
+ line-height:1;
+}
+.shell .workspace .activity-modality-options label:has(input:checked)>.outlined-check,
+.shell .workspace .sports-boolean-row .activity-toggle-card:has(input:checked)>.outlined-check{
+ color:var(--mlz-info-500)!important;
+}
+.shell .workspace .activity-modality-options label:hover,
+.shell .workspace .activity-modality-options label:has(input:checked):hover,
+.shell .workspace .sports-boolean-row .activity-toggle-card:hover,
+.shell .workspace .sports-boolean-row .activity-toggle-card:has(input:checked):hover{
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+}
+.shell .workspace .activity-modality-options label:focus-within>.outlined-check,
+.shell .workspace .sports-boolean-row .activity-toggle-card:focus-within>.outlined-check{
+ border-radius:var(--mlz-radius-control);
+ outline:2px solid var(--mlz-info-500);
+ outline-offset:2px;
+}
+.shell .workspace .activity-toggle-card .activity-leading-icon{
+ order:0;
+ font-size:22px;
+ color:var(--mlz-primary-600);
+ margin:0;
+}
+.shell .workspace .sports-boolean-row .activity-toggle-text{order:1}
+.shell .workspace .sports-boolean-row .activity-toggle-card>.outlined-check{order:2;margin-left:0}
+/* Mantener el icono del checkbox a la IZQUIERDA de cada opción de atributo,
+   incluso cuando el texto incluye un ícono de accesibilidad. */
+.shell .workspace .sports-boolean-row .activity-toggle-card>.outlined-check{order:-2}
+.shell .workspace .sports-boolean-row .activity-toggle-card>.activity-leading-icon{order:-1}
+/* Foco real sin caja alrededor de toda la opción. */
+.shell .workspace .activity-modality-options label:focus-within,
+.shell .workspace .sports-boolean-row .activity-toggle-card:focus-within{outline:none!important;box-shadow:none!important}
+/* Opciones de radio de inscripciones: sin contenedor coloreado por selección. */
+.workspace .en-radio-row{
+ background:transparent;
+ box-shadow:none;
+ border-left:0;
+ border-right:0;
+ border-top:0;
+ gap:var(--mlz-space-12);
+}
+.workspace .en-radio-row.chosen,
+.workspace .en-radio-row:hover{background:transparent;box-shadow:none}
+.workspace .en-radio-row input[type=radio]{accent-color:var(--mlz-info-500);width:20px;height:20px}
+@media(max-width:600px){
+ .shell .workspace .activity-modality-options{display:flex;flex-direction:column;gap:var(--mlz-space-8)}
+ .shell .workspace .activity-modality-options label{width:100%}
+ .shell .workspace .sports-boolean-row{flex-direction:column;align-items:flex-start}
+ .shell .workspace .sports-boolean-row .activity-toggle-card{width:100%;flex:0 1 auto}
+}
+/* Dropdowns no desplazan el documento; la lista interna es el único viewport.
+   El scroll de la página cierra el menú mediante JS. */
+.deportes-menu{overscroll-behavior:contain}
+.deportes-sheet-list{overscroll-behavior:contain}
