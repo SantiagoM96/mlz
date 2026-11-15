@@ -232,3 +232,24 @@ body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
  .workspace .panelbody{padding:var(--mlz-space-16)}
  .workspace .panelhead{padding:var(--mlz-space-16)}
 }
+
+
+/* El prototipo tenía algunos encabezados en Inter. Se unifican en Geometria
+   sin modificar el rol visual de cada bloque ni el tamaño institucional. */
+.workspace .console-breadcrumb,
+.workspace .console-page-header h1,
+.workspace .console-page-header .sub,
+.sports-form-aside .sports-preview-sticky>h2,
+.sports-form-aside .sports-preview-sticky>.sub{
+ font-family:"Geometria","Century Gothic",Arial,sans-serif;
+}
+.workspace .console-page-header h1,
+.sports-form-aside .sports-preview-sticky>h2{font-weight:700}
+.workspace .console-breadcrumb{font-size:16px;line-height:24px}
+.workspace .console-page-header .sub,
+.sports-form-aside .sports-preview-sticky>.sub{font-size:16px;line-height:24px}
+/* Reglas de compensación óptica también en botones del footer con iconos. */
+.workspace .sports-form-footer .btn:has(> .mi:first-child),
+.dialog-footer .btn:has(> .mi:first-child){padding-left:18px}
+.workspace .sports-form-footer .btn:has(> .mi:last-child),
+.dialog-footer .btn:has(> .mi:last-child){padding-right:18px}
