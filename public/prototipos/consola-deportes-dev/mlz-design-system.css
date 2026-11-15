@@ -407,3 +407,49 @@ body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
  outline:2px solid var(--mlz-info-500)!important;
  outline-offset:2px!important;
 }
+
+/* Radio y checkbox sin tarjetas: misma familia Material Symbols Outlined que
+   el formulario público de Deportes. Control real conservado para accesibilidad. */
+.workspace .schedule-day input[type=checkbox],
+.workspace .en-radio-row input[type=radio],
+.workspace .en-choices input[type=radio]{
+ position:relative;
+ appearance:none;-webkit-appearance:none;
+ display:inline-grid;place-items:center;
+ width:24px;height:24px;
+ min-width:24px;min-height:24px;
+ flex:0 0 24px;
+ margin:0;padding:0;
+ background:transparent;
+ border:0;
+ border-radius:0;
+ cursor:pointer;
+ color:var(--mlz-primary-600);
+}
+.workspace .schedule-day input[type=checkbox]::after,
+.workspace .en-radio-row input[type=radio]::after,
+.workspace .en-choices input[type=radio]::after{
+ display:block;
+ width:24px;height:24px;
+ font-family:"Material Symbols Outlined";
+ font-size:24px;
+ line-height:24px;
+ font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+ color:inherit;
+}
+.workspace .schedule-day input[type=checkbox]::after{content:"check_box_outline_blank"}
+.workspace .schedule-day input[type=checkbox]:checked::after{content:"check_box"}
+.workspace .en-radio-row input[type=radio]::after,
+.workspace .en-choices input[type=radio]::after{content:"radio_button_unchecked"}
+.workspace .en-radio-row input[type=radio]:checked::after,
+.workspace .en-choices input[type=radio]:checked::after{content:"radio_button_checked"}
+.workspace .schedule-day input[type=checkbox]:checked,
+.workspace .en-radio-row input[type=radio]:checked,
+.workspace .en-choices input[type=radio]:checked{color:var(--mlz-info-500)}
+.workspace .schedule-day input[type=checkbox]:focus-visible,
+.workspace .en-radio-row input[type=radio]:focus-visible,
+.workspace .en-choices input[type=radio]:focus-visible{
+ outline:2px solid var(--mlz-info-500)!important;
+ outline-offset:2px!important;
+ border-radius:var(--mlz-radius-control);
+}
