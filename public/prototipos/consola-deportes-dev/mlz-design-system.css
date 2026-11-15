@@ -1,0 +1,234 @@
+/* MLZ UI Kit · Deportes — capa productiva compartida.
+   Fuente: UI Kit Andy (tipografía, primario/Info, alturas, bordes, espaciados,
+   iconografía Material Symbols). No cambia navegación ni lógica JavaScript. */
+@font-face{
+ font-family:"Geometria";font-style:normal;font-weight:400;font-display:swap;
+ src:url("https://raw.githubusercontent.com/SantiagoM96/mlz/main/src/assets/fonts/Geometria-Regular.woff2") format("woff2");
+}
+@font-face{
+ font-family:"Geometria";font-style:normal;font-weight:500;font-display:swap;
+ src:url("https://raw.githubusercontent.com/SantiagoM96/mlz/main/src/assets/fonts/Geometria-Medium.ttf") format("truetype");
+}
+@font-face{
+ font-family:"Geometria";font-style:normal;font-weight:700;font-display:swap;
+ src:url("https://raw.githubusercontent.com/SantiagoM96/mlz/main/src/assets/fonts/Geometria-Bold.woff2") format("woff2");
+}
+:root{
+ --mlz-primary-600:#236999;
+ --mlz-primary-700:#19577f;
+ --mlz-info-500:#006eff;
+ --mlz-primary-100:#e5f0f9;
+ --mlz-text:#3d3d3d;
+ --mlz-stroke:#5ba8d5;
+ --mlz-muted:#71808c;
+ --mlz-surface:#f3f7fc;
+ --mlz-border:#dce7ef;
+ --mlz-danger:#ef284c;
+ --mlz-success:#1d9c48;
+ --mlz-warning:#f9a825;
+ --mlz-space-2:2px;--mlz-space-4:4px;--mlz-space-6:6px;
+ --mlz-space-8:8px;--mlz-space-10:10px;--mlz-space-12:12px;
+ --mlz-space-14:14px;--mlz-space-16:16px;--mlz-space-24:24px;
+ --mlz-space-32:32px;--mlz-space-40:40px;--mlz-space-48:48px;
+ --mlz-space-56:56px;--mlz-space-64:64px;
+ --mlz-radius-control:4px;--mlz-radius-chip:6px;
+ --mlz-radius-card:8px;--mlz-radius-modal:12px;
+ --mlz-radius-sheet:16px;
+}
+body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
+ font-family:"Geometria","Century Gothic",Arial,sans-serif;
+ color:var(--mlz-text);
+}
+:where(button,input,select,textarea){font-family:inherit}
+/* Controles en formularios, filtros, edición de actividad y programación. */
+.workspace .field label,
+.dialog .field label{font-size:16px;line-height:24px;font-weight:700;color:var(--mlz-primary-600)}
+.workspace .field{gap:var(--mlz-space-8)}
+.workspace .field :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,select),
+.dialog .field :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,select),
+.workspace .deportes-select-trigger,.dialog .deportes-select-trigger{
+ border:1px solid var(--mlz-stroke);
+ border-radius:var(--mlz-radius-control);
+ min-height:48px;
+ background:#fff;
+ color:var(--mlz-text);
+ font-size:16px;
+ line-height:24px;
+ box-shadow:none;
+ transition:border-color .15s,box-shadow .15s,background-color .15s;
+}
+.workspace .field :is(input,textarea)::placeholder,
+.dialog .field :is(input,textarea)::placeholder{color:#8baac3;opacity:1}
+.workspace .field :is(input:not([type=checkbox]),textarea,select):hover:not(:disabled):not(:focus),
+.dialog .field :is(input:not([type=checkbox]),textarea,select):hover:not(:disabled):not(:focus),
+.deportes-select-trigger:hover:not(:disabled){border-color:var(--mlz-primary-600)}
+.workspace .field :is(input:not([type=checkbox]),textarea,select):focus,
+.dialog .field :is(input:not([type=checkbox]),textarea,select):focus,
+.workspace .field :is(input:not([type=checkbox]),textarea,select):focus-visible,
+.dialog .field :is(input:not([type=checkbox]),textarea,select):focus-visible,
+.deportes-select-trigger:focus-visible,.deportes-select-trigger[aria-expanded=true]{
+ outline:0!important;
+ border-color:var(--mlz-info-500)!important;
+ box-shadow:inset 0 0 0 1px var(--mlz-info-500)!important;
+}
+.workspace .field :is(input,textarea,select)[aria-invalid=true],
+.dialog .field :is(input,textarea,select)[aria-invalid=true]{
+ border-color:var(--mlz-danger)!important;box-shadow:inset 0 0 0 1px var(--mlz-danger)!important;
+}
+.workspace .field :is(input,textarea,select):disabled,
+.dialog .field :is(input,textarea,select):disabled,
+.deportes-select-trigger:disabled{
+ border-color:#dce4ea;background:#f3f7fc;color:var(--mlz-muted);cursor:not-allowed;
+}
+.workspace .field textarea,.dialog .field textarea,
+.workspace .sports-form-main .sports-description-field textarea{
+ min-height:112px;height:auto;font-size:16px;line-height:24px;padding:var(--mlz-space-12) var(--mlz-space-14);
+}
+.workspace :is(input[type=date],input[type=time])::-webkit-calendar-picker-indicator,
+.dialog :is(input[type=date],input[type=time])::-webkit-calendar-picker-indicator{
+ filter:invert(31%) sepia(45%) saturate(950%) hue-rotate(166deg);
+ cursor:pointer;
+}
+/* Check y radio: contorno Primario600 en reposo; selección Info500. */
+.workspace :is(input[type=checkbox],input[type=radio]),
+.dialog :is(input[type=checkbox],input[type=radio]){
+ width:20px;height:20px;flex:none;accent-color:var(--mlz-info-500);cursor:pointer;
+}
+.workspace :is(input[type=checkbox],input[type=radio]):focus-visible,
+.dialog :is(input[type=checkbox],input[type=radio]):focus-visible{
+ outline:2px solid var(--mlz-info-500);outline-offset:2px;
+}
+.workspace .activity-checkbox-icon,
+.workspace .activity-modality-options label:not(:has(input:checked)) .mi,
+.workspace .sports-boolean-row .activity-toggle-card:not(:has(input:checked)) .mi{
+ color:var(--mlz-primary-600);
+}
+.workspace :is(.activity-modality-options label:has(input:checked),
+ .sports-boolean-row .activity-toggle-card:has(input:checked)) .mi{
+ color:var(--mlz-info-500);
+}
+/* Botones: Large 48 / Medium 40 / Small 32. Acciones reales Primario600. */
+.workspace .btn,.dialog .btn,.deportes-sheet .btn{
+ display:inline-flex;align-items:center;justify-content:center;gap:var(--mlz-space-8);
+ min-height:48px;
+ padding:0 var(--mlz-space-24);
+ border:1px solid var(--mlz-stroke);border-radius:var(--mlz-radius-control);
+ background:#fff;color:var(--mlz-primary-600);
+ font-size:16px;line-height:24px;font-weight:700;
+ transition:background-color .15s,border-color .15s,color .15s;
+}
+.workspace .btn.primary,.dialog .btn.primary,.deportes-sheet .btn.primary{
+ color:#fff;background:var(--mlz-primary-600);border-color:var(--mlz-primary-600);
+}
+.workspace .btn.primary:hover:not(:disabled),.dialog .btn.primary:hover:not(:disabled),.deportes-sheet .btn.primary:hover:not(:disabled){
+ color:#fff;background:var(--mlz-primary-700);border-color:var(--mlz-primary-700);filter:none;
+}
+.workspace .btn:not(.primary):not(.danger):hover:not(:disabled),
+.dialog .btn:not(.primary):not(.danger):hover:not(:disabled),
+.deportes-sheet .btn:not(.primary):not(.danger):hover:not(:disabled){
+ background:var(--mlz-surface);filter:none;
+}
+.workspace .btn.ghost,.dialog .btn.ghost{border-color:transparent;background:transparent;color:var(--mlz-primary-600)}
+.workspace .btn.ghost:hover:not(:disabled),.dialog .btn.ghost:hover:not(:disabled){background:var(--mlz-surface)}
+.workspace .btn.danger,.dialog .btn.danger{border-color:#ef284c;color:#c42d4b;background:#fff}
+.workspace .btn.danger:hover:not(:disabled),.dialog .btn.danger:hover:not(:disabled){background:#fff0f0}
+.workspace .btn:focus-visible,.dialog .btn:focus-visible,.deportes-sheet .btn:focus-visible,
+.workspace .iconbtn:focus-visible,.dialog .iconbtn:focus-visible{
+ outline:2px solid var(--mlz-info-500);outline-offset:2px;
+}
+.workspace .btn:disabled,.dialog .btn:disabled,.deportes-sheet .btn:disabled{opacity:.5;cursor:not-allowed}
+.workspace .btn:has(> .mi:first-child),.dialog .btn:has(> .mi:first-child),
+.deportes-sheet .btn:has(> .mi:first-child){padding-left:18px}
+.workspace .btn:has(> .mi:last-child),.dialog .btn:has(> .mi:last-child),
+.deportes-sheet .btn:has(> .mi:last-child){padding-right:18px}
+.workspace .iconbtn,.dialog .iconbtn{
+ display:inline-grid;place-items:center;
+ width:40px;height:40px;min-width:40px;min-height:40px;
+ padding:0;border-radius:var(--mlz-radius-control);
+ color:var(--mlz-primary-600);
+}
+.workspace .iconbtn:hover:not(:disabled),.dialog .iconbtn:hover:not(:disabled){
+ background:var(--mlz-primary-100);filter:none;
+}
+.workspace .btn .mi,.dialog .btn .mi,.deportes-sheet .btn .mi{color:inherit;font-size:20px}
+.workspace :is(.btn,.iconbtn):active:not(:disabled),.dialog :is(.btn,.iconbtn):active:not(:disabled){
+ transform:none;
+}
+/* Paneles, bloques, popovers y tarjetas. Mantener layout funcional. */
+.workspace .panel,.workspace .stat,.workspace .photo-card,.workspace .preview,
+.workspace .commission-admin-table,.workspace .activity-admin-table{
+ border-radius:var(--mlz-radius-card);
+}
+.workspace .panel{border-color:var(--mlz-border)}
+.workspace .panelhead{gap:var(--mlz-space-16);padding:var(--mlz-space-16) var(--mlz-space-24)}
+.workspace .panelbody{padding:var(--mlz-space-24)}
+.workspace .sports-form-section{margin-bottom:var(--mlz-space-32)}
+.workspace .sports-form-section .grid2,
+.workspace .sports-form-section .grid3,
+.workspace .sports-full-field{gap:var(--mlz-space-16)}
+.workspace .sports-section-heading{gap:var(--mlz-space-16);margin-bottom:var(--mlz-space-16)}
+.workspace .note{border-radius:var(--mlz-radius-card);background:#e5f0ff;color:#0058cc;padding:var(--mlz-space-12) var(--mlz-space-16)}
+.workspace :is(.tag,.pill,.meta-tag,.activity-status-chip){
+ border-radius:var(--mlz-radius-chip);
+}
+.workspace .activity-status-chip{padding:var(--mlz-space-4) var(--mlz-space-8)}
+.workspace .photo-drop{border-color:var(--mlz-stroke);border-radius:var(--mlz-radius-card)}
+.workspace .photo-card .photo-actions .iconbtn{border-radius:var(--mlz-radius-control)}
+.dialog{border-radius:var(--mlz-radius-modal)}
+.dialog-title{padding:var(--mlz-space-16) var(--mlz-space-24);gap:var(--mlz-space-16)}
+.dialog-content{padding:var(--mlz-space-24)}
+.dialog-footer{padding:var(--mlz-space-16) var(--mlz-space-24);gap:var(--mlz-space-8)}
+/* Dropdown custom: mismo menú 8px, opciones 4px, 44px mínimo.
+   El scroll funciona con trackpad, rueda, teclado y táctil, sin barra visible.
+   No afectar scroll global, tablas ni dialog-content. */
+.deportes-menu{
+ box-sizing:border-box;
+ border:1px solid #c7d8e7;border-radius:var(--mlz-radius-card);
+ padding:var(--mlz-space-6);
+ scrollbar-width:none;-ms-overflow-style:none;
+}
+.deportes-menu-option{
+ box-sizing:border-box;
+ min-height:44px;width:100%;
+ padding:var(--mlz-space-8) var(--mlz-space-12);
+ gap:var(--mlz-space-8);
+ border-radius:var(--mlz-radius-control);
+ background:#fff;color:var(--mlz-text);
+ font:400 16px/24px Geometria,"Century Gothic",Arial,sans-serif;
+}
+.deportes-menu-option:hover:not([aria-selected=true]){background:#eaf4ff;color:var(--mlz-primary-600)}
+.deportes-menu-option[aria-selected=true],
+.deportes-menu-option[aria-selected=true]:hover{
+ color:#fff;background:var(--mlz-info-500);font-weight:600;
+}
+.deportes-menu-option .mi{color:var(--mlz-primary-600);font-size:20px}
+.deportes-menu-option[aria-selected=true] .mi{color:#fff}
+.deportes-menu-option:focus-visible{outline:2px solid var(--mlz-info-500);outline-offset:-2px}
+.deportes-sheet{border-radius:var(--mlz-radius-sheet) var(--mlz-radius-sheet) 0 0}
+.deportes-sheet-list{
+ box-sizing:border-box;
+ padding:var(--mlz-space-8) var(--mlz-space-12);
+ scrollbar-width:none;-ms-overflow-style:none;
+}
+.deportes-sheet-list .deportes-menu-option{width:100%}
+.deportes-menu::-webkit-scrollbar,.deportes-sheet-list::-webkit-scrollbar{
+ display:none;width:0;height:0;
+}
+/* Desplegable cerrado: icono azul, padding óptico y misma altura. */
+.workspace .deportes-select-trigger,.dialog .deportes-select-trigger{
+ height:48px;min-height:48px;
+ padding-inline:var(--mlz-space-14);
+ color:var(--mlz-text);
+}
+.deportes-select-trigger>.mi{color:var(--mlz-primary-600)!important;font-size:24px}
+.deportes-select-trigger:focus-visible>.mi,.deportes-select-trigger[aria-expanded=true]>.mi{color:var(--mlz-info-500)!important}
+/* No usar las píldoras Info500 de la documentación en esta UI productiva. */
+@media(max-width:680px){
+ .deportes-sheet-actions{gap:var(--mlz-space-8);padding:var(--mlz-space-12) var(--mlz-space-16)}
+ .deportes-sheet-actions .btn{min-height:40px;height:40px;padding-inline:var(--mlz-space-16);font-size:16px}
+ .deportes-sheet-actions .btn:has(> .mi:first-child){padding-left:12px}
+ .deportes-sheet-actions .btn:has(> .mi:last-child){padding-right:12px}
+ .dialog{border-radius:var(--mlz-radius-sheet) var(--mlz-radius-sheet) 0 0}
+ .workspace .panelbody{padding:var(--mlz-space-16)}
+ .workspace .panelhead{padding:var(--mlz-space-16)}
+}
