@@ -361,3 +361,34 @@ body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
    El scroll de la página cierra el menú mediante JS. */
 .deportes-menu{overscroll-behavior:contain}
 .deportes-sheet-list{overscroll-behavior:contain}
+
+
+/* Días recurrentes: también son checkboxes, no chips con cajas externas. */
+.shell .workspace .schedule-days{gap:var(--mlz-space-8) var(--mlz-space-16)}
+.shell .workspace .schedule-day,
+.shell .workspace .schedule-day:has(input:checked),
+.shell .workspace .schedule-day:hover,
+.shell .workspace .schedule-day:focus-within{
+ display:inline-flex;align-items:center;gap:var(--mlz-space-8);
+ min-height:40px;
+ padding:var(--mlz-space-4) 0;
+ border:0!important;
+ border-radius:0;
+ background:transparent!important;
+ box-shadow:none!important;
+ outline:none!important;
+ color:var(--mlz-text);
+ font-size:15px;line-height:24px;
+ font-weight:400;
+}
+.shell .workspace .schedule-day input[type=checkbox]{
+ width:20px;height:20px;flex:0 0 20px;margin:0;
+ accent-color:var(--mlz-info-500);
+}
+.shell .workspace .schedule-day input[type=checkbox]:focus-visible{
+ outline:2px solid var(--mlz-info-500)!important;
+ outline-offset:2px!important;
+ border-radius:var(--mlz-radius-control);
+}
+.workspace .en-choices label{display:inline-flex;align-items:center;gap:var(--mlz-space-8);border:0;background:transparent;padding:var(--mlz-space-4) 0}
+.workspace .en-choices input[type=radio]{width:20px;height:20px;accent-color:var(--mlz-info-500)}
