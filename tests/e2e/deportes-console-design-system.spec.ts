@@ -52,3 +52,45 @@ test('Consola de Deportes: el CSS institucional carga y conserva scrollbar globa
  expect(root).toBe('#006eff');
  expect(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollbarWidth)).not.toBe('none');
 });
+
+
+test('Consola Deportes: checkboxes no tienen cajas y conservan la selección',async ({page})=>{
+ await page.goto(url);
+ await page.getByRole('button',{name:/Agregar actividad/}).first().click();
+ await expect(page.locator('#activity-form')).toBeVisible();
+ const disability=page.locator('#pcd');
+ const disabilityLabel=page.locator('.sports-boolean-row .activity-toggle-card').filter({has:disability});
+ await expect(disabilityLabel).toHaveCSS('border-top-width','0px');
+ await expect(disabilityLabel).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+ const symbol=disabilityLabel.locator('.outlined-check');
+ await expect(symbol).toHaveCSS('color','rgb(35, 105, 153)');
+ await disabilityLabel.click();
+ await expect(disability).toBeChecked();
+ await expect(symbol).toHaveCSS('color','rgb(0, 110, 255)');
+ await expect(disabilityLabel).toHaveCSS('border-top-width','0px');
+ const modality=page.locator('.activity-modality-options label').first();
+ await expect(modality).toHaveCSS('border-top-width','0px');
+ await modality.click();
+ await expect(modality.locator('input[type=checkbox]')).toBeChecked();
+ await expect(modality).toHaveCSS('border-top-width','0px');
+});
+
+test('Consola Deportes: abrir dropdown no desplaza la página y scroll exterior lo cierra',async ({page})=>{
+ await page.goto(url);
+ await page.getByRole('button',{name:/Agregar actividad/}).first().click();
+ const field=page.locator('#activity-form .deportes-select-trigger').first();
+ await field.scrollIntoViewIfNeeded();
+ const previousY=await page.evaluate(()=>window.scrollY);
+ await field.click();
+ await expect(page.locator('.deportes-menu:visible')).toHaveCount(1);
+ const afterY=await page.evaluate(()=>window.scrollY);
+ expect(Math.abs(afterY-previousY)).toBeLessThan(2);
+ const desktop=(page.viewportSize()?.width??1440)>680;
+ if(!desktop){
+  await expect(page.locator('.deportes-sheet-list')).toBeVisible();
+  return;
+ }
+ await page.evaluate(()=>window.scrollBy(0,160));
+ await expect(page.locator('.deportes-menu')).toHaveCount(0);
+ await expect(field).toHaveAttribute('aria-expanded','false');
+});
