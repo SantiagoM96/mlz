@@ -465,3 +465,14 @@ Este documento enumera los cambios aprobados o en prueba en Crónica DEV desde e
 **Registro acumulado: 45 cambios.**
 
 **QA Cambio 45 — APROBADA (Chromium, 2026-11-12).** [Ejecución](https://github.com/SantiagoM96/mlz/actions/runs/43224660518): BAE confirma switch de textual dentro de Diseño de placas, textarea condicionado al inicio de Textos, tamaño al final y controles de formato/alineación visualmente igualados a Diario Show. Diario Show confirma switches y campos en sus módulos correctos, con visibilidad condicional correcta en variantes 1, 2, 3 y 4; comprobado también activar/desactivar autor. Se corrigió además el espejo contextual mobile, que debe tolerar que el switch ya no se clone dentro de Textos. Sin errores JavaScript en el recorrido probado.
+
+## Cambio 46 — Revisión de switches y animación Shift con flecha (2026-11-12)
+
+El número 45 ya corresponde a la reorganización de Textos; esta corrección de la ilustración se registra como 46 para evitar duplicarlo.
+
+- La ilustración compartida por Crónica, BAE y Diario Show DEV reemplaza la mano por una flecha negra proporcional de 18 × 25 px, sin fondo propio. Recorre una curva desde abajo/derecha hasta el chevrón y se pinta detrás de Shift.
+- Shift se ilumina antes del desplazamiento. El clic ocurre antes de la apertura; el mouse físico mantiene un movimiento de 2 px y un realce breve. Los módulos crecen, desplazan los siguientes y revelan contenido recortado dentro de cada cuerpo. Se simulan variantes, logo/firma, carga fotográfica y controles de texto. Pausa, cierre y reinicio sin segundo clic.
+- Se actualiza la versión del recurso en los tres onboarding. La preferencia de movimiento reducido muestra un estado estático abierto.
+- Revisión en Chromium mediante CUA sobre la vista local: BAE ubica Incluir textual en Diseño de placas, oculta su campo al desactivar y conserva etiqueta de formato de 14 px y resaltado interior de alineación. Diario Show muestra switch/input de autor solamente en variantes 3/4, oculta el input al desactivar y conserva autor → formato/alineación → titular/tamaño. Crónica conserva volanta → formato/alineación → titular/tamaño. El recorrido Crónica revisado es diapositivas → diseño → fotografía → textos → Shift. La nueva ilustración carga y se observa abierta dentro del tooltip.
+- Comandos ejecutados: `npm run validate:prototypes` (6 scripts inline, aprobado); `node --check` sobre los tres onboarding y `scripts/editorial-onboarding-spacing-smoke.mjs` (aprobados). La prueba existente se adapta a la nueva flecha y al recorte del contenido; su ejecución completa en CI queda pendiente.
+- Alcance: recurso compartido y tres referencias DEV; sin cambios en las versiones de producción. No se afirma comparación exacta con la imagen de referencia anterior, que no está adjunta a este turno.
