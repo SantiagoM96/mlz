@@ -392,3 +392,18 @@ body,.shell,.workspace,.dialog,.deportes-menu,.deportes-sheet{
 }
 .workspace .en-choices label{display:inline-flex;align-items:center;gap:var(--mlz-space-8);border:0;background:transparent;padding:var(--mlz-space-4) 0}
 .workspace .en-choices input[type=radio]{width:20px;height:20px;accent-color:var(--mlz-info-500)}
+
+/* El ícono inicial comparte DOM con un nodo de texto; :last-child también
+   coincidía cuando era el único elemento HTML. Evitar descontar ambos lados. */
+.workspace .btn:has(> .mi:first-child),
+.dialog .btn:has(> .mi:first-child),
+.deportes-sheet .btn:has(> .mi:first-child){padding-right:var(--mlz-space-24)}
+.workspace .btn:has(> .mi:last-child):not(:has(> .mi:first-child)),
+.dialog .btn:has(> .mi:last-child):not(:has(> .mi:first-child)),
+.deportes-sheet .btn:has(> .mi:last-child):not(:has(> .mi:first-child)){padding-right:18px}
+.workspace :is(.btn,.iconbtn):focus-visible,
+.dialog :is(.btn,.iconbtn):focus-visible,
+.deportes-sheet .btn:focus-visible{
+ outline:2px solid var(--mlz-info-500)!important;
+ outline-offset:2px!important;
+}
