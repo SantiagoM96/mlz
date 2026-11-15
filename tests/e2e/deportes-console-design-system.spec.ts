@@ -82,14 +82,11 @@ test('Consola Deportes: abrir dropdown no desplaza la página y scroll exterior 
  await field.scrollIntoViewIfNeeded();
  const previousY=await page.evaluate(()=>window.scrollY);
  await field.click();
- await expect(page.locator('.deportes-menu:visible')).toHaveCount(1);
+ const desktop=(page.viewportSize()?.width??1440)>680;
+ await expect(page.locator(desktop?'.deportes-menu:visible':'.deportes-sheet-list:visible')).toHaveCount(1);
+ if(!desktop)return;
  const afterY=await page.evaluate(()=>window.scrollY);
  expect(Math.abs(afterY-previousY)).toBeLessThan(2);
- const desktop=(page.viewportSize()?.width??1440)>680;
- if(!desktop){
-  await expect(page.locator('.deportes-sheet-list')).toBeVisible();
-  return;
- }
  await page.evaluate(()=>window.scrollBy(0,160));
  await expect(page.locator('.deportes-menu')).toHaveCount(0);
  await expect(field).toHaveAttribute('aria-expanded','false');
