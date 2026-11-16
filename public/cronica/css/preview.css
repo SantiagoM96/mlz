@@ -98,5 +98,24 @@
 .export-dialog-feedback{margin:13px 0 0;color:#c3c6cd;font-size:12px;line-height:1.5}
 @media(max-width:420px){.export-dialog{padding:20px 16px}.export-dialog-option{padding:11px 10px}}
 
-/* Producción: anillo exterior de selección, borde interior neutro. */
-.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63;outline-color:#ed0000}
+/* Dev: el logo seleccionado mantiene su borde interior y destaca el anillo exterior. */
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{border-color:#565a63}
+
+.editor-panel .logo-choice[aria-pressed="true"] .logo-choice-preview{outline-color:#ed0000}
+
+/* Mobile: calle de scroll de 50 px por lado del canvas; no cambia toolbar ni botones. */
+@media (max-width:700px){
+ .preview .canvas-stage{width:min(540px,calc(100vw - 100px));max-width:100%;margin-inline:auto}
+}
+
+/* Cambio 18: mismo trazo CSS que los hotspots de texto y logo.
+   Mismo patrón dash del navegador y 2 px; se conserva el gris de foto.
+   El SVG sigue en DOM por compatibilidad pero no dibuja una segunda línea. */
+.preview .photo-hover-border{
+ box-sizing:border-box!important;
+ border:2px dashed #41464e!important;
+ border-radius:6px!important;
+}
+.preview .photo-hover-border>.photo-hover-outline{
+ display:none!important;
+}
