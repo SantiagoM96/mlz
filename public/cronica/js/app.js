@@ -2,9 +2,215 @@
 (function(){
 'use strict';
 
+const CIRCLE_SIZE=320,CIRCLE_MARGIN=80,CIRCLE_STROKE=12;
+const newCirclePhoto=()=>({enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0});
+let circlePhoto=newCirclePhoto(),circleHit=null,circlePreviewCanvas=null,circleControls=[],circleEditing=false,circlePhotoClickTimer=null;
+function circlePhotoGeometry(state,bottom){
+ const fits=bottom>=CIRCLE_SIZE+CIRCLE_MARGIN*2;
+ const x=Math.max(CIRCLE_MARGIN,Math.min(W-CIRCLE_MARGIN-CIRCLE_SIZE,state.x));
+ const y=Math.max(CIRCLE_MARGIN,Math.min(bottom-CIRCLE_MARGIN-CIRCLE_SIZE,state.y));
+ return {x,y,fits};
+}
+function circlePhotoRotation(x){
+ const left=CIRCLE_MARGIN,right=W-CIRCLE_MARGIN-CIRCLE_SIZE;
+ return (Math.max(left,Math.min(right,x))-left)/(right-left)*20-10;
+}
+function circlePhotoReframeDelta(dx,dy,x){
+ const angle=circlePhotoRotation(x)*Math.PI/180;
+ return {x:dx*Math.cos(angle)+dy*Math.sin(angle),y:-dx*Math.sin(angle)+dy*Math.cos(angle)};
+}
+function circlePhotoBottom(){return photoBottom-DIVIDER_HEIGHT/2}
+function circlePhotoAllowed(){return ['internal','red'].includes(pageVariant)}
+
+function circlePhotoCrop(photo,state){
+ const scale=Math.max(CIRCLE_SIZE/photo.naturalWidth,CIRCLE_SIZE/photo.naturalHeight)*(state.zoom||1);
+ const width=photo.naturalWidth*scale,height=photo.naturalHeight*scale;
+ return {width,height,x:Math.max(-(width-CIRCLE_SIZE)/2,Math.min((width-CIRCLE_SIZE)/2,state.offsetX||0)),
+  y:Math.max(-(height-CIRCLE_SIZE)/2,Math.min((height-CIRCLE_SIZE)/2,state.offsetY||0))};
+}
+function setCircleEditing(active){
+ clearTimeout(circlePhotoClickTimer);
+ circleEditing=Boolean(active&&circlePhoto.image?.complete&&circlePhoto.image.naturalWidth&&circlePhotoAllowed()&&circlePhoto.enabled);
+ syncPhotoZoom();render();
+}
+function initializeCirclePhotoPosition(state,bottom){
+ if(state.positioned!==false||bottom<CIRCLE_SIZE+CIRCLE_MARGIN*2)return;
+ state.x=(W-CIRCLE_SIZE)/2;
+ state.y=bottom-CIRCLE_MARGIN-CIRCLE_SIZE;
+ state.positioned=true;
+}
+function drawCirclePhoto(includeHover,paint=ctx){
+ if(!circlePhotoAllowed()||!circlePhoto.enabled)return;
+ initializeCirclePhotoPosition(circlePhoto,circlePhotoBottom());
+ const geometry=circlePhotoGeometry(circlePhoto,circlePhotoBottom());
+ if(!geometry.fits)return;
+ circlePhoto.x=geometry.x;circlePhoto.y=geometry.y;
+ const photo=circlePhoto.image,ready=photo?.complete&&photo.naturalWidth>0;
+ if(!ready&&!includeHover)return;
+ const cx=geometry.x+CIRCLE_SIZE/2,cy=geometry.y+CIRCLE_SIZE/2,r=(CIRCLE_SIZE-CIRCLE_STROKE)/2;
+ paint.save();paint.beginPath();paint.arc(cx,cy,r,0,Math.PI*2);paint.clip();
+ paint.fillStyle='#a4abb3';paint.fillRect(geometry.x,geometry.y,CIRCLE_SIZE,CIRCLE_SIZE);
+ if(ready){
+  const crop=circlePhotoCrop(photo,circlePhoto);
+  circlePhoto.offsetX=crop.x;circlePhoto.offsetY=crop.y;
+  paint.translate(cx,cy);
+  paint.rotate(circlePhotoRotation(geometry.x)*Math.PI/180);
+  paint.drawImage(photo,-crop.width/2+crop.x,-crop.height/2+crop.y,crop.width,crop.height);
+ }
+ paint.restore();
+ paint.save();paint.beginPath();paint.arc(cx,cy,r,0,Math.PI*2);
+ paint.strokeStyle=circlePhoto.color==='brand'?'#ED0000':'#fff';paint.lineWidth=CIRCLE_STROKE;paint.stroke();paint.restore();
+}
+function syncCirclePhotoUI(){
+ const allowed=circlePhotoAllowed(),geometry=circlePhotoGeometry(circlePhoto,circlePhotoBottom());
+ if(circleEditing&&(!allowed||!circlePhoto.enabled||!geometry.fits)){circleEditing=false;syncPhotoZoom()}
+ for(const ui of circleControls){
+  ui.field.hidden=!allowed;
+  ui.options.hidden=!circlePhoto.enabled;
+  ui.toggle.checked=circlePhoto.enabled;
+  for(const button of ui.field.querySelectorAll('[data-circle-color]'))button.setAttribute('aria-pressed',String(button.dataset.circleColor===circlePhoto.color));
+  ui.upload.textContent=circlePhoto.image?'Cambiar':'Seleccioná';
+  ui.caption.textContent=circlePhoto.image?(circlePhoto.filename||'foto bolita'):'una foto bolita';
+  ui.picker.classList.toggle('has-photo',Boolean(circlePhoto.image));
+  ui.notice.hidden=!circlePhoto.enabled||geometry.fits;
+ }
+ if(!circleHit)return;
+ circleHit.hidden=!allowed||!circlePhoto.enabled||!geometry.fits;
+ if(circleHit.hidden)return;
+ circleHit.style.left=geometry.x/W*100+'%';circleHit.style.top=geometry.y/H*100+'%';
+ circleHit.style.width=CIRCLE_SIZE/W*100+'%';circleHit.style.height=CIRCLE_SIZE/H*100+'%';
+ const icon=circleHit.querySelector('.material-icons');
+ if(icon)icon.hidden=Boolean(circlePhoto.image);
+ if(circlePreviewCanvas){
+  circlePreviewCanvas.width=CIRCLE_SIZE;circlePreviewCanvas.height=CIRCLE_SIZE;
+  const paint=circlePreviewCanvas.getContext('2d');
+  paint.translate(-geometry.x,-geometry.y);
+  drawCirclePhoto(true,paint);
+ }
+ circleHit.classList.toggle('is-editing',circleEditing);
+ circleHit.setAttribute('aria-pressed',String(circleEditing));
+ el('photoZoom').setAttribute('aria-label',circleEditing?'Zoom de la foto bolita':'Zoom de la fotografía');
+ if(circleEditing)el('status').textContent='Foto bolita · Usá el zoom lateral y arrastrá la imagen para reencuadrar. Hacé clic afuera para terminar.';
+ circleHit.setAttribute('aria-label',circlePhoto.image?(circleEditing?'Reencuadrar foto bolita. Hacé clic afuera para terminar.':'Mover foto bolita. Doble clic para reencuadrar y usar el zoom lateral.'):'Cargar foto bolita o arrastrar para moverla');
+}
+function loadCirclePhoto(file){
+ if(!file)return;
+ if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
+ const photo=new Image(),url=URL.createObjectURL(file);
+ circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
+ circlePhoto.filename=file.name;
+ circlePhoto.image=photo;
+ photo.onload=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo)render()};
+ photo.onerror=()=>{URL.revokeObjectURL(url);if(circlePhoto.image===photo){circlePhoto.image=null;el('status').textContent='No se pudo cargar la foto bolita.';render()}};
+ photo.src=url;render();
+}
+function installCirclePhoto(){
+ function makeControls(host,suffix){
+  const field=document.createElement('div');field.className='control-field ds-circle-photo-field';
+  const inputId='circlePhotoInput'+suffix,toggleId='circlePhotoEnabled'+suffix;
+  field.innerHTML='<label class="switch-row" for="'+toggleId+'"><span class="ds-circle-label">Foto bolita <span class="ds-new-chip">Nuevo</span></span><span class="switch"><input id="'+toggleId+'" type="checkbox" role="switch" data-circle-enabled><span class="switch-track"></span></span></label><div class="ds-circle-photo-options"><div class="ds-circle-upload-row"><div class="ds-photo-picker"><input id="'+inputId+'" type="file" accept="image/*" class="ds-photo-picker-native"><div class="ds-photo-picker-surface"><label for="'+inputId+'" class="ds-photo-picker-clickable"><span class="material-symbols-outlined ds-photo-picker-icon" aria-hidden="true">add_photo_alternate</span><span class="ds-photo-picker-text"><strong class="ds-photo-picker-action">Seleccioná</strong> <span class="ds-photo-picker-caption">una foto bolita</span></span></label></div></div><button type="button" class="ds-circle-color-swatch is-white" data-circle-color="white" aria-label="Anillo blanco" aria-pressed="true" title="Anillo blanco"><span class="material-icons" aria-hidden="true">check</span></button><button type="button" class="ds-circle-color-swatch is-brand" data-circle-color="brand" aria-label="Anillo rojo" aria-pressed="false" title="Anillo rojo"><span class="material-icons" aria-hidden="true">check</span></button></div><p class="hint ds-circle-notice" hidden>No hay espacio suficiente para la foto bolita y sus márgenes de 80 px. Reducí el texto o su tamaño.</p></div>';
+  const options=field.querySelector('.ds-circle-photo-options'),picker=field.querySelector('.ds-photo-picker'),
+   upload=field.querySelector('.ds-photo-picker-action'),caption=field.querySelector('.ds-photo-picker-caption'),
+   input=field.querySelector('input[type=file]'),toggle=field.querySelector('[data-circle-enabled]'),notice=field.querySelector('.ds-circle-notice');
+  input.addEventListener('change',()=>{loadCirclePhoto(input.files[0]);input.value=''});
+  toggle.addEventListener('change',()=>{circlePhoto.enabled=toggle.checked;render()});
+  field.addEventListener('click',event=>{
+   const button=event.target.closest('[data-circle-color]');
+   if(!button)return;
+   circlePhoto.color=button.dataset.circleColor;render();
+  });
+  picker.addEventListener('dragover',event=>{event.preventDefault();picker.classList.add('is-drag-over')});
+  picker.addEventListener('dragleave',event=>{if(!picker.contains(event.relatedTarget))picker.classList.remove('is-drag-over')});
+  picker.addEventListener('drop',event=>{
+   event.preventDefault();event.stopPropagation();picker.classList.remove('is-drag-over');
+   loadCirclePhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/')));
+  });
+  host.append(field);circleControls.push({field,options,upload,caption,picker,toggle,notice,input});
+ }
+ const host=document.querySelector('main .editor-panel .modern-photo-group>.modern-body');
+ if(host)makeControls(host,'Main');
+ circleHit=document.createElement('button');circleHit.type='button';circleHit.className='ds-circle-photo-hit';circleHit.hidden=true;
+ circlePreviewCanvas=document.createElement('canvas');circlePreviewCanvas.className='ds-circle-preview-canvas';circlePreviewCanvas.setAttribute('aria-hidden','true');
+ const placeholderIcon=document.createElement('span');placeholderIcon.className='material-icons';placeholderIcon.textContent='add_photo_alternate';placeholderIcon.setAttribute('aria-hidden','true');
+ circleHit.append(circlePreviewCanvas,placeholderIcon);
+ el('photoStage').append(circleHit);
+ let drag=null,suppressClick=false,lastTouchTap=0;
+ circleHit.addEventListener('pointerdown',event=>{
+  if(event.button!==0&&event.pointerType!=='touch')return;
+  event.preventDefault();event.stopPropagation();suppressClick=false;clearTimeout(circlePhotoClickTimer);
+  drag={id:event.pointerId,x:event.clientX,y:event.clientY,startX:circleEditing?circlePhoto.offsetX:circlePhoto.x,startY:circleEditing?circlePhoto.offsetY:circlePhoto.y,crop:circleEditing,moved:false};
+  circleHit.setPointerCapture(event.pointerId);
+ });
+ circleHit.addEventListener('pointermove',event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  event.preventDefault();event.stopPropagation();
+  const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+  if(!drag.moved&&Math.hypot(dx,dy)<4)return;
+  drag.moved=true;const scale=W/el('art').getBoundingClientRect().width;
+  if(drag.crop){
+   const delta=circlePhotoReframeDelta(dx*scale,dy*scale,circlePhoto.x);
+   circlePhoto.offsetX=drag.startX+delta.x;circlePhoto.offsetY=drag.startY+delta.y;
+  }else{
+   const next=circlePhotoGeometry({x:drag.startX+dx*scale,y:drag.startY+dy*scale},circlePhotoBottom());
+   circlePhoto.x=next.x;circlePhoto.y=next.y;
+  }
+  render();
+ });
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])circleHit.addEventListener(type,event=>{
+  event.stopPropagation();if(!drag||drag.id!==event.pointerId)return;
+  suppressClick=drag.moved||type!=='pointerup';
+  if(type==='pointerup'&&!drag.moved&&event.pointerType==='touch'&&circlePhoto.image){
+   const now=performance.now();
+   if(lastTouchTap&&now-lastTouchTap<350){setCircleEditing(true);lastTouchTap=0}else lastTouchTap=now;
+  }else if(drag.moved)lastTouchTap=0;
+  drag=null;
+ });
+ circleHit.addEventListener('click',event=>{
+  event.preventDefault();event.stopPropagation();
+  if(suppressClick){suppressClick=false;return}
+  if(!circlePhoto.image)circleControls[0]?.input.click();
+  else if(!circleEditing){
+   clearTimeout(circlePhotoClickTimer);
+   const selectedPhoto=circlePhoto.image;
+   if(event.detail<2)circlePhotoClickTimer=setTimeout(()=>{
+    if(!circleEditing&&circlePhoto.image===selectedPhoto&&circlePhoto.enabled&&circlePhotoAllowed())circleControls[0]?.input.click();
+   },350);
+  }
+ });
+ circleHit.addEventListener('dblclick',event=>{
+  event.preventDefault();event.stopPropagation();setCircleEditing(true);
+ });
+ document.addEventListener('pointerdown',event=>{
+  if(circleHit.contains(event.target)||el('photoZoom').closest('.preview-zoom')?.contains(event.target))return;
+  clearTimeout(circlePhotoClickTimer);
+  if(circleEditing)setCircleEditing(false);
+ },true);
+ document.addEventListener('keydown',event=>{if(circleEditing&&event.key==='Escape'){event.preventDefault();setCircleEditing(false)}});
+ circleHit.addEventListener('keydown',event=>{
+  const deltas={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]},delta=deltas[event.key];
+  if(!delta)return;event.preventDefault();event.stopPropagation();
+  if(circleEditing){const local=circlePhotoReframeDelta(delta[0],delta[1],circlePhoto.x);circlePhoto.offsetX+=local.x;circlePhoto.offsetY+=local.y}
+  else{const next=circlePhotoGeometry({x:circlePhoto.x+delta[0],y:circlePhoto.y+delta[1]},circlePhotoBottom());circlePhoto.x=next.x;circlePhoto.y=next.y}
+  render();
+ });
+ syncCirclePhotoUI();
+}
+
+function syncPhotoZoom(){
+ const current=circleEditing?circlePhoto.zoom:zoom,slider=el('photoZoom');
+ slider.value=Math.round(current*100);el('zoomLabel').textContent=Math.round(current*100)+' %';
+ const min=Number(slider.min),max=Number(slider.max);
+ slider.style.setProperty('--modern-progress',((Number(slider.value)-min)/(max-min)*100)+'%');
+}
+
 const el=id=>document.getElementById(id),canvas=el('art'),ctx=canvas.getContext('2d'),W=1080,H=1440;
-let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=false,selectedLogo='primary',photoHover=false;
+let image=null,zoom=1,offsetX=0,offsetY=0,dragging=false,lastX=0,lastY=0,photoBottom=820,textAlignment='center',forceUppercase=true,selectedLogo='primary',logoPosition='right',photoHover=false,pageVariant='cover';
 const RED='#ed0000',BLACK='#080808',EDGE=80;
+// Volantas un 30 % más altas; las mismas medidas se usan en preview y PNG.
+const COVER_STRAP_HEIGHT=68,INTERNAL_STRAP_HEIGHT=65;
+const DIVIDER_HEIGHT=24;
+let footerStyle='carousel';
+document.addEventListener('editorial:footer-style',event=>{footerStyle=event.detail.style;render()});
 const LOGO_WIDTH=75*1.25*1.15,LOGO_HEIGHT=LOGO_WIDTH*191/175;
 const logoImages={},logoSources={primary:'../cronica/logos/primario.svg',secondary:'../cronica/logos/secundario.svg',white:'../cronica/logos/blanco.svg'};
 const logosReady=Promise.all(Object.entries(logoSources).map(([key,src])=>new Promise(resolve=>{
@@ -17,7 +223,7 @@ function drawBrandLogo(){
  if(selectedLogo==='none')return;
  const img=logoImages[selectedLogo];
  if(!img||!img.complete||!img.naturalWidth)return;
- ctx.drawImage(img,W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
+ ctx.drawImage(img,logoPosition==='left'?EDGE:W-EDGE-LOGO_WIDTH,EDGE,LOGO_WIDTH,LOGO_HEIGHT);
 }
 // El campo refleja el modo mayúsculas sin alterar el texto que escribió el usuario.
 function syncUppercaseUI(){
@@ -27,6 +233,13 @@ function syncUppercaseUI(){
 function syncLogoChoices(){
  document.querySelectorAll('.logo-choice').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.logo===selectedLogo)));
 }
+function syncLogoPosition(){
+ document.querySelectorAll('[data-logo-position]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.logoPosition===logoPosition)));
+}
+document.querySelectorAll('[data-logo-position]').forEach(button=>button.addEventListener('click',()=>{
+ logoPosition=button.dataset.logoPosition;syncLogoPosition();render();
+}));
+syncLogoPosition();
 function parseRich(text){
  const out=[];let state={accent:false,italic:false,strike:false},buffer='';
  const flush=()=>{if(buffer){out.push({text:buffer,...state});buffer=''}};
@@ -65,14 +278,14 @@ function wrappedLines(text,size){
 function drawStrap(y,isCover){
  if(!el('showStrap').checked)return;
  const content=el('strapText').value.replace(/\s+/g,' ').trim().toLocaleUpperCase('es-AR'),maxWidth=W-EDGE*2;
- let size=isCover?34:32;
+ let size=isCover?40:38;
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
- const textWidth=ctx.measureText(content).width,barHeight=isCover?52:50;
+ const textWidth=ctx.measureText(content).width,barHeight=isCover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT;
  const width=isCover?Math.min(maxWidth,Math.ceil(textWidth+44)):W;
  const left=isCover?(W-width)/2:0;
- ctx.fillStyle=RED;ctx.fillRect(left,y,width,barHeight);
- if(content){ctx.font='800 '+size+'px Inter,Arial,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
+ ctx.fillStyle=pageVariant==='red'?'#fff':RED;ctx.fillRect(left,y,width,barHeight);
+ if(content){ctx.font='800 '+size+'px Inter,Arial,sans-serif';ctx.fillStyle=pageVariant==='red'?RED:'#fff';ctx.textAlign='center';
  ctx.fillText(content,W/2,y+barHeight/2,maxWidth-24)}
  ctx.textAlign='left';ctx.textBaseline='alphabetic';
 }
@@ -83,9 +296,9 @@ function drawText(lines,size,baselines){
   const total=line.reduce((sum,p)=>sum+p.width,0);
   let x=centered?(W-total)/2:EDGE;
   for(const part of line){
-   ctx.font=fontFor(size,part);ctx.fillStyle=part.accent?RED:BLACK;
+   ctx.font=fontFor(size,part);ctx.fillStyle=pageVariant==='red'?'#fff':part.accent?RED:BLACK;
    ctx.fillText(part.text,x,baselines[i]);
-   if(part.strike){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
+   if(part.strike){const y=baselines[i]-size*.32;ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=18;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+part.width,y);ctx.stroke()}
    x+=part.width;
   }
  });
@@ -110,15 +323,28 @@ function drawPhoto(height,includeHover=true){
 }
 function render(includeHover=true){
  try{
-  const cover=activePage===0,requestedSize=Number(el('size').value);
+  if(pageVariant==='blank'){
+   // Placa neutra completa; no se dibuja foto, logo, volanta ni textos.
+   ctx.clearRect(0,0,W,H);
+   ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
+   photoBottom=H;
+   window.__editorialHotspotBounds={text:{left:0,top:0,right:0,bottom:0},logo:{left:0,top:0,right:0,bottom:0}};
+   updatePhotoDropzone();
+   el('sizeLabel').textContent=el('size').value;
+   el('zoomLabel').textContent=Math.round(zoom*100)+' %';
+   el('photoZoom').value=Math.round(zoom*100);
+   el('status').textContent='Sin diseño · Elegí Portada o Interior para aplicar una composición.';
+   return;
+  }
+  const cover=pageVariant==='cover',red=pageVariant==='red',requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
-  const availableBottom=cover?footerTop-50:H-EDGE;
+  const availableBottom=(cover||red)?footerTop-50:H-EDGE;
   const desired=forceUppercase?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value;
   let size=requestedSize,lines=wrappedLines(desired,size);
   const lineHeight=()=>Math.round(size*1.09);
   function textTop(){return availableBottom-(lines.length?size*0.85+(lines.length-1)*lineHeight():0)}
   const showBar=el('showStrap').checked;
-  const barHeight=showBar?(cover?52:50):0;
+  const barHeight=showBar?(cover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT):0;
   const requiredGap=cover?80:80;
   while(size>32&&textTop()-(showBar?barHeight+requiredGap:80)<230){
     size-=2;lines=wrappedLines(desired,size);
@@ -128,9 +354,9 @@ function render(includeHover=true){
   let panelTop,barY;
   if(cover){
    // La distancia desde el borde inferior de la volanta hasta el texto es 50 px.
-   // Sin volanta, se mide desde el borde inferior de la línea roja de 13 px.
-   panelTop=Math.max(160,top-(showBar?76:56.5));
-   barY=panelTop-26;
+   // Sin volanta, se mide desde el borde inferior de la línea roja de 24 px.
+   panelTop=Math.max(160,top-(showBar?50+COVER_STRAP_HEIGHT/2:50+DIVIDER_HEIGHT/2));
+   barY=panelTop-COVER_STRAP_HEIGHT/2;
   }else{
    panelTop=Math.max(160,top-50-(showBar?barHeight:0));
    barY=panelTop;
@@ -139,22 +365,45 @@ function render(includeHover=true){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
   drawPhoto(imageBottom,includeHover);
+  drawCirclePhoto(includeHover);
   drawBrandLogo();
-  ctx.fillStyle='#fff';ctx.fillRect(0,panelTop,W,H-panelTop);
+  if(red){
+   const background=ctx.createLinearGradient(0,panelTop,W,H);
+   background.addColorStop(0,'#bf0000');background.addColorStop(1,'#ed0000');
+   ctx.fillStyle=background;
+  }else ctx.fillStyle='#fff';
+  ctx.fillRect(0,panelTop,W,H-panelTop);
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
-  ctx.fillStyle=RED;ctx.fillRect(0,panelTop-6.5,W,13);
+  ctx.fillStyle=red?'#fff':RED;ctx.fillRect(0,panelTop-DIVIDER_HEIGHT/2,W,DIVIDER_HEIGHT);
   if(showBar)drawStrap(barY,cover);
   drawText(lines,size,baselines);
-  if(cover){
+  // Ubicaciones en píxeles reales de la placa, usadas solo por el overlay HTML.
+  // La unión de renglones evita seleccionar toda la caja blanca.
+  const richWidths=lines.map(line=>line.reduce((total,part)=>total+part.width,0));
+  const left=textAlignment==='center'?Math.min(...richWidths.map(w=>(W-w)/2)):EDGE;
+  const right=textAlignment==='center'?Math.max(...richWidths.map(w=>(W+w)/2)):Math.max(...richWidths.map(w=>EDGE+w));
+  // Mismo padding que Diario Show: 14 px internos + 12 px externos,
+  // 1.05x del cuerpo arriba y .28x debajo de la línea base, más 10 px.
+  const textRect={left:Math.max(0,left-26),top:Math.max(0,(baselines[0]??availableBottom)-size*1.05-10),
+   right:Math.min(W,right+26),bottom:Math.min(H,(baselines.at(-1)??availableBottom)+size*.28+10)};
+  const logoX=logoPosition==='left'?EDGE:W-EDGE-LOGO_WIDTH;
+  const logoRect={left:logoX-54,top:EDGE-54,
+   right:logoX+LOGO_WIDTH+54,bottom:EDGE+LOGO_HEIGHT+54};
+  window.__editorialHotspotBounds={text:textRect,logo:logoRect};
+
+  if(cover||red){
    // Pie: texto en caja baja y flecha alineados por su centro vertical.
    const footerCenterY=H-EDGE-16;
    ctx.save();
-   ctx.fillStyle=RED;ctx.textBaseline='middle';
+   ctx.fillStyle=red?'#fff':RED;ctx.textBaseline='middle';
    ctx.font='500 30px Inter,Arial,sans-serif';
-   ctx.textAlign='left';ctx.fillText('cronica.com.ar',EDGE,footerCenterY);
-   ctx.font='54px "Material Icons"';ctx.textAlign='right';
-   ctx.fillText('arrow_forward',W-EDGE,footerCenterY);
+   ctx.textAlign=footerStyle==='center'?'center':'left';
+   ctx.fillText('cronica.com.ar',footerStyle==='center'?W/2:EDGE,footerCenterY);
+   if(footerStyle==='carousel'){
+    ctx.font='54px "Material Icons"';ctx.textAlign='right';
+    ctx.fillText('arrow_forward',W-EDGE,footerCenterY);
+   }
    ctx.restore();
   }
   updatePhotoDropzone();
@@ -162,50 +411,165 @@ function render(includeHover=true){
   el('zoomLabel').textContent=Math.round(zoom*100)+' %';el('photoZoom').value=Math.round(zoom*100);
   el('status').textContent=size<requestedSize?'Texto largo: tamaño ajustado para respetar los márgenes.':'Vista previa activa · Arrastrá la foto para reencuadrarla.';
  }catch(error){el('status').textContent='Error de vista previa: '+error.message;console.error(error)}
+finally{syncPhotoZoom();syncCirclePhotoUI();window.dispatchEvent(new Event('modern:render'))}
 }
 /* Cada placa conserva sus propios controles, foto, zoom y encuadre durante la edición. */
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,image,zoom,offsetX,offsetY};
+  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant,footerStyle,circlePhoto:{...circlePhoto}};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
-const COVER_STRAP="LA CLAVE DE ESTA NOTICIA";
-const COVER_HEADLINE="Escribí un título claro y directo. *Destacá el dato principal* y dejá los detalles para las siguientes placas.";
-const INTERNAL_HEADLINE="En esta placa podés ampliar la información. Explicá qué pasó, quiénes están involucrados y por qué es importante. Usá frases cortas y una idea por vez para facilitar la lectura.";
+const COVER_STRAP="CULTURA EN LA CIUDAD";
+// Ejemplo común para una nueva diapositiva: funciona tanto en Portada como en Interior.
+const DEFAULT_STRAP=COVER_STRAP;
+const COVER_HEADLINE="Un nuevo *espacio cultural* abrió sus puertas y presentó actividades para toda la comunidad";
+const INTERNAL_HEADLINE="El espacio ofrecerá *talleres, muestras y espectáculos* durante todo el año. La programación incluirá propuestas gratuitas y actividades para distintas edades.";
+const INTERNAL_STRAP="NUEVAS ACTIVIDADES";
 function newBlankPage(){
- return {headline:INTERNAL_HEADLINE,strapText:'',showStrap:false,size:'52',alignment:'left',forceUppercase:false,logo:'primary',
-  image:null,zoom:1,offsetX:0,offsetY:0};
+ return {headline:INTERNAL_HEADLINE,strapText:INTERNAL_STRAP,showStrap:true,size:'52',alignment:'left',forceUppercase:true,footerStyle:'center',logo:'primary',logoPosition:'right',
+  image:null,zoom:1,offsetX:0,offsetY:0,logoPosition:'right',variant:'blank',samplePending:true,circlePhoto:newCirclePhoto()};
 }
-function saveActivePage(){if(carouselPages[activePage])carouselPages[activePage]=readCurrentPage()}
+function saveActivePage(){
+ const previous=carouselPages[activePage];if(!previous)return;
+ carouselPages[activePage]={...readCurrentPage(),
+  samplePending:pageVariant==='blank'&&Boolean(previous.samplePending)};
+}
+function syncVariantUI(){
+ // La variante controla también el DOM de Formato y sus espejos mobile.
+ document.documentElement.dataset.cronicaVariant=pageVariant;
+ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.pageVariant===pageVariant)));
+}
 function loadPage(page){
+ clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto={...newCirclePhoto(),...page.circlePhoto};
+ pageVariant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
- forceUppercase=Boolean(page.forceUppercase);syncUppercaseUI();
- selectedLogo=page.logo||'primary';syncLogoChoices();
+ footerStyle=page.footerStyle||(page.variant==='cover'?'carousel':'center');
+ document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
+ forceUppercase=page.forceUppercase!==false;syncUppercaseUI();
+ selectedLogo=page.logo||'primary';syncLogoChoices();logoPosition=page.logoPosition||'right';syncLogoPosition();
  textAlignment=page.alignment;image=page.image;zoom=page.zoom;offsetX=page.offsetX;offsetY=page.offsetY;
  el('file').value='';dragging=false;
  el('alignLeft').setAttribute('aria-pressed',String(page.alignment==='left'));
  el('alignCenter').setAttribute('aria-pressed',String(page.alignment==='center'));
  render();
+ window.dispatchEvent(new CustomEvent('editorial:page-selected',{detail:{blank:pageVariant==='blank'}}));
 }
 function renderCarouselNavigation(){
  const list=el('carouselPages');list.replaceChildren();
  carouselPages.forEach((page,index)=>{
   const button=document.createElement('button');button.type='button';
   button.setAttribute('aria-current',index===activePage?'page':'false');
-  button.setAttribute('aria-label',index===0?'Página 1, portada':'Página '+(index+1)+', interna');
-  button.textContent=String(index+1);
+  const variant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';
+  const variantName={blank:'Sin diseño',cover:'Portada',internal:'Interior',red:'Variante 1'}[variant];
+  button.setAttribute('aria-label','Página '+(index+1)+', '+variantName.toLowerCase());
+  button.setAttribute('title','Página '+(index+1)+' · '+variantName);
+  button.className='carousel-page-thumb';
+  button.dataset.variant=variant;
+  // Se clona la miniatura real del selector, sin recrear sus colores ni
+  // su composición. El aro de selección pertenece únicamente a este botón.
+  const original=document.querySelector('.cronica-variant-option[data-page-variant="'+variant+'"] .cronica-variant-thumbnail');
+  const composition=document.createElement('span');
+  composition.className='carousel-design-copy editor-panel';
+  composition.setAttribute('aria-hidden','true');
+  if(original)composition.appendChild(original.cloneNode(true));
+  const number=document.createElement('span');
+  number.className='carousel-page-number';
+  number.textContent=String(index+1);
+  button.append(composition,number);
   button.addEventListener('click',()=>selectPage(index));list.appendChild(button);
  });
- el('pageIndicator').textContent=(activePage+1)+' de '+carouselPages.length+' · '+(activePage===0?'Portada':'Interna');
+ // Una miniatura punteada al final permite añadir una diapositiva sin
+ // abandonar la navegación. Usa exactamente el mismo controlador existente.
+ const addTile=document.createElement('button');
+ addTile.type='button';addTile.className='carousel-add-placeholder';
+ addTile.setAttribute('aria-label','Agregar nueva diapositiva');
+ addTile.setAttribute('title','Agregar nueva diapositiva');
+ const addIcon=document.createElement('span');
+ addIcon.className='material-icons';addIcon.setAttribute('aria-hidden','true');
+ addIcon.textContent='add';
+ addTile.append(addIcon);
+ addTile.addEventListener('click',()=>el('addPage').click());
+ list.appendChild(addTile);
+ const indicator=el('pageIndicator');
+ const count=document.createElement('span');
+ count.className='carousel-indicator-count';
+ count.textContent=(activePage+1)+' de '+carouselPages.length;
+ const type=document.createElement('span');
+ type.className='carousel-indicator-type is-'+pageVariant;
+ type.textContent={blank:'Sin diseño',cover:'Portada',internal:'Interior',red:'Variante 1'}[pageVariant];
+ indicator.replaceChildren(count,type);
  el('removePage').disabled=activePage===0;
+ // Con espacio libre, la miniatura punteada es el botón de agregar.
+ // Cuando desborda, el botón fijo se incorpora junto al de eliminar;
+ // la fila sigue desplazándose horizontalmente por debajo de las acciones.
+ const recalc=()=>{
+  const host=list.closest('.cronica-preview-pages');
+  if(!host)return;
+  // La acción fija no debe depender de scrollLeft ni de la posición de la
+  // miniatura +: aparece en cuanto el contenido excede el ancho disponible.
+  const overflowing=list.scrollWidth>list.clientWidth+2;
+  host.classList.toggle('carousel-is-overflowing',overflowing);
+  el('addPage').disabled=false;
+ };
+ recalc();
+ requestAnimationFrame(recalc);
+ if(!list.dataset.resizeObserved&&typeof ResizeObserver!=='undefined'){
+  list.dataset.resizeObserved='true';
+  new ResizeObserver(recalc).observe(list);
+ }
+ // Mostrar la acción punteada junto a la última diapositiva, como Diario Show.
+ requestAnimationFrame(()=>{
+  const active=list.querySelector('[aria-current="page"]');
+  if(!active||!list.clientWidth)return;
+  if(activePage===carouselPages.length-1){
+   list.scrollLeft=Math.max(0,list.scrollWidth-list.clientWidth);
+   return;
+  }
+  // Comparar coordenadas del viewport evita mezclar offsetParents distintos.
+  const viewport=list.getBoundingClientRect(),item=active.getBoundingClientRect();
+  if(item.left<viewport.left+4)list.scrollLeft+=item.left-viewport.left-4;
+  else if(item.right>viewport.right-4)list.scrollLeft+=item.right-viewport.right+4;
+ });
 }
 function selectPage(index){
  if(index===activePage||index<0||index>=carouselPages.length)return;
  saveActivePage();activePage=index;loadPage(carouselPages[index]);renderCarouselNavigation();
 }
+function installCarouselDragScroll(){
+ const track=el('carouselPages');
+ let drag=null,suppressClick=false;
+ track.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='touch'||event.button!==0)return;
+  drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,scrollX:track.scrollLeft,moved:false};
+ });
+ track.addEventListener('pointermove',event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+  if(!drag.moved&&Math.abs(dx)<5)return;
+  if(!drag.moved&&Math.abs(dy)>Math.abs(dx))return;
+  if(!drag.moved){drag.moved=true;track.classList.add('is-dragging');track.setPointerCapture(event.pointerId)}
+  track.scrollLeft=drag.scrollX-dx;
+  event.preventDefault();
+ });
+ const stop=event=>{
+  if(!drag||drag.id!==event.pointerId)return;
+  if(drag.moved){suppressClick=true;track.classList.remove('is-dragging');}
+  drag=null;
+ };
+ track.addEventListener('pointerup',stop);
+ track.addEventListener('pointercancel',stop);
+ track.addEventListener('lostpointercapture',stop);
+ track.addEventListener('click',event=>{
+  if(!suppressClick)return;
+  suppressClick=false;event.preventDefault();event.stopImmediatePropagation();
+ },true);
+ // Cada interacción nueva sin arrastre debe poder seleccionar las miniaturas.
+ track.addEventListener('pointerdown',()=>{suppressClick=false},true);
+}
 function initializeCarousel(){
+ installCarouselDragScroll();
  carouselPages=[readCurrentPage()];activePage=0;renderCarouselNavigation();
  el('addPage').addEventListener('click',()=>{
   saveActivePage();const index=activePage+1;carouselPages.splice(index,0,newBlankPage());
@@ -218,6 +582,37 @@ function initializeCarousel(){
  });
 }
 
+document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addEventListener('click',()=>{
+ const next=button.dataset.pageVariant;
+ if(next===pageVariant)return;
+ const previous=pageVariant;
+ pageVariant=next;
+ footerStyle=next==='cover'?'carousel':'center';
+ document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
+ if(next==='red'){
+  el('showStrap').checked=false;el('strapField').hidden=true;
+ }
+ // Una placa sin diseño no muestra volanta. Al aplicar Portada o Interior,
+ // el usuario comienza con la volanta activa y su texto de ejemplo.
+ if(previous==='blank'&&next!=='blank'){
+  // Las páginas nuevas son Sin diseño, pero estrenan textos completos
+  // al escoger Portada o Interior; no se reemplazan ediciones posteriores.
+  const current=carouselPages[activePage];
+  if(current?.samplePending){
+   el('headline').value=next==='cover'?COVER_HEADLINE:INTERNAL_HEADLINE;
+   el('strapText').value=next==='cover'?COVER_STRAP:INTERNAL_STRAP;
+   el('size').value=next==='cover'?'64':'52';
+   textAlignment=next==='cover'?'center':'left';
+   el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));
+   el('alignCenter').setAttribute('aria-pressed',String(textAlignment==='center'));
+   current.samplePending=false;
+  }
+  el('showStrap').checked=next!=='red';
+  if(!el('strapText').value.trim())el('strapText').value=next==='cover'?COVER_STRAP:INTERNAL_STRAP;
+  el('strapField').hidden=next==='red';
+ }
+ syncVariantUI();saveActivePage();renderCarouselNavigation();render();
+}));
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
 for(const id of ['headline','size'])el(id).addEventListener('input',render);
@@ -264,7 +659,7 @@ window.addEventListener('resize',updateHoverBorderGeometry);
 function updatePhotoDropzone(){
  const zone=el('photoDropzone'),stage=el('photoStage');
  if(!zone||!stage)return;
- zone.hidden=Boolean(image);
+ zone.hidden=Boolean(image)||pageVariant==='blank';
  stage.style.setProperty('--photo-height',(photoBottom/H*100)+'%');
  updateHoverBorderGeometry();
  canvas.style.cursor=image?'grab':'default';
@@ -307,12 +702,16 @@ photoStage.addEventListener('dragenter',event=>{if(isImageDrag(event)&&isOverPho
 photoStage.addEventListener('dragover',event=>{if(isImageDrag(event)&&isOverPhoto(event)){event.preventDefault();event.dataTransfer.dropEffect='copy';photoStage.classList.add('is-drag-over');setPhotoHover(true)}else{photoStage.classList.remove('is-drag-over');setPhotoHover(false)}});
 photoStage.addEventListener('dragleave',event=>{if(!photoStage.contains(event.relatedTarget)){photoStage.classList.remove('is-drag-over');setPhotoHover(false)}});
 photoStage.addEventListener('drop',event=>{photoStage.classList.remove('is-drag-over');setPhotoHover(false);if(!isOverPhoto(event))return;event.preventDefault();loadPhoto([...event.dataTransfer.files].find(file=>file.type.startsWith('image/'))||event.dataTransfer.files[0])});
-el('photoZoom').addEventListener('input',event=>{zoom=Number(event.target.value)/100;render()});
+el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zoom=Number(event.target.value)/100;else zoom=Number(event.target.value)/100;render()});
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
- const initial=newBlankPage();if(activePage===0){initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto=newCirclePhoto();
+ const initial=newBlankPage();initial.variant=pageVariant;initial.samplePending=false;
+ if(pageVariant==='cover'){initial.footerStyle='carousel';initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}
+ if(pageVariant==='red'){initial.showStrap=false;initial.footerStyle='center'}
+ if(pageVariant==='internal'){initial.headline=INTERNAL_HEADLINE;initial.strapText=INTERNAL_STRAP;initial.showStrap=true}
  loadPage(initial);saveActivePage();
 });
 // Exportar una placa o todo el carrusel sin perder el estado de edición.
@@ -465,5 +864,45 @@ document.addEventListener('click',event=>{
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape')closeHelpTooltips();
 });
+/* El aviso sigue el borde derecho real del canvas. Se desplaza hacia
+   adentro cuando faltarían menos de 24px al borde de la pantalla. */
+function positionBrowserZoomTip(){
+ const tip=el('browserZoomTip');
+ const stage=el('photoStage');
+ if(!tip||!stage||tip.hidden||document.documentElement.clientWidth<=700)return;
+ const stageRect=stage.getBoundingClientRect();
+ const tipWidth=tip.getBoundingClientRect().width;
+ const viewportWidth=document.documentElement.clientWidth;
+ // A la derecha de la placa (+24px), hasta que toca el límite de 20px.
+ // Al reducir el viewport se superpone a la placa, sin cambiar el layout.
+ const left=Math.min(stageRect.right+24,viewportWidth-tipWidth-20);
+ const top=stageRect.top+24;
+ tip.style.setProperty('--zoom-tip-x',left+'px');
+ tip.style.setProperty('--zoom-tip-y',top+'px');
+}
+let zoomTipPositionFrame=0;
+function scheduleBrowserZoomTipPosition(){
+ if(zoomTipPositionFrame)return;
+ zoomTipPositionFrame=window.requestAnimationFrame(()=>{
+  zoomTipPositionFrame=0;
+  positionBrowserZoomTip();
+ });
+}
+window.addEventListener('resize',scheduleBrowserZoomTipPosition);
+window.addEventListener('scroll',scheduleBrowserZoomTipPosition,{passive:true});
+if(typeof ResizeObserver!=='undefined'){
+ const zoomTipResizeObserver=new ResizeObserver(scheduleBrowserZoomTipPosition);
+ zoomTipResizeObserver.observe(el('photoStage'));
+ zoomTipResizeObserver.observe(el('browserZoomTip'));
+ zoomTipResizeObserver.observe(el('browserZoomTip').closest('.preview'));
+}
+el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
+scheduleBrowserZoomTipPosition();
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
+document.addEventListener('DOMContentLoaded',()=>{installCirclePhoto();render()},{once:true});
+
+window.addEventListener('editorial:preview-snapshot',event=>{
+ render(false);
+ try{event.detail.capture(canvas)}finally{render()}
+});
 })();
