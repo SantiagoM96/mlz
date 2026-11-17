@@ -1,0 +1,373 @@
+{
+  "source": "Tabla provista para ARLO",
+  "rows": [
+    {
+      "entity": "Portal de Autogestión",
+      "channel": "Web",
+      "medium": "Online",
+      "methods": [
+        "Interbanking (GC)",
+        "MercadoPago",
+        "Net Pagos"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "PagoMisCuentas",
+      "channel": "Web",
+      "medium": "Online",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Link Pagos",
+      "channel": "Web",
+      "medium": "Online",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Tarjeta VISA / Mastercard",
+      "channel": "Débito automático",
+      "medium": "Online",
+      "methods": [
+        "Tarjeta de Crédito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Tarjeta Naranja",
+      "channel": "Débito automático",
+      "medium": "Online",
+      "methods": [
+        "Tarjeta de Crédito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Pago Fácil",
+      "channel": "Red de cobranza",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Rapipago",
+      "channel": "Red de cobranza",
+      "medium": "Presencial",
+      "methods": [
+        "Efectivo",
+        "Tarjeta de Débito",
+        "QR"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Cobro Express",
+      "channel": "Red de cobranza",
+      "medium": "Presencial",
+      "methods": [
+        "Efectivo",
+        "Tarjeta de Débito",
+        "QR"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Provincia Net",
+      "channel": "Red de cobranza",
+      "medium": "Presencial",
+      "methods": [
+        "Efectivo",
+        "Tarjeta de Débito",
+        "QR Dinero en Cuenta"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Banco Provincia de Buenos Aires",
+      "channel": "Banco",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Crédito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Credicoop Coop. Ltdo.",
+      "channel": "Banco",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Macro BMA Provincia de Buenos Aires",
+      "channel": "Banco",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Supervielle S.A.",
+      "channel": "Banco",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Banco Nación",
+      "channel": "Banco",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Cámara de Comercio e Industria de Lomas de Zamora",
+      "channel": "Cámara",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Cheque",
+        "Caja Provincia Net",
+        "Efectivo"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Cámara de Comercio, Industria y Bienes Raíces de Banfield",
+      "channel": "Cámara",
+      "medium": "Presencial",
+      "methods": [
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR",
+        "Tarjeta de Débito"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Cámara de Comercio e Industria de Llavallol (Filial Lomas)",
+      "channel": "Cámara",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Efectivo",
+        "QR",
+        "Cheque",
+        "Caja Provincia Net"
+      ],
+      "address": null,
+      "hours": null
+    },
+    {
+      "entity": "Red Link",
+      "channel": "Cajero automático",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Red Banelco",
+      "channel": "Cajero automático",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito"
+      ],
+      "address": null,
+      "hours": "24 h"
+    },
+    {
+      "entity": "Tesorería Municipal – CAV Central",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Cheque",
+        "QR",
+        "Efectivo"
+      ],
+      "address": "Azara 237 – Lomas de Zamora",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Banfield",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Crédito",
+        "Caja Provincia Net",
+        "Cheque",
+        "Efectivo",
+        "QR"
+      ],
+      "address": "Rincón 565 – Banfield",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Budge",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Campana y Guaminí – Budge",
+      "hours": "Lun a vie 8:00 a 14:00 h"
+    },
+    {
+      "entity": "CGM Centenario",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Martín Rodríguez 450 – Centenario",
+      "hours": "Lun a vie 8:00 a 14:00 h"
+    },
+    {
+      "entity": "CGM Temperley Oeste – CAV Temperley Oeste",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Avellaneda 126 – Temperley",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Temperley Este – CAV Temperley Este",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Av. Eva Perón 1732 – Temperley",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Turdera",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "H. Yrigoyen 11555 – Turdera",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Llavallol Norte – CAV Llavallol Norte",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Luzuriaga 308 esq. El Rosedal – Llavallol",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Fiorito",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Campana entre Larrazabal y Murature – Fiorito",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    },
+    {
+      "entity": "CGM Albertina",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Caja Provincia Net",
+        "Efectivo",
+        "QR Dinero en Cuenta"
+      ],
+      "address": "Bayona 70 – Albertina",
+      "hours": "Lun a vie 8:00 a 14:00 h"
+    },
+    {
+      "entity": "CGM San José",
+      "channel": "CGM",
+      "medium": "Presencial",
+      "methods": [
+        "Tarjeta de Débito",
+        "Tarjeta de Crédito",
+        "Cheque",
+        "QR",
+        "Efectivo"
+      ],
+      "address": "Av. Eva Perón 2940 – San José",
+      "hours": "Lun a vie 8:00 a 16:00 h"
+    }
+  ]
+}
