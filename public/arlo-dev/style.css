@@ -51,19 +51,16 @@
 @media(prefers-reduced-motion:reduce){#calendar-dialog,#calendar-dialog::backdrop,#calendar-dialog .calendar-grabber span{animation:none!important;transition:none!important}}
 @media print{#calendar-dialog .calendar-grabber{display:none}#calendar-dialog[open]{height:auto;max-height:none;position:static;padding:0;transform:none;box-shadow:none}#calendar-dialog .dialog-scroll,#calendar-dialog .calendar-scroll-content{display:block;max-height:none;overflow:visible}}
 
-/* Header mobile: wordmark independiente y acceso compacto al Portal de Autogestión. */
-.brand .brand-mobile,.header-link-mobile{display:none}
+/* Header mobile: la misma marca que en desktop, con acceso PA outlined. */
+.header-link-mobile{display:none}
 .header-link-desktop{display:flex;align-items:center;gap:4px}
 @media(max-width:767px){
   .header-inner{min-height:104px;gap:12px}
-  .brand{flex:1 1 auto;min-width:0;display:flex;align-items:flex-start;justify-content:center;gap:0}
-  .brand .brand-logo{display:none}
-  .brand .brand-mobile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;min-width:0;container-type:inline-size}
-  .brand-mobile-mark{display:block;width:clamp(148px,70%,212px);height:auto;max-width:100%;object-fit:contain}
-  .brand .brand-mobile-caption{display:block;font-size:clamp(9px,4.1cqi,12px);font-weight:700;line-height:1.15;white-space:nowrap;letter-spacing:-.12px;color:#fff}
-  .header-link{display:grid;place-items:center;flex:0 0 52px;width:52px;height:52px;max-width:none;background:#358dc2;border-radius:4px;color:#fff;font-size:22px;line-height:1;font-weight:900;letter-spacing:-.4px}
+  .header-inner .brand{display:flex;flex:1 1 auto;min-width:0;align-items:flex-start;justify-content:center;gap:0}
+  .header-inner .brand-logo{display:block;width:100%;max-width:330px;height:auto;object-fit:contain}
+  .header-inner .header-link{display:grid;place-items:center;flex:0 0 52px;width:52px;height:52px;max-width:none;background:transparent;border:2px solid #fff;border-radius:4px;color:#fff;font-size:23px;line-height:1;font-weight:800;letter-spacing:0}
   .header-link-desktop{display:none}
   .header-link-mobile{display:block}
-  .header-link:active{background:#236999}
-  .header-link:focus-visible{outline-color:white}
+  .header-inner .header-link:active{background:rgba(255,255,255,.12)}
+  .header-inner .header-link:focus-visible{outline-color:#fff}
 }
