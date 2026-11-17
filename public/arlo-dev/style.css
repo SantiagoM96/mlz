@@ -15,3 +15,38 @@
 #calendar-dialog .dialog-scroll::-webkit-scrollbar{width:0;height:0}
 @media(max-width:767px){#calendar-dialog{--dialog-padding:16px;--dialog-max-height:92dvh}}
 @media print{#calendar-dialog[open]{display:block;max-height:none;overflow:visible;padding:0}#calendar-dialog .dialog-scroll{max-height:none;overflow:visible}}
+
+/* Bottom sheet: mismas medidas, curvas y estados de Deportes / Agenda. */
+.calendar-grabber{display:none}
+.calendar-scroll-content{display:contents}
+@keyframes arlo-sheet-in{from{transform:translate3d(0,100%,0)}to{transform:translate3d(0,0,0)}}
+@keyframes arlo-sheet-backdrop-in{from{opacity:0}to{opacity:1}}
+@media(max-width:767px){
+  #calendar-dialog{position:fixed;inset:auto 0 0 0;width:100%;max-width:none;min-width:0;height:min(86dvh,820px);max-height:86dvh;--dialog-padding:16px;margin:0;padding:0 16px max(16px,env(safe-area-inset-bottom,0px));border-radius:16px 16px 0 0;box-shadow:0 -8px 28px rgba(0,0,0,.2);transform-origin:bottom center;overscroll-behavior:contain}
+  #calendar-dialog[open]{animation:arlo-sheet-in 230ms cubic-bezier(.2,.8,.2,1) backwards;transform:translate3d(0,0,0)}
+  #calendar-dialog::backdrop{background:rgba(19,47,69,.56);opacity:var(--sheet-backdrop-opacity,1);animation:arlo-sheet-backdrop-in 220ms ease backwards;transition:opacity 220ms ease}
+  #calendar-dialog .calendar-grabber{display:flex;flex:0 0 36px;align-items:flex-start;justify-content:center;width:100%;padding:10px 12px 0;border:0;background:transparent;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+  #calendar-dialog .calendar-grabber:active{cursor:grabbing}
+  #calendar-dialog .calendar-grabber span{display:block;width:44px;height:5px;border-radius:999px;background:#bac5cf;transition:width 150ms ease,background-color 150ms ease}
+  #calendar-dialog .calendar-grabber:active span{width:52px;background:#879aab}
+  #calendar-dialog .dialog-scroll{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;max-height:none;overflow:hidden}
+  #calendar-dialog .dialog-bar{flex:0 0 auto;min-height:54px;gap:12px;margin:0 0 8px;padding:0 0 8px;border-bottom:1px solid #e6ecf0}
+  #calendar-dialog .dialog-bar h2{font-size:18px;line-height:24px;color:#236999}
+  #calendar-dialog #close-dialog{display:grid;place-items:center;width:40px;height:40px;min-width:40px;padding:0;border:0;background:#f1f6fa;color:#236999;border-radius:50%}
+  #calendar-dialog #close-dialog .material-symbols-outlined{font-size:24px}
+  #calendar-dialog .calendar-scroll-content{display:block;flex:1 1 auto;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #calendar-dialog .calendar-scroll-content::-webkit-scrollbar{display:none}
+  #calendar-dialog .calendar-scroll-content .table-wrap:first-child{margin-top:8px}
+  #calendar-dialog.sheet-settled{animation:none}
+  #calendar-dialog.sheet-settled::backdrop{animation:none}
+  #calendar-dialog.sheet-dragging{animation:none;transition:none;transform:translate3d(0,var(--sheet-drag-y,0px),0);will-change:transform}
+  #calendar-dialog.sheet-dragging::backdrop{transition:none}
+  #calendar-dialog.sheet-stretching{animation:none;transition:none;transform:none;height:calc(var(--sheet-base-height) + var(--sheet-stretch-y,0px));max-height:calc(var(--sheet-base-height) + var(--sheet-stretch-y,0px));will-change:height}
+  #calendar-dialog.sheet-rebounding{animation:none;transform:translate3d(0,0,0);transition:transform 320ms cubic-bezier(.18,1.15,.36,1)}
+  #calendar-dialog.sheet-stretch-rebounding{animation:none;transform:none;height:var(--sheet-base-height);max-height:calc(var(--sheet-base-height) + var(--sheet-stretch-y,0px));transition:height 380ms cubic-bezier(.21,1.10,.38,1)}
+  #calendar-dialog.sheet-rebounding::backdrop,#calendar-dialog.sheet-stretch-rebounding::backdrop{transition:opacity 380ms ease-out}
+  #calendar-dialog.sheet-exit{animation:none;transform:translate3d(0,100%,0);transition:transform 220ms cubic-bezier(.4,0,1,1);pointer-events:none}
+  #calendar-dialog.sheet-exit::backdrop{animation:none;opacity:0;transition:opacity 220ms ease-in}
+}
+@media(prefers-reduced-motion:reduce){#calendar-dialog,#calendar-dialog::backdrop,#calendar-dialog .calendar-grabber span{animation:none!important;transition:none!important}}
+@media print{#calendar-dialog .calendar-grabber{display:none}#calendar-dialog[open]{height:auto;max-height:none;position:static;padding:0;transform:none;box-shadow:none}#calendar-dialog .dialog-scroll,#calendar-dialog .calendar-scroll-content{display:block;max-height:none;overflow:visible}}
