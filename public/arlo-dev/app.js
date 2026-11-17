@@ -25,10 +25,97 @@ function setArrowState(rail){let holder=rail.closest('.calendar-section');holder
 function initRails(){document.querySelectorAll('.rail').forEach(rail=>{const start=Number(rail.dataset.start);rail.scrollLeft=start*304;setArrowState(rail);rail.addEventListener('scroll',()=>setArrowState(rail),{passive:true})})}
 function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=nav.some(n=>n[0]===hash)?hash:'home';$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+(['higiene','publicidad'].includes(current)?docs(current):banner(true));document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo(0,0);requestAnimationFrame(initRails)}
 function tableGroups(tax){const subset=rows.filter(r=>r.tax===tax);if(['abl','auto','moto'].includes(tax))return [{title:titles[tax],headers:['Modalidad','Cuota','Mes','1er vencimiento','2do vencimiento'],data:subset.map(r=>[r.mode,r.quota,r.month?months[r.month-1]:'—',dateFmt(r.firstDue),dateFmt(r.secondDue)])}];const annual=subset.filter(r=>r.mode==='Anual');const monthly=subset.filter(r=>r.mode==='Mensual');const result=[{title:'Declaración jurada anual',headers:['Régimen','Vencimiento de entrega de DDJJ'],data:annual.map(r=>[r.regime,r.ddjjPending?'Fecha a confirmar':dateFmt(r.ddjj)])}];for(const reg of [...new Set(monthly.map(r=>r.regime))]){const general=reg==='Régimen General';result.push({title:tax==='publicidad'?'Tasa por Publicidad':general?'Régimen General':'Régimen Simplificado',headers:general?['Modalidad','Mes','Cuota','Entrega de DDJJ','Vencimiento de pago']:['Modalidad','Mes','Cuota','Vencimiento de pago'],data:monthly.filter(r=>r.regime===reg).map(r=>[r.mode,months[r.month-1],r.quota+' - '+r.year,...(general?[dateFmt(r.ddjj)]:[]),dateFmt(r.firstDue)])})}return result}
-function openCalendar(tax){activeTax=tax;$('#calendar-title').textContent=titles[tax]+' · 2026';$('#calendar-tables').innerHTML=tableGroups(tax).map(g=>'<section class="table-wrap"><h3>'+esc(g.title)+'</h3><table><thead><tr>'+g.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.data.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table></section>').join('');$('#calendar-dialog').showModal();$('#calendar-dialog .dialog-scroll').scrollTop=0}
+function openCalendar(tax){activeTax=tax;$('#calendar-title').textContent=titles[tax]+' · 2026';$('#calendar-tables').innerHTML=tableGroups(tax).map(g=>'<section class="table-wrap"><h3>'+esc(g.title)+'</h3><table><thead><tr>'+g.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.data.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table></section>').join('');resetCalendarDrawer();calendarDialog.showModal();syncCalendarScrollLock();$('#calendar-dialog .dialog-scroll').scrollTop=0;$('#calendar-dialog .calendar-scroll-content').scrollTop=0}
 function pdf(tax){const sections=tableGroups(tax), pages=[];let lines=[];const flush=()=>{if(lines.length)pages.push(lines);lines=[]};const add=(s,size=11,bold=false)=>{if(lines.length>=43)flush();lines.push({s,size,bold})};add('ARLO | Agencia de Recaudación de Lomas de Zamora',14,true);add(titles[tax]+' - Calendario 2026',18,true);add('Prototipo de desarrollo. Fechas según datos provistos.',10);for(const g of sections){if(lines.length>35)flush();add('',10);add(g.title.toUpperCase(),13,true);const widths=g.headers.map((_,i)=>Math.max(g.headers[i].length,...g.data.map(r=>String(r[i]).length))+2);const row=r=>r.map((v,i)=>String(v).padEnd(widths[i])).join('');add(row(g.headers),10,true);for(const r of g.data)add(row(r),10)}flush();const enc=s=>String(s).replace(/[–—]/g,'-').replace(/°/g,'º').replace(/[^\x20-\xFF]/g,'?').replace(/([\\()])/g,'\\$1');const objs=['<< /Type /Catalog /Pages 2 0 R >>','', '<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>','<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>'];const ids=[];pages.forEach((p,i)=>{let id=objs.length+1;ids.push(id);const stream='BT\n'+p.map((l,j)=>'/F'+(l.bold?2:1)+' '+l.size+' Tf 1 0 0 1 32 '+(795-j*16)+' Tm ('+enc(l.s)+') Tj').join('\n')+'\nET';objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+(id+1)+' 0 R >>','<< /Length '+stream.length+' >>\nstream\n'+stream+'\nendstream')});objs[1]='<< /Type /Pages /Count '+ids.length+' /Kids ['+ids.map(i=>i+' 0 R').join(' ')+'] >>';let out='%PDF-1.4\n',offsets=[0];objs.forEach((o,i)=>{offsets.push(out.length);out+=(i+1)+' 0 obj\n'+o+'\nendobj\n'});const xref=out.length;out+='xref\n0 '+offsets.length+'\n0000000000 65535 f \n'+offsets.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+offsets.length+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF';const blob=new Blob([Uint8Array.from(out,c=>c.charCodeAt(0))],{type:'application/pdf'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='ARLO-'+tax+'-2026.pdf';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000)}
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.dir){const rail=b.closest('.calendar-section').querySelector('.rail');rail.scrollBy({left:Number(b.dataset.dir)*304,behavior:'smooth'})}if(b.dataset.open)openCalendar(b.dataset.open);if(b.dataset.pdf)pdf(b.dataset.pdf);if(b.id==='close-dialog')$('#calendar-dialog').close();if(b.id==='print-calendar'&&activeTax)pdf(activeTax);if(b.id==='expand-cgm'){expanded=!expanded;renderPayments()}});
-$('#calendar-dialog').addEventListener('click',e=>{if(e.target===$('#calendar-dialog'))$('#calendar-dialog').close()});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.dir){const rail=b.closest('.calendar-section').querySelector('.rail');rail.scrollBy({left:Number(b.dataset.dir)*304,behavior:'smooth'})}if(b.dataset.open)openCalendar(b.dataset.open);if(b.dataset.pdf)pdf(b.dataset.pdf);if(b.id==='close-dialog')closeCalendarDrawer();if(b.id==='print-calendar'&&activeTax)pdf(activeTax);if(b.id==='expand-cgm'){expanded=!expanded;renderPayments()}});
+$('#calendar-dialog').addEventListener('click',e=>{if(e.target!==calendarDialog)return;const r=calendarDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeCalendarDrawer()});
 window.addEventListener('hashchange',route);
 async function start(){try{const [cal,pay]=await Promise.all(['vencimientos','medios-pago'].map(n=>fetch('./data/'+n+'.json').then(r=>{if(!r.ok)throw Error('No se pudo cargar '+n);return r.json()})));rows=cal.rows;months=cal.months;payments=pay.rows;renderPayments();route();if(location.hash==='#medios'&&!$('#app').querySelector('.hero')){$('#app').innerHTML=home();$('#medios').scrollIntoView()}}catch(e){$('#app').innerHTML='<h1>No se pudo cargar la información</h1><p>Intentá recargar la página.</p>';console.error(e)}}
+// Drawer de calendario: adaptación del motion de Agenda/Deportes sin dependencias React.
+const calendarDialog = $('#calendar-dialog');
+const calendarGrabber = calendarDialog.querySelector('.calendar-grabber');
+const drawerMobile = window.matchMedia('(max-width: 767px)');
+const drawerReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+let sheetStartY = null, sheetStartTime = 0, sheetBaseHeight = 0, sheetMoved = false;
+let sheetResetTimer = null, sheetCloseTimer = null, previousBodyOverflow = null, sheetPointerId = null;
+function clearSheetReset(){
+  if(sheetResetTimer!==null) window.clearTimeout(sheetResetTimer);
+  sheetResetTimer=null;
+}
+function clearSheetGesture(){
+  calendarDialog.classList.remove('sheet-dragging','sheet-stretching','sheet-rebounding','sheet-stretch-rebounding');
+  ['--sheet-drag-y','--sheet-stretch-y','--sheet-base-height','--sheet-backdrop-opacity'].forEach(p=>calendarDialog.style.removeProperty(p));
+}
+function resetCalendarDrawer(){
+  clearSheetReset();
+  if(sheetCloseTimer!==null)window.clearTimeout(sheetCloseTimer);
+  sheetCloseTimer=null;sheetStartY=null;sheetMoved=false;sheetPointerId=null;
+  clearSheetGesture();
+  calendarDialog.classList.remove('sheet-settled','sheet-exit');
+}
+function syncCalendarScrollLock(){
+  if(calendarDialog.open&&drawerMobile.matches){
+    if(previousBodyOverflow===null){previousBodyOverflow=document.body.style.overflow;document.body.style.overflow='hidden'}
+  }else if(previousBodyOverflow!==null){document.body.style.overflow=previousBodyOverflow;previousBodyOverflow=null}
+}
+function closeCalendarDrawer(){
+  if(!calendarDialog.open||sheetCloseTimer!==null)return;
+  clearSheetReset();sheetStartY=null;sheetPointerId=null;
+  if(!drawerMobile.matches||drawerReduced.matches){calendarDialog.close();return}
+  calendarDialog.classList.remove('sheet-dragging','sheet-stretching','sheet-rebounding','sheet-stretch-rebounding');
+  calendarDialog.classList.add('sheet-settled','sheet-exit');
+  sheetCloseTimer=window.setTimeout(()=>{sheetCloseTimer=null;calendarDialog.close()},220);
+}
+function sheetShouldDismiss(delta,elapsed,height){
+  return delta>0&&(delta>=Math.min(168,Math.max(120,height*.24))||(delta>=55&&delta/Math.max(1,elapsed)>=.8));
+}
+calendarGrabber.addEventListener('pointerdown',e=>{
+  if(!drawerMobile.matches||sheetCloseTimer!==null||sheetPointerId!==null||(e.pointerType==='mouse'&&e.button!==0))return;
+  clearSheetReset();clearSheetGesture();
+  sheetBaseHeight=calendarDialog.getBoundingClientRect().height;
+  calendarDialog.style.setProperty('--sheet-base-height',sheetBaseHeight.toFixed(2)+'px');
+  calendarDialog.classList.add('sheet-settled');
+  sheetStartY=e.clientY;sheetStartTime=e.timeStamp;sheetMoved=false;sheetPointerId=e.pointerId;
+  calendarGrabber.setPointerCapture(e.pointerId);
+});
+calendarGrabber.addEventListener('pointermove',e=>{
+  if(sheetStartY===null||e.pointerId!==sheetPointerId)return;
+  const delta=e.clientY-sheetStartY;
+  if(Math.abs(delta)>8)sheetMoved=true;
+  if(delta<0){
+    calendarDialog.classList.remove('sheet-dragging');
+    calendarDialog.style.setProperty('--sheet-drag-y','0px');
+    calendarDialog.style.setProperty('--sheet-stretch-y',(34*(1-Math.exp(Math.abs(delta)/-76))).toFixed(2)+'px');
+    calendarDialog.classList.add('sheet-stretching');
+    calendarDialog.style.setProperty('--sheet-backdrop-opacity','1');
+  }else{
+    calendarDialog.classList.remove('sheet-stretching');
+    calendarDialog.style.setProperty('--sheet-stretch-y','0px');
+    calendarDialog.style.setProperty('--sheet-drag-y',Math.max(0,delta).toFixed(2)+'px');
+    calendarDialog.classList.add('sheet-dragging');
+    calendarDialog.style.setProperty('--sheet-backdrop-opacity',String(Math.max(.12,1-delta/Math.max(1,sheetBaseHeight))));
+  }
+});
+function endCalendarGesture(e,cancelled){
+  if(sheetStartY===null||e.pointerId!==sheetPointerId)return;
+  const delta=e.clientY-sheetStartY,elapsed=Math.max(1,e.timeStamp-sheetStartTime);
+  sheetStartY=null;sheetPointerId=null;
+  if(Math.abs(delta)>8||cancelled)sheetMoved=true;
+  if(!cancelled&&sheetShouldDismiss(delta,elapsed,sheetBaseHeight)){closeCalendarDrawer();return}
+  const stretched=calendarDialog.classList.contains('sheet-stretching');
+  if(drawerReduced.matches||Math.abs(delta)<2){clearSheetGesture();return}
+  calendarDialog.classList.remove('sheet-dragging','sheet-stretching');
+  calendarDialog.classList.add(stretched?'sheet-stretch-rebounding':'sheet-rebounding');
+  calendarDialog.style.setProperty('--sheet-backdrop-opacity','1');
+  clearSheetReset();
+  sheetResetTimer=window.setTimeout(()=>{clearSheetGesture();sheetResetTimer=null},430);
+}
+calendarGrabber.addEventListener('pointerup',e=>endCalendarGesture(e,false));
+calendarGrabber.addEventListener('pointercancel',e=>endCalendarGesture(e,true));
+calendarGrabber.addEventListener('lostpointercapture',e=>endCalendarGesture(e,true));
+calendarGrabber.addEventListener('click',()=>{if(!sheetMoved)closeCalendarDrawer();sheetMoved=false});
+calendarDialog.addEventListener('cancel',e=>{if(drawerMobile.matches){e.preventDefault();closeCalendarDrawer()}});
+calendarDialog.addEventListener('close',()=>{resetCalendarDrawer();syncCalendarScrollLock()});
+drawerMobile.addEventListener('change',()=>{if(calendarDialog.open){if(sheetCloseTimer!==null)calendarDialog.close();else resetCalendarDrawer();syncCalendarScrollLock()}});
+
 start();
