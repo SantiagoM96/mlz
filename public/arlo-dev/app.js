@@ -22,7 +22,49 @@ function dateCard(e,highlight){let d=dayDiff(e.date,todayISO());return '<article
 function calendar(tax){const all=events(tax);const today=todayISO();let next=all.findIndex(e=>e.date>=today);if(next<0)next=Math.max(0,all.length-4);const pending=rows.filter(r=>r.tax===tax&&r.ddjjPending);return '<section class="calendar-section" data-tax="'+tax+'"><div class="heading-row"><div><h1>'+titles[tax]+'</h1><p class="muted">Informate sobre todas las fechas de vencimiento del año y descargate el calendario completo.</p></div><div class="arrows"><button data-dir="-1" aria-label="Vencimientos anteriores">'+icon('chevron_left')+'</button><button data-dir="1" aria-label="Vencimientos siguientes">'+icon('chevron_right')+'</button></div></div><div class="rail" tabindex="0" aria-label="Vencimientos de '+titles[tax]+'" data-start="'+next+'">'+all.map((e,i)=>dateCard(e,i===next)).join('')+'</div>'+(pending.length?'<p class="notice">Declaración jurada anual: fecha a confirmar.</p>':'')+'<div class="controls"><button class="pill" data-open="'+tax+'">'+icon('visibility')+' Ver calendario completo</button><button class="pill" data-pdf="'+tax+'">'+icon('download')+' Descargar calendario completo en PDF</button></div></section>'}
 function docs(tax){const data=tax==='higiene'?[['Información Útil','Encontrá toda la información correspondiente a la Tasa por Seguridad e Higiene.',['Constancia de Categorización','Mínimos Marzo 2026 (Cuota 3)','Mínimos Febrero 2026 (Cuota 2)','Valores RS Enero 2026 (Cuota 1)','Mínimos Noviembre 2025 (Cuota 11)']],['Formularios de DDJJ','Si vas a hacer el trámite de forma presencial, encontrá los formularios afines.',['DDJJ Régimen General Mensual','DDJJ Anual','Anexo Tasa Vial']],['Ordenanzas','Normativa tributaria, categorías, mínimos y condiciones aplicables.',['Ordenanza Impositiva','Ordenanza Fiscal']]]:[['Información Útil','Códigos de Publicidad.',['Códigos de Publicidad']],['Formularios de DDJJ','Declaración jurada de Derechos de Publicidad y Propaganda.',['DDJJ Publicidad y Propaganda / Ocupación de Espacios Públicos 2026']]];return data.map(([t,d,items])=>'<section class="documents"><h3>'+t+'</h3><p class="muted">'+d+'</p><div class="document-grid">'+items.map(n=>'<article class="doc">'+icon('description')+'<div>'+n+'<small>Documento pendiente de vincular</small></div></article>').join('')+'</div></section>').join('')}
 function setArrowState(rail){let holder=rail.closest('.calendar-section');holder.querySelector('[data-dir="-1"]').disabled=rail.scrollLeft<=2;holder.querySelector('[data-dir="1"]').disabled=rail.scrollLeft>=rail.scrollWidth-rail.clientWidth-2}
-function initRails(){document.querySelectorAll('.rail').forEach(rail=>{const start=Number(rail.dataset.start);rail.scrollLeft=start*304;setArrowState(rail);rail.addEventListener('scroll',()=>setArrowState(rail),{passive:true})})}
+function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
+  const start=Number(rail.dataset.start);
+  rail.scrollLeft=start*304;
+  setArrowState(rail);
+  rail.addEventListener('scroll',()=>setArrowState(rail),{passive:true});
+  let pointerId=null,originX=0,originScroll=0,dragged=false;
+  rail.addEventListener('pointerdown',e=>{
+    if(e.pointerType!=='mouse'||e.button!==0||pointerId!==null)return;
+    pointerId=e.pointerId;originX=e.clientX;originScroll=rail.scrollLeft;dragged=false;
+    rail.setPointerCapture(e.pointerId);
+  });
+  rail.addEventListener('pointermove',e=>{
+    if(e.pointerId!==pointerId)return;
+    const dx=e.clientX-originX;
+    if(!dragged&&Math.abs(dx)>5){dragged=true;rail.classList.add('is-dragging')}
+    if(dragged){rail.scrollLeft=originScroll-dx;e.preventDefault()}
+  });
+  const endDrag=e=>{
+    if(e.pointerId!==pointerId)return;
+    pointerId=null;
+    if(rail.hasPointerCapture(e.pointerId))rail.releasePointerCapture(e.pointerId);
+    rail.classList.remove('is-dragging');
+    if(dragged){
+      rail.dataset.suppressClick='true';
+      window.setTimeout(()=>{delete rail.dataset.suppressClick},0);
+    }
+    dragged=false;
+    setArrowState(rail);
+  };
+  rail.addEventListener('pointerup',endDrag);
+  rail.addEventListener('pointercancel',endDrag);
+  rail.addEventListener('lostpointercapture',endDrag);
+  rail.addEventListener('click',e=>{
+    if(rail.dataset.suppressClick==='true'){
+      e.preventDefault();e.stopPropagation();delete rail.dataset.suppressClick;
+    }
+  },true);
+  rail.addEventListener('keydown',e=>{
+    if(e.target!==rail||!['ArrowLeft','ArrowRight'].includes(e.key))return;
+    e.preventDefault();
+    rail.scrollBy({left:(e.key==='ArrowRight'?1:-1)*304,behavior:'smooth'});
+  });
+})}
 function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=nav.some(n=>n[0]===hash)?hash:'home';$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+(['higiene','publicidad'].includes(current)?docs(current):banner(true));document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo(0,0);requestAnimationFrame(initRails)}
 function tableGroups(tax){const subset=rows.filter(r=>r.tax===tax);if(['abl','auto','moto'].includes(tax))return [{title:titles[tax],headers:['Modalidad','Cuota','Mes','1er vencimiento','2do vencimiento'],data:subset.map(r=>[r.mode,r.quota,r.month?months[r.month-1]:'—',dateFmt(r.firstDue),dateFmt(r.secondDue)])}];const annual=subset.filter(r=>r.mode==='Anual');const monthly=subset.filter(r=>r.mode==='Mensual');const result=[{title:'Declaración jurada anual',headers:['Régimen','Vencimiento de entrega de DDJJ'],data:annual.map(r=>[r.regime,r.ddjjPending?'Fecha a confirmar':dateFmt(r.ddjj)])}];for(const reg of [...new Set(monthly.map(r=>r.regime))]){const general=reg==='Régimen General';result.push({title:tax==='publicidad'?'Tasa por Publicidad':general?'Régimen General':'Régimen Simplificado',headers:general?['Modalidad','Mes','Cuota','Entrega de DDJJ','Vencimiento de pago']:['Modalidad','Mes','Cuota','Vencimiento de pago'],data:monthly.filter(r=>r.regime===reg).map(r=>[r.mode,months[r.month-1],r.quota+' - '+r.year,...(general?[dateFmt(r.ddjj)]:[]),dateFmt(r.firstDue)])})}return result}
 function openCalendar(tax){activeTax=tax;$('#calendar-title').textContent=titles[tax]+' · 2026';$('#calendar-tables').innerHTML=tableGroups(tax).map(g=>'<section class="table-wrap"><h3>'+esc(g.title)+'</h3><table><thead><tr>'+g.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.data.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table></section>').join('');resetCalendarDrawer();calendarDialog.showModal();syncCalendarScrollLock();$('#calendar-dialog .dialog-scroll').scrollTop=0;$('#calendar-dialog .calendar-scroll-content').scrollTop=0}
