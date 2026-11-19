@@ -50,6 +50,8 @@ jobs:
           cache: npm
       - name: Instalar dependencias
         run: npm ci --no-audit --no-fund
+      - name: Generar fichas de Guía de Trámites desde el Excel
+        run: node scripts/generate-tramites-catalog.mjs
       - name: Instalar Chromium y librerías del sistema
         run: npx playwright install --with-deps chromium
       - name: Verificar el build
