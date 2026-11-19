@@ -200,8 +200,78 @@
       <a class="btn" href="#donde">Ver dónde se hace ${icon('place')}</a><p style="font-size:12px;color:var(--muted);margin-top:14px">Este es un prototipo de consulta, no un sistema de gestión de trámites.</p>
       </aside></div></main>`;
   }
+
+function detailExcel(){
+ const item=selectedItem;
+ if(!item)return `<main id="main" class="wrap main-section">${breadcrumb([{name:'Trámites',href:'d-catalogo.html'},{name:'Trámite no encontrado'}])}<h1>No encontramos ese trámite</h1><a class="btn" href="d-catalogo.html">Volver al catálogo</a></main>`;
+ const cat=byCategory[item.category];
+ const record=window.GUIA_TRAMITES_FICHAS?.[item.id];
+ const forms=record?.forms||[];
+ const info=forms[0];
+ const related=entries.filter(x=>x.category===item.category&&x.id!==item.id).slice(0,3);
+ const safePortal=p=>/^https?:\/\//i.test(p||'')?`<a href="${esc(p)}" target="_blank" rel="noopener noreferrer">Acceder a la gestión ${icon('open_in_new')}</a>`:'';
+ const paragraph=(value,missing='No especificado en la planilla de relevamiento')=>value?`<p>${esc(value)}</p>`:`<p class="detail-none">${esc(missing)}</p>`;
+ const infoRow=(name,value)=>value?`<tr><th scope="row">${esc(name)}</th><td>${esc(value)}</td></tr>`:'';
+ const table=rows=>`<table class="meta-table"><tbody>${rows}</tbody></table>`;
+ const part=(form,index,full=false)=>{
+  const tag=full?'h2':'h3';
+  return `<div class="detail-variant">
+    <${tag}>${full?'Información del trámite':esc(form.sourceName)}</${tag}>
+    ${form.summary&&form.summary.toLowerCase()!==item.description.toLowerCase()?`<p>${esc(form.summary)}</p>`:''}
+    <h3 class="mini-heading">Quién puede hacerlo y requisitos</h3>
+    ${table(infoRow('Destinatarios',form.audience)+infoRow('Condiciones para acceder',form.eligibility)+infoRow('Requisitos',form.requirements))}
+    <h3 class="mini-heading">Documentación necesaria</h3>
+    ${paragraph(form.documentation)}
+    ${form.documentFormat?`<p><strong>Presentación:</strong> ${esc(form.documentFormat)}</p>`:''}
+    <h3 class="mini-heading">Costo y pago</h3>
+    ${table(infoRow('Costo (relevamiento)',form.costDetail)+infoRow('Forma de pago',form.payment)+infoRow('Exenciones',form.exemptions))}
+    <h3 class="mini-heading">Cómo se hace</h3>
+    ${paragraph(form.process,'La planilla no describe los pasos para este trámite')}
+    <h3 class="mini-heading">Dónde y cuándo</h3>
+    ${table(infoRow('Modalidad',form.modality)+infoRow('Lugar de atención',form.place)+infoRow('Días y horarios',form.hours)+infoRow('Tiempo estimado de resolución',form.leadTime)+infoRow('Canales de atención',form.channels))}
+    ${form.portal?`<p>${safePortal(form.portal)}</p>`:''}
+    <h3 class="mini-heading">Normativa</h3>
+    ${paragraph(form.regulations,'No se informó normativa específica')}
+    ${form.regulationLink?`<p>${safePortal(form.regulationLink).replace('Acceder a la gestión','Ver normativa')}</p>`:''}
+    <p class="source-note">Fuente: relevamiento municipal de trámites · ${esc(form.surveyDate||'2026')}${index>0?' · Variante de la gestión':''}</p>
+  </div>`;
+ };
+ const sections=[['requisitos','Quién puede hacerlo'],['documentacion','Documentación'],['costo','Costo y formas de pago'],['pasos','Cómo se hace'],['atencion','Dónde y cuándo'],['normativa','Normativa'],...(forms.length>1?[['variantes','Variantes del trámite']]:[]),['relacionados','Otros trámites del tema']];
+ let body='';
+ if(info){
+  body=`
+  <section id="requisitos"><h2>Quién puede hacerlo</h2>${table(infoRow('Destinatarios',info.audience)+infoRow('Condiciones',info.eligibility)+infoRow('Requisitos',info.requirements))}</section>
+  <section id="documentacion"><h2>Documentación</h2>${paragraph(info.documentation)}${info.documentFormat?`<p><strong>Formato de presentación:</strong> ${esc(info.documentFormat)}</p>`:''}</section>
+  <section id="costo"><h2>Costo y formas de pago</h2><div class="result-meta"><span class="tag ${isFree(item)?'free':'cost'}">${esc(item.cost)}</span></div>${table(infoRow('Detalle según Excel',info.costDetail)+infoRow('Medios de pago',info.payment)+infoRow('Exenciones',info.exemptions))}</section>
+  <section id="pasos"><h2>Cómo se hace</h2>${paragraph(info.process,'No se detallan pasos en la planilla de relevamiento')}</section>
+  <section id="atencion"><h2>Dónde y cuándo</h2>${table(infoRow('Modalidad',info.modality)+infoRow('Lugar de atención',info.place)+infoRow('Días y horarios',info.hours)+infoRow('Plazo estimado según Excel',info.leadTime)+infoRow('Canales de atención',info.channels))}${info.portal?`<p>${safePortal(info.portal)}</p>`:''}</section>
+  <section id="normativa"><h2>Normativa</h2>${paragraph(info.regulations,'No se informó normativa específica')}${info.regulationLink?`<p>${safePortal(info.regulationLink).replace('Acceder a la gestión','Ver normativa')}</p>`:''}</section>
+  ${forms.length>1?`<section id="variantes"><h2>Variantes del trámite</h2><p>El relevamiento incluye ${forms.length} gestiones relacionadas. Revisá el caso que corresponda: pueden cambiar los requisitos, los costos o el procedimiento.</p>${forms.slice(1).map((form,index)=>part(form,index+1)).join('')}</section>`:''}
+  `;
+ }else{
+  body='<section><h2>Información del trámite</h2><p>La ficha de origen no está disponible en esta compilación. Consultá el área municipal antes de realizar la gestión.</p></section>';
+ }
+ body+=`<section id="relacionados"><h2>Otros trámites del tema</h2><div class="related-list">${related.map(x=>`<a href="${detailUrl(x)}"><span>${esc(x.title)}</span><small>${esc(x.cost)} · ${esc(x.time)}</small></a>`).join('')}</div></section>`;
+ return `<main class="wrap main-section" id="main">
+  ${breadcrumb([{name:'Trámites',href:'d-catalogo.html'},{name:cat.name,href:categoryUrl(cat)},{name:item.title}])}
+  <div class="detail-head">
+   <div class="title-actions"><div><a class="eyebrow" href="${categoryUrl(cat)}">${esc(cat.name)}</a><p class="detail-source">Información obtenida de la planilla de relevamiento municipal de 2026</p></div>
+    <div class="small-actions actions"><button type="button" class="btn secondary" data-action="share">${icon('share')} Compartir</button><button type="button" class="btn secondary" data-action="print">${icon('print')} Imprimir</button></div>
+   </div>
+   <h1>${esc(item.title)}</h1><p class="summary">${esc(item.description)}</p>
+   <div class="result-meta"><span class="tag ${isFree(item)?'free':'cost'}">${esc(item.cost)}</span><span class="tag">${esc(item.time)}</span><span class="tag ${isOnline(item)?'online':''}">${esc(item.mode)}</span></div>
+  </div>
+  <div class="detail-columns">
+    <div class="detail-body">${body}</div>
+    <aside class="detail-aside"><h2>En esta ficha</h2><nav aria-label="Contenido de la ficha">${sections.map(([id,name])=>`<a href="#${id}">${esc(name)}</a>`).join('')}</nav>
+       <div class="detail-highlight"><p>Este es un prototipo de trabajo con datos relevados. Confirmá requisitos, plazos y montos antes de hacer una gestión real.</p></div>
+       <a class="btn" href="d-catalogo.html">Volver al catálogo ${icon('arrow_back')}</a>
+    </aside>
+  </div>
+ </main>`;
+}
   function render(){
-    let main=page==='home'?home():page==='category'?category():page==='detail'?detail():catalog();
+    let main=page==='home'?home():page==='category'?category():page==='detail'?detailExcel():catalog();
     mount.innerHTML=header()+main+footer();
     document.title=(page==='home'?'Inicio':page==='category'?selectedCategory.name:page==='detail'?(selectedItem?.title||'Trámite'): 'Catálogo de trámites')+' · Guía de Trámites Lomas';
   }
