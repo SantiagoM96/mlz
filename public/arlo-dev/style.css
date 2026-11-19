@@ -68,3 +68,12 @@
 /* Calendario: arrastre con mouse y navegación por flechas, sin alterar swipe táctil. */
 @media(hover:hover) and (pointer:fine){.rail{cursor:grab}.rail.is-dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto;user-select:none;-webkit-user-select:none}.rail.is-dragging *{user-select:none;-webkit-user-select:none}}
 .rail:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* Selector de ejercicio fiscal, sin afectar los controles de calendarios existentes. */
+.calendar-year-picker{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin:20px 0 24px}
+.calendar-year-picker label{color:var(--gray);font-size:14px;font-weight:600}
+.calendar-year-picker select{appearance:auto;border:1px solid var(--border);background:#fff;color:var(--gray);border-radius:8px;font:600 16px Inter,Arial,sans-serif;min-width:108px;padding:10px 14px;cursor:pointer}
+.calendar-year-picker select:focus-visible{outline:3px solid #006eff;outline-offset:3px}
+@media(min-width:1080px){.tax-grid:has(> :nth-child(5)){grid-template-columns:repeat(5,minmax(0,1fr))}.tax-grid:has(> :nth-child(5)) .tax-card{padding:16px;min-width:0}}
+@media(min-width:768px) and (max-width:1079px){.tax-grid:has(> :nth-child(5)){grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:767px){.calendar-year-picker{justify-content:space-between;margin:16px 0 24px}.calendar-year-picker select{min-height:44px}}
