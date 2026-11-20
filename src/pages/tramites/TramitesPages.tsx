@@ -237,7 +237,14 @@ export function TramiteDetailPage() {
     <Link to={base} className="tram-btn">Volver al catálogo</Link>
   </PageContainer>;
 
-  const relacionados = tramites.filter((item) => item.categoria === tramite.categoria && item.id !== tramite.id).slice(0, 3);
+  // Solo sugerencias identificadas en Figma, no relaciones inferidas por coincidencia de categoría.
+  // Otros mapas se incorporan únicamente cuando exista aprobación editorial.
+  const relacionadosPorDiseno: Readonly<Record<string, readonly string[]>> = {
+    R036: ['R093', 'R089', 'R046'],
+  };
+  const relacionados = (relacionadosPorDiseno[tramite.id] ?? [])
+    .map((relatedId) => tramites.find((item) => item.id === relatedId))
+    .filter((item): item is Tramite => Boolean(item));
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 || Boolean(tramite.requisitos.trim()) },
     { id: 'documentacion', titulo: 'Documentación', visible: Boolean(tramite.documentacion.trim()) },
