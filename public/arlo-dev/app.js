@@ -113,6 +113,18 @@ function toggleCalendarView(){
   const monthly=calendarView==='month';
   rail.hidden=monthly;view.hidden=!monthly;arrows.hidden=monthly;
   if(monthly&&!view.dataset.rendered){view.innerHTML=monthlyCalendar(tax);view.dataset.rendered='true'}
+  if(!monthly){
+    // El carrusel puede haber sido montado oculto; ubicarlo sin animar.
+    const index=chooseYearIndex(events(tax),currentYear);
+    const card=rail.children[index];
+    if(card){
+      const snap=rail.style.scrollSnapType;
+      rail.style.scrollSnapType='none';
+      rail.scrollTo({left:card.offsetLeft-rail.offsetLeft,behavior:'instant'});
+      rail.style.scrollSnapType=snap;
+      setArrowState(rail);
+    }
+  }
   button.setAttribute('aria-pressed',String(monthly));
   button.setAttribute('aria-label','Cambiar a vista '+(monthly?'semanal':'mensual'));
   button.querySelector('span:last-child').textContent=monthly?'Ver semana':'Ver mes';
