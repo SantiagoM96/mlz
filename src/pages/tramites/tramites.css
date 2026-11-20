@@ -697,3 +697,15 @@
 /* Modalidades diferenciadas: violeta para Online y verde para Presencial. */
 .tram-modalidad-chip--online { background: var(--color-panel); color: var(--color-primary-600); }
 .tram-modalidad-chip--presencial { background: var(--color-panel); color: var(--color-primary-600); }
+
+/* Tarjetas del catálogo: ambos bloques dentro de una misma caja. */
+.tram-group-grid { row-gap: 16px; }
+.tram-group-grid > .tram-row {
+  padding: 24px;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: #fff;
+}
+@media (max-width: 680px) {
+  .tram-group-grid > .tram-row { padding: 24px; }
+}
