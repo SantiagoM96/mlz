@@ -75,3 +75,96 @@ test('rutas directas y enlaces públicos verificables', async ({ page }) => {
   await page.getByRole('link', { name: 'Volver al catálogo' }).click();
   await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toBeVisible();
 });
+
+
+test('Más filtros sincroniza destinatario y tema seleccionados en accesos directos', async ({ page }) => {
+  await page.goto('/tramites');
+  const more = page.getByTestId('tramites-more-filters');
+  const counter = more.locator('[data-agenda-filter-count]');
+  await expect(counter).toHaveCount(0);
+
+  await page.getByRole('button', { name: '¿Para quién es?', exact: true }).click();
+  const audience = page.getByRole('dialog', { name: 'Opciones de ¿Para quién es?' });
+  await audience.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
+  await audience.getByRole('button', { name: /Ver resultados/ }).click();
+  await expect(counter).toHaveText('1');
+
+  await page.getByRole('button', { name: 'Tema', exact: true }).click();
+  const topic = page.getByRole('dialog', { name: 'Opciones de Tema' });
+  await topic.getByRole('checkbox', { name: 'Vehículos y tránsito' }).click();
+  await topic.getByRole('button', { name: /Ver resultados/ }).click();
+  await expect(counter).toHaveText('2');
+
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByRole('checkbox', { name: 'Vecinos y vecinas' })).toBeChecked();
+  await panel.getByRole('button', { name: 'Tema', exact: true }).click();
+  await expect(panel.getByRole('checkbox', { name: 'Vehículos y tránsito' })).toBeChecked();
+
+  await panel.getByRole('button', { name: 'Turno', exact: true }).click();
+  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await expect(counter).toHaveText('3');
+  await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
+  await expect(panel).toBeHidden();
+  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('tramite-filter-chip-turno')).toBeVisible();
+
+  // Cambiar el turno desde el panel no suma una segunda selección del mismo criterio.
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const reopened = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await reopened.getByRole('button', { name: 'Turno', exact: true }).click();
+  await expect(reopened.getByRole('checkbox', { name: 'No requiere turno' })).toBeChecked();
+  await reopened.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
+  await expect(reopened.getByRole('checkbox', { name: 'No requiere turno' })).not.toBeChecked();
+  await expect(counter).toHaveText('3');
+  await reopened.getByRole('button', { name: 'Ver resultados (1)' }).click();
+  await expect(reopened).toBeHidden();
+  await expect(page.getByText('1 trámite', { exact: true })).toBeVisible();
+});
+
+test('Turno no incluye trámites cuyo relevamiento no informa si requieren reserva', async ({ page }) => {
+  await page.goto('/tramites');
+  const more = page.getByTestId('tramites-more-filters');
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await panel.getByRole('button', { name: 'Turno', exact: true }).click();
+
+  // Se comprueban ambas alternativas mientras el mismo panel permanece abierto,
+  // sin introducir carreras con el cierre animado de Agenda en móvil.
+  await panel.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Ver resultados (10)' })).toBeVisible();
+  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await expect(panel.getByRole('checkbox', { name: 'Requiere turno', exact: true })).not.toBeChecked();
+  await expect(panel.getByRole('button', { name: 'Ver resultados (83)' })).toBeVisible();
+  await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
+  await expect(panel).toBeHidden();
+  await expect(page.getByText('83 trámites', { exact: true })).toBeVisible();
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('1');
+
+  // Con un estado inicial desde la URL, limpiar las opciones mantiene la búsqueda.
+  await page.goto('/tramites?q=licencia&turno=No+requiere+turno');
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const filters = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await filters.getByRole('button', { name: 'Limpiar', exact: true }).click();
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
+  await expect(page.getByRole('searchbox', { name: 'Buscar trámite' })).toHaveValue('licencia');
+});
+
+test('Más filtros usa bottom sheet de Agenda en móvil', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tramites');
+  await page.getByTestId('tramites-more-filters').getByRole('button', { name: 'Más filtros' }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await expect(panel).toBeVisible();
+  await expect(page.locator('.agenda-mobile-backdrop')).toBeVisible();
+  await expect(panel.getByRole('button', { name: '¿Para quién es?' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Tema' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Turno' })).toBeVisible();
+  await panel.getByRole('button', { name: 'Turno' }).click();
+  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});

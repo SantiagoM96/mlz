@@ -5,6 +5,7 @@ import { PageContainer } from '../../components/layout/PageContainer';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { TableOfContents } from '../../components/ui/TableOfContents';
 import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
+import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
 import { documentacionPublica, pasosPublicos } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import './tramites.css';
@@ -49,7 +50,15 @@ export function TramitesCatalogPage() {
   const tema = params.get('tema') ?? '';
   const destinatario = params.get('destinatario') ?? '';
   const modalidad = params.get('modalidad') ?? '';
+  const turno = params.get('turno') ?? '';
   const orden = params.get('orden') === 'az' ? 'az' : 'tema';
+  const valores: FiltrosTramites = { destinatario, tema, turno, modalidad };
+  const modalidades = useMemo(() => Array.from(new Set(tramites.map(t => t.modalidad))), []);
+  const limpiarOpciones = () => setParams(actual => {
+    const siguiente = new URLSearchParams(actual);
+    camposFiltro.forEach(campo => siguiente.delete(campo));
+    return siguiente;
+  }, { replace: true });
 
   const filtrados = useMemo(() => {
     const q = normalizarBusqueda(diferida);
@@ -57,18 +66,20 @@ export function TramitesCatalogPage() {
       (!q || normalizarBusqueda([t.titulo, t.descripcion, t.sinonimos, ...t.etiquetas].join(' ')).includes(q)) &&
       (!tema || t.categoria === tema) &&
       (!destinatario || t.destinatarios.includes(destinatario)) &&
-      (!modalidad || t.modalidad === modalidad)
+      (!modalidad || t.modalidad === modalidad) &&
+      (!turno || (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
+        (turno === 'No requiere turno' && /^no$/i.test(t.turno.trim())))
     );
     return orden === 'az'
       ? [...rows].sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
       : rows;
-  }, [diferida, tema, destinatario, modalidad, orden]);
+  }, [diferida, tema, destinatario, modalidad, turno, orden]);
 
   const grupos = useMemo(() => orden === 'az'
     ? [{ nombre: '', items: filtrados }]
     : temas.map((nombre) => ({ nombre, items: filtrados.filter((tramite) => tramite.categoria === nombre) })).filter((grupo) => grupo.items.length > 0), [filtrados, orden]);
 
-  const hayFiltros = !!(busqueda || tema || destinatario || modalidad);
+  const hayFiltros = !!(busqueda || tema || destinatario || modalidad || turno);
   return (
     <PageContainer className="tram-container">
       <Breadcrumbs items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
@@ -103,17 +114,35 @@ export function TramitesCatalogPage() {
             align="end-responsive" />
         </div>
         <div className="tram-filter-control tram-filter-more-control">
-          <AgendaDropdown label="Más filtros" panelTitle="Modalidad" triggerIcon="tune"
-            searchable={false} options={['Online', 'Presencial', 'Online y Presencial']}
-            selected={modalidad ? [modalidad] : []} resultCount={filtrados.length}
-            onChange={(values) => elegirValor(setParams, 'modalidad', values[0] ?? '')}
-            align="end" />
+          <TramitesMoreFilters
+            value={valores}
+            temas={temas}
+            destinatarios={destinatarios}
+            modalidades={modalidades}
+            resultCount={filtrados.length}
+            onChange={(campo, value) => elegirValor(setParams, campo, value)}
+            onReset={limpiarOpciones}
+          />
         </div>
       </div>
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
         <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
       </div>
-      {hayFiltros && <div className="tram-active-filters"><span>Filtros aplicados</span><button type="button" onClick={() => setParams(new URLSearchParams(orden === 'az' ? { orden: 'az' } : {}))}>Limpiar filtros</button></div>}
+      {hayFiltros && <div className="tram-active-filters">
+        <span>Filtros aplicados</span>
+        <div className="tram-selected-filters">
+          {camposFiltro.filter(campo => valores[campo]).map(campo =>
+            <button type="button" key={campo} data-testid={'tramite-filter-chip-' + campo}
+              aria-label={'Quitar filtro ' + campo + ': ' + valores[campo]}
+              onClick={() => elegirValor(setParams, campo, '')}
+              className="agenda-filter-chip inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
+              {valores[campo]} <MaterialIcon name="close" size={15} />
+            </button>)}
+          <button type="button" onClick={() => setParams(new URLSearchParams(orden === 'az' ? { orden: 'az' } : {}))}>
+            Limpiar filtros
+          </button>
+        </div>
+      </div>}
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
