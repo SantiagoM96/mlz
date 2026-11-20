@@ -138,13 +138,11 @@ export function AgendaDropdown({
                   <span className="min-w-0 flex-1">{option}</span>
                   <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onClick={(event) => { if (selectionControl === 'radio' && checked) { event.preventDefault(); toggle(option); } }} onChange={() => { if (!checked || !(selectionControl === 'radio')) toggle(option); }}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
-                  <span aria-hidden="true"
-                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2 ${selectionControl === 'radio' ? 'rounded-full' : 'rounded-[2px]'}
-                      ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
-                    {checked && (selectionControl === 'radio'
-                      ? <span className="size-2 rounded-full bg-white" />
-                      : <MaterialIcon name="check" size={16} className="text-white" />)}
-                  </span>
+                  <MaterialIcon
+                    name={selectionControl === 'radio' ? (checked ? 'radio_button_checked' : 'radio_button_unchecked') : (checked ? 'check_box' : 'check_box_outline_blank')}
+                    size={24} weight={400}
+                    className={`agenda-motion-check pointer-events-none relative z-10 ${checked ? 'text-white' : 'text-primary-600'}`}
+                  />
                 </label>
               );
             }) : (
