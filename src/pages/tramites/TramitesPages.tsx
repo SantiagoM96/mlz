@@ -98,14 +98,6 @@ export function TramitesCatalogPage() {
 }
 
 
-function SeccionFicha({ id, titulo, contenido }: { id: string; titulo: string; contenido: string }) {
-  if (!contenido.trim()) return null;
-  return <section className="tram-detail-section" id={id}>
-    <h2>{titulo}</h2>
-    <p className="tram-longtext">{contenido}</p>
-  </section>;
-}
-
 function AccionesFicha() {
   const [copiado, setCopiado] = useState(false);
   async function compartir() {
@@ -233,7 +225,7 @@ export function TramiteDetailPage() {
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 || Boolean(tramite.requisitos.trim()) },
     { id: 'documentacion', titulo: 'Documentación', visible: Boolean(tramite.documentacion.trim()) },
-    { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: Boolean(pasos.trim()) },
+    { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: Boolean(tramite.pasos.trim() || tramite.comoIniciar.trim()) },
     { id: 'donde-cuando', titulo: 'Dónde y cuándo', visible: Boolean(tramite.direccion.trim() || tramite.horarios.trim() || tramite.turno.trim()) },
     { id: 'costos', titulo: 'Costos y plazos', visible: Boolean(tramite.costo.trim() || tramite.monto.trim() || tramite.pago.trim() || tramite.plazo.trim() || tramite.detalleExenciones.trim()) },
     { id: 'normativa', titulo: 'Normativa', visible: Boolean(tramite.normativa.trim() || tramite.normativaUrl.trim()) },
