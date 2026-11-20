@@ -658,15 +658,38 @@
 .tram-row-actions .tram-link-action:hover { color: var(--color-primary-700); text-decoration: underline; }
 .tram-row-actions .tram-link-action:focus-visible { outline: 2px solid var(--color-info-500); outline-offset: 3px; }
 
-/* Catálogo: dos trámites por fila en desktop, uno por fila en mobile. */
-@media (min-width: 1024px) {
-  .tram-group-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
-  .tram-group-grid > .tram-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 38%); align-items: stretch; gap: 16px; min-width: 0; height: 100%; box-sizing: border-box; }
+/* Cada trámite mantiene contenido y etiquetas en columnas internas.
+   El catálogo muestra dos trámites por fila en desktop. */
+@media (min-width: 681px) {
+  .tram-group-grid > .tram-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 36%);
+    align-items: stretch;
+    gap: 16px;
+    min-width: 0;
+    box-sizing: border-box;
+  }
   .tram-group-grid > .tram-row .tram-row-body { min-width: 0; }
-  .tram-group-grid > .tram-row .tram-row-side { flex: none; width: auto; min-width: 0; min-height: 0; padding: 0 0 0 16px; border-left: 1px solid var(--color-divider); justify-content: flex-start; gap: 12px; }
-  .tram-group-grid > .tram-row .tram-tags { align-content: flex-start; }
+  .tram-group-grid > .tram-row .tram-row-side {
+    flex: none;
+    width: auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 0 0 0 16px;
+    border-left: 1px solid var(--color-divider);
+    justify-content: flex-start;
+    gap: 12px;
+  }
 }
-
+@media (min-width: 1024px) {
+  .tram-group-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    align-items: stretch;
+  }
+  .tram-group-grid > .tram-row { height: 100%; }
+}
 /* Chips medianos informativos para modalidades del catálogo. */
 .tram-modalidad-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .tram-modalidad-chip { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border-radius: 4px; background: #e5f0f9; color: var(--color-info-500); font-size: 14px; font-weight: 500; line-height: 20px; }
