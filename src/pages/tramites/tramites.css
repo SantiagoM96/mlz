@@ -103,6 +103,8 @@
    Aquí solo se ajusta el ritmo vertical propio del catálogo. */
 .tram-active-filters + .tram-results { margin-top: 24px; }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
+/* En desktop el wrapper no altera la composición del componente compartido. */
+.tram-filter-more-control [data-tram-counter-slot] { display: contents; }
 
 .tram-group { margin: 32px 0 40px; scroll-margin-top: 24px; }
 .tram-group-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 24px; }
