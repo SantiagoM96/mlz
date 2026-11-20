@@ -33,7 +33,11 @@ test('ficha R036: índice de Jóvenes, contenido de Figma y sin campos descartad
   await expect(page.getByRole('button', { name: 'Imprimir' }).first()).toBeVisible();
   await expect(page.locator('#costos')).toHaveCount(0);
   await expect(page.locator('#normativa')).toHaveCount(0);
-  await expect(page.locator('#relacionados')).toHaveCount(0);
+  await expect(page.locator('#otros-tramites .tram-related-card')).toHaveCount(3);
+  await expect(page.locator('#otros-tramites .tram-related-card').nth(0)).toHaveAttribute('href', /\/R093$/);
+  await expect(page.locator('#otros-tramites .tram-related-card').nth(1)).toHaveAttribute('href', /\/R089$/);
+  await expect(page.locator('#otros-tramites .tram-related-card').nth(2)).toHaveAttribute('href', /\/R046$/);
+  await expect(page.locator('#otros-tramites')).not.toContainText('Solicitar un certificado para escribanía');
   await expect(page.locator('#donde-cuando .tram-location-map')).toHaveCount(1);
   await expect(page.getByRole('link', { name: /Ir al sitio del trámite/i })).toHaveCount(0);
 });
@@ -44,6 +48,16 @@ test('ficha R018: separa correctamente los cuatro pasos de ORIGEN', async ({ pag
   await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(4);
   await expect(page.locator('#procedimiento')).not.toContainText('1\nRecepcionarse\n2');
   await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(3);
+  await expect(page.locator('#documentacion .tram-documents li').first())
+    .toContainText('Baja impositiva municipio anterior');
+  await expect(page.locator('#documentacion .tram-documents li').nth(1))
+    .toContainText('Título automotor');
+  await expect(page.locator('#documentacion .tram-documents li').nth(2))
+    .toContainText('DNI');
+  await expect(page.locator('#donde-cuando .tram-location-info'))
+    .toContainText('Azara 237 PB');
+  await expect(page.locator('#donde-cuando .tram-location-info'))
+    .toContainText('Lunes a viernes de 8 a 16 h');
   await expect(page.locator('#costos')).toHaveCount(0);
   await expect(page.locator('#normativa')).toHaveCount(0);
 });
@@ -54,6 +68,10 @@ test('ficha mobile: índice antes del contenido, filtros tipo Agenda y sin desbo
   const tools = page.locator('.tram-detail-mobile-tools');
   await expect(tools.getByRole('navigation', { name: 'Índice de la ficha' })).toBeVisible();
   await expect(tools.getByRole('button', { name: 'Compartir' })).toBeVisible();
+  await expect(page.locator('#otros-tramites .tram-related-card')).toHaveCount(3);
+  const cards = page.locator('#otros-tramites .tram-related-card');
+  expect(await cards.nth(1).boundingBox().then(rect => rect?.y ?? 0))
+    .toBeGreaterThan(await cards.nth(0).boundingBox().then(rect => rect?.y ?? 0));
   await expect(page.locator('.tram-detail-aside')).toBeHidden();
   let overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
@@ -167,4 +185,39 @@ test('Más filtros usa bottom sheet de Agenda en móvil', async ({ page }) => {
   await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
+});
+
+
+test('Compartir copia la URL como Agenda y cambia ícono de enlace a check', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (text: string) => {
+          (window as Window & { lastCopiedLink?: string }).lastCopiedLink = text;
+        },
+      },
+    });
+  });
+  await page.goto('/tramites/R018');
+  const share = page.locator('.tram-detail-aside').getByRole('button', { name: 'Compartir' });
+  await expect(share.locator('[data-material-symbol="link"]')).toBeVisible();
+  await share.click();
+  const copied = page.locator('.tram-detail-aside').getByRole('button', { name: 'Enlace copiado' });
+  await expect(copied.locator('[data-material-symbol="check"]')).toBeVisible();
+  await expect(page.locator('.tram-detail-aside [role="status"]'))
+    .toContainText('Enlace copiado al portapapeles');
+  expect(await page.evaluate(() => (window as Window & { lastCopiedLink?: string }).lastCopiedLink))
+    .toContain('/tramites/R018');
+});
+
+test('Otros trámites del tema navegan sin inventar categorías ni reutilizar la ficha actual', async ({ page }) => {
+  await page.goto('/tramites/R018');
+  const currentTitle = await page.getByRole('heading', { level: 1 }).textContent();
+  const cards = page.locator('#otros-tramites .tram-related-card');
+  await expect(cards).toHaveCount(3);
+  await expect(page.locator('#otros-tramites')).not.toContainText(currentTitle ?? '');
+  await cards.first().click();
+  await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(currentTitle ?? '');
+  await expect(page.locator('#otros-tramites')).toBeVisible();
 });
