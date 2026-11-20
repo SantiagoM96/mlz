@@ -200,6 +200,22 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   </section>;
 }
 
+function CostosFicha({ tramite }: { tramite: Tramite }) {
+  const sinCosto = tramite.costo.trim().toLocaleLowerCase('es-AR') === 'no';
+  const visible = Boolean(tramite.costo || tramite.monto || tramite.pago || tramite.plazo || tramite.detalleExenciones);
+  if (!visible) return null;
+  return <section className="tram-detail-section" id="costos">
+    <h2>Costos y plazos</h2>
+    {sinCosto ? <p><strong>Sin costo</strong></p> : <>
+      {tramite.costo && <p><strong>Costo: </strong>{tramite.costo}</p>}
+      {tramite.monto && <p><strong>Monto: </strong>{tramite.monto}</p>}
+      {tramite.pago && <p><strong>Forma de pago: </strong>{tramite.pago}</p>}
+      {tramite.detalleExenciones && <p><strong>Exenciones o bonificaciones: </strong>{tramite.detalleExenciones}</p>}
+    </>}
+    {tramite.plazo && <p><strong>Plazo estimado: </strong>{tramite.plazo}</p>}
+  </section>;
+}
+
 function RelacionadosFicha({ items }: { items: Tramite[] }) {
   if (!items.length) return null;
   return <section className="tram-related" id="relacionados">
@@ -263,14 +279,7 @@ export function TramiteDetailPage() {
         <DocumentacionFicha tramite={tramite} />
         <ProcedimientoFicha tramite={tramite} />
         <SedeFicha tramite={tramite} />
-        {(tramite.costo || tramite.monto || tramite.pago || tramite.plazo || tramite.detalleExenciones) && <section className="tram-detail-section" id="costos">
-          <h2>Costos y plazos</h2>
-          {tramite.costo && <p><strong>Costo: </strong>{tramite.costo.toLowerCase() === 'no' ? 'Sin costo' : tramite.costo}</p>}
-          {tramite.monto && <p><strong>Monto: </strong>{tramite.monto}</p>}
-          {tramite.pago && <p><strong>Forma de pago: </strong>{tramite.pago}</p>}
-          {tramite.plazo && <p><strong>Plazo estimado: </strong>{tramite.plazo}</p>}
-          {tramite.detalleExenciones && <p><strong>Exenciones o bonificaciones: </strong>{tramite.detalleExenciones}</p>}
-        </section>}
+        <CostosFicha tramite={tramite} />
         {(tramite.normativa || tramite.normativaUrl) && <section className="tram-detail-section" id="normativa">
           <h2>Normativa</h2>
           {tramite.normativa && <p className="tram-longtext">{tramite.normativa}</p>}
