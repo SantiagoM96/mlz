@@ -15,11 +15,30 @@ import './tramites.css';
 
 const base = '/tramites';
 const ficha = (id: string) => base + '/' + id;
-function Etiquetas({ items }: { items: readonly string[] }) {
-  return <div className="tram-tags">{items.map((item) => <span className="tram-tag" key={item}>{item}</span>)}</div>;
+function Etiquetas({ items, activa, onSeleccionar }: {
+  items: readonly string[];
+  activa?: string;
+  onSeleccionar?: (etiqueta: string) => void;
+}) {
+  return <div className="tram-tags" aria-label="Etiquetas del trámite">
+    {items.map((item) => onSeleccionar
+      ? <button key={item} type="button"
+          className={'tram-tag tram-tag-action' + (activa === item ? ' tram-tag-selected' : '')}
+          aria-label={'Filtrar trámites por etiqueta: ' + item}
+          aria-pressed={activa === item}
+          onClick={() => onSeleccionar(item)}>{item}</button>
+      : <Link key={item} to={base + '?etiqueta=' + encodeURIComponent(item)}
+          className="tram-tag tram-tag-action"
+          aria-label={'Ver trámites con etiqueta: ' + item}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>{item}</Link>)}
+  </div>;
 }
 
-function FilaTramite({ tramite }: { tramite: Tramite }) {
+function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
+  tramite: Tramite;
+  etiquetaActiva: string;
+  onElegirEtiqueta: (etiqueta: string) => void;
+}) {
   return (
     <article className="tram-row" data-testid="tramite-row">
       <div className="tram-row-body">
@@ -32,7 +51,7 @@ function FilaTramite({ tramite }: { tramite: Tramite }) {
       </div>
       <div className="tram-row-side">
         <h4>Etiquetas</h4>
-        <Etiquetas items={tramite.etiquetas} />
+        <Etiquetas items={tramite.etiquetas} activa={etiquetaActiva} onSeleccionar={onElegirEtiqueta} />
       </div>
     </article>
   );
@@ -65,8 +84,9 @@ export function TramitesCatalogPage() {
   const destinatario = [...new Set(params.getAll('destinatario'))].filter((nombre) => destinatarios.includes(nombre));
   const modalidad = params.get('modalidad') ?? '';
   const turno = params.get('turno') ?? '';
+  const etiqueta = params.get('etiqueta') ?? '';
   const orden = params.get('orden') === 'az' ? 'az' : 'tema';
-  const valores: FiltrosTramites = { destinatario, tema, turno, modalidad };
+  const valores: FiltrosTramites = { destinatario, tema, turno, modalidad, etiqueta };
   const modalidades = useMemo(() => Array.from(new Set(tramites.map(t => t.modalidad))), []);
   const limpiarOpciones = () => setParams(actual => {
     const siguiente = new URLSearchParams(actual);
@@ -88,7 +108,7 @@ export function TramitesCatalogPage() {
   };
   const chips: { campo: (typeof camposFiltro)[number]; valor: string }[] = [
     ...destinatario.map((valor) => ({ campo: 'destinatario' as const, valor })),
-    ...(['tema', 'turno', 'modalidad'] as const).flatMap(campo =>
+    ...(['tema', 'turno', 'modalidad', 'etiqueta'] as const).flatMap(campo =>
       valores[campo] ? [{ campo, valor: valores[campo] }] : []),
   ];
 
@@ -97,6 +117,7 @@ export function TramitesCatalogPage() {
     const rows = tramites.filter((t) =>
       (!q || normalizarBusqueda([t.titulo, t.descripcion, t.sinonimos, ...t.etiquetas].join(' ')).includes(q)) &&
       (!tema || t.categoria === tema) &&
+      (!etiqueta || t.etiquetas.some(item => normalizarBusqueda(item) === normalizarBusqueda(etiqueta))) &&
       (!destinatario.length || destinatario.some(item => t.destinatarios.includes(item))) &&
       (!modalidad || t.modalidad === modalidad) &&
       (!turno || (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
@@ -105,11 +126,16 @@ export function TramitesCatalogPage() {
     return orden === 'az'
       ? [...rows].sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
       : rows;
-  }, [diferida, tema, destinatario, modalidad, turno, orden]);
+  }, [diferida, tema, destinatario, modalidad, turno, etiqueta, orden]);
 
   const grupos = useMemo(() => orden === 'az'
     ? [{ nombre: '', items: filtrados }]
     : temas.map((nombre) => ({ nombre, items: filtrados.filter((tramite) => tramite.categoria === nombre) })).filter((grupo) => grupo.items.length > 0), [filtrados, orden]);
+
+  const elegirEtiqueta = (item: string) => {
+    elegirValor(setParams, 'etiqueta', etiqueta === item ? '' : item);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const hayFiltros = !!(busqueda || chips.length);
   return (
@@ -174,7 +200,8 @@ export function TramitesCatalogPage() {
       </div>
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
-        <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
+        <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite}
+          etiquetaActiva={etiqueta} onElegirEtiqueta={elegirEtiqueta} />)}</div>
       </section>) : <div className="tram-empty"><h2>No encontramos trámites con esos filtros</h2><p>Probá con otras palabras o quitá alguno de los filtros.</p><button type="button" className="tram-btn" onClick={() => setParams({})}>Ver todos los trámites</button></div>}
       <TramitesBackToTop />
     </PageContainer>
