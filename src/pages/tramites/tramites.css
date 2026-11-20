@@ -175,6 +175,30 @@
   font-weight: 500;
   line-height: 20px;
 }
+.tram-tag-action {
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  font-family: inherit;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.tram-tag-action:hover {
+  background: var(--color-panel);
+  border-color: var(--color-primary-600);
+  color: var(--color-primary-600);
+}
+.tram-tag-action:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: 3px;
+}
+.tram-tag-action.tram-tag-selected {
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tram-tag-action { transition: none; }
+}
 .tram-empty { padding: 60px 24px; background: var(--color-panel); text-align: center; }
 .tram-empty h2 { color: var(--color-primary-600); font-size: 24px; font-weight: 700; }
 .tram-empty p { margin: 12px auto 24px; }
