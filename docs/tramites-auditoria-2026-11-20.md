@@ -28,11 +28,18 @@
 - `npm run validate:tramites -- /ruta/catalogo.csv`: compara los campos públicos con un CSV exportado de **CATALOGO DE TRÁMITES** de la base editorial autorizada.
 
 ## Pendiente de aprobación/validación
-- Completar la paridad visual por captura en 1440, 768 y 390 px; revisar todas las variantes condicionales de Figma.
+- Completar comparación de capturas Figma vs aplicación en 1440, 768 y 390 px; el CI captura pantallas de navegador, pero no demuestra paridad píxel a píxel con Figma.
 - Validar en navegador en distintos registros; R036 por sí sola no cubre todos los formatos de horarios, costos, documentación ni pasos.
-- Realizar verificación de campos de detalle uno por uno contra ORIGEN, en especial texto multilineal, costos, enlaces, dirección y horarios, sin publicar datos personales.
-- Implementar transformador reproducible a partir de exportaciones *de la base final*, no del Excel de relevamiento, y retirar o aislar el flujo antiguo.
+- **Realizado:** reconstrucción de los 125 registros de ficha por la columna de fila de ORIGEN, incorporación condicional de links, canales y exenciones, con exclusión de contactos personales. Queda pendiente revisión humana municipal de textos y valores individuales.
+- **Realizado:** `scripts/generate-tramites-from-base-final.mjs` permite regeneración reproducible a partir de exportaciones CSV de las 3 hojas de BASE FINAL, manteniendo el generador legado aislado para el prototipo estático histórico.
 - Resolver editorialmente la divergencia 11 vs 12 categorías sin inventar una categoría.
-- Ejecutar `npm run typecheck`, `npm run lint`, `npm run build:pages`, tests existentes y pruebas de URL directa en GitHub Pages antes de considerar merge/publicación.
+- Ejecutar y registrar `npm run validate:tramites`, `npm run typecheck`, `npm run lint`, `npm run build:pages`, Playwright en los cuatro anchos y comprobaciones de URLs directas tras el despliegue.
 
 Este documento **no** certifica paridad visual total, pruebas ejecutadas ni despliegue. No fusionar automáticamente sin revisiones y CI.
+
+## Incorporaciones posteriores a la auditoría inicial
+- Fuente autorizada reexportada de Google Sheets, con 125/125 registros y correspondencia estable `filaOrigen`.
+- 33 URLs digitales y 17 URLs normativas derivadas exclusivamente de la pestaña ORIGEN, aplicadas condicionalmente. Documentación R036 segmentada en 4 documentos según separadores explícitos.
+- Índice, lista documental, timeline, sedes condicionales, costos y plazos, ayuda contextual e información normativa.
+- R036 muestra relacionados explícitos de Figma (R093, R089, R046). No se inventan relacionados para otros trámites.
+- El trabajo continúa sujeto a validación editorial municipal y comparativa visual formal. El hecho de publicar no equivale a validación de costos u horarios por las áreas.
