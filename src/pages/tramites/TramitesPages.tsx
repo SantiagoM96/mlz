@@ -166,11 +166,11 @@ function AccionesFicha() {
     <button type="button" onClick={() => { void compartir(); }}
       aria-label={estado === 'copied' ? 'Enlace copiado' : 'Compartir'}
       title={estado === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
-      <MaterialIcon name={estado === 'copied' ? 'check' : 'link'} size={20} />
+      <MaterialIcon name={estado === 'copied' ? 'check' : 'link'} size={24} />
       <span>{estado === 'copied' ? 'Enlace copiado' : 'Compartir'}</span>
     </button>
     <button type="button" onClick={() => window.print()}>
-      <MaterialIcon name="print" size={20} /><span>Imprimir</span>
+      <MaterialIcon name="print" size={24} /><span>Imprimir</span>
     </button>
     <span className="sr-only" role="status" aria-live="polite">
       {estado === 'copied' ? 'Enlace copiado al portapapeles' :
