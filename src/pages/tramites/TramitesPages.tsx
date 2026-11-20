@@ -151,7 +151,6 @@ function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
           <span>{item}</span>
         </li>)}</ul>
       : <p className="tram-longtext">{texto}</p>}
-    {tramite.formatoDocumentacion && <p className="tram-document-format">Formato informado: {tramite.formatoDocumentacion}</p>}
   </section>;
 }
 
