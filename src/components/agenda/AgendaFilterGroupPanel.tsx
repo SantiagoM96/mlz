@@ -61,26 +61,24 @@ export function AgendaFilterGroupPanel({
               const checked = group.selected.includes(option);
               const isRadio = group.selectionControl === 'radio';
               return <label key={option}
-                className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4 rounded
-                  px-4 py-2 text-[16px] leading-6 transition-colors duration-150
-                  has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
-                  has-[:focus-visible]:outline-primary-600
-                  ${checked ? 'bg-info-500 text-white hover:bg-[#005bd1]'
-                    : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}>
-                <span className="min-w-0 flex-1">{option}</span>
+                className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center gap-3 rounded
+                  px-2 py-2 text-[16px] leading-6 text-grey-900 transition-colors duration-150
+                  hover:bg-[#eff7fd] has-[:focus-visible]:outline-2
+                  has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-primary-600`}>
                 <input type={isRadio ? 'radio' : 'checkbox'}
                   name={isRadio ? dialogId + '-' + group.key : undefined}
                   className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   checked={checked} onChange={() => onToggle(group.key, option)}
                   aria-label={option} />
                 <span aria-hidden="true"
-                  className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2
+                  className={`agenda-motion-check pointer-events-none relative z-10 grid size-5 shrink-0 place-items-center border-2
                     ${isRadio ? 'rounded-full' : 'rounded-[2px]'}
-                    ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
+                    ${checked ? 'border-primary-600 bg-primary-600 text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
                   {checked && (isRadio
                     ? <span className="size-2 rounded-full bg-white" />
                     : <MaterialIcon name="check" size={16} className="text-white" />)}
                 </span>
+                <span className={`min-w-0 flex-1 ${checked ? 'font-bold' : 'font-normal'}`}>{option}</span>
               </label>;
             })}
           </div>}
