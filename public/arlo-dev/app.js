@@ -12,7 +12,7 @@ const dayDiff=(a,b)=>Math.round((dateObj(a)-dateObj(b))/86400000);
 const capitalize=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const humanDate=s=>{const d=s.split('-')[2];return d+' '+capitalize(new Intl.DateTimeFormat('es-AR',{month:'long',timeZone:'UTC'}).format(dateObj(s)))};
 const period=r=>(r.month?months[r.month-1]:'Anual')+' - '+r.year;
-let rows=[],months=[],payments=[],current='home',activeTax=null,expanded=false,currentYear=2027,calendarYears={},calendarView='week';
+let rows=[],months=[],payments=[],current='home',activeTax=null,expanded=false,currentYear=2027,calendarYears={};
 const visibleNav=()=>nav;
 function yearControl(tax){
  const available=year=>calendarYears[year]?.rows.some(r=>r.tax===tax);
@@ -35,7 +35,7 @@ const groups=[['Web','Web','Disponible las 24 horas'],['Débito automático','D�
 const paymentItem=p=>'<article class="payment-item"><h4>'+esc(p.entity)+'</h4>'+(p.address?'<p>'+esc(p.address)+'</p>':'')+(p.hours?'<p>'+esc(p.hours)+'</p>':'')+'<p>'+esc(p.methods.join(', '))+'</p></article>';
 function renderPayments(){ $('#payment-groups').innerHTML=groups.map(([k,title,desc])=>'<section class="payment-group"><h3>'+title+'</h3><p>'+desc+'</p><div class="items">'+payments.filter(p=>p.channel===k).map(paymentItem).join('')+'</div></section>').join('');const cg=payments.filter(p=>p.channel==='CGM');$('#cgm').innerHTML=(expanded?cg:cg.slice(0,3)).map(paymentItem).join('');$('#expand-cgm').textContent=expanded?'Ver menos':'Ver todos los CGM';$('#expand-cgm').setAttribute('aria-expanded',String(expanded));}
 function banner(compact=false){return compact?'<div class="annual-banner compact-banner"><img src="./assets/banner-calendar-desktop.png?v=20261117-assets-v2" width="1200" height="145" alt="Pago anual 2026 · 2 meses de bonificación · Medios de pago"></div>':'<div class="annual-banner home-banner"><img class="banner-desktop" src="./assets/banner-home-desktop.png?v=20261117-assets-v2" width="1200" height="269" alt="Pago anual 2026 · 2 meses de bonificación · Tasa por Servicios Generales ABL"><img class="banner-mobile" src="./assets/banner-home-mobile.png?v=20261117-assets-v2" width="400" height="153" alt="Pago anual 2026 · 2 meses de bonificación"></div>'}
-function home(){return '<div class="actions">'+[['document_search','Consultar Deuda','Revisá tus deudas, vencimientos y pagos pendientes en un solo lugar.'],['paid','Pagar Tasas','Pagá tus tasas municipales online de forma rápida, simple y segura.']].map(([i,t,d])=>'<a class="action" href="https://sag.lomasdezamora.gov.ar/" target="_blank" rel="noopener noreferrer"><span class="icon">'+icon(i)+'</span><div><h3>'+t+'</h3><p class="muted">'+d+'</p></div></a>').join('')+'</div><section><div class="intro"><h2>Calendario de Pagos</h2><p class="muted">Encontrá el cronograma completo de vencimientos e información tributaria oficial</p></div><div class="tax-grid">'+visibleNav().map(([k,t,i])=>'<a class="tax-card" href="#'+k+'"><span class="icon">'+icon(i)+'</span><div><h3>'+t+'</h3><p class="muted">Ver más</p></div></a>').join('')+'</div></section><section><div class="intro"><h2>¿Qué podés hacer en el Portal de ARLO?</h2><p class="muted">Ahorrá tiempo y resolvé tus trámites de forma online. Consultá tu estado de deuda, pagá tus tasas y descargá tus comprobantes de forma rápida y segura.</p></div><div class="feature-grid">'+features.map(([i,t,d])=>'<article class="feature"><span class="icon">'+icon(i)+'</span><h3>'+t+'</h3><p class="muted">'+d+'</p></article>').join('')+'</div></section>'}
+function home(){return banner()+'<div class="actions">'+[['document_search','Consultar Deuda','Revisá tus deudas, vencimientos y pagos pendientes en un solo lugar.'],['paid','Pagar Tasas','Pagá tus tasas municipales online de forma rápida, simple y segura.']].map(([i,t,d])=>'<a class="action" href="https://sag.lomasdezamora.gov.ar/" target="_blank" rel="noopener noreferrer"><span class="icon">'+icon(i)+'</span><div><h3>'+t+'</h3><p class="muted">'+d+'</p></div></a>').join('')+'</div><section><div class="intro"><h2>Calendario de Pagos</h2><p class="muted">Encontrá el cronograma completo de vencimientos e información tributaria oficial</p></div><div class="tax-grid">'+visibleNav().map(([k,t,i])=>'<a class="tax-card" href="#'+k+'"><span class="icon">'+icon(i)+'</span><div><h3>'+t+'</h3><p class="muted">Ver más</p></div></a>').join('')+'</div></section><section><div class="intro"><h2>¿Qué podés hacer en el Portal de ARLO?</h2><p class="muted">Ahorrá tiempo y resolvé tus trámites de forma online. Consultá tu estado de deuda, pagá tus tasas y descargá tus comprobantes de forma rápida y segura.</p></div><div class="feature-grid">'+features.map(([i,t,d])=>'<article class="feature"><span class="icon">'+icon(i)+'</span><h3>'+t+'</h3><p class="muted">'+d+'</p></article>').join('')+'</div></section>'}
 function events(tax){
  return [2026,2027].flatMap(fiscalYear=>(calendarYears[fiscalYear]?.rows||[])
  .filter(r=>r.tax===tax).flatMap(r=>[
@@ -47,91 +47,7 @@ function dateCard(e,highlight){let d=dayDiff(e.date,todayISO());return '<article
 function calendar(tax){
  const all=events(tax),next=chooseYearIndex(all,currentYear),upcoming=all.findIndex(e=>e.date>=todayISO());
  const pending=rows.filter(r=>r.tax===tax&&(r.ddjjPending||r.firstDuePending||r.secondDuePending));
- const monthly=calendarView==='month';
- const viewButton='<button type="button" class="calendar-view-toggle" data-view-toggle aria-pressed="'+monthly+'" aria-label="Cambiar a vista '+(monthly?'semanal':'mensual')+'">'+icon(monthly?'view_carousel':'calendar_month')+' <span>'+(monthly?'Ver semana':'Ver mes')+'</span></button>';
- return '<section class="calendar-section" data-tax="'+tax+'">'
- +'<div class="heading-row"><div class="calendar-heading-main"><h1>'+titles[tax]+'</h1><p class="muted">Informate sobre todas las fechas de vencimiento y descargate el calendario completo.</p>'
- +'<div class="calendar-view-controls">'+yearControl(tax)+viewButton+'</div></div>'
- +'<div class="arrows"'+(monthly?' hidden':'')+'><button data-dir="-1" aria-label="Vencimientos anteriores">'+icon('chevron_left')+'</button><button data-dir="1" aria-label="Vencimientos siguientes">'+icon('chevron_right')+'</button></div></div>'
- +'<div class="rail"'+(monthly?' hidden':'')+' tabindex="0" aria-label="Vencimientos de '+titles[tax]+' de 2026 y 2027" data-start="'+next+'">'+all.map((e,i)=>dateCard(e,i===upcoming)).join('')+'</div>'
- +'<div class="monthly-view" data-monthly-view="'+tax+'"'+(monthly?'':' hidden')+'>'+(monthly?monthlyCalendar(tax):'')+'</div>'
- +(pending.length?'<p class="notice">Hay '+pending.length+' fecha'+(pending.length===1?'':'s')+' pendiente'+(pending.length===1?'':'s')+' de precisar. Consultá el calendario completo.</p>':'')
- +'<div class="controls"><button class="pill" data-open="'+tax+'">'+icon('visibility')+' Ver calendario completo</button><button class="pill" data-pdf="'+tax+'">'+icon('download')+' Descargar calendario completo en PDF</button></div></section>';
-}
-/* Vista mensual: no se asignan días a obligaciones con fecha incompleta. */
-function monthlyMonth(year,month,items){
- const days=new Date(Date.UTC(year,month,0)).getUTCDate();
- const offset=(new Date(Date.UTC(year,month-1,1)).getUTCDay()+6)%7;
- const cellCount=Math.ceil((offset+days)/7)*7;
- const dates=new Map(),today=todayISO(),label=months[month-1];
- items.forEach(e=>{const day=Number(e.date.slice(8,10));if(!dates.has(day))dates.set(day,[]);dates.get(day).push(e)});
- const cells=Array.from({length:cellCount},(_,index)=>{
-  const d=index-offset+1;if(d<1||d>days)return '<div class="monthly-day monthly-day-empty" aria-hidden="true"></div>';
-  const iso=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0'),list=dates.get(d)||[];
-  return '<div class="monthly-day'+(iso===today?' monthly-today':'')+'" role="gridcell" aria-label="'+d+' de '+esc(label)+' de '+year+'">'
-   +'<strong class="monthly-day-number">'+d+'</strong>'
-   +list.map(e=>'<article class="monthly-event monthly-event-'+e.kind+'"><strong class="monthly-event-heading">'+dueIcon(e.kind)+'<span>'+esc(e.label)+'</span></strong><span>'+esc(quotaText(e.r))+' · '+e.r.year+'</span>'+(e.r.regime?'<span>'+esc(e.r.regime)+'</span>':'')+'</article>').join('')+'</div>';
- }).join('');
- return '<section class="monthly-month" id="month-'+year+'-'+String(month).padStart(2,'0')+'"><h3>'+esc(label)+' '+year+'</h3>'
- +'<div class="monthly-scroller"><div class="monthly-grid" role="grid" aria-label="'+esc(label)+' '+year+'">'
- +['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d=>'<div class="monthly-weekday" role="columnheader">'+d+'</div>').join('')+cells+'</div></div></section>';
-}
-function monthlyCalendar(tax){
- const list=events(tax),byMonth=new Map();
- list.forEach(item=>{const key=item.date.slice(0,7);if(!byMonth.has(key))byMonth.set(key,[]);byMonth.get(key).push(item)});
- const years=[2026,2027].filter(y=>calendarYears[y]?.rows.some(r=>r.tax===tax));
- if(!years.length)return '<p>Sin vencimientos registrados.</p>';
- const dates=[...byMonth.keys()].sort(),start=years[0]+'-01',end=years.at(-1)+'-12';
- const min=dates.length&&dates[0]<start?dates[0]:start,max=dates.length&&dates.at(-1)>end?dates.at(-1):end;
- let [year,month]=min.split('-').map(Number),[lastYear,lastMonth]=max.split('-').map(Number);
- let html='<div class="monthly-calendar" aria-label="Calendario por meses de '+esc(titles[tax])+'">';
- let heading=null;
- while(year<lastYear||(year===lastYear&&month<=lastMonth)){
-  if(year!==heading){html+='<h2 class="monthly-year-heading" id="monthly-year-'+tax+'-'+year+'">'+year+'</h2>';heading=year}
-  const key=year+'-'+String(month).padStart(2,'0');
-  html+=monthlyMonth(year,month,byMonth.get(key)||[]);
-  month++;if(month===13){month=1;year++}
- }
- const pending=years.flatMap(y=>calendarYears[y].rows.filter(r=>r.tax===tax)).flatMap(r=>
- [r.firstDuePending,r.secondDuePending,r.ddjjPending?'Fecha de DDJJ a confirmar':null]
- .filter(Boolean).map(note=>'<li>'+esc(quotaText(r))+' · '+r.year+' — '+esc(note)+'</li>'));
- if(pending.length)html+='<aside class="monthly-pending"><h3>Fechas pendientes de precisar</h3><ul>'+pending.join('')+'</ul></aside>';
- return html+'</div>';
-}
-function monthlyFocus(year,tax,smooth){
- const section=document.querySelector('.calendar-section[data-tax="'+tax+'"]');
- const view=section?.querySelector('.monthly-view');
- if(!view||view.hidden)return;
- const now=todayISO(),month=Number(now.slice(0,4))===year?Number(now.slice(5,7)):1;
- const target=view.querySelector('#month-'+year+'-'+String(month).padStart(2,'0'))||view.querySelector('#monthly-year-'+tax+'-'+year);
- if(target)target.scrollIntoView({behavior:smooth&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches?'smooth':'instant',block:'start'});
-}
-function toggleCalendarView(){
- calendarView=calendarView==='week'?'month':'week';
- document.querySelectorAll('.calendar-section').forEach(section=>{
-  const tax=section.dataset.tax,rail=section.querySelector('.rail'),view=section.querySelector('.monthly-view'),arrows=section.querySelector('.arrows'),button=section.querySelector('[data-view-toggle]');
-  const monthly=calendarView==='month';
-  rail.hidden=monthly;view.hidden=!monthly;arrows.hidden=monthly;
-  if(monthly&&!view.dataset.rendered){view.innerHTML=monthlyCalendar(tax);view.dataset.rendered='true'}
-  if(!monthly){
-    // El carrusel puede haber sido montado oculto; ubicarlo sin animar.
-    const index=chooseYearIndex(events(tax),currentYear);
-    const card=rail.children[index];
-    if(card){
-      const snap=rail.style.scrollSnapType;
-      rail.style.scrollSnapType='none';
-      rail.scrollTo({left:card.offsetLeft-rail.offsetLeft,behavior:'instant'});
-      rail.style.scrollSnapType=snap;
-      setArrowState(rail);
-    }
-  }
-  button.setAttribute('aria-pressed',String(monthly));
-  button.setAttribute('aria-label','Cambiar a vista '+(monthly?'semanal':'mensual'));
-  button.querySelector('span:last-child').textContent=monthly?'Ver semana':'Ver mes';
-  const i=button.querySelector('.material-symbols-outlined');
-  if(i)i.textContent=monthly?'view_carousel':'calendar_month';
- });
- if(calendarView==='month')monthlyFocus(currentYear,current,false);
+ return '<section class="calendar-section" data-tax="'+tax+'"><div class="heading-row"><div class="calendar-heading-main"><h1>'+titles[tax]+'</h1><p class="muted">Informate sobre todas las fechas de vencimiento y descargate el calendario completo.</p>'+yearControl(tax)+'</div><div class="arrows"><button data-dir="-1" aria-label="Vencimientos anteriores">'+icon('chevron_left')+'</button><button data-dir="1" aria-label="Vencimientos siguientes">'+icon('chevron_right')+'</button></div></div><div class="rail" tabindex="0" aria-label="Vencimientos de '+titles[tax]+' de 2026 y 2027" data-start="'+next+'">'+all.map((e,i)=>dateCard(e,i===upcoming)).join('')+'</div>'+(pending.length?'<p class="notice">Hay '+pending.length+' fecha'+(pending.length===1?'':'s')+' pendiente'+(pending.length===1?'':'s')+' de precisar. Consultá el calendario completo.</p>':'')+'<div class="controls"><button class="pill" data-open="'+tax+'">'+icon('visibility')+' Ver calendario completo</button><button class="pill" data-pdf="'+tax+'">'+icon('download')+' Descargar calendario completo en PDF</button></div></section>';
 }
 
 function docs(tax){const data=tax==='higiene'?[['Información Útil','Encontrá toda la información correspondiente a la Tasa por Seguridad e Higiene.',['Constancia de Categorización','Mínimos Marzo 2026 (Cuota 3)','Mínimos Febrero 2026 (Cuota 2)','Valores RS Enero 2026 (Cuota 1)','Mínimos Noviembre 2025 (Cuota 11)']],['Formularios de DDJJ','Si vas a hacer el trámite de forma presencial, encontrá los formularios afines.',['DDJJ Régimen General Mensual','DDJJ Anual','Anexo Tasa Vial']],['Ordenanzas','Normativa tributaria, categorías, mínimos y condiciones aplicables.',['Ordenanza Impositiva','Ordenanza Fiscal']]]:[['Información Útil','Códigos de Publicidad.',['Códigos de Publicidad']],['Formularios de DDJJ','Declaración jurada de Derechos de Publicidad y Propaganda.',['DDJJ Publicidad y Propaganda / Ocupación de Espacios Públicos 2026']]];return data.map(([t,d,items])=>'<section class="documents"><h3>'+t+'</h3><p class="muted">'+d+'</p><div class="document-grid">'+items.map(n=>'<article class="doc">'+icon('description')+'<div>'+n+'<small>Documento pendiente de vincular</small></div></article>').join('')+'</div></section>').join('')}
@@ -192,7 +108,7 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
     rail.scrollBy({left:(e.key==='ArrowRight'?1:-1)*304,behavior:'smooth'});
   });
 })}
-function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=visibleNav().some(n=>n[0]===hash)?hash:'home';if(current==='antenas'&&currentYear===2026){currentYear=2027;rows=calendarYears[2027].rows;months=calendarYears[2027].months}$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+(currentYear===2026?(['higiene','publicidad'].includes(current)?docs(current):banner(true)):'');document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo({top:0,left:0,behavior:'instant'});initRails()}
+function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=visibleNav().some(n=>n[0]===hash)?hash:'home';if(current==='antenas'&&currentYear===2026){currentYear=2027;rows=calendarYears[2027].rows;months=calendarYears[2027].months}$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+(['higiene','publicidad'].includes(current)?docs(current):banner(true));document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo({top:0,left:0,behavior:'instant'});initRails()}
 function tableGroups(tax){
  const subset=rows.filter(r=>r.tax===tax);
  const monthLabel=r=>r.month?months[r.month-1]:'Anual';
@@ -219,7 +135,6 @@ function jumpToFiscalYear(year){
  document.querySelectorAll('.calendar-year-option').forEach(button=>{
   const active=Number(button.dataset.yearJump)===year;button.classList.toggle('is-active',active);button.setAttribute('aria-pressed',String(active));
  });
- if(calendarView==='month'){monthlyFocus(year,current,true);return}
  document.querySelectorAll('.calendar-section').forEach(section=>{
   const rail=section.querySelector('.rail'),index=chooseYearIndex(events(section.dataset.tax),year);
   const item=rail.children[index];if(!item)return;
@@ -227,7 +142,7 @@ function jumpToFiscalYear(year){
  });
 }
 
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-view-toggle')){toggleCalendarView();return}if(b.dataset.yearJump){jumpToFiscalYear(Number(b.dataset.yearJump));return}if(b.dataset.dir){const rail=b.closest('.calendar-section').querySelector('.rail');rail.scrollBy({left:Number(b.dataset.dir)*304,behavior:'smooth'})}if(b.dataset.open)openCalendar(b.dataset.open);if(b.dataset.pdf)pdf(b.dataset.pdf);if(b.id==='close-dialog')closeCalendarDrawer();if(b.id==='print-calendar'&&activeTax)pdf(activeTax);if(b.id==='expand-cgm'){expanded=!expanded;renderPayments()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.yearJump){jumpToFiscalYear(Number(b.dataset.yearJump));return}if(b.dataset.dir){const rail=b.closest('.calendar-section').querySelector('.rail');rail.scrollBy({left:Number(b.dataset.dir)*304,behavior:'smooth'})}if(b.dataset.open)openCalendar(b.dataset.open);if(b.dataset.pdf)pdf(b.dataset.pdf);if(b.id==='close-dialog')closeCalendarDrawer();if(b.id==='print-calendar'&&activeTax)pdf(activeTax);if(b.id==='expand-cgm'){expanded=!expanded;renderPayments()}});
 $('#calendar-dialog').addEventListener('click',e=>{if(e.target!==calendarDialog)return;const r=calendarDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeCalendarDrawer()});
 window.addEventListener('hashchange',route);
 async function start(){try{
