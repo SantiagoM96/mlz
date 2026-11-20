@@ -127,26 +127,26 @@ test('Turno no incluye trámites cuyo relevamiento no informa si requieren reser
   await page.goto('/tramites');
   const more = page.getByTestId('tramites-more-filters');
   await more.getByRole('button', { name: /Más filtros/ }).click();
-  let panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
   await panel.getByRole('button', { name: 'Turno', exact: true }).click();
-  await panel.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
-  await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
-  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
 
-  await more.getByRole('button', { name: /Más filtros/ }).click();
-  panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
-  await panel.getByRole('button', { name: 'Turno', exact: true }).click();
+  // Se comprueban ambas alternativas mientras el mismo panel permanece abierto,
+  // sin introducir carreras con el cierre animado de Agenda en móvil.
+  await panel.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Ver resultados (10)' })).toBeVisible();
   await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await expect(panel.getByRole('checkbox', { name: 'Requiere turno', exact: true })).not.toBeChecked();
+  await expect(panel.getByRole('button', { name: 'Ver resultados (83)' })).toBeVisible();
   await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
   await expect(panel).toBeHidden();
   await expect(page.getByText('83 trámites', { exact: true })).toBeVisible();
   await expect(more.locator('[data-agenda-filter-count]')).toHaveText('1');
 
-  // Limpiar el panel conserva búsqueda y orden, pero limpia todos los criterios.
-  await page.getByRole('searchbox', { name: 'Buscar trámite' }).fill('licencia');
+  // Con un estado inicial desde la URL, limpiar las opciones mantiene la búsqueda.
+  await page.goto('/tramites?q=licencia&turno=No+requiere+turno');
   await more.getByRole('button', { name: /Más filtros/ }).click();
-  panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
-  await panel.getByRole('button', { name: 'Limpiar', exact: true }).click();
+  const filters = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await filters.getByRole('button', { name: 'Limpiar', exact: true }).click();
   await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
   await expect(page.getByRole('searchbox', { name: 'Buscar trámite' })).toHaveValue('licencia');
 });
