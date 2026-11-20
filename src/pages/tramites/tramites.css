@@ -210,8 +210,8 @@
   text-decoration: underline;
 }
 .tram-lead { margin: 20px 0 16px; color: var(--color-grey-900); font-size: 18px; line-height: 26px; }
-.tram-detail-header .tram-modalidad { margin: 16px 0 12px; }
-.tram-detail-header .tram-start-link { margin-top: 20px; }
+/* La distribución del encabezado se rige exclusivamente por su gap. */
+
 .tram-detail-section {
   padding-bottom: 24px;
   margin-bottom: 24px;
