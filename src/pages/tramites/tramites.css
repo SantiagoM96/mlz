@@ -55,6 +55,20 @@
 .tram-filter-more-control { min-width: max-content; }
 .tram-filter-more-control .agenda-filter-trigger { white-space: nowrap; }
 
+/* El panel tiene altura explícita en tablet/desktop para que las listas
+   desplegadas hagan scroll dentro, sin quedar fuera del viewport. */
+@media (min-width: 681px) {
+  .tram-filter-more-control .agenda-more-panel {
+    height: min(620px, calc(100dvh - 300px));
+    min-height: 0;
+  }
+  .tram-filter-more-control .agenda-more-panel .agenda-filter-options {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
 /* Resultados, agrupaciones y acciones. */
 .tram-results {
   display: flex;
