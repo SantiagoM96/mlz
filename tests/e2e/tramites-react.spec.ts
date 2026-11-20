@@ -272,3 +272,14 @@ test('ficha R036: jerarquía tipográfica y espaciados según Figma', async ({ p
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
 });
+
+
+test('catálogo: tipografía Geometria y escala Figma desktop/mobile', async ({ page }) => {
+  await page.goto('/tramites');
+  await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toHaveCSS('font-size', '32px');
+  await expect(page.locator('.tram-group-heading h2').first()).toHaveCSS('font-size', '24px');
+  await expect(page.locator('.tram-row h3').first()).toHaveCSS('font-size', '20px');
+  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('font-size', '16px');
+  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('line-height', '21px');
+  await expect(page.locator('.tram-row-actions .tram-btn').first()).toHaveCSS('font-size', '16px');
+});
