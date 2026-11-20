@@ -3,6 +3,7 @@ import { MaterialIcon } from '../ui/MaterialIcon';
 export interface SelectedFilterChip {
   id: string;
   label: string;
+  ariaLabel?: string;
 }
 
 type Props<T extends SelectedFilterChip> = {
@@ -24,7 +25,7 @@ export function AgendaSelectedFilterChips<T extends SelectedFilterChip>({
     <div className="agenda-filter-chips-scroll">
       {items.map(item => <button type="button" key={item.id}
         onClick={() => onRemove(item)}
-        aria-label={`Quitar filtro: ${item.label}`}
+        aria-label={item.ariaLabel ?? `Quitar filtro: ${item.label}`}
         data-agenda-chip="selected"
         className="agenda-filter-chip inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
         <span>{item.label}</span><MaterialIcon name="close" size={15} />
