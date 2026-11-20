@@ -86,7 +86,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin: 40px 0 24px;
+  margin: 24px 0 0;
 }
 .tram-results > strong { font-size: 18px; line-height: 26px; }
 .tram-sort { display: flex; align-items: center; gap: 16px; font-size: 16px; }
@@ -106,7 +106,7 @@
 /* En desktop el wrapper no altera la composición del componente compartido. */
 .tram-filter-more-control [data-tram-counter-slot] { display: contents; }
 
-.tram-group { margin: 32px 0 40px; scroll-margin-top: 24px; }
+.tram-group { margin: 24px 0 40px; scroll-margin-top: 24px; }
 .tram-group-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 24px; }
 .tram-group-heading h2 { color: var(--color-primary-600); font-size: 24px; font-weight: 700; }
 .tram-group-heading h2 small { color: #5d5d5d; font-size: 17px; font-weight: 400; }
@@ -608,7 +608,7 @@
     width: 24px;
     min-width: 24px;
   }
-  .tram-results { margin: 24px 0; }
+  .tram-results { margin: 24px 0 0; }
   .tram-results > strong { font-size: 18px; }
   .tram-sort { gap: 0; }
   .tram-sort > span { display: none; }
