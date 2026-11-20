@@ -6,6 +6,7 @@ import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { TableOfContents } from '../../components/ui/TableOfContents';
 import { copyToClipboard } from '../../components/ui/copyToClipboard';
 import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
+import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
 import { AgendaSelectedFilterChips } from '../../components/agenda/AgendaSelectedFilterChips';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
 import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
@@ -218,7 +219,10 @@ export function TramitesCatalogPage() {
         onClear={limpiarTodo}
       />}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
-        <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
+        <AgendaSortDropdown value={orden === 'az' ? 'az' : 'default'}
+          options={[{ value: 'default', text: 'Por tema' }, { value: 'az', text: 'Alfabético A–Z' }]}
+          title="Ordenar trámites"
+          onChange={(value) => elegirValor(setParams, 'orden', value === 'az' ? 'az' : '')} />
       </div>
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre}</h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
