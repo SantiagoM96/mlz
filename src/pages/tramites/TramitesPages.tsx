@@ -320,7 +320,7 @@ function OtrosTramitesFicha({ items }: { items: readonly Tramite[] }) {
     <div className="tram-related-grid">
       {items.map(item => <Link key={item.id} to={ficha(item.id)}
         className="tram-related-card" aria-label={'Ver trámite: ' + item.titulo}>
-        <span className="tram-related-icon"><MaterialIcon name="receipt_long" size={24}/></span>
+        <span className="tram-related-icon"><MaterialIcon name="receipt_long" size={32}/></span>
         <strong>{item.titulo}</strong>
         <p>{item.descripcion}</p>
       </Link>)}
