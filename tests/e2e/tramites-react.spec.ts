@@ -13,7 +13,8 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await page.getByRole('button', { name: 'Tema', exact: true }).click();
   const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
   await expect(menu).toBeVisible();
-  await menu.getByText('Vehículos y tránsito', { exact: true }).click();
+  // El checkbox de Agenda cubre toda la fila; activar el control real, no el texto debajo.
+  await menu.getByRole('checkbox', { name: 'Vehículos y tránsito' }).click();
   await menu.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
