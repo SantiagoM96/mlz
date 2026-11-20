@@ -3,17 +3,14 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
+import { TableOfContents } from '../../components/ui/TableOfContents';
+import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
+import { documentacionPublica, pasosPublicos } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import './tramites.css';
 
 const base = '/tramites';
 const ficha = (id: string) => base + '/' + id;
-const resumen = 'Contenido del relevamiento municipal 2026. Los requisitos, horarios, montos y plazos están sujetos a validación del área responsable.';
-
-function AvisoValidacion() {
-  return <div className="tram-aviso" role="note"><MaterialIcon name="info" size={22} /><span>{resumen}</span></div>;
-}
-
 function Etiquetas({ items }: { items: readonly string[] }) {
   return <div className="tram-tags">{items.map((item) => <span className="tram-tag" key={item}>{item}</span>)}</div>;
 }
@@ -47,7 +44,6 @@ function elegirValor(setSearchParams: ReturnType<typeof useSearchParams>[1], key
 
 export function TramitesCatalogPage() {
   const [params, setParams] = useSearchParams();
-  const [masFiltros, setMasFiltros] = useState(false);
   const busqueda = params.get('q') ?? '';
   const diferida = useDeferredValue(busqueda);
   const tema = params.get('tema') ?? '';
@@ -61,7 +57,7 @@ export function TramitesCatalogPage() {
       (!q || normalizarBusqueda([t.titulo, t.descripcion, t.sinonimos, ...t.etiquetas].join(' ')).includes(q)) &&
       (!tema || t.categoria === tema) &&
       (!destinatario || t.destinatarios.includes(destinatario)) &&
-      (!modalidad || t.modalidad.toLowerCase().includes(modalidad.toLowerCase()))
+      (!modalidad || t.modalidad === modalidad)
     );
     return orden === 'az'
       ? [...rows].sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
@@ -77,13 +73,43 @@ export function TramitesCatalogPage() {
     <PageContainer className="tram-container">
       <Breadcrumbs items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
       <h1 className="tram-title">Catálogo de trámites</h1>
-      <div className="tram-filters" role="search" aria-label="Filtrar trámites">
-        <label className="tram-search"><span className="sr-only">Buscar trámite</span><input aria-label="Buscar trámite" type="search" placeholder="Buscá un trámite: licencia, poda..." value={busqueda} onChange={(e) => elegirValor(setParams, 'q', e.target.value)} /><MaterialIcon name="search" size={24} /></label>
-        <label className="tram-select"><span className="sr-only">¿Para quién es?</span><select aria-label="¿Para quién es?" value={destinatario} onChange={(e) => elegirValor(setParams, 'destinatario', e.target.value)}><option value="">¿Para quién es?</option>{destinatarios.map((d) => <option key={d} value={d}>{d}</option>)}</select></label>
-        <label className="tram-select"><span className="sr-only">Tema</span><select aria-label="Tema" value={tema} onChange={(e) => elegirValor(setParams, 'tema', e.target.value)}><option value="">Tema</option>{temas.map((t) => <option key={t} value={t}>{t}</option>)}</select></label>
-        <button type="button" aria-expanded={masFiltros} aria-controls="tram-extra" className="tram-filter-more" onClick={() => setMasFiltros((v) => !v)}>Más filtros <MaterialIcon name="tune" size={24} /></button>
+      <div className="tram-filters agenda-search-filterbar" role="search" aria-label="Filtrar trámites">
+        <label className="tram-search relative">
+          <span className="sr-only">Buscar trámite</span>
+          <input
+            type="search"
+            aria-label="Buscar trámite"
+            placeholder="Buscá un trámite: licencia, poda..."
+            value={busqueda}
+            onChange={(event) => elegirValor(setParams, 'q', event.target.value)}
+            className="agenda-search-input"
+          />
+          {busqueda ? (
+            <button type="button" aria-label="Borrar búsqueda" onClick={() => elegirValor(setParams, 'q', '')}>
+              <MaterialIcon name="close" size={24}/>
+            </button>
+          ) : <MaterialIcon name="search" size={24} className="tram-search-icon" />}
+        </label>
+        <div className="tram-filter-control">
+          <AgendaDropdown label="¿Para quién es?" options={destinatarios}
+            selected={destinatario ? [destinatario] : []} resultCount={filtrados.length}
+            onChange={(values) => elegirValor(setParams, 'destinatario', values[0] ?? '')}
+            align="end" />
+        </div>
+        <div className="tram-filter-control">
+          <AgendaDropdown label="Tema" options={temas}
+            selected={tema ? [tema] : []} resultCount={filtrados.length}
+            onChange={(values) => elegirValor(setParams, 'tema', values[0] ?? '')}
+            align="end-responsive" />
+        </div>
+        <div className="tram-filter-control tram-filter-more-control">
+          <AgendaDropdown label="Más filtros" panelTitle="Modalidad" triggerIcon="tune"
+            searchable={false} options={['Online', 'Presencial', 'Online y Presencial']}
+            selected={modalidad ? [modalidad] : []} resultCount={filtrados.length}
+            onChange={(values) => elegirValor(setParams, 'modalidad', values[0] ?? '')}
+            align="end" />
+        </div>
       </div>
-      {masFiltros && <div className="tram-extra" id="tram-extra"><label>Modalidad <select aria-label="Modalidad" value={modalidad} onChange={(e) => elegirValor(setParams, 'modalidad', e.target.value)}><option value="">Todas</option><option value="Online">Online</option><option value="Presencial">Presencial</option></select></label></div>}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
         <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
       </div>
@@ -92,7 +118,6 @@ export function TramitesCatalogPage() {
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
       </section>) : <div className="tram-empty"><h2>No encontramos trámites con esos filtros</h2><p>Probá con otras palabras o quitá alguno de los filtros.</p><button type="button" className="tram-btn" onClick={() => setParams({})}>Ver todos los trámites</button></div>}
-      <AvisoValidacion />
     </PageContainer>
   );
 }
@@ -300,6 +325,5 @@ export function TramiteDetailPage() {
         <AyudaFicha tramite={tramite} />
       </aside>
     </div>
-    <AvisoValidacion />
   </PageContainer>;
 }
