@@ -37,13 +37,14 @@ export function SiteHeader() {
 
         <nav aria-label="Navegación principal" className="hidden items-center gap-4 xl:flex">
           {desktopMenu.map(({ label, hasChevron }) =>
-            label === 'Municipio' ? (
+            label === 'Municipio' || label === 'Trámites' ? (
               <Link
                 key={label}
-                to="/"
+                to={label === 'Trámites' ? '/tramites' : '/'}
                 className="inline-flex min-h-12 items-center rounded-[4px] px-4 text-[18px] leading-[26px] font-bold hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
               >
                 {label}
+                {hasChevron && <MaterialIcon name="chevron_right" size={24} />}
               </Link>
             ) : (
               <span
@@ -111,8 +112,16 @@ export function SiteHeader() {
             >
               Jóvenes en Comunidad
             </Link>
+            <Link
+              to="/tramites"
+              aria-current={location.pathname.startsWith('/tramites') ? 'page' : undefined}
+              className="rounded-sm px-3 py-3 font-bold focus-visible:outline-2 focus-visible:outline-white"
+              onClick={() => setOpen(false)}
+            >
+              Trámites
+            </Link>
             <p className="px-3 pt-3 text-sm text-white/75">
-              Próximamente: Gestión, Trámites y Turnos
+              Próximamente: Gestión y Turnos
             </p>
           </PageContainer>
         </nav>

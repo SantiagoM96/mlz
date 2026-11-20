@@ -1,7 +1,11 @@
-import { copyFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { copyFileSync, mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 const dist = join(process.cwd(), 'dist');
+const tramitesData = JSON.parse(readFileSync(join(process.cwd(), 'src', 'data', 'tramites.json'), 'utf8'));
+const tramitesPaths = tramitesData.map((tramite) => 'tramites/' + tramite.id);
 const staticPaths = [
+  'tramites',
+  ...tramitesPaths,
   'jovenes-en-comunidad',
   'agenda-de-la-comunidad',
   'agenda-de-la-comunidad/actividades',
