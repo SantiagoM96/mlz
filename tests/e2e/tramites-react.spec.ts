@@ -257,7 +257,7 @@ test('catálogo: subir respeta preferencia de movimiento reducido', async ({ pag
 test('ficha R036: jerarquía tipográfica y espaciados según Figma', async ({ page }) => {
   await page.goto('/tramites/R036');
   await expect(page.locator('.tram-detail h1')).toHaveCSS('font-size', '32px');
-  await expect(page.locator('.tram-detail .tram-eyebrow')).toHaveCSS('font-size', '18px');
+  await expect(page.locator('.tram-detail .tram-eyebrow')).toHaveCount(0);
   await expect(page.locator('#documentacion h2')).toHaveCSS('font-size', '24px');
   await expect(page.locator('#otros-tramites h2')).toHaveCSS('font-size', '24px');
   await expect(page.locator('#otros-tramites .tram-related-grid')).toHaveCSS('gap', '16px');
