@@ -70,8 +70,8 @@ export function textoPublicoLegible(valor: string): string {
   return base
     .replace(/^\p{L}/u, letra => letra.toLocaleUpperCase('es-AR'))
     .replace(/\b(dni|cuit|cuil|cbu|cvu|pb|arba|afip|pdf)\b/gi, sigla => sigla.toLocaleUpperCase('es-AR'))
+    .replace(/(\d)\s*hs?\.?(?=\s|$)/gi, '$1 h')
     .replace(/\bhs\.?(?=\s|$)/gi, 'h')
-    .replace(/(\d)\s*h(?=\s|$)/gi, '$1 h')
     .replace(/^Titulo\b/u, 'Título');
 }
 
