@@ -645,3 +645,11 @@
   .tram-detail .tram-detail-grid { display: block; }
   .tram-detail-section { break-inside: avoid; }
 }
+
+/* Versión publicada, alineada al extremo derecho del breadcrumb. */
+.tram-breadcrumb-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
+.tram-breadcrumb-row > nav { flex: 1 1 auto; width: auto; }
+.tram-build-badge { display: inline-flex; align-items: center; flex: none; gap: 8px; padding: 6px 12px; border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-panel); color: var(--color-primary-600); font-size: 12px; line-height: 20px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tram-build-code { font-weight: 800; letter-spacing: .04em; }
+.tram-build-time { font-weight: 500; }
+@media (max-width: 680px) { .tram-breadcrumb-row { gap: 8px; } .tram-build-badge { gap: 6px; padding: 4px 8px; font-size: 11px; } }
