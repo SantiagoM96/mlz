@@ -57,7 +57,7 @@ export function TramitesMoreFilters({
       className={'agenda-filter-trigger agenda-motion-control flex h-12 w-full min-w-0 items-center justify-center rounded border border-[#5ba8d5] bg-white px-4 text-[16px] text-primary-600 transition-colors duration-150 hover:border-primary-600 hover:bg-[#f4f9fd] focus-visible:outline-2 ' + (open || count ? 'agenda-filter-trigger-active' : '')}>
       <span data-agenda-more-content className="inline-flex shrink-0 items-center gap-2">
         <span data-agenda-more-label className="whitespace-nowrap">Más filtros</span>
-        <AgendaFilterCounter count={count} />
+        <span data-tram-counter-slot><AgendaFilterCounter count={count} /></span>
         <MaterialIcon name="tune" size={24}/>
       </span>
     </button>
