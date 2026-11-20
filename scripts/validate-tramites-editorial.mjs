@@ -14,9 +14,9 @@ for (const [index, item] of tramites.entries()) {
   assert.ok(!ids.has(item.id), 'ID duplicado: ' + item.id);
   ids.add(item.id);
   assert.ok(Number.isInteger(item.filaOrigen) && item.filaOrigen >= 2 && item.filaOrigen <= 134, item.id + ': fila de origen inválida');
-  assert.ok(!/[\\w.+-]+@[\\w.-]+\\.[A-Z]{2,}/i.test(JSON.stringify(item)), item.id + ': posible contacto privado');
+  assert.ok(!/[\w.+-]+@[\w.-]+\.[A-Z]{2,}/i.test(JSON.stringify(item)), item.id + ': posible contacto privado');
   for (const link of [item.web, item.normativaUrl, ...(item.otrosEnlaces ?? [])]) {
-    if (link) assert.match(link, /^https?:\\/\\/[^\\s]+$/i, item.id + ': URL de origen no válida');
+    if (link) assert.match(link, /^https?:\/\/[^\s]+$/i, item.id + ': URL de origen no válida');
   }
   for (const key of ['categoria', 'titulo', 'descripcion', 'modalidad']) {
     assert.equal(typeof item[key], 'string', item.id + ': ' + key);
