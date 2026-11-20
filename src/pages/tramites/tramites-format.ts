@@ -83,7 +83,19 @@ function parsearNumerosSueltos(lineas: string[]): BloqueProcedimiento[] | null {
 function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
   // También reconoce "1)Paso" sin espacio y "1. Paso 2. Paso" en un párrafo.
   const regex = /(?:^|\s)(\d{1,2})[.)]\s*(?=\S)/gu;
-  const marcas = Array.from(texto.matchAll(regex));
+  // Una dirección puede incluir "Siria 75)" u otra cifra entre paréntesis.
+  // Los marcadores del procedimiento deben ser números pequeños y consecutivos.
+  const candidatas = Array.from(texto.matchAll(regex));
+  const marcas: RegExpMatchArray[] = [];
+  let ultimoNumero = 0;
+  for (const candidata of candidatas) {
+    const numero = Number(candidata[1]);
+    if (numero > 20 || numero < 1) continue;
+    if (numero === 1 || numero === ultimoNumero + 1) {
+      marcas.push(candidata);
+      ultimoNumero = numero;
+    }
+  }
   if (marcas.length < 2) return null;
 
   const bloques: BloqueProcedimiento[] = [];
