@@ -10,6 +10,7 @@ import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './Trami
 import { documentacionPublica, pasosPublicos, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import { TramitesBackToTop } from './TramitesBackToTop';
+import { iconoDestinatario } from './tramites-icons';
 import './tramites.css';
 
 const base = '/tramites';
@@ -37,6 +38,17 @@ function FilaTramite({ tramite }: { tramite: Tramite }) {
   );
 }
 
+function elegirDestinatarios(setSearchParams: ReturnType<typeof useSearchParams>[1], valores: readonly string[]) {
+  setSearchParams((actual) => {
+    const siguiente = new URLSearchParams(actual);
+    siguiente.delete('destinatario');
+    for (const valor of [...new Set(valores)]) {
+      if (destinatarios.includes(valor)) siguiente.append('destinatario', valor);
+    }
+    return siguiente;
+  }, { replace: true });
+}
+
 function elegirValor(setSearchParams: ReturnType<typeof useSearchParams>[1], key: string, value: string) {
   setSearchParams((actual) => {
     const siguiente = new URLSearchParams(actual);
@@ -50,7 +62,7 @@ export function TramitesCatalogPage() {
   const busqueda = params.get('q') ?? '';
   const diferida = useDeferredValue(busqueda);
   const tema = params.get('tema') ?? '';
-  const destinatario = params.get('destinatario') ?? '';
+  const destinatario = [...new Set(params.getAll('destinatario'))].filter((nombre) => destinatarios.includes(nombre));
   const modalidad = params.get('modalidad') ?? '';
   const turno = params.get('turno') ?? '';
   const orden = params.get('orden') === 'az' ? 'az' : 'tema';
@@ -62,12 +74,30 @@ export function TramitesCatalogPage() {
     return siguiente;
   }, { replace: true });
 
+  const limpiarTodo = () => setParams(actual => new URLSearchParams(
+    actual.get('orden') === 'az' ? { orden: 'az' } : {}
+  ), { replace: true });
+  const cambiarFiltro = (campo: (typeof camposFiltro)[number], valor: string) => {
+    if (campo === 'destinatario') {
+      elegirDestinatarios(setParams, destinatario.includes(valor)
+        ? destinatario.filter(item => item !== valor)
+        : [...destinatario, valor]);
+    } else {
+      elegirValor(setParams, campo, valores[campo] === valor ? '' : valor);
+    }
+  };
+  const chips: { campo: (typeof camposFiltro)[number]; valor: string }[] = [
+    ...destinatario.map((valor) => ({ campo: 'destinatario' as const, valor })),
+    ...(['tema', 'turno', 'modalidad'] as const).flatMap(campo =>
+      valores[campo] ? [{ campo, valor: valores[campo] }] : []),
+  ];
+
   const filtrados = useMemo(() => {
     const q = normalizarBusqueda(diferida);
     const rows = tramites.filter((t) =>
       (!q || normalizarBusqueda([t.titulo, t.descripcion, t.sinonimos, ...t.etiquetas].join(' ')).includes(q)) &&
       (!tema || t.categoria === tema) &&
-      (!destinatario || t.destinatarios.includes(destinatario)) &&
+      (!destinatario.length || destinatario.some(item => t.destinatarios.includes(item))) &&
       (!modalidad || t.modalidad === modalidad) &&
       (!turno || (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
         (turno === 'No requiere turno' && /^no$/i.test(t.turno.trim())))
@@ -81,7 +111,7 @@ export function TramitesCatalogPage() {
     ? [{ nombre: '', items: filtrados }]
     : temas.map((nombre) => ({ nombre, items: filtrados.filter((tramite) => tramite.categoria === nombre) })).filter((grupo) => grupo.items.length > 0), [filtrados, orden]);
 
-  const hayFiltros = !!(busqueda || tema || destinatario || modalidad || turno);
+  const hayFiltros = !!(busqueda || chips.length);
   return (
     <PageContainer className="tram-container">
       <Breadcrumbs items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
@@ -105,14 +135,14 @@ export function TramitesCatalogPage() {
         </label>
         <div className="tram-filter-control">
           <AgendaDropdown label="¿Para quién es?" options={destinatarios}
-            selected={destinatario ? [destinatario] : []} resultCount={filtrados.length}
-            onChange={(values) => elegirValor(setParams, 'destinatario', values[0] ?? '')}
+            selected={destinatario} multiple resultCount={filtrados.length}
+            onChange={(seleccion) => elegirDestinatarios(setParams, seleccion)}
             align="end" />
         </div>
         <div className="tram-filter-control">
-          <AgendaDropdown label="Tema" options={temas}
+          <AgendaDropdown label="Tema" options={temas} selectionControl="radio"
             selected={tema ? [tema] : []} resultCount={filtrados.length}
-            onChange={(values) => elegirValor(setParams, 'tema', values[0] ?? '')}
+            onChange={(seleccion) => elegirValor(setParams, 'tema', seleccion[0] ?? '')}
             align="end-responsive" />
         </div>
         <div className="tram-filter-control tram-filter-more-control">
@@ -122,29 +152,26 @@ export function TramitesCatalogPage() {
             destinatarios={destinatarios}
             modalidades={modalidades}
             resultCount={filtrados.length}
-            onChange={(campo, value) => elegirValor(setParams, campo, value)}
+            onChange={cambiarFiltro}
             onReset={limpiarOpciones}
           />
         </div>
       </div>
+      {hayFiltros && <div className="agenda-filter-chips tram-active-filters"
+        role="group" aria-label="Filtros seleccionados">
+        {chips.map(({ campo, valor }) =>
+          <button type="button" key={campo + ':' + valor}
+            data-testid={'tramite-filter-chip-' + campo}
+            className="agenda-filter-chip"
+            aria-label={'Quitar filtro ' + campo + ': ' + valor}
+            onClick={() => cambiarFiltro(campo, valor)}>
+            <span>{valor}</span><span aria-hidden="true">×</span>
+          </button>)}
+        <button type="button" className="agenda-filter-clear" onClick={limpiarTodo}>Limpiar</button>
+      </div>}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
         <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
       </div>
-      {hayFiltros && <div className="tram-active-filters">
-        <span>Filtros aplicados</span>
-        <div className="tram-selected-filters">
-          {camposFiltro.filter(campo => valores[campo]).map(campo =>
-            <button type="button" key={campo} data-testid={'tramite-filter-chip-' + campo}
-              aria-label={'Quitar filtro ' + campo + ': ' + valores[campo]}
-              onClick={() => elegirValor(setParams, campo, '')}
-              className="agenda-filter-chip inline-flex min-h-[30px] items-center gap-2 rounded-[6px] bg-info-500 px-2.5 text-[14px] font-medium text-white hover:bg-[#005bd1]">
-              {valores[campo]} <MaterialIcon name="close" size={15} />
-            </button>)}
-          <button type="button" onClick={() => setParams(new URLSearchParams(orden === 'az' ? { orden: 'az' } : {}))}>
-            Limpiar filtros
-          </button>
-        </div>
-      </div>}
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
@@ -321,14 +348,10 @@ export function TramiteDetailPage() {
     <div className="tram-detail-grid">
       <article className="tram-detail-main">
         <header className="tram-detail-header">
-          <p className="tram-eyebrow">{tramite.categoria}</p>
           <h1>{tramite.titulo}</h1>
           <p className="tram-lead">{tramite.descripcion}</p>
           <p className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></p>
           <Etiquetas items={tramite.etiquetas} />
-          {tramite.web && <a className="tram-btn tram-start-link" href={tramite.web} target="_blank" rel="noopener noreferrer">
-            Ir al sitio del trámite <MaterialIcon name="arrow_forward" size={20} />
-          </a>}
         </header>
         <div className="tram-detail-mobile-tools">
           <AccionesFicha />
@@ -338,7 +361,7 @@ export function TramiteDetailPage() {
           <h2>¿Quién puede solicitarlo?</h2>
           <div className="tram-audiences">{tramite.destinatarios.map((destinatario) =>
             <span className="tram-audience-tag" key={destinatario}>
-              <MaterialIcon name={destinatario === 'Profesionales' ? 'work_outline' : 'groups'} size={18}/>{destinatario}
+              <MaterialIcon name={iconoDestinatario(destinatario)} size={18} />{destinatario}
             </span>
           )}</div>
         </section>}
