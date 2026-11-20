@@ -190,6 +190,7 @@ export function TramitesCatalogPage() {
           id: campo + ':' + valor,
           label: valor,
           ariaLabel: 'Quitar filtro ' + campo + ': ' + valor,
+          testId: 'tramite-filter-chip-' + campo,
           campo,
           valor,
         }))}
