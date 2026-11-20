@@ -25,7 +25,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "PRESENCIAL 1 HORA- DIGITAL 3 DÍAS",
     "normativa": "Ley 10.397\nLey 13.010\nLey 14.553\nLey Impositiva 13.003\nLey Impositiva 2026 15.558\nOrdenanza Impositiva 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 19,
     "canales": "Teléfono, Mail, WhatsApp, Presencial, Web",
@@ -60,7 +60,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "30 MIN A 2 HS",
     "normativa": "ORDENANZA IMPOSITIVA 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 20,
     "canales": "Teléfono, Mail, WhatsApp, Presencial, Web",
@@ -95,7 +95,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "30 MIN A 1.30HS",
     "normativa": "1.Ley 10.397\n2.Ley 13.010\n3.Ley 14.553\n4.Ley Impositiva 13.003",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 21,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -130,7 +130,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "30 MIN A 1.30 HS",
     "normativa": "ORDENANZA IMPOSITIVA 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 22,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -165,7 +165,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "30 MIN A 1.30 HS",
     "normativa": "-",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 23,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -235,7 +235,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "40 MIN A 1.30 HS",
     "normativa": "Ley 10.397\nLey 13.010\nLey 14.553\nLey Impositiva 13.003\nOrdenanza Impositiva 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 30,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -270,7 +270,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "40 min a 1.30 hs",
     "normativa": "Ley 10.397 \n\n\nLey 13.010 \n\n\nLey 14.553 \n\n\nLey Impositiva 13.003 \n\n\nOrdenanza Impositiva 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 31,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -340,7 +340,7 @@
     "pago": "Presencial, Débito / crédito, Pago online",
     "plazo": "40 MIN A 1.30 HR",
     "normativa": "Ordenanza impositiva 2026",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 34,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
@@ -382,7 +382,7 @@
     "formatoDocumentacion": "Papel",
     "exenciones": "Sí",
     "detalleExenciones": "Para los conductores municipales (solo tasa municipal)",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.gba.gob.ar/seguridadvial/normativa_vial_0"
   },
   {
     "id": "R121",
@@ -410,14 +410,14 @@
     "pago": "",
     "plazo": "24/48 hs",
     "normativa": "ordenanza de estacionamiento 19166",
-    "web": "",
+    "web": "https://webextra.lomasdezamora.gov.ar/ConsolaSitio/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 122,
     "canales": "Mail",
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://share.google/p2CmKy5fVr7EAJaTX"
   },
   {
     "id": "R122",
@@ -445,14 +445,14 @@
     "pago": "",
     "plazo": "24 - 48 HS",
     "normativa": "Ley provincial 13927",
-    "web": "",
+    "web": "https://webextra.lomasdezamora.gov.ar/ConsolaSitio/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 123,
     "canales": "Web",
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.argentina.gob.ar/normativa/provincial/ley-13927-123456789-0abc-defg-729-3100bvorpyel/actualizacion"
   },
   {
     "id": "R123",
@@ -483,7 +483,7 @@
     "pago": "",
     "plazo": "24/48 hs",
     "normativa": "no hay",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/iframe/Cortes.aspx",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 124,
     "canales": "Mail",
@@ -556,7 +556,7 @@
     "pago": "",
     "plazo": "24/48hs",
     "normativa": "no hay",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/iframe/Cortes.aspx",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 132,
     "canales": "Web",
@@ -594,7 +594,7 @@
     "pago": "",
     "plazo": "24-48 hs",
     "normativa": "ninguna",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/iframe/Cortes.aspx",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 133,
     "canales": "Web",
@@ -632,7 +632,7 @@
     "pago": "",
     "plazo": "24/48hs",
     "normativa": "no hay",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/iframe/Cortes.aspx",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 134,
     "canales": "Teléfono, Mail, Presencial",
@@ -1066,7 +1066,7 @@
     "pago": "Presencial, Transferencia, Débito / crédito, Pago online",
     "plazo": "2 días hábiles aprox",
     "normativa": "Ordenanza General Nº 267/1980; Ordenanza Fiscal, capítulo XIII; y Ordenanza Impositiva, capítulo XV Art. 54º (Tasa 7).",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/tramites/obras-particulares",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 98,
     "canales": "Teléfono, Mail, Presencial",
@@ -1222,7 +1222,7 @@
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://normas.gba.gob.ar/documentos/Bj6NDiyB.html"
   },
   {
     "id": "R120",
@@ -1257,7 +1257,7 @@
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://normas.gba.gob.ar/documentos/Bj6NDiyB.html"
   },
   {
     "id": "R125",
@@ -1327,7 +1327,7 @@
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://normas.gba.gob.ar/documentos/Bj6NDiyB.html"
   },
   {
     "id": "R001",
@@ -1355,14 +1355,14 @@
     "pago": "Presencial",
     "plazo": "15 dias, habiles, depende el nivel y tamaño de la empresa",
     "normativa": "Decreto Ley Nº 6769/58 (Ley Orgánica de las Municipalidades - LOM) y posteriorers",
-    "web": "",
+    "web": "https://proveedores.lomasdezamora.gov.ar",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 2,
     "canales": "Mail",
     "formatoDocumentacion": "Digital y papel",
     "exenciones": "No",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://webextra.lomasdezamora.gov.ar/consoladelamuni/pdf/legislacion/Ley_Org%C3%A1nica_de_las_Municipalidades.pdf"
   },
   {
     "id": "R028",
@@ -1392,14 +1392,14 @@
     "pago": "Presencial, Transferencia, Débito / crédito",
     "plazo": "Según las Dirección y según la celeridad del contribuyente en enviar la documentación.",
     "normativa": "Ordenanza Impositiva y Fiscal Vigente",
-    "web": "",
+    "web": "https://elomas.gob.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 29,
     "canales": "Mail, Presencial",
     "formatoDocumentacion": "Digital y papel",
     "exenciones": "Sí",
     "detalleExenciones": "Bonificación según ordenanza municipal cuyas personas tengan declarado el domicilio en el partido de Lomas de Zamora",
-    "normativaUrl": ""
+    "normativaUrl": "https://formularios.lomasdezamora.gov.ar/descargas/tasas/Ordenanza-Impositiva-2026.pdf"
   },
   {
     "id": "R035",
@@ -1463,7 +1463,7 @@
     "pago": "",
     "plazo": "Depende estrictamente de lo que tarde el comercio en presentar la documentación necesaria para habilitar. En condiciones ideales, 1 mes.",
     "normativa": "Ordenanza 19.165 y Ordenanza Fiscal e Impositiva Vigente (19466 y 19467)",
-    "web": "",
+    "web": "https://elomas.gob.ar",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 82,
     "canales": "Mail, WhatsApp",
@@ -1498,7 +1498,7 @@
     "pago": "",
     "plazo": "30 días",
     "normativa": "Ordenanza Fiscal e Impositiva (19466 y 19467)",
-    "web": "",
+    "web": "https://elomas.gob.ar",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 83,
     "canales": "Mail, WhatsApp",
@@ -1568,7 +1568,7 @@
     "pago": "Presencial, Transferencia, Débito / crédito, Pago online",
     "plazo": "30 dias",
     "normativa": "Ordenanza Fiscal e Impositiva vigente y de procedimiento de Habilitaciones.",
-    "web": "",
+    "web": "https://elomas.gob.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 85,
     "canales": "Mail",
@@ -1638,7 +1638,7 @@
     "pago": "Presencial, Transferencia, Débito / crédito, Pago online",
     "plazo": "30 a 60 dias para el provisorio",
     "normativa": "Ordenanza Fiscal e Impositiva vigente y de procedimiento de Habilitaciones.",
-    "web": "",
+    "web": "https://elomas.gob.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 87,
     "canales": "Mail",
@@ -2314,14 +2314,14 @@
     "pago": "",
     "plazo": "5min aproximadamente",
     "normativa": "ordenanza fiscal e impositiva",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 28,
     "canales": "Mail, WhatsApp, Presencial",
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://formularios.lomasdezamora.gov.ar/descargas/tasas/Ordenanza-Impositiva-2026.pdf"
   },
   {
     "id": "R031",
@@ -2349,7 +2349,7 @@
     "pago": "",
     "plazo": "si el vecino presentó lo requerido (que el PORTAL NO INFORMA) 24hs",
     "normativa": "Decreto, ordenanzas y resoluciones vigentes",
-    "web": "",
+    "web": "https://sag.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 32,
     "canales": "Mail, WhatsApp",
@@ -2886,7 +2886,7 @@
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R063",
@@ -2921,7 +2921,7 @@
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R064",
@@ -2959,7 +2959,7 @@
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R065",
@@ -2987,14 +2987,14 @@
     "pago": "",
     "plazo": "2 dia",
     "normativa": "ORDENANZA Nº 19207",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/arbolado-publico/autorizacion-poda",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 66,
     "canales": "Mail, Presencial",
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R066",
@@ -3029,7 +3029,7 @@
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R067",
@@ -3067,7 +3067,7 @@
     "formatoDocumentacion": "Digital",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.concejoldez.gob.ar/detalle_norma/4833"
   },
   {
     "id": "R069",
@@ -3278,7 +3278,7 @@
     "pago": "",
     "plazo": "5 min.",
     "normativa": "no hay",
-    "web": "",
+    "web": "https://siteqa.lomasdezamora.gov.ar/formularios/sembrar-soberania",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 80,
     "canales": "Mail, WhatsApp",
@@ -3348,14 +3348,17 @@
     "pago": "Presencial",
     "plazo": "2 meses",
     "normativa": "Ley 22431",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/tramites/discapacidad-cud",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 10,
     "canales": "Teléfono, Mail, WhatsApp, Presencial",
     "formatoDocumentacion": "Papel",
     "exenciones": "No",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.argentina.gob.ar/normativa/nacional/ley-22431-20620/texto",
+    "otrosEnlaces": [
+      "https://lomasdezamora.gov.ar/tramites/discapacidad-cud/requisitos-especificos-segun-patologia"
+    ]
   },
   {
     "id": "R011",
@@ -3523,7 +3526,7 @@
     "pago": "",
     "plazo": "Varia según la especialidad.",
     "normativa": ".",
-    "web": "",
+    "web": "https://saludencomunidad.lomasdezamora.gov.ar/",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 53,
     "canales": "Teléfono, Presencial, Web",
@@ -3593,7 +3596,7 @@
     "pago": "",
     "plazo": "3 minutos",
     "normativa": "No existe normativa que lo regule.",
-    "web": "",
+    "web": "https://comunidad.lomasdezamora.gov.ar/iniciar-sesion",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 55,
     "canales": "Mail",
@@ -3628,7 +3631,7 @@
     "pago": "Débito / crédito",
     "plazo": "3 meses máximo",
     "normativa": "Ley nacional 24240 y provincial 13133",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/iframe/DefensaConsumidor.aspx",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 3,
     "canales": "Mail, WhatsApp, Presencial",
@@ -3908,14 +3911,18 @@
     "pago": "",
     "plazo": "72 hs",
     "normativa": ".",
-    "web": "",
+    "web": "https://www.instagram.com/p/DZ5JEShFeHm/?igsh=NDBqM3g5Z2MxZXRj",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 75,
     "canales": "Mail, Presencial",
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "",
+    "otrosEnlaces": [
+      "https://l.instagram.com/?u=https%3A%2F%2Fforms.gle%2FN18zfChtS3rmo6m5A%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnBKEqltYX9n3biIxjqoNA3uXkl7_-6xp7eZhQ3cYB9HDUDja44wZ79iz0I-8_aem_GEHvzMUHtQBfruzJzk1dxA&e=AUCy3j7SOWSgrZszQG1mlFSBYIAjrNawE3EFKP9MF1UJseBQgf-nwxrZYPBVWQX7Lhh2fSRo7gzrjjsO1yYsUe6gFIrK5xwYb0byAV3TdhE9P-oaAHZ1DEzYF4Av61ejZJrNfz7Z-xAIDefKjbkWkag",
+      "https://l.instagram.com/?u=https%3A%2F%2Flinktr.ee%2Femajea%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnPEmPUqlkMryUQOUCJ3F1ToBZqSVDGnZUN55ZPv7dE3nkFRJslBOFEVFgRl4_aem_EVIrptfb1E5e0GQX1dxN-Q&e=AUDE-_mm8JxS4VqM2TkivJxe4Wgr9FC-B_KO4_Q21kJHT4Vc-0s31lEKjpE2KZjOJZOb3H-40GpRfl-054Nfayj-vMYHBpoA5eK9mL2tRwklNiR0hJpDlc4unERtjL1I4JhMXxHZWLMVJWLCbvKd2NA"
+    ]
   },
   {
     "id": "R078",
@@ -4014,7 +4021,7 @@
     "pago": "",
     "plazo": "Como las inscripciones a los talleres se hacen solo una vez al año, en el mes de Marzo, no requieren mucho tiempo de resolución la solicitud del vecino.",
     "normativa": "Se desconoce.",
-    "web": "",
+    "web": "https://lomasdezamora.gov.ar/centros-culturales",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 95,
     "canales": "Mail",
@@ -4049,7 +4056,7 @@
     "pago": "",
     "plazo": "La inscripción es inmediata y depende del cupo de cada escuela y/o carrera/curso.",
     "normativa": "-",
-    "web": "",
+    "web": "https://aprender.lomasdezamora.gov.ar/courses/academies",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 99,
     "canales": "Presencial",
@@ -4197,7 +4204,7 @@
     "formatoDocumentacion": "Papel",
     "exenciones": "",
     "detalleExenciones": "",
-    "normativaUrl": ""
+    "normativaUrl": "https://www.gba.gob.ar/registrodelaspersonas/normativa"
   },
   {
     "id": "R118",
@@ -4227,7 +4234,7 @@
     "pago": "",
     "plazo": "Depende del trámite.\n-Migraciones + de 6 meses\n-Consulados - de 48hs\n-Municipio 1 semana.",
     "normativa": ".....",
-    "web": "",
+    "web": "https://www.instagram.com/comunidades_migrantes?igsh=MXBsNjFzMmdxNzQ1bg==",
     "estado": "Pendiente de validación municipal",
     "filaOrigen": 119,
     "canales": "Teléfono, WhatsApp, Presencial",
