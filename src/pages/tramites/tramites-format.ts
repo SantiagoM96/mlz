@@ -54,3 +54,23 @@ export function pasosPublicos(tramite: Tramite): string[] {
 
   return [];
 }
+
+
+/**
+ * Presentación, no edición editorial: conserva el valor original del catálogo
+ * y convierte únicamente los textos de ORIGEN escritos enteramente en mayúsculas
+ * a formato de oración. Preserva siglas municipales y unidades horarias.
+ */
+export function textoPublicoLegible(valor: string): string {
+  const original = valor.trim().replace(/[ \t]+/g, ' ');
+  if (!original) return '';
+  const mayusculas = original === original.toLocaleUpperCase('es-AR') &&
+    /[A-ZÁÉÍÓÚÜÑ]/.test(original);
+  const base = mayusculas ? original.toLocaleLowerCase('es-AR') : original;
+  return base
+    .replace(/^\p{L}/u, letra => letra.toLocaleUpperCase('es-AR'))
+    .replace(/\b(dni|cuit|cuil|cbu|cvu|pb|arba|afip|pdf)\b/gi, sigla => sigla.toLocaleUpperCase('es-AR'))
+    .replace(/\bhs\.?(?=\s|$)/gi, 'h')
+    .replace(/(\d)\s*h(?=\s|$)/gi, '$1 h')
+    .replace(/^Titulo\b/u, 'Título');
+}
