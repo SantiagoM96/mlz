@@ -141,37 +141,70 @@ function IndiceFicha({ secciones }: { secciones: { id: string; titulo: string }[
   </nav>;
 }
 
-function DocumentacionFicha({ texto }: { texto: string }) {
+function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
+  const texto = tramite.documentacion;
   if (!texto.trim()) return null;
-  // Solo dividir cuando el relevamiento trae delimitadores explícitos de lista.
-  // No inferir documentos a partir de barras o comas que pueden ser parte del nombre.
-  const items = texto.split(/\r?\n|;\s*|(?:^|\s)[•]\s*/).map((item) => item.trim()).filter(Boolean);
+  // R036 usa barras como delimitadores de sus cuatro documentos en ORIGEN.
+  // No dividir otras barras: pueden formar parte de códigos, fechas o enlaces.
+  const items = (tramite.id === 'R036'
+    ? texto.split('/')
+    : texto.split(/\r?\n|;\s*|(?:^|\s)[•]\s*/))
+    .map((item) => item.trim()).filter(Boolean);
   return <section className="tram-detail-section" id="documentacion">
     <h2>Documentación</h2>
+    <p className="tram-document-intro">Para realizar el trámite te van a solicitar la siguiente documentación</p>
     {items.length > 1
       ? <ul className="tram-documents">{items.map((item, index) => <li key={index}>
           <span className="tram-document-icon"><MaterialIcon name="description" size={24} /></span>
           <span>{item}</span>
         </li>)}</ul>
       : <p className="tram-longtext">{texto}</p>}
+    {tramite.formatoDocumentacion && <p className="tram-document-format">Formato informado: {tramite.formatoDocumentacion}</p>}
+  </section>;
+}
+
+function ProcedimientoFicha({ tramite }: { tramite: Tramite }) {
+  const texto = tramite.pasos || tramite.comoIniciar;
+  if (!texto.trim()) return null;
+  const steps = tramite.id === 'R036'
+    ? texto.split('/').map((item) => item.trim()).filter(Boolean)
+    : texto.match(/^\s*1[).\s]/)
+      ? texto.split(/(?=\b\d+[).]\s+)/).map((item) => item.replace(/^\d+[).]\s*/, '').trim()).filter(Boolean)
+      : [];
+  return <section className="tram-detail-section" id="procedimiento">
+    <h2>¿Cómo se realiza?</h2>
+    {steps.length > 1 ? <ol className="tram-timeline">{steps.map((step, index) => <li key={index}>
+      <span className="tram-timeline-marker">{index + 1}</span>
+      <span>{step}</span>
+    </li>)}</ol> : <p className="tram-longtext">{texto}</p>}
+  </section>;
+}
+
+function AyudaFicha({ tramite }: { tramite: Tramite }) {
+  if (!tramite.canales.trim()) return null;
+  return <section className="tram-contact-help" aria-label="Ayuda sobre el trámite">
+    <div className="tram-contact-heading">
+      <span className="tram-help-icon"><MaterialIcon name="support_agent" size={24} /></span>
+      <h2>¿Necesitás ayuda?</h2>
+    </div>
+    <p>Canales de consulta o seguimiento informados para este trámite:</p>
+    <p className="tram-help-channels">{tramite.canales}</p>
   </section>;
 }
 
 function SedeFicha({ tramite }: { tramite: Tramite }) {
-  if (!tramite.direccion.trim() && !tramite.horarios.trim() && !tramite.turno.trim()) return null;
+  const sedes = [
+    { lugar: tramite.direccion, dias: tramite.horarios, turno: tramite.turno },
+    ...(tramite.sedeAlternativa ? [tramite.sedeAlternativa] : []),
+  ].filter((sede) => sede.lugar || sede.dias || sede.turno);
+  if (!sedes.length) return null;
   return <section className="tram-detail-section" id="donde-cuando">
     <h2>Dónde y cuándo</h2>
-    <div className="tram-location">
-      {tramite.direccion.trim() && <div className="tram-location-item">
-        <MaterialIcon name="location_on" size={24} /><p>{tramite.direccion}</p>
-      </div>}
-      {tramite.horarios.trim() && <div className="tram-location-item">
-        <MaterialIcon name="schedule" size={24} /><p>{tramite.horarios}</p>
-      </div>}
-      {tramite.turno.trim() && <div className="tram-location-item">
-        <MaterialIcon name="event" size={24} /><p>Turno: {tramite.turno}</p>
-      </div>}
-    </div>
+    <div className="tram-sedes">{sedes.map((sede, index) => <div className="tram-location" key={index}>
+      {sede.lugar && <div className="tram-location-item"><MaterialIcon name="location_on" size={24} /><p>{sede.lugar}</p></div>}
+      {sede.dias && <div className="tram-location-item"><MaterialIcon name="schedule" size={24} /><p>{sede.dias}</p></div>}
+      {sede.turno && <div className="tram-location-item"><MaterialIcon name="event" size={24} /><p>Turno: {sede.turno}</p></div>}
+    </div>)}</div>
   </section>;
 }
 
@@ -197,14 +230,13 @@ export function TramiteDetailPage() {
   </PageContainer>;
 
   const relacionados = tramites.filter((item) => item.categoria === tramite.categoria && item.id !== tramite.id).slice(0, 3);
-  const pasos = tramite.pasos || tramite.comoIniciar;
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 || Boolean(tramite.requisitos.trim()) },
     { id: 'documentacion', titulo: 'Documentación', visible: Boolean(tramite.documentacion.trim()) },
     { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: Boolean(pasos.trim()) },
     { id: 'donde-cuando', titulo: 'Dónde y cuándo', visible: Boolean(tramite.direccion.trim() || tramite.horarios.trim() || tramite.turno.trim()) },
-    { id: 'costos', titulo: 'Costos y plazos', visible: Boolean(tramite.costo.trim() || tramite.monto.trim() || tramite.pago.trim() || tramite.plazo.trim()) },
-    { id: 'normativa', titulo: 'Normativa', visible: Boolean(tramite.normativa.trim()) },
+    { id: 'costos', titulo: 'Costos y plazos', visible: Boolean(tramite.costo.trim() || tramite.monto.trim() || tramite.pago.trim() || tramite.plazo.trim() || tramite.detalleExenciones.trim()) },
+    { id: 'normativa', titulo: 'Normativa', visible: Boolean(tramite.normativa.trim() || tramite.normativaUrl.trim()) },
     { id: 'relacionados', titulo: 'Otros trámites del tema', visible: relacionados.length > 0 },
   ].filter((seccion) => seccion.visible);
 
@@ -233,25 +265,32 @@ export function TramiteDetailPage() {
         </div>
         {(tramite.destinatarios.length > 0 || tramite.requisitos.trim()) && <section id="destinatarios" className="tram-detail-section">
           <h2>Quién puede hacerlo</h2>
-          {tramite.destinatarios.length > 0 && <p>{tramite.destinatarios.join(', ')}</p>}
+          {tramite.destinatarios.length > 0 && <div className="tram-audiences">{tramite.destinatarios.map((destinatario) => <span className="tram-audience-tag" key={destinatario}><MaterialIcon name={destinatario === 'Profesionales' ? 'work_outline' : 'groups'} size={18} />{destinatario}</span>)}</div>}
           {tramite.requisitos.trim() && <p className="tram-longtext">{tramite.requisitos}</p>}
         </section>}
-        <DocumentacionFicha texto={tramite.documentacion} />
-        <SeccionFicha id="procedimiento" titulo="Cómo se hace" contenido={pasos} />
+        <DocumentacionFicha tramite={tramite} />
+        <ProcedimientoFicha tramite={tramite} />
         <SedeFicha tramite={tramite} />
-        {(tramite.costo || tramite.monto || tramite.pago || tramite.plazo) && <section className="tram-detail-section" id="costos">
+        {(tramite.costo || tramite.monto || tramite.pago || tramite.plazo || tramite.detalleExenciones) && <section className="tram-detail-section" id="costos">
           <h2>Costos y plazos</h2>
-          {tramite.costo && <p><strong>Costo: </strong>{tramite.costo}</p>}
+          {tramite.costo && <p><strong>Costo: </strong>{tramite.costo.toLowerCase() === 'no' ? 'Sin costo' : tramite.costo}</p>}
           {tramite.monto && <p><strong>Monto: </strong>{tramite.monto}</p>}
           {tramite.pago && <p><strong>Forma de pago: </strong>{tramite.pago}</p>}
           {tramite.plazo && <p><strong>Plazo estimado: </strong>{tramite.plazo}</p>}
+          {tramite.detalleExenciones && <p><strong>Exenciones o bonificaciones: </strong>{tramite.detalleExenciones}</p>}
         </section>}
-        <SeccionFicha id="normativa" titulo="Normativa" contenido={tramite.normativa} />
+        {(tramite.normativa || tramite.normativaUrl) && <section className="tram-detail-section" id="normativa">
+          <h2>Normativa</h2>
+          {tramite.normativa && <p className="tram-longtext">{tramite.normativa}</p>}
+          {tramite.normativaUrl && <a className="tram-normative-link" href={tramite.normativaUrl} target="_blank" rel="noopener noreferrer">Consultar normativa <MaterialIcon name="arrow_forward" size={20} /></a>}
+        </section>}
         <RelacionadosFicha items={relacionados} />
+        <div className="tram-detail-mobile-help"><AyudaFicha tramite={tramite} /></div>
       </article>
       <aside className="tram-detail-aside">
         <AccionesFicha />
         <IndiceFicha secciones={secciones} />
+        <AyudaFicha tramite={tramite} />
       </aside>
     </div>
   </PageContainer>;
