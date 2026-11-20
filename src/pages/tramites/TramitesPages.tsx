@@ -66,9 +66,13 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
       <div className="tram-row-body">
         <h3>{tramite.titulo}</h3>
         <p>{tramite.descripcion}</p>
+        <div className="tram-modalidad-chips" aria-label="Modalidad del trámite">
+          {tramite.modalidad.split(/\s+y\s+|\s*,\s*/).map((opcion) => (
+            <span key={opcion} className="tram-modalidad-chip">{opcion}</span>
+          ))}
+        </div>
         <div className="tram-row-actions">
-          <Link className="tram-link-action" to={ficha(tramite.id)}>Ver trámite <MaterialIcon name="arrow_forward" size={20} /></Link>
-          <span className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></span>
+          <Link className="tram-link-action" to={ficha(tramite.id)}>Ver trámite</Link>
         </div>
       </div>
       <div className="tram-row-side">

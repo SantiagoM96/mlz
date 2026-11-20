@@ -664,3 +664,7 @@
   .tram-group-grid > .tram-row { min-width: 0; align-items: flex-start; flex-direction: column; gap: 16px; }
   .tram-group-grid > .tram-row .tram-row-side { flex: none; width: 100%; min-height: 0; padding: 0; border-left: 0; gap: 8px; }
 }
+
+/* Chips medianos informativos para modalidades del catálogo. */
+.tram-modalidad-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.tram-modalidad-chip { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border-radius: 4px; background: #e5f0f9; color: var(--color-info-500); font-size: 14px; font-weight: 500; line-height: 20px; }
