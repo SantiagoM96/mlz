@@ -13,8 +13,9 @@ const sortOptions: { value: AgendaSortValue; text: string }[] = [
 ];
 
 export function AgendaSortDropdown({
-  value, onChange,
-}: { value: AgendaSortValue; onChange: (sort: AgendaSortValue) => void }) {
+  value, onChange, options = sortOptions, title = 'Ordenar actividades',
+}: { value: AgendaSortValue; onChange: (sort: AgendaSortValue) => void;
+  options?: { value: AgendaSortValue; text: string }[]; title?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
   const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLDivElement>(isOpen, () => setIsOpen(false));
@@ -43,8 +44,8 @@ export function AgendaSortDropdown({
           className="agenda-dropdown-enter agenda-mobile-sheet absolute right-0 top-[calc(100%+8px)] z-40
             w-max min-w-[210px] max-w-[calc(100vw-32px)] overflow-hidden rounded-md
             border border-[#e1e7eb] bg-white py-2 shadow-[0_4px_14px_rgba(0,0,0,0.16)]">
-          <AgendaSheetHeader title="Ordenar actividades" onClose={dismiss} />
-          {sortOptions.map(option => (
+          <AgendaSheetHeader title={title} onClose={dismiss} />
+          {options.map(option => (
             <button type="button" key={option.value}
               aria-pressed={value === option.value}
               onClick={() => { onChange(option.value); dismiss(); buttonRef.current?.focus(); }}
