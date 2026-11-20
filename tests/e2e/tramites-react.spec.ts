@@ -224,3 +224,51 @@ test('Otros trámites del tema navegan sin inventar categorías ni reutilizar la
   await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(currentTitle ?? '');
   await expect(page.locator('#otros-tramites')).toBeVisible();
 });
+
+
+test('catálogo: burbuja de chevrón aparece al bajar y vuelve arriba sin abrir otra ruta', async ({ page }) => {
+  await page.goto('/tramites');
+  const boton = page.getByRole('button', { name: 'Volver arriba' });
+  await expect(boton).toHaveCount(0);
+
+  await page.evaluate(() => window.scrollTo(0, 1100));
+  await expect(boton).toBeVisible();
+  await expect(boton.locator('[data-material-symbol="keyboard_arrow_up"]')).toBeVisible();
+  await expect(boton).toHaveCSS('border-radius', '50%');
+  await boton.click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(10);
+
+  await page.goto('/tramites/R036');
+  await expect(page.getByRole('button', { name: 'Volver arriba' })).toHaveCount(0);
+});
+
+test('catálogo: subir respeta preferencia de movimiento reducido', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/tramites');
+  await page.evaluate(() => window.scrollTo(0, 1300));
+  const boton = page.getByRole('button', { name: 'Volver arriba' });
+  await expect(boton).toBeVisible();
+  await boton.click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(10);
+});
+
+test('ficha R036: jerarquía tipográfica y espaciados según Figma', async ({ page }) => {
+  await page.goto('/tramites/R036');
+  await expect(page.locator('.tram-detail h1')).toHaveCSS('font-size', '32px');
+  await expect(page.locator('.tram-detail .tram-eyebrow')).toHaveCSS('font-size', '18px');
+  await expect(page.locator('#documentacion h2')).toHaveCSS('font-size', '24px');
+  await expect(page.locator('#otros-tramites h2')).toHaveCSS('font-size', '24px');
+  await expect(page.locator('#otros-tramites .tram-related-grid')).toHaveCSS('gap', '16px');
+  await expect(page.locator('#otros-tramites .tram-related-card strong').first()).toHaveCSS('font-size', '18px');
+  await expect(page.locator('#otros-tramites .tram-related-card p').first()).toHaveCSS('font-size', '18px');
+
+  // Figma R036: el separador va ANTES de "Otros trámites", nunca después.
+  await expect(page.locator('#otros-tramites')).toHaveCSS('border-bottom-width', '0px');
+  await expect(page.locator('#otros-tramites')).toHaveCSS('padding-bottom', '0px');
+
+  const isMobile = (page.viewportSize()?.width ?? 1415) <= 680;
+  await expect(page.locator('#otros-tramites > h2')).toHaveCSS('margin-bottom', isMobile ? '16px' : '24px');
+  await expect(page.locator('.tram-detail-header')).toHaveCSS('gap', isMobile ? '12px' : '16px');
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});
