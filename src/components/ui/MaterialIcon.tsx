@@ -43,7 +43,9 @@ export type MaterialIconName =
   | 'print'
   | 'description'
   | 'event'
-  | 'receipt_long';
+  | 'receipt_long'
+  | 'support_agent'
+  | 'work_outline';
 
 export type MaterialIconProps = {
   name: MaterialIconName;
