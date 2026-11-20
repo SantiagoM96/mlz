@@ -206,8 +206,8 @@ function jumpToFiscalYear(year){
  document.querySelectorAll('.calendar-year-option').forEach(button=>{
   const active=Number(button.dataset.yearJump)===year;button.classList.toggle('is-active',active);button.setAttribute('aria-pressed',String(active));
  });
+ if(calendarView==='month'){monthlyFocus(year,current,true);return}
  document.querySelectorAll('.calendar-section').forEach(section=>{
-  if(calendarView==='month'){monthlyFocus(year,section.dataset.tax,true);return}
   const rail=section.querySelector('.rail'),index=chooseYearIndex(events(section.dataset.tax),year);
   const item=rail.children[index];if(!item)return;
   rail.scrollTo({left:item.offsetLeft-rail.offsetLeft,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
