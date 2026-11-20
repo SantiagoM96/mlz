@@ -400,3 +400,68 @@ test('íconos de documentación y destinatarios: semánticos y medidas de Figma'
   await page.goto('/tramites/R123');
   await expect(page.locator('#destinatarios [data-material-symbol="diversity_3"]')).toHaveCount(1);
 });
+
+
+test('etiquetas del catálogo: Patentes filtra exactamente los registros editoriales y genera chip', async ({ page }) => {
+  await page.goto('/tramites');
+  const etiqueta = page.locator('.tram-row').first()
+    .getByRole('button', { name: 'Filtrar trámites por etiqueta: Patentes' });
+  await expect(etiqueta).toBeVisible();
+  await etiqueta.click();
+  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
+    .getByRole('button', { name: 'Quitar filtro etiqueta: Patentes' })).toBeVisible();
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
+  await expect(page).toHaveURL(/(?:\?|&)etiqueta=Patentes(?:&|$)/);
+  await expect(page.getByTestId('tramite-row')).toHaveCount(10);
+
+  // Cada trámite visible debe contener la misma etiqueta editorial.
+  for (const item of await page.getByTestId('tramite-row').all()) {
+    await expect(item.getByRole('button', { name: 'Filtrar trámites por etiqueta: Patentes' }))
+      .toHaveAttribute('aria-pressed', 'true');
+  }
+
+  await page.reload();
+  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
+  await page.getByRole('group', { name: 'Filtros seleccionados' })
+    .getByRole('button', { name: 'Quitar filtro etiqueta: Patentes' }).click();
+  await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
+});
+
+test('etiquetas de ficha: navegan al catálogo filtrado y combinan con tema sin duplicar chips', async ({ page }) => {
+  await page.goto('/tramites/R018');
+  const tag = page.locator('.tram-detail-header')
+    .getByRole('link', { name: 'Ver trámites con etiqueta: Patentes' });
+  await expect(tag).toBeVisible();
+  await tag.click();
+  await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toBeVisible();
+  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
+    .locator('.agenda-filter-chip')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Tema', exact: true }).click();
+  const topics = page.getByRole('dialog', { name: 'Opciones de Tema' });
+  await topics.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
+  await topics.getByRole('button', { name: /Ver resultados/ }).click();
+  await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
+    .locator('.agenda-filter-chip')).toHaveCount(2);
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await page.getByRole('group', { name: 'Filtros seleccionados' })
+    .getByRole('button', { name: 'Limpiar' }).click();
+  await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
+});
+
+test('etiquetas en mobile: accesibles por teclado y sin desborde horizontal', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tramites');
+  const tag = page.locator('.tram-row').first()
+    .getByRole('button', { name: 'Filtrar trámites por etiqueta: Patentes' });
+  await tag.focus();
+  await expect(tag).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
+    .getByRole('button', { name: 'Quitar filtro etiqueta: Patentes' })).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});
