@@ -425,9 +425,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
   background: var(--color-panel);
   border-radius: 4px;
   color: var(--color-primary-600);
@@ -440,8 +440,8 @@
   overflow-wrap: anywhere;
 }
 .tram-related-card p {
-  font-size: 18px;
-  line-height: 26px;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
   overflow-wrap: anywhere;
 }
