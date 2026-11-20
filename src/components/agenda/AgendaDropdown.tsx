@@ -41,6 +41,10 @@ export function AgendaDropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  // Mantener las selecciones entre clics consecutivos aunque React Router
+  // todavía no haya actualizado las props del menú (especialmente en tablet).
+  const selectedRef = useRef(selected);
+  useEffect(() => { selectedRef.current = selected; }, [selected]);
   const showOptionSearch = searchable ?? label !== 'Fecha';
 
   useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
@@ -54,11 +58,11 @@ export function AgendaDropdown({
     normalizeAgendaText(option).includes(normalizeAgendaText(search)),
   );
   const toggle = (option: string) => {
-    if (multiple) {
-      onChange(toggleSelectedValue(selected, option));
-    } else {
-      onChange(selected.includes(option) ? [] : [option]);
-    }
+    const siguiente = multiple
+      ? toggleSelectedValue(selectedRef.current, option)
+      : selectedRef.current.includes(option) ? [] : [option];
+    selectedRef.current = siguiente;
+    onChange(siguiente);
   };
 
   return (
@@ -154,7 +158,7 @@ export function AgendaDropdown({
                 text-white transition-colors hover:bg-primary-700">
               Ver resultados ({resultCount})
             </button>
-            <button type="button" onClick={() => { onChange([]); setSearch(''); }}
+            <button type="button" onClick={() => { selectedRef.current = []; onChange([]); setSearch(''); }}
               className="min-h-12 shrink-0 rounded px-4 text-[16px] font-bold
                 text-primary-600 transition-colors hover:bg-[#f2f7fc]">
               Limpiar
