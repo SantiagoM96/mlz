@@ -216,7 +216,7 @@ export function TramiteDetailPage() {
       { label: tramite.titulo },
     ]} />
     <div className="tram-detail-grid">
-      <main className="tram-detail-main">
+      <article className="tram-detail-main">
         <header className="tram-detail-header">
           <p className="tram-eyebrow">{tramite.categoria}</p>
           <h1>{tramite.titulo}</h1>
@@ -248,7 +248,7 @@ export function TramiteDetailPage() {
         </section>}
         <SeccionFicha id="normativa" titulo="Normativa" contenido={tramite.normativa} />
         <RelacionadosFicha items={relacionados} />
-      </main>
+      </article>
       <aside className="tram-detail-aside">
         <AccionesFicha />
         <IndiceFicha secciones={secciones} />
