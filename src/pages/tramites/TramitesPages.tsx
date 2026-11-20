@@ -300,5 +300,6 @@ export function TramiteDetailPage() {
         <AyudaFicha tramite={tramite} />
       </aside>
     </div>
+    <AvisoValidacion />
   </PageContainer>;
 }
