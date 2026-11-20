@@ -127,9 +127,6 @@ export function TramitesCatalogPage() {
           />
         </div>
       </div>
-      <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
-        <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
-      </div>
       {hayFiltros && <div className="tram-active-filters">
         <span>Filtros aplicados</span>
         <div className="tram-selected-filters">
@@ -145,6 +142,9 @@ export function TramitesCatalogPage() {
           </button>
         </div>
       </div>}
+      <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
+        <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
+      </div>
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
