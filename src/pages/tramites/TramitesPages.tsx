@@ -14,6 +14,26 @@ import { TramitesBackToTop } from './TramitesBackToTop';
 import { iconoDestinatario } from './tramites-icons';
 import './tramites.css';
 
+declare const __MLZ_BUILD_SHA__: string;
+declare const __MLZ_BUILD_AT__: string;
+
+function TramitesBuildBadge() {
+  const sha = __MLZ_BUILD_SHA__;
+  const fecha = new Date(__MLZ_BUILD_AT__);
+  const hora = new Intl.DateTimeFormat('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires', hour: '2-digit', minute: '2-digit', hour12: false,
+  }).format(fecha);
+  const version = sha ? sha.slice(-3).toUpperCase() : 'DEV';
+  return <span className="tram-build-badge"
+    aria-label={`Versión ${version}. Última actualización a las ${hora}, hora de Argentina`}
+    title={`Versión ${sha || 'desarrollo'} · Publicado: ${fecha.toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`}
+  ><span className="tram-build-code">{version}</span><span className="tram-build-time">{hora}</span></span>;
+}
+
+function TramitesBreadcrumb({ items }: { items: React.ComponentProps<typeof Breadcrumbs>['items'] }) {
+  return <div className="tram-breadcrumb-row"><Breadcrumbs items={items} /><TramitesBuildBadge /></div>;
+}
+
 const base = '/tramites';
 const ficha = (id: string) => base + '/' + id;
 function Etiquetas({ items, activa, onSeleccionar }: {
@@ -141,7 +161,7 @@ export function TramitesCatalogPage() {
   const hayFiltros = !!(busqueda || chips.length);
   return (
     <PageContainer className="tram-container">
-      <Breadcrumbs items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
+      <TramitesBreadcrumb items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
       <h1 className="tram-title">Catálogo de trámites</h1>
       <div className="tram-filters agenda-search-filterbar" role="search" aria-label="Filtrar trámites">
         <label className="tram-search relative">
@@ -361,7 +381,7 @@ export function TramiteDetailPage() {
   const { id } = useParams<{ id: string }>();
   const tramite = tramites.find((item) => item.id.toLowerCase() === (id || '').toLowerCase());
   if (!tramite) return <PageContainer className="tram-container">
-    <Breadcrumbs items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites', to: base }, { label: 'No encontrado' }]} />
+    <TramitesBreadcrumb items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites', to: base }, { label: 'No encontrado' }]} />
     <h1 className="tram-title">No encontramos ese trámite</h1>
     <Link to={base} className="tram-btn">Volver al catálogo</Link>
   </PageContainer>;
@@ -377,7 +397,7 @@ export function TramiteDetailPage() {
   ].filter((seccion) => seccion.visible);
 
   return <PageContainer className="tram-container tram-detail">
-    <Breadcrumbs items={[
+    <TramitesBreadcrumb items={[
       { label: 'Inicio', to: '/' },
       { label: 'Trámites', to: base },
       { label: tramite.categoria, to: base + '?tema=' + encodeURIComponent(tramite.categoria) },
