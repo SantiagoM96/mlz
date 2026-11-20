@@ -16,7 +16,7 @@ Fecha: 20 de noviembre de 2026.
 | Distribución ficha desktop | Columna principal 770 px, lateral 390 px, gap 40 px | Máximos fijos que podían desbordar entre 1000 y 1200 px | Distribución fluida `minmax(0,1fr) minmax(280px,390px)`, gap 40 px; a 1200 px = 770 + 390 |
 | Header de ficha | Stack de 16 px desktop / 12 px mobile | Márgenes independientes de 12, 16 y 20 px, varios superpuestos | `display: flex`, `gap: 16px` desktop / 12 px mobile, eliminando márgenes previos |
 | Título de ficha mobile | Geometria Bold 32 px | 28 px | 32 px |
-| Categoría en ficha | Geometria Medium 18 px / 26 px | 16 px Bold | 18 px Medium / 26 px |
+| Categoría en ficha | Solo en breadcrumb (feedback posterior) | Se repetía encima del título | Se eliminó el rótulo duplicado |
 | Descripción y cuerpo de ficha | Geometria Regular 18 px | 18 px | Se mantiene |
 | Títulos de sección | Geometria Bold 24 px | 24 px / 30 px | 24 px, `line-height: normal` |
 | Espacio entre título y contenido de sección | 16 px | 20 px | 16 px |
@@ -51,4 +51,4 @@ Playwright verifica en el proyecto:
 - botón ausente al inicio, visible tras desplazamiento, retorno a 0 y ausencia en fichas;
 - comportamiento con movimiento reducido.
 
-La revisión compara los valores disponibles del diseño con la estructura y estilos de la aplicación; **no equivale a una certificación de igualdad píxel a píxel** mediante superposición de capturas a todas las resoluciones.
+La última revisión también elimina el enlace de sitio genérico en el encabezado de ficha y diferencia destinatarios con iconos semánticos de 18 px. La revisión compara los valores disponibles del diseño con la estructura y estilos de la aplicación; **no equivale a una certificación de igualdad píxel a píxel** mediante superposición de capturas a todas las resoluciones.
