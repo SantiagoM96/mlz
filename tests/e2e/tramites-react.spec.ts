@@ -372,6 +372,10 @@ test('procedimientos con ramas y datos mal clasificados: sin instrucciones inven
   await page.goto('/tramites/R033');
   await expect(page.locator('#procedimiento .tram-timeline')).toHaveCount(0);
   await expect(page.locator('#procedimiento .tram-procedure-list li')).toHaveCount(5);
+  await page.goto('/tramites/R055');
+  await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(5);
+  await expect(page.locator('#procedimiento .tram-timeline li').first()).toContainText('Ingreso y Primera Escucha');
+  await expect(page.locator('#procedimiento .tram-timeline li').first()).toContainText('Siria 75');
   await page.goto('/tramites/R125');
   await expect(page.locator('#procedimiento')).toHaveCount(0);
 });
