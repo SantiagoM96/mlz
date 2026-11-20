@@ -164,3 +164,33 @@
   .tram-detail .tram-detail-grid { display: block; }
   .tram-detail .tram-detail-section { break-inside: avoid; }
 }
+
+
+/* Figma: categorías de destinatarios, documentación, timeline y panel institucional. */
+.tram-audiences { display: flex; flex-wrap: wrap; gap: 8px; }
+.tram-audience-tag { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; border-radius: 6px; padding: 4px 8px; background: var(--color-panel); color: var(--color-primary-600); font-size: 16px; font-weight: 500; }
+.tram-document-intro { font-size: 18px !important; line-height: 26px !important; margin: 0 0 16px; }
+.tram-documents li > span:last-child { font-size: 18px; line-height: 26px; font-weight: 700; overflow-wrap: anywhere; }
+.tram-document-format { margin-top: 16px; font-size: 14px !important; }
+.tram-timeline { padding: 0; margin: 0; list-style: none; }
+.tram-timeline li { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 16px; min-height: 70px; align-items: start; color: var(--color-primary-600); font-size: 18px; line-height: 26px; font-weight: 700; }
+.tram-timeline li:not(:last-child) { padding-bottom: 16px; }
+.tram-timeline-marker { position: relative; display: grid; place-items: center; width: 36px; height: 36px; background: var(--color-primary-600); color: white; border-radius: 50%; font-weight: 700; font-size: 18px; }
+.tram-timeline li:not(:last-child) .tram-timeline-marker::after { content: ''; position: absolute; top: 36px; left: 17px; height: 34px; width: 2px; background: var(--color-primary-500); }
+.tram-sedes { display: grid; gap: 16px; }
+.tram-normative-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; color: var(--color-primary-600); font-weight: 700; text-decoration: underline; }
+.tram-detail .tram-contact-help { margin-top: 24px; padding: 24px; border: 1px solid var(--color-divider); border-radius: 12px; background: var(--color-panel); }
+.tram-contact-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.tram-contact-heading h2 { color: var(--color-primary-600); font-weight: 700; font-size: 24px; line-height: 30px; }
+.tram-detail .tram-contact-help .tram-help-icon { color: var(--color-primary-600); background: #e5f0f9; border-radius: 8px; }
+.tram-contact-help p { font-size: 16px; line-height: 1.6; }
+.tram-contact-help .tram-help-channels { font-weight: 700; margin-top: 12px; }
+.tram-detail-mobile-help { display: none; }
+@media (max-width: 680px) {
+  .tram-detail-mobile-help { display: block; }
+  .tram-detail .tram-contact-help { margin: 24px 0 0; }
+  .tram-documents li > span:last-child { min-width: 0; }
+}
+@media print {
+  .tram-detail-mobile-help { display: none !important; }
+}
