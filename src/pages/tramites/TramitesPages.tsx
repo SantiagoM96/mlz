@@ -219,7 +219,7 @@ export function TramitesCatalogPage() {
         onClear={limpiarTodo}
       />}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
-        <AgendaSortDropdown value={orden === 'az' ? 'az' : 'default'}
+        <AgendaSortDropdown ghost value={orden === 'az' ? 'az' : 'default'}
           options={[{ value: 'default', text: 'Por tema' }, { value: 'az', text: 'Alfabético A–Z' }]}
           title="Ordenar trámites"
           onChange={(value) => elegirValor(setParams, 'orden', value === 'az' ? 'az' : '')} />
