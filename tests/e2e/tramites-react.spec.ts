@@ -106,6 +106,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
   await expect(counter).toHaveText('3');
   await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
+  await expect(panel).toBeHidden();
   await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
   await expect(page.getByTestId('tramite-filter-chip-turno')).toBeVisible();
 
@@ -118,6 +119,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await expect(reopened.getByRole('checkbox', { name: 'No requiere turno' })).not.toBeChecked();
   await expect(counter).toHaveText('3');
   await reopened.getByRole('button', { name: 'Ver resultados (1)' }).click();
+  await expect(reopened).toBeHidden();
   await expect(page.getByText('1 trámite', { exact: true })).toBeVisible();
 });
 
@@ -136,6 +138,7 @@ test('Turno no incluye trámites cuyo relevamiento no informa si requieren reser
   await panel.getByRole('button', { name: 'Turno', exact: true }).click();
   await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
   await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
+  await expect(panel).toBeHidden();
   await expect(page.getByText('83 trámites', { exact: true })).toBeVisible();
   await expect(more.locator('[data-agenda-filter-count]')).toHaveText('1');
 
