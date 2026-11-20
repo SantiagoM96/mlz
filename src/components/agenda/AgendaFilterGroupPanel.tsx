@@ -11,6 +11,8 @@ export type AgendaFilterGroupOption = {
   title: string;
   options: readonly string[];
   selected: readonly string[];
+  /** Por defecto Agenda mantiene su selección múltiple actual. */
+  selectionControl?: 'checkbox' | 'radio';
 };
 
 type Props = {
@@ -57,7 +59,9 @@ export function AgendaFilterGroupPanel({
             className="agenda-motion-accordion mt-2 grid grid-cols-1 gap-x-3 gap-y-1 sm:grid-cols-2">
             {group.options.map(option => <label key={option}
               className="flex min-h-11 cursor-pointer items-center gap-2 rounded px-2 py-2 text-[16px] leading-6 text-grey-900 transition-colors hover:bg-[#eff7fd] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary-600">
-              <input type="checkbox" className="size-5 shrink-0 accent-[#006eff]"
+              <input type={group.selectionControl ?? 'checkbox'}
+                name={group.selectionControl === 'radio' ? dialogId + '-' + group.key : undefined}
+                className="size-5 shrink-0 accent-[#006eff]"
                 checked={group.selected.includes(option)} onChange={() => onToggle(group.key, option)} />
               <span>{option}</span>
             </label>)}

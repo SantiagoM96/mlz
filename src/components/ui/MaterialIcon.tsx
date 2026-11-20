@@ -46,7 +46,10 @@ export type MaterialIconName =
   | 'event'
   | 'receipt_long'
   | 'support_agent'
-  | 'work_outline';
+  | 'work_outline'
+  | 'storefront'
+  | 'account_balance'
+  | 'diversity_3';
 
 export type MaterialIconProps = {
   name: MaterialIconName;

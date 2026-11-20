@@ -21,6 +21,8 @@ type FilterDropdownProps = {
   triggerIcon?: 'expand_more' | 'tune';
   panelTitle?: string;
   searchable?: boolean;
+  /** Control visual opcional para selecciones exclusivas de otros módulos; Agenda conserva sus checkboxes. */
+  selectionControl?: 'checkbox' | 'radio';
 };
 
 /**
@@ -29,7 +31,7 @@ type FilterDropdownProps = {
  */
 export function AgendaDropdown({
   label, options, selected, resultCount, onChange, multiple = false, align = 'start',
-  triggerIcon = 'expand_more', panelTitle, searchable,
+  triggerIcon = 'expand_more', panelTitle, searchable, selectionControl = 'checkbox',
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
@@ -39,6 +41,10 @@ export function AgendaDropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  // Mantener las selecciones entre clics consecutivos aunque React Router
+  // todavía no haya actualizado las props del menú (especialmente en tablet).
+  const selectedRef = useRef(selected);
+  useEffect(() => { selectedRef.current = selected; }, [selected]);
   const showOptionSearch = searchable ?? label !== 'Fecha';
 
   useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
@@ -52,11 +58,11 @@ export function AgendaDropdown({
     normalizeAgendaText(option).includes(normalizeAgendaText(search)),
   );
   const toggle = (option: string) => {
-    if (multiple) {
-      onChange(toggleSelectedValue(selected, option));
-    } else {
-      onChange(selected.includes(option) ? [] : [option]);
-    }
+    const siguiente = multiple
+      ? toggleSelectedValue(selectedRef.current, option)
+      : selectedRef.current.includes(option) ? [] : [option];
+    selectedRef.current = siguiente;
+    onChange(siguiente);
   };
 
   return (
@@ -130,12 +136,14 @@ export function AgendaDropdown({
                       : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
-                  <input type="checkbox" checked={checked} onChange={() => toggle(option)}
+                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onChange={() => toggle(option)}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
-                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center rounded-[2px] border-2
+                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2 ${selectionControl === 'radio' ? 'rounded-full' : 'rounded-[2px]'}
                       ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
-                    {checked && <MaterialIcon name="check" size={16} className="text-white" />}
+                    {checked && (selectionControl === 'radio'
+                      ? <span className="size-2 rounded-full bg-white" />
+                      : <MaterialIcon name="check" size={16} className="text-white" />)}
                   </span>
                 </label>
               );
@@ -150,7 +158,7 @@ export function AgendaDropdown({
                 text-white transition-colors hover:bg-primary-700">
               Ver resultados ({resultCount})
             </button>
-            <button type="button" onClick={() => { onChange([]); setSearch(''); }}
+            <button type="button" onClick={() => { selectedRef.current = []; onChange([]); setSearch(''); }}
               className="min-h-12 shrink-0 rounded px-4 text-[16px] font-bold
                 text-primary-600 transition-colors hover:bg-[#f2f7fc]">
               Limpiar

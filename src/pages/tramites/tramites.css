@@ -99,23 +99,19 @@
 .tram-sort-buttons button { padding: 10px 16px; color: var(--color-primary-600); background: #fff; }
 .tram-sort-buttons button.active { background: var(--color-panel); color: var(--color-primary-600); font-weight: 700; }
 .tram-sort-buttons button:focus-visible { outline: 2px solid var(--color-info-500); outline-offset: -2px; }
-.tram-active-filters { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; font-size: 14px; }
-.tram-active-filters button { font-weight: 700; color: var(--color-primary-600); text-decoration: underline; }
-/* El panel avanzado y los accesos directos comparten la misma selección. */
-.tram-selected-filters {
+/* Mismo componente de chips que Agenda: azul, cruz a la derecha y Limpiar. */
+.tram-active-filters {
   display: flex;
-  min-width: 0;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
 }
-.tram-active-filters .tram-selected-filters .agenda-filter-chip {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-.tram-active-filters .tram-selected-filters .agenda-filter-chip:hover { background: #005bd1; }
+.tram-active-filters + .tram-results { margin-top: 24px; }
+.tram-active-filters .agenda-filter-chip { flex: 0 0 auto; }
+.tram-active-filters .agenda-filter-clear { flex: 0 0 auto; }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
 
 .tram-group { margin: 32px 0 40px; scroll-margin-top: 24px; }
@@ -179,6 +175,30 @@
   font-weight: 500;
   line-height: 20px;
 }
+.tram-tag-action {
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  font-family: inherit;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.tram-tag-action:hover {
+  background: var(--color-panel);
+  border-color: var(--color-primary-600);
+  color: var(--color-primary-600);
+}
+.tram-tag-action:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: 3px;
+}
+.tram-tag-action.tram-tag-selected {
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600);
+  color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tram-tag-action { transition: none; }
+}
 .tram-empty { padding: 60px 24px; background: var(--color-panel); text-align: center; }
 .tram-empty h2 { color: var(--color-primary-600); font-size: 24px; font-weight: 700; }
 .tram-empty p { margin: 12px auto 24px; }
@@ -201,15 +221,8 @@
   margin-bottom: 24px;
   border-bottom: 1px solid var(--color-divider);
 }
-.tram-detail-header :is(.tram-eyebrow, h1, .tram-lead, .tram-modalidad, .tram-tags, .tram-start-link) {
+.tram-detail-header :is(h1, .tram-lead, .tram-modalidad, .tram-tags) {
   margin: 0;
-}
-.tram-eyebrow {
-  color: var(--color-primary-600);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 26px;
-  text-decoration: underline;
 }
 .tram-lead { margin: 20px 0 16px; color: var(--color-grey-900); font-size: 18px; line-height: 26px; }
 /* La distribución del encabezado se rige exclusivamente por su gap. */
@@ -235,6 +248,18 @@
 }
 .tram-detail-section .tram-longtext { overflow-wrap: anywhere; }
 .tram-audiences { display: flex; flex-wrap: wrap; gap: 8px; }
+.tram-audience-tag {
+  box-sizing: border-box;
+  height: 28px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  line-height: 20px;
+  border-radius: 6px;
+}
+.tram-audience-tag [data-material-symbol] {
+  width: 18px;
+  height: 18px;
+}
 .tram-audience-tag,
 .tram-turno-tags span {
   display: inline-flex;
@@ -248,6 +273,7 @@
   font-size: 16px;
   font-weight: 500;
 }
+.tram-audience-tag { border-radius: 6px; }
 .tram-document-intro { margin-bottom: 16px; }
 .tram-documents { display: flex; flex-direction: column; gap: 16px; padding: 0; margin: 0; list-style: none; }
 .tram-documents li { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -268,42 +294,68 @@
   font-weight: 700;
   overflow-wrap: anywhere;
 }
-.tram-timeline { padding: 0; margin: 0; list-style: none; }
+/* Timeline de Figma: columna del marcador 36, círculo 30, gap 24 desktop / 16 mobile. */
+.tram-procedure-blocks { display: grid; gap: 16px; min-width: 0; }
+.tram-timeline { display: grid; gap: 0; padding: 0; margin: 0; list-style: none; }
 .tram-timeline li {
   position: relative;
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr);
   align-items: start;
-  gap: 16px;
+  column-gap: 24px;
+  min-width: 0;
   min-height: 70px;
-  padding-bottom: 24px;
+  padding: 12px 0 16px;
   color: var(--color-primary-600);
   font-size: 18px;
   line-height: 26px;
   font-weight: 700;
 }
-.tram-timeline li:last-child { padding-bottom: 0; min-height: 36px; }
+.tram-timeline li:last-child { min-height: 54px; padding-bottom: 0; }
 .tram-timeline li:not(:last-child)::before {
   content: '';
   position: absolute;
   left: 17px;
-  top: 36px;
-  bottom: 0;
+  top: 42px;
+  bottom: -12px;
   width: 2px;
   background: color-mix(in srgb, var(--color-primary-600) 55%, transparent);
 }
 .tram-timeline-marker {
+  position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  justify-self: center;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: var(--color-primary-600);
   color: #fff;
+  font-family: Inter, sans-serif;
   font-size: 20px;
   line-height: 1;
   font-weight: 700;
+}
+.tram-timeline-text { display: block; min-width: 0; overflow-wrap: anywhere; }
+.tram-procedure-note {
+  margin: 0;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.tram-procedure-list {
+  display: grid;
+  gap: 12px;
+  padding-left: 24px;
+  margin: 0;
+  list-style: disc;
+}
+.tram-procedure-list li { font-size: 18px; line-height: 26px; overflow-wrap: anywhere; }
+.tram-document-icon [data-material-symbol] {
+  width: 24px;
+  height: 24px;
 }
 .tram-turno-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .tram-sedes { display: grid; gap: 24px; }
@@ -397,9 +449,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
   background: var(--color-panel);
   border-radius: 4px;
   color: var(--color-primary-600);
@@ -412,8 +464,8 @@
   overflow-wrap: anywhere;
 }
 .tram-related-card p {
-  font-size: 18px;
-  line-height: 26px;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: 400;
   overflow-wrap: anywhere;
 }
@@ -544,8 +596,7 @@
     width: 48px;
     height: 48px;
   }
-  .tram-active-filters { flex-wrap: wrap; align-items: flex-start; }
-  .tram-selected-filters { width: 100%; justify-content: flex-start; }
+  .tram-active-filters { flex-wrap: wrap; align-items: center; }
   .tram-container { padding: 0 16px 64px; }
   .tram-container .tram-title { font-size: 32px; }
   .tram-detail h1 { font-size: 32px; line-height: normal; }
@@ -575,6 +626,7 @@
   .tram-related-section > h2 { margin-bottom: 16px; }
   .tram-detail-header { gap: 12px; }
   .tram-detail .tram-document-intro { font-weight: 700; }
+  .tram-timeline li { column-gap: 16px; }
   .tram-related-grid { grid-template-columns: minmax(0, 1fr); }
   .tram-related-card { gap: 12px; }
   .tram-location-map { height: 180px; }
