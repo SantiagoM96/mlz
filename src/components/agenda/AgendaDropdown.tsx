@@ -137,7 +137,9 @@ export function AgendaDropdown({
                   <span aria-hidden="true"
                     className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2 ${selectionControl === 'radio' ? 'rounded-full' : 'rounded-[2px]'}
                       ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
-                    {checked && <MaterialIcon name="check" size={16} className="text-white" />}
+                    {checked && (selectionControl === 'radio'
+                      ? <span className="size-2 rounded-full bg-white" />
+                      : <MaterialIcon name="check" size={16} className="text-white" />)}
                   </span>
                 </label>
               );
