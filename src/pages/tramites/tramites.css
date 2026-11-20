@@ -194,3 +194,15 @@
 @media print {
   .tram-detail-mobile-help { display: none !important; }
 }
+
+
+/* Catálogo mobile: Figma 390px apila búsqueda, destinatarios, tema y filtros. */
+@media (max-width: 680px) {
+  .tram-filters { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+  .tram-filters .tram-search { flex: 0 0 48px; min-height: 48px; width: 100%; }
+  .tram-filters .tram-select { flex: 0 0 48px; width: 100%; min-height: 48px; }
+  .tram-filters .tram-filter-more { flex: 0 0 48px; width: 100%; justify-content: center; }
+  .tram-group-heading { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .tram-group-heading h2 { display: flex; flex-direction: column; gap: 8px; }
+  .tram-group-heading h2 small { font-size: 14px; font-weight: 400; }
+}
