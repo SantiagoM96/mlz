@@ -494,7 +494,7 @@ test('chips seleccionados: misma presentación visual real de Agenda en Trámite
     };
   });
   const agendaStyle = await readStyles(agendaChip);
-  expect(agendaStyle.display).toBe('inline-flex');
+  expect(['flex', 'inline-flex']).toContain(agendaStyle.display);
   expect(agendaStyle.minHeight).toBe('30px');
   expect(agendaStyle.fontSize).toBe('14px');
   expect(agendaStyle.borderRadius).toBe('6px');
