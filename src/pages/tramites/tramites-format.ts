@@ -54,3 +54,35 @@ export function pasosPublicos(tramite: Tramite): string[] {
 
   return [];
 }
+
+
+/**
+ * Presentación, no edición editorial: conserva el valor original del catálogo
+ * y convierte únicamente los textos de ORIGEN escritos enteramente en mayúsculas
+ * a formato de oración. Preserva siglas municipales y unidades horarias.
+ */
+export function textoPublicoLegible(valor: string): string {
+  const original = valor.trim().replace(/[ \t]+/g, ' ');
+  if (!original) return '';
+  const mayusculas = original === original.toLocaleUpperCase('es-AR') &&
+    /[A-ZÁÉÍÓÚÜÑ]/.test(original);
+  const base = mayusculas ? original.toLocaleLowerCase('es-AR') : original;
+  return base
+    .replace(/^\p{L}/u, letra => letra.toLocaleUpperCase('es-AR'))
+    .replace(/\b(dni|cuit|cuil|cbu|cvu|pb|arba|afip|pdf)\b/gi, sigla => sigla.toLocaleUpperCase('es-AR'))
+    .replace(/(\d)\s*hs?\.?(?=\s|$)/gi, '$1 h')
+    .replace(/\bhs\.?(?=\s|$)/gi, 'h')
+    .replace(/^Titulo\b/u, 'Título');
+}
+
+
+/** Tres entradas del mismo tema; R036 respeta los IDs visibles en Figma. */
+export function otrosTramitesDelTema(actual: Tramite, catalogo: readonly Tramite[]): Tramite[] {
+  const mismoTema = catalogo.filter(item =>
+    item.categoria === actual.categoria && item.id !== actual.id);
+  if (actual.id !== 'R036') return mismoTema.slice(0, 3);
+  const idsDelDiseno = ['R093', 'R089', 'R046'];
+  return idsDelDiseno
+    .map(id => mismoTema.find(item => item.id === id))
+    .filter((item): item is Tramite => Boolean(item));
+}

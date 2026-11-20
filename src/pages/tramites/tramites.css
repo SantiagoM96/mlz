@@ -297,21 +297,111 @@
   font-weight: 700;
 }
 .tram-turno-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.tram-sedes { display: grid; gap: 16px; }
-.tram-location {
+.tram-sedes { display: grid; gap: 24px; }
+.tram-location { min-width: 0; }
+.tram-location-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.tram-location-item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  width: 100%;
+}
+.tram-location-item .tram-location-symbol {
+  color: var(--color-primary-600);
+  margin-top: 1px;
+}
+.tram-location-item p {
+  min-width: 0;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.tram-location-map-wrap {
   overflow: hidden;
-  min-height: 132px;
+  margin-top: 20px;
   border: 1px solid var(--color-divider);
   border-radius: 8px;
+  background: #fff;
 }
-.tram-location-info { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 16px; }
-.tram-location-item { display: flex; align-items: flex-start; gap: 8px; }
-.tram-location-item [data-material-symbol] { color: var(--color-primary-600); }
-.tram-location-item p { min-width: 0; font-size: 16px; line-height: 24px; overflow-wrap: anywhere; }
-.tram-location-map { width: 100%; min-height: 130px; height: 100%; border: 0; }
-.tram-location:not(:has(.tram-location-map)) { grid-template-columns: 1fr; }
+.tram-location-map {
+  display: block;
+  width: 100%;
+  height: 190px;
+  border: 0;
+}
+.tram-location-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  color: var(--color-primary-600);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.tram-location-map-link:hover { text-decoration: underline; }
+.tram-location-map-link:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: -2px;
+}
+/* Las tres tarjetas de Figma usan exclusivamente el tema editorial actual. */
+.tram-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.tram-related-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+}
+.tram-related-card:hover {
+  border-color: var(--color-primary-600);
+  background: var(--color-panel);
+}
+.tram-related-card:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: 2px;
+}
+.tram-related-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  background: var(--color-panel);
+  border-radius: 4px;
+  color: var(--color-primary-600);
+}
+.tram-related-card strong {
+  color: var(--color-primary-600);
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.tram-related-card p {
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
 
 /* Lateral: TableOfContents usa exactamente InfoCard e IconLink de Jóvenes. */
 .tram-detail .tram-detail-actions {
@@ -320,11 +410,12 @@
   gap: 16px;
   margin: 0 0 20px;
 }
+
 .tram-detail .tram-detail-actions button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 0;
+  gap: 6px;
+  padding: 4px 0;
   color: var(--color-primary-600);
   font-size: 16px;
   font-weight: 500;
@@ -421,8 +512,9 @@
   .tram-detail-mobile-tools { display: block; margin-bottom: 24px; }
   .tram-detail-aside { display: none; }
   .tram-detail .tram-detail-section { margin-bottom: 24px; padding-bottom: 24px; }
-  .tram-location { grid-template-columns: 1fr; }
-  .tram-location-map { min-height: 180px; height: 180px; }
+  .tram-related-grid { grid-template-columns: minmax(0, 1fr); }
+  .tram-related-card { gap: 12px; }
+  .tram-location-map { height: 180px; }
   .tram-detail-mobile-help { display: block; }
   .tram-detail .tram-contact-help { margin-top: 24px; }
 }
