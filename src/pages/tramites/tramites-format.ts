@@ -42,7 +42,6 @@ export type BloqueProcedimiento =
   | { tipo: 'texto'; texto: string };
 
 const numeroSuelto = /^(\d{1,2})[.)]?$/;
-const prefijoNumerado = /^(\d{1,2})[.)]\s*(.+)$/;
 
 function agregarPasos(bloques: BloqueProcedimiento[], pasos: string[]) {
   const validos = pasos.map(paso => paso.trim()).filter(Boolean);
@@ -71,9 +70,9 @@ function parsearNumerosSueltos(lineas: string[]): BloqueProcedimiento[] | null {
   }
   // R030: "Recepcionarse" figura justo antes del marcador 2;
   // es el primer paso del relevamiento, no un título editorial inventado.
-  const primeraMarca = Number(marcas[0].match(numeroSuelto)?.[1] ?? 0);
+  const primeraMarca = Number(marcas[0]?.match(numeroSuelto)?.[1] ?? 0);
   if (primeraMarca === 2 && previas.length === 1) {
-    pasos.unshift(previas[0]);
+    pasos.unshift(previas[0] ?? '');
   } else if (previas.length) {
     bloques.push({ tipo: 'texto', texto: previas.join(' ') });
   }
@@ -88,28 +87,30 @@ function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
   if (marcas.length < 2) return null;
 
   const bloques: BloqueProcedimiento[] = [];
-  const introduccion = texto.slice(0, marcas[0].index).trim();
+  const introduccion = texto.slice(0, marcas[0]?.index ?? 0).trim();
   if (introduccion) bloques.push({ tipo: 'texto', texto: introduccion });
 
   let grupo: string[] = [];
   for (let i = 0; i < marcas.length; i++) {
     const marca = marcas[i];
+    if (!marca) continue;
+    const siguienteMarca = marcas[i + 1];
     const inicio = (marca.index ?? 0) + marca[0].length;
-    const fin = i + 1 < marcas.length ? marcas[i + 1].index : texto.length;
+    const fin = siguienteMarca?.index ?? texto.length;
     let contenido = texto.slice(inicio, fin).trim();
     const numeroActual = Number(marca[1]);
-    const numeroSiguiente = i + 1 < marcas.length ? Number(marcas[i + 1][1]) : 0;
+    const numeroSiguiente = Number(siguienteMarca?.[1] ?? 0);
 
     // En un trámite puede comenzar una segunda secuencia condicional.
     // Mantener el encabezado del relevamiento en vez de sumarlo al paso anterior.
     if (numeroSiguiente === 1 && numeroActual !== 1) {
       const separacion = contenido.match(/^([\s\S]+?)\n\s*\n([\s\S]+)$/);
       if (separacion) {
-        contenido = separacion[1].trim();
+        contenido = (separacion[1] ?? '').trim();
         grupo.push(contenido);
         agregarPasos(bloques, grupo);
         grupo = [];
-        bloques.push({ tipo: 'texto', texto: separacion[2].trim() });
+        bloques.push({ tipo: 'texto', texto: (separacion[2] ?? '').trim() });
         continue;
       }
     }
