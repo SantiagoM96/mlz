@@ -1,5 +1,6 @@
 const $=s=>document.querySelector(s);
 const icon=n=>'<span class="material-symbols-outlined" aria-hidden="true">'+n+'</span>';
+const dueIcon=kind=>icon(kind==='ddjj'?'description':kind==='second'?'event_repeat':'payments');
 const titles={abl:'Tasa por Servicios Generales',auto:'Impuesto Automotores',moto:'Patente Motovehículos',higiene:'Tasa por Seguridad e Higiene',publicidad:'Publicidad y Propaganda',antenas:'Antenas'};
 const nav=[['abl','Inmueble','home'],['auto','Automotor y Motovehículo','directions_car'],['higiene','Seguridad e Higiene','factory'],['publicidad','Publicidad y Propaganda','campaign'],['antenas','Antenas','cell_tower']];
 const features=[['document_search','Consultar tus deudas','Revisá el estado de tus tasas municipales y automotores, y accedé a las boletas para realizar el pago.'],['task_alt','Regularizar deudas vencidas','Actualizá deudas pendientes y accedé a las opciones disponibles para poner tu cuenta al día.'],['calendar_month','Solicitar planes de pago','Financiá deudas de la Tasa por Servicios Generales y Automotor en cuotas.'],['upload_file','Presentar declaraciones juradas','Descargá y presentá las declaraciones juradas correspondientes a tu actividad comercial.'],['directions_car','Gestionar automotores y motos','Realizá altas impositivas, bajas y cambios de titularidad de vehículos.'],['folder_open','Consultar expedientes','Seguí el estado y avance de tus trámites y expedientes.'],['mark_email_read','Adherirse a la boleta electrónica','Recibí tus boletas por correo electrónico y simplificá la gestión de tus pagos.'],['bookmark_check','Solicitar certificado de exención','Tramitá el certificado de exención de la Tasa por Servicios Generales.']];
@@ -42,7 +43,7 @@ function events(tax){
  ].filter(([key])=>r[key]).map(([key,label,kind])=>({r,date:r[key],label,kind,fiscalYear}))))
  .sort((a,b)=>a.date.localeCompare(b.date)||a.fiscalYear-b.fiscalYear||String(a.r.quota).localeCompare(String(b.r.quota)));
 }
-function dateCard(e,highlight){let d=dayDiff(e.date,todayISO());return '<article class="date-card" data-fiscal-year="'+e.fiscalYear+'"><div class="date-head"><strong>'+humanDate(e.date)+'</strong>'+(highlight&&d>=0?'<span class="days">'+(d===0?'Vence hoy':'Faltan '+d+(d===1?' día':' días'))+'</span>':'')+'</div><span class="tag '+e.kind+'">'+e.label+'</span><p class="period">'+period(e.r)+' · '+quotaText(e.r)+'</p>'+ (e.r.tax==='higiene'?'<p class="regime">'+esc(e.r.regime==='Simplificado'?'Régimen Simplificado':e.r.regime)+'</p>':'')+(highlight&&d>=0&&e.kind!=='ddjj'?'<a class="pay-link" href="https://sag.lomasdezamora.gov.ar/" target="_blank" rel="noopener noreferrer">Pagar ahora</a>':'')+'</article>'}
+function dateCard(e,highlight){let d=dayDiff(e.date,todayISO());return '<article class="date-card" data-fiscal-year="'+e.fiscalYear+'"><div class="date-head"><strong>'+humanDate(e.date)+'</strong>'+(highlight&&d>=0?'<span class="days">'+(d===0?'Vence hoy':'Faltan '+d+(d===1?' día':' días'))+'</span>':'')+'</div><span class="tag '+e.kind+'">'+dueIcon(e.kind)+'<span>'+esc(e.label)+'</span></span><p class="period">'+period(e.r)+' · '+quotaText(e.r)+'</p>'+ (e.r.tax==='higiene'?'<p class="regime">'+esc(e.r.regime==='Simplificado'?'Régimen Simplificado':e.r.regime)+'</p>':'')+(highlight&&d>=0&&e.kind!=='ddjj'?'<a class="pay-link" href="https://sag.lomasdezamora.gov.ar/" target="_blank" rel="noopener noreferrer">Pagar ahora</a>':'')+'</article>'}
 function calendar(tax){
  const all=events(tax),next=chooseYearIndex(all,currentYear),upcoming=all.findIndex(e=>e.date>=todayISO());
  const pending=rows.filter(r=>r.tax===tax&&(r.ddjjPending||r.firstDuePending||r.secondDuePending));
@@ -69,7 +70,7 @@ function monthlyMonth(year,month,items){
   const iso=year+'-'+String(month).padStart(2,'0')+'-'+String(d).padStart(2,'0'),list=dates.get(d)||[];
   return '<div class="monthly-day'+(iso===today?' monthly-today':'')+'" role="gridcell" aria-label="'+d+' de '+esc(label)+' de '+year+'">'
    +'<strong class="monthly-day-number">'+d+'</strong>'
-   +list.map(e=>'<article class="monthly-event monthly-event-'+e.kind+'"><strong>'+esc(e.label)+'</strong><span>'+esc(quotaText(e.r))+' · '+e.r.year+'</span>'+(e.r.regime?'<span>'+esc(e.r.regime)+'</span>':'')+'</article>').join('')+'</div>';
+   +list.map(e=>'<article class="monthly-event monthly-event-'+e.kind+'"><strong class="monthly-event-heading">'+dueIcon(e.kind)+'<span>'+esc(e.label)+'</span></strong><span>'+esc(quotaText(e.r))+' · '+e.r.year+'</span>'+(e.r.regime?'<span>'+esc(e.r.regime)+'</span>':'')+'</article>').join('')+'</div>';
  }).join('');
  return '<section class="monthly-month" id="month-'+year+'-'+String(month).padStart(2,'0')+'"><h3>'+esc(label)+' '+year+'</h3>'
  +'<div class="monthly-scroller"><div class="monthly-grid" role="grid" aria-label="'+esc(label)+' '+year+'">'
