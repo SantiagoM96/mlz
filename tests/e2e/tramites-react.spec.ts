@@ -465,3 +465,68 @@ test('etiquetas en mobile: accesibles por teclado y sin desborde horizontal', as
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
 });
+
+
+test('chips seleccionados: misma presentación visual real de Agenda en Trámites', async ({ page }) => {
+  await page.goto('/agenda-de-la-comunidad/actividades');
+  await page.getByRole('button', { name: 'Más Filtros', exact: true }).click();
+  const agendaPanel = page.getByRole('dialog', { name: 'Filtros de la agenda' });
+  await agendaPanel.getByRole('button', { name: 'Localidad' }).click();
+  await agendaPanel.getByRole('checkbox', { name: 'Banfield' }).check();
+  await agendaPanel.getByRole('button', { name: /Ver resultados/ }).click();
+  const agendaChips = page.getByRole('group', { name: 'Filtros seleccionados' });
+  const agendaChip = agendaChips.locator('[data-agenda-chip="selected"]').first();
+  await expect(agendaChip).toBeVisible();
+
+  const readStyles = async (selector: typeof agendaChip) => selector.evaluate(element => {
+    const style = getComputedStyle(element);
+    return {
+      display: style.display,
+      minHeight: style.minHeight,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
+      color: style.color,
+      backgroundColor: style.backgroundColor,
+      gap: style.gap,
+      paddingLeft: style.paddingLeft,
+      paddingRight: style.paddingRight,
+      borderRadius: style.borderRadius,
+    };
+  });
+  const agendaStyle = await readStyles(agendaChip);
+  expect(['flex', 'inline-flex']).toContain(agendaStyle.display);
+  expect(agendaStyle.minHeight).toBe('30px');
+  expect(agendaStyle.fontSize).toBe('14px');
+  expect(agendaStyle.borderRadius).toBe('6px');
+  expect(agendaStyle.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  const agendaClearStyle = await readStyles(
+    agendaChips.getByRole('button', { name: 'Limpiar' }),
+  );
+
+  await page.goto('/tramites?destinatario=Instituciones&destinatario=Comercios+y+empresas');
+  const tramitesChips = page.getByRole('group', { name: 'Filtros seleccionados' });
+  await expect(tramitesChips.locator('[data-agenda-chip="selected"]')).toHaveCount(2);
+  const tramitesChip = tramitesChips.locator('[data-agenda-chip="selected"]').first();
+  expect(await readStyles(tramitesChip)).toEqual(agendaStyle);
+  expect(await readStyles(tramitesChips.getByRole('button', { name: 'Limpiar' })))
+    .toEqual(agendaClearStyle);
+  await expect(tramitesChip.locator('[data-material-symbol="close"]')).toHaveCSS('font-size', '15px');
+  await expect(tramitesChips.getByRole('button', { name: 'Quitar filtro destinatario: Instituciones' }))
+    .toBeVisible();
+  await tramitesChips.getByRole('button', { name: 'Quitar filtro destinatario: Instituciones' }).click();
+  await expect(tramitesChips.locator('[data-agenda-chip="selected"]')).toHaveCount(1);
+  await tramitesChips.getByRole('button', { name: 'Limpiar' }).click();
+  await expect(tramitesChips).toHaveCount(0);
+});
+
+test('chips seleccionados en mobile: scroll horizontal y Limpiar fijo como Agenda', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tramites?destinatario=Instituciones&destinatario=Comercios+y+empresas&tema=Veh%C3%ADculos+y+tr%C3%A1nsito');
+  const selected = page.getByRole('group', { name: 'Filtros seleccionados' });
+  await expect(selected.locator('[data-agenda-chip="selected"]')).toHaveCount(3);
+  await expect(selected.locator('.agenda-filter-chips-scroll')).toHaveCSS('overflow-x', 'auto');
+  await expect(selected.getByRole('button', { name: 'Limpiar' })).toBeInViewport();
+  await expect(selected.locator('[data-material-symbol="close"]')).toHaveCount(3);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});

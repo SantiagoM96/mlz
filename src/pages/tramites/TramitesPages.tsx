@@ -6,6 +6,7 @@ import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { TableOfContents } from '../../components/ui/TableOfContents';
 import { copyToClipboard } from '../../components/ui/copyToClipboard';
 import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
+import { AgendaSelectedFilterChips } from '../../components/agenda/AgendaSelectedFilterChips';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
 import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
@@ -183,18 +184,19 @@ export function TramitesCatalogPage() {
           />
         </div>
       </div>
-      {hayFiltros && <div className="agenda-filter-chips tram-active-filters"
-        role="group" aria-label="Filtros seleccionados">
-        {chips.map(({ campo, valor }) =>
-          <button type="button" key={campo + ':' + valor}
-            data-testid={'tramite-filter-chip-' + campo}
-            className="agenda-filter-chip"
-            aria-label={'Quitar filtro ' + campo + ': ' + valor}
-            onClick={() => cambiarFiltro(campo, valor)}>
-            <span>{valor}</span><span aria-hidden="true">×</span>
-          </button>)}
-        <button type="button" className="agenda-filter-clear" onClick={limpiarTodo}>Limpiar</button>
-      </div>}
+      {hayFiltros && <AgendaSelectedFilterChips
+        className="tram-active-filters"
+        items={chips.map(({ campo, valor }) => ({
+          id: campo + ':' + valor,
+          label: valor,
+          ariaLabel: 'Quitar filtro ' + campo + ': ' + valor,
+          testId: 'tramite-filter-chip-' + campo,
+          campo,
+          valor,
+        }))}
+        onRemove={chip => cambiarFiltro(chip.campo, chip.valor)}
+        onClear={limpiarTodo}
+      />}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
         <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
       </div>
