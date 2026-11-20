@@ -26,7 +26,7 @@ test('ficha R036: índice de Jóvenes, contenido de Figma y sin campos descartad
   await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(4);
   await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(3);
   await expect(page.getByRole('navigation', { name: 'Índice de la ficha' }).first()).toBeVisible();
-  const visibleIndex = (page.viewportSize()?.width ?? 1415) <= 680
+  const visibleIndex = (page.viewportSize()?.width ?? 1415) <= 900
     ? page.locator('.tram-detail-mobile-tools')
     : page.locator('.tram-detail-aside');
   await expect(visibleIndex.getByRole('heading', { name: 'Índice' })).toBeVisible();
@@ -200,7 +200,7 @@ test('Compartir copia la URL como Agenda y cambia ícono de enlace a check', asy
     });
   });
   await page.goto('/tramites/R018');
-  const actions = (page.viewportSize()?.width ?? 1415) <= 680
+  const actions = (page.viewportSize()?.width ?? 1415) <= 900
     ? page.locator('.tram-detail-mobile-tools')
     : page.locator('.tram-detail-aside');
   const share = actions.getByRole('button', { name: 'Compartir' });
