@@ -37,10 +37,10 @@ export function SiteHeader() {
 
         <nav aria-label="Navegación principal" className="hidden items-center gap-4 xl:flex">
           {desktopMenu.map(({ label, hasChevron }) =>
-            label === 'Municipio' ? (
+            label === 'Municipio' || label === 'Trámites' ? (
               <Link
                 key={label}
-                to="/"
+                to={label === 'Trámites' ? '/tramites' : '/'}
                 className="inline-flex min-h-12 items-center rounded-[4px] px-4 text-[18px] leading-[26px] font-bold hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
               >
                 {label}

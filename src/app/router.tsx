@@ -7,6 +7,7 @@ import { AgendaActivityDetailPage } from '../pages/agenda/AgendaActivityDetailPa
 import { AgendaConsolePreviewPage } from '../pages/agenda/AgendaConsolePreviewPage';
 import { JovenesEnComunidadPage } from '../pages/jovenes-en-comunidad/JovenesEnComunidadPage';
 import { NotFoundPage } from '../pages/not-found/NotFoundPage';
+import { TramitesCatalogPage, TramiteDetailPage } from '../pages/tramites/TramitesPages';
 
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
 const router = createBrowserRouter([{
@@ -17,6 +18,8 @@ const router = createBrowserRouter([{
     { path: '/agenda-de-la-comunidad/actividades', element: <AgendaPage /> },
     { path: '/agenda-de-la-comunidad/actividades/:id', element: <AgendaActivityDetailPage /> },
     { path: '/jovenes-en-comunidad', element: <JovenesEnComunidadPage /> },
+    { path: '/tramites', element: <TramitesCatalogPage /> },
+    { path: '/tramites/:id', element: <TramiteDetailPage /> },
     { path: '*', element: <NotFoundPage /> },
   ],
 }, {
