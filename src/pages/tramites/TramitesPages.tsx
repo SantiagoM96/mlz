@@ -226,7 +226,7 @@ export function TramitesCatalogPage() {
       </div>
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre}</h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
-        <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite}
+        <div className="tram-group-grid">{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite}
           etiquetaActiva={etiqueta} onElegirEtiqueta={elegirEtiqueta} />)}</div>
       </section>) : <div className="tram-empty"><h2>No encontramos trámites con esos filtros</h2><p>Probá con otras palabras o quitá alguno de los filtros.</p><button type="button" className="tram-btn" onClick={() => setParams({})}>Ver todos los trámites</button></div>}
       <TramitesBackToTop />
