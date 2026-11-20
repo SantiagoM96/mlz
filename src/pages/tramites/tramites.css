@@ -15,6 +15,7 @@
   line-height: 1.25;
 }
 .tram-title { margin: 16px 0 24px; }
+.tram-detail h1 { line-height: normal; }
 
 /* Buscador y dropdowns: componentes compartidos con Agenda. */
 .tram-filters {
