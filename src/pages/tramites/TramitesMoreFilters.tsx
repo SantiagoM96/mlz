@@ -7,7 +7,12 @@ import { useAgendaOutsideDismiss } from '../../features/agenda/hooks/useAgendaOu
 export const turnoOpciones = ['Requiere turno', 'No requiere turno'] as const;
 export const camposFiltro = ['destinatario', 'tema', 'turno', 'modalidad'] as const;
 export type CampoFiltro = typeof camposFiltro[number];
-export type FiltrosTramites = Record<CampoFiltro, string>;
+export type FiltrosTramites = {
+  destinatario: readonly string[];
+  tema: string;
+  turno: string;
+  modalidad: string;
+};
 
 type Props = {
   value: FiltrosTramites;
@@ -26,14 +31,21 @@ export function TramitesMoreFilters({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   useAgendaOutsideDismiss(open, rootRef, buttonRef, () => setOpen(false));
-  // Como en Agenda: se cuenta cada criterio activo una sola vez, con independencia
-  // de si fue elegido desde los accesos directos o dentro de Más filtros.
-  const count = camposFiltro.filter(campo => Boolean(value[campo])).length;
+
+  // El contador usa la cantidad total de selecciones, como en Agenda.
+  // Las opciones elegidas afuera y dentro del panel leen exactamente el mismo estado.
+  const count = value.destinatario.length +
+    Number(Boolean(value.tema)) + Number(Boolean(value.turno)) +
+    Number(Boolean(value.modalidad));
   const groups = [
-    { key: 'destinatario', title: '¿Para quién es?', options: destinatarios, selected: value.destinatario ? [value.destinatario] : [] },
-    { key: 'tema', title: 'Tema', options: temas, selected: value.tema ? [value.tema] : [] },
-    { key: 'turno', title: 'Turno', options: turnoOpciones, selected: value.turno ? [value.turno] : [] },
-    { key: 'modalidad', title: 'Modalidad', options: modalidades, selected: value.modalidad ? [value.modalidad] : [] },
+    { key: 'destinatario', title: '¿Para quién es?', options: destinatarios,
+      selected: value.destinatario, selectionControl: 'checkbox' as const },
+    { key: 'tema', title: 'Tema', options: temas,
+      selected: value.tema ? [value.tema] : [], selectionControl: 'radio' as const },
+    { key: 'turno', title: 'Turno', options: turnoOpciones,
+      selected: value.turno ? [value.turno] : [], selectionControl: 'radio' as const },
+    { key: 'modalidad', title: 'Modalidad', options: modalidades,
+      selected: value.modalidad ? [value.modalidad] : [], selectionControl: 'radio' as const },
   ];
 
   return <div ref={rootRef} className="relative min-w-0" data-testid="tramites-more-filters">
@@ -54,8 +66,7 @@ export function TramitesMoreFilters({
       ariaLabel="Filtros de trámites"
       title="Filtrar trámites"
       onToggle={(key, option) => {
-        const campo = key as CampoFiltro;
-        onChange(campo, value[campo] === option ? '' : option);
+        onChange(key as CampoFiltro, option);
       }}
       onApply={() => setOpen(false)}
       onReset={onReset}
