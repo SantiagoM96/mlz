@@ -103,6 +103,8 @@
    Aquí solo se ajusta el ritmo vertical propio del catálogo. */
 .tram-active-filters + .tram-results { margin-top: 24px; }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
+/* En desktop el wrapper no altera la composición del componente compartido. */
+.tram-filter-more-control [data-tram-counter-slot] { display: contents; }
 
 .tram-group { margin: 32px 0 40px; scroll-margin-top: 24px; }
 .tram-group-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 24px; }
@@ -116,7 +118,8 @@
   padding: 24px 0;
   border-bottom: 1px solid var(--color-divider);
 }
-.tram-row-body { display: flex; flex: 1 1 auto; min-width: 0; flex-direction: column; align-items: flex-start; gap: 16px; }
+.tram-row-body { display: flex; flex: 1 1 auto; min-width: 0; flex-direction: column; align-items: flex-start; gap: 8px; }
+.tram-row-actions { margin-top: 8px; }
 .tram-row h3 { color: var(--color-grey-900); font-size: 20px; font-weight: 700; line-height: 1.4; }
 .tram-row-body > p { font-size: 16px; line-height: 21px; white-space: pre-line; }
 .tram-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
@@ -589,9 +592,22 @@
   .tram-container { padding: 0 16px 64px; }
   .tram-container .tram-title { font-size: 32px; }
   .tram-detail h1 { font-size: 32px; line-height: normal; }
-  .tram-filters { grid-template-columns: minmax(0, 1fr); }
-  .tram-search { grid-column: auto; }
-  .tram-filter-control, .tram-filter-more-control { min-width: 0; width: 100%; }
+  /* Primera fila: buscador. Segunda: Más filtros al mínimo y audiencia flexible. */
+  .tram-filters { grid-template-columns: max-content minmax(0, 1fr); }
+  .tram-search { grid-column: 1 / -1; }
+  .tram-filter-topic-control { display: none; }
+  .tram-filter-more-control { grid-column: 1; grid-row: 2; width: max-content; min-width: 0; }
+  .tram-filter-audience-control { grid-column: 2; grid-row: 2; min-width: 0; width: 100%; }
+  .tram-filter-audience-control .agenda-filter-trigger { width: 100%; }
+  /* La reserva del contador evita que Más filtros cambie de ancho al activarse. */
+  .tram-filter-more-control [data-tram-counter-slot] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+  }
   .tram-results { margin: 24px 0; }
   .tram-results > strong { font-size: 18px; }
   .tram-sort { gap: 0; }

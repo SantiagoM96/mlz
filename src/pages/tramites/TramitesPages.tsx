@@ -160,13 +160,13 @@ export function TramitesCatalogPage() {
             </button>
           ) : <MaterialIcon name="search" size={24} className="tram-search-icon" />}
         </label>
-        <div className="tram-filter-control">
+        <div className="tram-filter-control tram-filter-audience-control">
           <AgendaDropdown label="¿Para quién es?" options={destinatarios}
             selected={destinatario} multiple resultCount={filtrados.length}
             onChange={(seleccion) => elegirDestinatarios(setParams, seleccion)}
             align="end" />
         </div>
-        <div className="tram-filter-control">
+        <div className="tram-filter-control tram-filter-topic-control">
           <AgendaDropdown label="Tema" options={temas} selectionControl="radio"
             selected={tema ? [tema] : []} resultCount={filtrados.length}
             onChange={(seleccion) => elegirValor(setParams, 'tema', seleccion[0] ?? '')}
@@ -201,7 +201,7 @@ export function TramitesCatalogPage() {
         <div className="tram-sort"><span>Ordenar</span><div className="tram-sort-buttons" role="group" aria-label="Ordenar trámites"><button type="button" className={orden === 'tema' ? 'active' : ''} aria-pressed={orden === 'tema'} onClick={() => elegirValor(setParams, 'orden', '')}>Por tema</button><button type="button" className={orden === 'az' ? 'active' : ''} aria-pressed={orden === 'az'} onClick={() => elegirValor(setParams, 'orden', 'az')}>A–Z</button></div></div>
       </div>
       {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
-        {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
+        {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre}</h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite}
           etiquetaActiva={etiqueta} onElegirEtiqueta={elegirEtiqueta} />)}</div>
       </section>) : <div className="tram-empty"><h2>No encontramos trámites con esos filtros</h2><p>Probá con otras palabras o quitá alguno de los filtros.</p><button type="button" className="tram-btn" onClick={() => setParams({})}>Ver todos los trámites</button></div>}
