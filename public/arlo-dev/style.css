@@ -102,3 +102,8 @@
 .date-card .tag{gap:5px;align-items:center}
 .date-card .tag>.material-symbols-outlined{font-size:16px;line-height:1;flex:0 0 auto;font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 20}
 @media(max-width:767px){.date-card .tag>.material-symbols-outlined{font-size:16px}}
+
+/* Los banners compactos deben verse en todas las secciones, también en Mobile. */
+.annual-banner.compact-banner{display:block;width:100%;height:auto;aspect-ratio:1200 / 145;margin:0}
+.annual-banner.compact-banner img{display:block;width:100%;height:auto;object-fit:contain}
+@media(max-width:767px){.annual-banner.compact-banner{display:block;height:auto;aspect-ratio:1200 / 145}}

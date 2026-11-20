@@ -108,7 +108,7 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
     rail.scrollBy({left:(e.key==='ArrowRight'?1:-1)*304,behavior:'smooth'});
   });
 })}
-function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=visibleNav().some(n=>n[0]===hash)?hash:'home';if(current==='antenas'&&currentYear===2026){currentYear=2027;rows=calendarYears[2027].rows;months=calendarYears[2027].months}$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+(['higiene','publicidad'].includes(current)?docs(current):banner(true));document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo({top:0,left:0,behavior:'instant'});initRails()}
+function route(){const hash=location.hash.slice(1);if(hash==='medios'){document.getElementById('medios').scrollIntoView();return}current=visibleNav().some(n=>n[0]===hash)?hash:'home';if(current==='antenas'&&currentYear===2026){currentYear=2027;rows=calendarYears[2027].rows;months=calendarYears[2027].months}$('#app').innerHTML=current==='home'?home():'<a href="#home" class="pill back">'+icon('chevron_left')+' Atrás</a>'+calendar(current)+(current==='auto'?calendar('moto'):'')+banner(true)+(['higiene','publicidad'].includes(current)?docs(current):'');document.title=(current==='home'?'Calendario de pagos':titles[current])+' · ARLO';window.scrollTo({top:0,left:0,behavior:'instant'});initRails()}
 function tableGroups(tax){
  const subset=rows.filter(r=>r.tax===tax);
  const monthLabel=r=>r.month?months[r.month-1]:'Anual';
