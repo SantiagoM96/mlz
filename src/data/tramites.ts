@@ -24,6 +24,14 @@ export interface Tramite {
   normativa: string;
   web: string;
   estado: string;
+  filaOrigen: number;
+  canales: string;
+  formatoDocumentacion: string;
+  exenciones: string;
+  detalleExenciones: string;
+  normativaUrl: string;
+  sedeAlternativa?: { lugar: string; dias: string; turno: string };
+  otrosEnlaces?: string[];
 }
 
 export const tramites: readonly Tramite[] = raw;

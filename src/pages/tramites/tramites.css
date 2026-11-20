@@ -110,3 +110,103 @@
  .tram-filters,.tram-results,.tram-detail-actions,.tram-help,.tram-related,.tram-group-heading button { display:none !important; }
  .tram-detail-grid { display:block; }
 }
+
+
+/* Ficha: composición desktop 770px + 390px (gap 40), según Figma R036. */
+.tram-detail .tram-detail-grid {
+  grid-template-columns: minmax(0, 770px) minmax(0, 390px);
+  gap: 40px;
+  margin-top: 24px;
+}
+.tram-detail-main { min-width: 0; }
+.tram-detail-header { border-bottom: 0; padding-bottom: 0; margin-bottom: 40px; }
+.tram-detail-header .tram-modalidad { margin: 32px 0 12px; }
+.tram-detail-header .tram-tags { margin-top: 8px; }
+.tram-detail-header .tram-start-link { margin-top: 20px; }
+.tram-detail .tram-detail-section { scroll-margin-top: 24px; border-bottom: 0; margin-bottom: 48px; padding-bottom: 0; }
+.tram-detail .tram-detail-section h2, .tram-detail .tram-related h2 { margin-bottom: 16px; }
+.tram-detail .tram-detail-section p + p { margin-top: 12px; }
+.tram-detail .tram-location { padding: 16px; border-color: var(--color-divider); }
+.tram-location-item { display: flex; align-items: flex-start; gap: 8px; font-size: 16px; }
+.tram-location-item + .tram-location-item { margin-top: 16px; }
+.tram-location-item [data-material-symbol] { flex: 0 0 24px; color: var(--color-primary-600); }
+.tram-documents { display: flex; flex-direction: column; gap: 16px; padding: 0; margin: 0; list-style: none; }
+.tram-documents li { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tram-document-icon { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; border-radius: 6px; background: var(--color-panel); color: var(--color-primary-600); }
+.tram-detail .tram-detail-actions { margin: 0 0 24px; gap: 12px; }
+.tram-detail .tram-detail-actions button { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--color-primary-600); font-size: 16px; font-weight: 500; }
+.tram-detail .tram-detail-actions button:focus-visible, .tram-index a:focus-visible { outline: 2px solid var(--color-info-500); outline-offset: 3px; }
+.tram-index { border: 1px solid var(--color-divider); border-radius: 8px; padding: 24px; }
+.tram-index h2 { font-size: 24px; font-weight: 700; color: var(--color-primary-600); margin-bottom: 16px; }
+.tram-index ul { display: flex; flex-direction: column; gap: 16px; padding: 0; list-style: none; }
+.tram-index a { display: flex; align-items: center; gap: 8px; color: var(--color-primary-600); text-decoration: none; line-height: 26px; }
+.tram-index a:hover { text-decoration: underline; }
+.tram-detail-mobile-tools { display: none; }
+.tram-related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.tram-related-card { min-width: 0; margin: 0; padding: 16px; gap: 14px; }
+.tram-related-card > span:not(.tram-document-icon) { color: var(--color-grey-900); }
+@media (max-width: 900px) {
+  .tram-detail .tram-detail-grid { grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; }
+}
+@media (max-width: 680px) {
+  .tram-detail .tram-detail-grid { display: block; margin-top: 24px; }
+  .tram-detail .tram-detail-header { margin-bottom: 24px; }
+  .tram-detail .tram-detail-header .tram-modalidad { margin-top: 12px; }
+  .tram-detail .tram-detail-header .tram-tags { margin-top: 12px; }
+  .tram-detail-mobile-tools { display: block; margin-bottom: 24px; }
+  .tram-detail .tram-detail-aside { display: none; }
+  .tram-detail .tram-detail-section { margin-bottom: 32px; }
+  .tram-related-grid { grid-template-columns: 1fr; }
+  .tram-related-card { margin: 0; }
+}
+@media print {
+  .tram-detail-mobile-tools,.tram-detail-aside { display: none !important; }
+  .tram-detail .tram-detail-grid { display: block; }
+  .tram-detail .tram-detail-section { break-inside: avoid; }
+}
+
+
+/* Figma: categorías de destinatarios, documentación, timeline y panel institucional. */
+.tram-audiences { display: flex; flex-wrap: wrap; gap: 8px; }
+.tram-audience-tag { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; border-radius: 6px; padding: 4px 8px; background: var(--color-panel); color: var(--color-primary-600); font-size: 16px; font-weight: 500; }
+.tram-document-intro { font-size: 18px !important; line-height: 26px !important; margin: 0 0 16px; }
+.tram-documents li > span:last-child { font-size: 18px; line-height: 26px; font-weight: 700; overflow-wrap: anywhere; }
+.tram-document-format { margin-top: 16px; font-size: 14px !important; }
+.tram-timeline { padding: 0; margin: 0; list-style: none; }
+.tram-timeline li { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 16px; min-height: 70px; align-items: start; color: var(--color-primary-600); font-size: 18px; line-height: 26px; font-weight: 700; }
+.tram-timeline li:not(:last-child) { padding-bottom: 16px; }
+.tram-timeline-marker { position: relative; display: grid; place-items: center; width: 36px; height: 36px; background: var(--color-primary-600); color: white; border-radius: 50%; font-weight: 700; font-size: 18px; }
+.tram-timeline li:not(:last-child) .tram-timeline-marker::after { content: ''; position: absolute; top: 36px; left: 17px; height: 34px; width: 2px; background: var(--color-primary-500); }
+.tram-sedes { display: grid; gap: 16px; }
+.tram-normative-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; color: var(--color-primary-600); font-weight: 700; text-decoration: underline; }
+.tram-detail .tram-contact-help { margin-top: 24px; padding: 24px; border: 1px solid var(--color-divider); border-radius: 12px; background: var(--color-panel); }
+.tram-contact-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.tram-contact-heading h2 { color: var(--color-primary-600); font-weight: 700; font-size: 24px; line-height: 30px; }
+.tram-detail .tram-contact-help .tram-help-icon { color: var(--color-primary-600); background: #e5f0f9; border-radius: 8px; }
+.tram-contact-help p { font-size: 16px; line-height: 1.6; }
+.tram-contact-help .tram-help-channels { font-weight: 700; margin-top: 12px; }
+.tram-detail-mobile-help { display: none; }
+@media (max-width: 680px) {
+  .tram-detail-mobile-help { display: block; }
+  .tram-detail .tram-contact-help { margin: 24px 0 0; }
+  .tram-documents li > span:last-child { min-width: 0; }
+}
+@media print {
+  .tram-detail-mobile-help { display: none !important; }
+}
+
+
+/* Catálogo mobile: Figma 390px apila búsqueda, destinatarios, tema y filtros. */
+@media (max-width: 680px) {
+  .tram-filters { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+  .tram-filters .tram-search { flex: 0 0 48px; min-height: 48px; width: 100%; }
+  .tram-filters .tram-select { flex: 0 0 48px; width: 100%; min-height: 48px; }
+  .tram-filters .tram-filter-more { flex: 0 0 48px; width: 100%; justify-content: center; }
+  .tram-group-heading { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .tram-group-heading h2 { display: flex; flex-direction: column; gap: 8px; }
+  .tram-group-heading h2 small { font-size: 14px; font-weight: 400; }
+}
+
+.tram-timeline li { position: relative; }
+.tram-timeline li:not(:last-child)::before { content: ''; position: absolute; top: 36px; bottom: 0; left: 17px; width: 2px; background: var(--color-primary-500); }
+.tram-timeline li:not(:last-child) .tram-timeline-marker::after { display: none; }
