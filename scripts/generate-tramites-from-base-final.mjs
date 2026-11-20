@@ -102,7 +102,7 @@ if (!catalogPath || !basePath || !originPath || (flag && flag !== '--check')) {
       requisitos: f(43),
       documentacion: f(44),
       pasos: f(55),
-      direccion: primary.lugar,
+      direccion: id === 'R036' ? primary.lugar.replace(/\s+(?:prsencial|presencial) o via mail.*$/i, '').trim() : primary.lugar,
       horarios: primary.dias,
       turno: primary.turno,
       comoIniciar: f(31),
