@@ -262,7 +262,12 @@ test('ficha R036: jerarquía tipográfica y espaciados según Figma', async ({ p
   await expect(page.locator('#otros-tramites h2')).toHaveCSS('font-size', '24px');
   await expect(page.locator('#otros-tramites .tram-related-grid')).toHaveCSS('gap', '16px');
   await expect(page.locator('#otros-tramites .tram-related-card strong').first()).toHaveCSS('font-size', '18px');
-  await expect(page.locator('#otros-tramites .tram-related-card p').first()).toHaveCSS('font-size', '18px');
+  await expect(page.locator('#otros-tramites .tram-related-card p').first()).toHaveCSS('font-size', '16px');
+  const iconBox = page.locator('#otros-tramites .tram-related-card .tram-related-icon').first();
+  await expect(iconBox).toHaveCSS('width', '48px');
+  await expect(iconBox).toHaveCSS('height', '48px');
+  await expect(iconBox.locator('[data-material-symbol="receipt_long"]')).toHaveCSS('width', '32px');
+  await expect(iconBox.locator('[data-material-symbol="receipt_long"]')).toHaveCSS('height', '32px');
 
   // Figma R036: el separador va ANTES de "Otros trámites", nunca después.
   await expect(page.locator('#otros-tramites')).toHaveCSS('border-bottom-width', '0px');
