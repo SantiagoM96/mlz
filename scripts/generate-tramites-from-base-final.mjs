@@ -89,7 +89,6 @@ if (!catalogPath || !basePath || !originPath || (flag && flag !== '--check')) {
     const primary = Object.values(first).some(Boolean) ? first : second;
     const secondary = Object.values(first).some(Boolean) && Object.values(second).some(Boolean) ? second : null;
     const links = [...new Set([19, 27, 65].flatMap(i => publicUrls(o[i])))];
-    const normativeLinks = publicUrls(o[62]);
     const item = {
       id,
       categoria: safeText(c[1]),
@@ -99,28 +98,14 @@ if (!catalogPath || !basePath || !originPath || (flag && flag !== '--check')) {
       etiquetas: [c[5], c[6]].map(safeText).filter(Boolean),
       destinatarios: String(c[19] ?? '').split(';').map(safeText).filter(Boolean),
       sinonimos: safeText(c[9]),
-      requisitos: f(43),
       documentacion: f(44),
       pasos: f(55),
       direccion: id === 'R036' ? primary.lugar.replace(/\s+(?:prsencial|presencial) o via mail.*$/i, '').trim() : primary.lugar,
       horarios: primary.dias,
       turno: primary.turno,
       comoIniciar: f(31),
-      costo: f(37),
-      monto: f(38),
-      pago: f(39),
-      plazo: f(52),
-      normativa: f(61),
       web: links[0] ?? '',
-      estado: safeText(c[17]),
-      filaOrigen: rowNumber,
-      canales: f(32),
-      formatoDocumentacion: f(45),
-      exenciones: f(41),
-      detalleExenciones: f(42),
-      normativaUrl: normativeLinks[0] ?? '',
       ...(secondary ? { sedeAlternativa: secondary } : {}),
-      ...(links.length > 1 ? { otrosEnlaces: links.slice(1) } : {}),
     };
     assert.ok(item.titulo && item.descripcion && item.categoria, id + ': información pública faltante');
     assert.ok(!/[\w.+-]+@[\w.-]+\.[A-Z]{2,}/i.test(JSON.stringify(item)), id + ': posible correo personal');

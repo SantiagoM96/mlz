@@ -17,6 +17,10 @@ type FilterDropdownProps = {
   onChange: (values: string[]) => void;
   multiple?: boolean;
   align?: 'start' | 'end' | 'end-responsive';
+  /** Permite reutilizar el dropdown de Agenda en otros módulos con controles equivalentes. */
+  triggerIcon?: 'expand_more' | 'tune';
+  panelTitle?: string;
+  searchable?: boolean;
 };
 
 /**
@@ -25,6 +29,7 @@ type FilterDropdownProps = {
  */
 export function AgendaDropdown({
   label, options, selected, resultCount, onChange, multiple = false, align = 'start',
+  triggerIcon = 'expand_more', panelTitle, searchable,
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
@@ -34,7 +39,7 @@ export function AgendaDropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const showOptionSearch = label !== 'Fecha';
+  const showOptionSearch = searchable ?? label !== 'Fecha';
 
   useAgendaOutsideDismiss(isOpen, rootRef, buttonRef, dismiss);
   useAgendaViewportPopover(isOpen, buttonRef, sheetRef);
@@ -75,7 +80,7 @@ export function AgendaDropdown({
       >
         <span className="min-w-0 flex-1 truncate">{label}</span>
         <AgendaFilterCounter count={selected.length} />
-        <MaterialIcon name="expand_more" size={20}
+        <MaterialIcon name={triggerIcon} size={triggerIcon === 'tune' ? 24 : 20}
           className={`agenda-motion-chevron ml-auto shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
@@ -95,7 +100,7 @@ export function AgendaDropdown({
             shadow-[0_8px_24px_rgba(21,57,76,0.17)]
             ${align === 'end' ? 'right-0' : align === 'end-responsive' ? 'left-0 md:left-auto md:right-0' : 'left-0'}`}
         >
-          <AgendaSheetHeader title={label} onClose={dismiss} showCloseButton={false} />
+          <AgendaSheetHeader title={panelTitle ?? label} onClose={dismiss} showCloseButton={false} />
           {showOptionSearch && <label className="relative mb-2 block shrink-0">
             <span className="sr-only">{`Buscar ${label.toLowerCase()}`}</span>
             <input
@@ -111,7 +116,7 @@ export function AgendaDropdown({
               className="pointer-events-none absolute right-3 top-3 text-primary-600" />
           </label>}
 
-          <div role="group" aria-label={`Seleccionar ${label.toLowerCase()}`}
+          <div role="group" aria-label={`Seleccionar ${(panelTitle ?? label).toLowerCase()}`}
             className="agenda-filter-options min-h-0 flex-1 space-y-[2px] overflow-y-auto overscroll-contain">
             {visibleOptions.length ? visibleOptions.map(option => {
               const checked = selected.includes(option);

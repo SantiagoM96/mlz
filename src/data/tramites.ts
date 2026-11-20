@@ -10,28 +10,14 @@ export interface Tramite {
   etiquetas: string[];
   destinatarios: string[];
   sinonimos: string;
-  requisitos: string;
   documentacion: string;
   pasos: string;
   direccion: string;
   horarios: string;
   turno: string;
   comoIniciar: string;
-  costo: string;
-  monto: string;
-  pago: string;
-  plazo: string;
-  normativa: string;
   web: string;
-  estado: string;
-  filaOrigen: number;
-  canales: string;
-  formatoDocumentacion: string;
-  exenciones: string;
-  detalleExenciones: string;
-  normativaUrl: string;
   sedeAlternativa?: { lugar: string; dias: string; turno: string };
-  otrosEnlaces?: string[];
 }
 
 export const tramites: readonly Tramite[] = raw;
