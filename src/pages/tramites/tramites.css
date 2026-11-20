@@ -99,23 +99,19 @@
 .tram-sort-buttons button { padding: 10px 16px; color: var(--color-primary-600); background: #fff; }
 .tram-sort-buttons button.active { background: var(--color-panel); color: var(--color-primary-600); font-weight: 700; }
 .tram-sort-buttons button:focus-visible { outline: 2px solid var(--color-info-500); outline-offset: -2px; }
-.tram-active-filters { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; font-size: 14px; }
-.tram-active-filters button { font-weight: 700; color: var(--color-primary-600); text-decoration: underline; }
-/* El panel avanzado y los accesos directos comparten la misma selección. */
-.tram-selected-filters {
+/* Mismo componente de chips que Agenda: azul, cruz a la derecha y Limpiar. */
+.tram-active-filters {
   display: flex;
-  min-width: 0;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
 }
-.tram-active-filters .tram-selected-filters .agenda-filter-chip {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-}
-.tram-active-filters .tram-selected-filters .agenda-filter-chip:hover { background: #005bd1; }
+.tram-active-filters + .tram-results { margin-top: 24px; }
+.tram-active-filters .agenda-filter-chip { flex: 0 0 auto; }
+.tram-active-filters .agenda-filter-clear { flex: 0 0 auto; }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
 
 .tram-group { margin: 32px 0 40px; scroll-margin-top: 24px; }
@@ -235,6 +231,18 @@
 }
 .tram-detail-section .tram-longtext { overflow-wrap: anywhere; }
 .tram-audiences { display: flex; flex-wrap: wrap; gap: 8px; }
+.tram-audience-tag {
+  box-sizing: border-box;
+  height: 28px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  line-height: 20px;
+  border-radius: 6px;
+}
+.tram-audience-tag [data-material-symbol] {
+  width: 18px;
+  height: 18px;
+}
 .tram-audience-tag,
 .tram-turno-tags span {
   display: inline-flex;
@@ -544,8 +552,7 @@
     width: 48px;
     height: 48px;
   }
-  .tram-active-filters { flex-wrap: wrap; align-items: flex-start; }
-  .tram-selected-filters { width: 100%; justify-content: flex-start; }
+  .tram-active-filters { flex-wrap: wrap; align-items: center; }
   .tram-container { padding: 0 16px 64px; }
   .tram-container .tram-title { font-size: 32px; }
   .tram-detail h1 { font-size: 32px; line-height: normal; }
