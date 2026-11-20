@@ -13,9 +13,9 @@ const sortOptions: { value: AgendaSortValue; text: string }[] = [
 ];
 
 export function AgendaSortDropdown({
-  value, onChange, options = sortOptions, title = 'Ordenar actividades',
+  value, onChange, options = sortOptions, title = 'Ordenar actividades', ghost = false,
 }: { value: AgendaSortValue; onChange: (sort: AgendaSortValue) => void;
-  options?: { value: AgendaSortValue; text: string }[]; title?: string }) {
+  options?: { value: AgendaSortValue; text: string }[]; title?: string; ghost?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
   const { sheetRef, dismiss } = useAgendaSheetDismiss<HTMLDivElement>(isOpen, () => setIsOpen(false));
@@ -30,10 +30,9 @@ export function AgendaSortDropdown({
       <button type="button" ref={buttonRef} aria-expanded={isOpen}
         aria-haspopup="true" aria-controls={menuId} aria-label="Ordenar"
         onClick={() => { if (isOpen) dismiss(); else setIsOpen(true); }}
-        className="agenda-motion-control inline-flex h-12 items-center justify-center gap-2 rounded-full
-          border border-[#d9d9d9] bg-white px-5 text-[18px] text-grey-900
-          transition-colors hover:bg-[#f2f7fc]
-          focus-visible:outline-2 focus-visible:outline-primary-600">
+        className={`agenda-motion-control inline-flex h-12 items-center justify-center gap-2 px-4 text-[18px]
+          transition-colors hover:bg-[#f2f7fc] focus-visible:outline-2 focus-visible:outline-primary-600
+          ${ghost ? 'rounded border border-transparent bg-transparent text-primary-600' : 'rounded-full border border-[#d9d9d9] bg-white px-5 text-grey-900'}`}>
         <MaterialIcon name="swap_vert" size={24}/>
         <span>Ordenar</span>
       </button>
@@ -49,11 +48,14 @@ export function AgendaSortDropdown({
             <button type="button" key={option.value}
               aria-pressed={value === option.value}
               onClick={() => { onChange(option.value); dismiss(); buttonRef.current?.focus(); }}
-              className={`flex min-h-11 w-full items-center justify-between gap-4 px-4
-                text-left text-[16px] text-primary-600 transition-colors hover:bg-[#f2f7fc]
-                ${value === option.value ? 'bg-[#e5f0ff] font-bold' : ''}`}>
+              className={`agenda-motion-option flex min-h-12 w-full items-center justify-between gap-4 rounded px-4 py-2
+                text-left text-[16px] leading-6 transition-colors duration-150
+                focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-600
+                ${value === option.value ? 'bg-info-500 font-bold text-white hover:bg-[#005bd1]' : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}>
               <span className="whitespace-nowrap">{option.text}</span>
-              {value === option.value && <MaterialIcon name="check" size={18}/>}
+              <span aria-hidden="true" className={`agenda-motion-check grid size-5 shrink-0 place-items-center rounded-[2px] border-2 ${value === option.value ? 'border-white text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
+                {value === option.value && <MaterialIcon name="check" size={16} className="text-white"/>}
+              </span>
             </button>
           ))}
         </div>
