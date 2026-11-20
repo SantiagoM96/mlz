@@ -5,13 +5,14 @@ import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { useAgendaOutsideDismiss } from '../../features/agenda/hooks/useAgendaOutsideDismiss';
 
 export const turnoOpciones = ['Requiere turno', 'No requiere turno'] as const;
-export const camposFiltro = ['destinatario', 'tema', 'turno', 'modalidad'] as const;
+export const camposFiltro = ['destinatario', 'tema', 'turno', 'modalidad', 'etiqueta'] as const;
 export type CampoFiltro = typeof camposFiltro[number];
 export type FiltrosTramites = {
   destinatario: readonly string[];
   tema: string;
   turno: string;
   modalidad: string;
+  etiqueta: string;
 };
 
 type Props = {
@@ -36,7 +37,7 @@ export function TramitesMoreFilters({
   // Las opciones elegidas afuera y dentro del panel leen exactamente el mismo estado.
   const count = value.destinatario.length +
     Number(Boolean(value.tema)) + Number(Boolean(value.turno)) +
-    Number(Boolean(value.modalidad));
+    Number(Boolean(value.modalidad)) + Number(Boolean(value.etiqueta));
   const groups = [
     { key: 'destinatario', title: '¿Para quién es?', options: destinatarios,
       selected: value.destinatario, selectionControl: 'checkbox' as const },
