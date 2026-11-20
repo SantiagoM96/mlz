@@ -7,14 +7,14 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await page.getByRole('searchbox', { name: 'Buscar trámite' }).fill('patente');
   await expect(page.getByTestId('tramite-row').first()).toBeVisible();
   await expect(page.getByText('125 trámites', { exact: true })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Limpiar filtros' }).click();
+  await page.getByRole('button', { name: 'Limpiar', exact: true }).click();
   await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
 
   await page.getByRole('button', { name: 'Tema', exact: true }).click();
   const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
   await expect(menu).toBeVisible();
   // El checkbox de Agenda cubre toda la fila; activar el control real, no el texto debajo.
-  await menu.getByRole('checkbox', { name: 'Vehículos y tránsito' }).click();
+  await menu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
   await menu.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
@@ -22,6 +22,9 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
 test('ficha R036: índice de Jóvenes, contenido de Figma y sin campos descartados', async ({ page }) => {
   await page.goto('/tramites/R036');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Solicitar un certificado para escribanía');
+  // El nombre de la categoría está en el breadcrumb y no se repite sobre el título.
+  await expect(page.locator('.tram-eyebrow')).toHaveCount(0);
+  await expect(page.locator('.tram-detail-header .tram-start-link')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Documentación', exact: true })).toBeVisible();
   await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(4);
   await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(3);
@@ -86,8 +89,7 @@ test('ficha mobile: índice antes del contenido, filtros tipo Agenda y sin desbo
 
 test('rutas directas y enlaces públicos verificables', async ({ page }) => {
   await page.goto('/tramites/R001');
-  await expect(page.getByRole('link', { name: /Ir al sitio del trámite/ }))
-    .toHaveAttribute('href', 'https://proveedores.lomasdezamora.gov.ar');
+  await expect(page.getByRole('link', { name: /Ir al sitio del trámite/ })).toHaveCount(0);
   await page.goto('/tramites/R999');
   await expect(page.getByRole('heading', { name: 'No encontramos ese trámite' })).toBeVisible();
   await page.getByRole('link', { name: 'Volver al catálogo' }).click();
@@ -109,7 +111,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
 
   await page.getByRole('button', { name: 'Tema', exact: true }).click();
   const topic = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await topic.getByRole('checkbox', { name: 'Vehículos y tránsito' }).click();
+  await topic.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
   await topic.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(counter).toHaveText('2');
 
@@ -118,10 +120,10 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await expect(panel).toBeVisible();
   await expect(panel.getByRole('checkbox', { name: 'Vecinos y vecinas' })).toBeChecked();
   await panel.getByRole('button', { name: 'Tema', exact: true }).click();
-  await expect(panel.getByRole('checkbox', { name: 'Vehículos y tránsito' })).toBeChecked();
+  await expect(panel.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeChecked();
 
   await panel.getByRole('button', { name: 'Turno', exact: true }).click();
-  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await panel.getByRole('radio', { name: 'No requiere turno' }).click();
   await expect(counter).toHaveText('3');
   await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
   await expect(panel).toBeHidden();
@@ -132,9 +134,9 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await more.getByRole('button', { name: /Más filtros/ }).click();
   const reopened = page.getByRole('dialog', { name: 'Filtros de trámites' });
   await reopened.getByRole('button', { name: 'Turno', exact: true }).click();
-  await expect(reopened.getByRole('checkbox', { name: 'No requiere turno' })).toBeChecked();
-  await reopened.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
-  await expect(reopened.getByRole('checkbox', { name: 'No requiere turno' })).not.toBeChecked();
+  await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).toBeChecked();
+  await reopened.getByRole('radio', { name: 'Requiere turno', exact: true }).click();
+  await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).not.toBeChecked();
   await expect(counter).toHaveText('3');
   await reopened.getByRole('button', { name: 'Ver resultados (1)' }).click();
   await expect(reopened).toBeHidden();
@@ -150,10 +152,10 @@ test('Turno no incluye trámites cuyo relevamiento no informa si requieren reser
 
   // Se comprueban ambas alternativas mientras el mismo panel permanece abierto,
   // sin introducir carreras con el cierre animado de Agenda en móvil.
-  await panel.getByRole('checkbox', { name: 'Requiere turno', exact: true }).click();
+  await panel.getByRole('radio', { name: 'Requiere turno', exact: true }).click();
   await expect(panel.getByRole('button', { name: 'Ver resultados (10)' })).toBeVisible();
-  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
-  await expect(panel.getByRole('checkbox', { name: 'Requiere turno', exact: true })).not.toBeChecked();
+  await panel.getByRole('radio', { name: 'No requiere turno' }).click();
+  await expect(panel.getByRole('radio', { name: 'Requiere turno', exact: true })).not.toBeChecked();
   await expect(panel.getByRole('button', { name: 'Ver resultados (83)' })).toBeVisible();
   await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
   await expect(panel).toBeHidden();
@@ -180,7 +182,7 @@ test('Más filtros usa bottom sheet de Agenda en móvil', async ({ page }) => {
   await expect(panel.getByRole('button', { name: 'Tema' })).toBeVisible();
   await expect(panel.getByRole('button', { name: 'Turno' })).toBeVisible();
   await panel.getByRole('button', { name: 'Turno' }).click();
-  await panel.getByRole('checkbox', { name: 'No requiere turno' }).click();
+  await panel.getByRole('radio', { name: 'No requiere turno' }).click();
   await panel.getByRole('button', { name: 'Ver resultados (83)' }).click();
   await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -282,4 +284,110 @@ test('catálogo: tipografía Geometria y escala Figma desktop/mobile', async ({ 
   await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('font-size', '16px');
   await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('line-height', '21px');
   await expect(page.locator('.tram-row-actions .tram-btn').first()).toHaveCSS('font-size', '16px');
+});
+
+
+test('destinatarios: varias selecciones, chips individuales y URL reproducible', async ({ page }) => {
+  await page.goto('/tramites');
+  const audienceTrigger = page.getByRole('button', { name: '¿Para quién es?', exact: true });
+  await audienceTrigger.click();
+  const menu = page.getByRole('dialog', { name: 'Opciones de ¿Para quién es?' });
+  await menu.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
+  await menu.getByRole('checkbox', { name: 'Profesionales' }).click();
+  await menu.getByRole('button', { name: /Ver resultados/ }).click();
+
+  const chips = page.getByRole('group', { name: 'Filtros seleccionados' });
+  await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
+  await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Vecinos y vecinas' })).toBeVisible();
+  await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' })).toBeVisible();
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
+    .toEqual(['Vecinos y vecinas', 'Profesionales']);
+
+  await page.reload();
+  await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
+  await page.getByRole('button', { name: 'Tema', exact: true }).click();
+  const temasMenu = page.getByRole('dialog', { name: 'Opciones de Tema' });
+  await expect(temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
+  await expect(temasMenu.getByRole('checkbox')).toHaveCount(0);
+  await temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
+  await temasMenu.getByRole('button', { name: /Ver resultados/ }).click();
+  await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('3');
+
+  await chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' }).click();
+  await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
+    .toEqual(['Vecinos y vecinas']);
+  await chips.getByRole('button', { name: 'Limpiar' }).click();
+  await expect(chips).toHaveCount(0);
+  await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
+});
+
+test('Más filtros permite varios destinatarios sin duplicar el contador; Tema utiliza radios', async ({ page }) => {
+  await page.goto('/tramites');
+  const more = page.getByTestId('tramites-more-filters');
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await panel.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
+  await panel.getByRole('checkbox', { name: 'Profesionales' }).click();
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('2');
+  await panel.getByRole('button', { name: 'Tema' }).click();
+  await expect(panel.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
+  await panel.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+  await panel.getByRole('button', { name: /Ver resultados/ }).click();
+  await expect(panel).toBeHidden();
+  const chips = page.getByRole('group', { name: 'Filtros seleccionados' });
+  await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
+
+  await more.getByRole('button', { name: /Más filtros/ }).click();
+  const reopened = page.getByRole('dialog', { name: 'Filtros de trámites' });
+  await expect(reopened.getByRole('checkbox', { name: 'Vecinos y vecinas' })).toBeChecked();
+  await expect(reopened.getByRole('checkbox', { name: 'Profesionales' })).toBeChecked();
+  await reopened.getByRole('button', { name: 'Tema' }).click();
+  await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeChecked();
+  await reopened.getByRole('radio', { name: 'Salud' }).click();
+  await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).not.toBeChecked();
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+});
+
+test('procedimientos no uniformes: normaliza R029, R030 y numeración en línea de R089', async ({ page }) => {
+  await page.goto('/tramites/R029');
+  await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(4);
+  await expect(page.locator('#procedimiento .tram-procedure-note')).toContainText('Solicitar baja automotor');
+  await page.goto('/tramites/R030');
+  await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(4);
+  await expect(page.locator('#procedimiento .tram-timeline li').first()).toContainText('Recepcionarse');
+  await page.goto('/tramites/R089');
+  await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(6);
+  await expect(page.locator('#procedimiento .tram-timeline li').last()).toContainText('Firma y entrega de planos');
+});
+
+test('procedimientos con ramas y datos mal clasificados: sin instrucciones inventadas', async ({ page }) => {
+  await page.goto('/tramites/R092');
+  await expect(page.locator('#procedimiento .tram-timeline')).toHaveCount(2);
+  await expect(page.locator('#procedimiento .tram-procedure-note')).toContainText('En caso de no haber copia');
+  await page.goto('/tramites/R033');
+  await expect(page.locator('#procedimiento .tram-timeline')).toHaveCount(0);
+  await expect(page.locator('#procedimiento .tram-procedure-list li')).toHaveCount(5);
+  await page.goto('/tramites/R125');
+  await expect(page.locator('#procedimiento')).toHaveCount(0);
+});
+
+test('íconos de documentación y destinatarios: semánticos y medidas de Figma', async ({ page }) => {
+  await page.goto('/tramites/R036');
+  await expect(page.locator('#documentacion .tram-document-icon').first()).toHaveCSS('width', '40px');
+  await expect(page.locator('#documentacion .tram-document-icon [data-material-symbol="description"]').first())
+    .toHaveCSS('width', '24px');
+  await expect(page.locator('#destinatarios .tram-audience-tag').first()).toHaveCSS('height', '28px');
+  await expect(page.locator('#destinatarios .tram-audience-tag [data-material-symbol]').first()).toHaveCSS('width', '18px');
+  await expect(page.locator('#destinatarios [data-material-symbol="work_outline"]')).toHaveCount(1);
+  await page.goto('/tramites/R121');
+  await expect(page.locator('#destinatarios [data-material-symbol="storefront"]')).toHaveCount(1);
+  await page.goto('/tramites/R122');
+  await expect(page.locator('#destinatarios [data-material-symbol="account_balance"]')).toHaveCount(1);
+  await page.goto('/tramites/R123');
+  await expect(page.locator('#destinatarios [data-material-symbol="diversity_3"]')).toHaveCount(1);
 });
