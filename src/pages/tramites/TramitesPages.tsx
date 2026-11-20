@@ -67,7 +67,7 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
         <h3>{tramite.titulo}</h3>
         <p>{tramite.descripcion}</p>
         <div className="tram-row-actions">
-          <Link className="tram-btn" to={ficha(tramite.id)}>Ver trámite</Link>
+          <Link className="tram-link-action" to={ficha(tramite.id)}>Ver trámite <MaterialIcon name="arrow_forward" size={20} /></Link>
           <span className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></span>
         </div>
       </div>

@@ -68,7 +68,7 @@ export function AgendaFilterGroupPanel({
                 <input type={isRadio ? 'radio' : 'checkbox'}
                   name={isRadio ? dialogId + '-' + group.key : undefined}
                   className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                  checked={checked} onChange={() => onToggle(group.key, option)}
+                  checked={checked} onClick={(event) => { if (isRadio && checked) { event.preventDefault(); onToggle(group.key, option); } }} onChange={() => { if (!checked || !(isRadio)) onToggle(group.key, option); }}
                   aria-label={option} />
                 <span aria-hidden="true"
                   className={`agenda-motion-check pointer-events-none relative z-10 grid size-5 shrink-0 place-items-center border-2

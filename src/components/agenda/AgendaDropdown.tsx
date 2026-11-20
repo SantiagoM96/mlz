@@ -136,7 +136,7 @@ export function AgendaDropdown({
                       : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
-                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onChange={() => toggle(option)}
+                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onClick={(event) => { if (selectionControl === 'radio' && checked) { event.preventDefault(); toggle(option); } }} onChange={() => { if (!checked || !(selectionControl === 'radio')) toggle(option); }}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
                     className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2 ${selectionControl === 'radio' ? 'rounded-full' : 'rounded-[2px]'}
