@@ -74,3 +74,15 @@ export function textoPublicoLegible(valor: string): string {
     .replace(/(\d)\s*h(?=\s|$)/gi, '$1 h')
     .replace(/^Titulo\b/u, 'Título');
 }
+
+
+/** Tres entradas del mismo tema; R036 respeta los IDs visibles en Figma. */
+export function otrosTramitesDelTema(actual: Tramite, catalogo: readonly Tramite[]): Tramite[] {
+  const mismoTema = catalogo.filter(item =>
+    item.categoria === actual.categoria && item.id !== actual.id);
+  if (actual.id !== 'R036') return mismoTema.slice(0, 3);
+  const idsDelDiseno = ['R093', 'R089', 'R046'];
+  return idsDelDiseno
+    .map(id => mismoTema.find(item => item.id === id))
+    .filter((item): item is Tramite => Boolean(item));
+}
