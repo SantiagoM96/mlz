@@ -57,14 +57,32 @@ export function AgendaFilterGroupPanel({
           </button>
           {expanded.includes(group.key) && <div
             className="agenda-motion-accordion mt-2 grid grid-cols-1 gap-x-3 gap-y-1 sm:grid-cols-2">
-            {group.options.map(option => <label key={option}
-              className="flex min-h-11 cursor-pointer items-center gap-2 rounded px-2 py-2 text-[16px] leading-6 text-grey-900 transition-colors hover:bg-[#eff7fd] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-primary-600">
-              <input type={group.selectionControl ?? 'checkbox'}
-                name={group.selectionControl === 'radio' ? dialogId + '-' + group.key : undefined}
-                className="size-5 shrink-0 accent-[#006eff]"
-                checked={group.selected.includes(option)} onChange={() => onToggle(group.key, option)} />
-              <span>{option}</span>
-            </label>)}
+            {group.options.map(option => {
+              const checked = group.selected.includes(option);
+              const isRadio = group.selectionControl === 'radio';
+              return <label key={option}
+                className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4 rounded
+                  px-4 py-2 text-[16px] leading-6 transition-colors duration-150
+                  has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
+                  has-[:focus-visible]:outline-primary-600
+                  ${checked ? 'bg-info-500 text-white hover:bg-[#005bd1]'
+                    : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}>
+                <span className="min-w-0 flex-1">{option}</span>
+                <input type={isRadio ? 'radio' : 'checkbox'}
+                  name={isRadio ? dialogId + '-' + group.key : undefined}
+                  className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  checked={checked} onChange={() => onToggle(group.key, option)}
+                  aria-label={option} />
+                <span aria-hidden="true"
+                  className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2
+                    ${isRadio ? 'rounded-full' : 'rounded-[2px]'}
+                    ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
+                  {checked && (isRadio
+                    ? <span className="size-2 rounded-full bg-white" />
+                    : <MaterialIcon name="check" size={16} className="text-white" />)}
+                </span>
+              </label>;
+            })}
           </div>}
         </section>)}
       </div>
