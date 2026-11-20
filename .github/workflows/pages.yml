@@ -37,12 +37,9 @@ jobs:
       - run: npm run lint
       - run: npm run build:pages
       - uses: actions/configure-pages@v5
-      # Un re-run vuelve a subir el artefacto; evitar duplicar "github-pages"
-      # dentro de un mismo workflow run.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
           name: github-pages
       - id: deployment
         uses: actions/deploy-pages@v4
-        with:
