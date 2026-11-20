@@ -69,6 +69,16 @@
   }
 }
 
+/* En tablet Más filtros cae en la primera columna; anclar a la izquierda
+   evita que el panel de 576px sobresalga del borde izquierdo del viewport. */
+@media (min-width: 681px) and (max-width: 1000px) {
+  .tram-filter-more-control .agenda-more-panel {
+    right: auto;
+    left: 0;
+    max-width: calc(100vw - 32px);
+  }
+}
+
 /* Resultados, agrupaciones y acciones. */
 .tram-results {
   display: flex;
