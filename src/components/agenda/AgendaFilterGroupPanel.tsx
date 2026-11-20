@@ -70,14 +70,11 @@ export function AgendaFilterGroupPanel({
                   className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   checked={checked} onClick={(event) => { if (isRadio && checked) { event.preventDefault(); onToggle(group.key, option); } }} onChange={() => { if (!checked || !(isRadio)) onToggle(group.key, option); }}
                   aria-label={option} />
-                <span aria-hidden="true"
-                  className={`agenda-motion-check pointer-events-none relative z-10 grid size-5 shrink-0 place-items-center border-2
-                    ${isRadio ? 'rounded-full' : 'rounded-[2px]'}
-                    ${checked ? 'border-primary-600 bg-primary-600 text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
-                  {checked && (isRadio
-                    ? <span className="size-2 rounded-full bg-white" />
-                    : <MaterialIcon name="check" size={16} className="text-white" />)}
-                </span>
+                <MaterialIcon
+                  name={isRadio ? (checked ? 'radio_button_checked' : 'radio_button_unchecked') : (checked ? 'check_box' : 'check_box_outline_blank')}
+                  size={24} weight={400}
+                  className="agenda-motion-check pointer-events-none relative z-10 text-primary-600"
+                />
                 <span className={`min-w-0 flex-1 ${checked ? 'font-bold' : 'font-normal'}`}>{option}</span>
               </label>;
             })}
