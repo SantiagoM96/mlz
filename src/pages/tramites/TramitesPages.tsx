@@ -4,9 +4,10 @@ import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
 import { TableOfContents } from '../../components/ui/TableOfContents';
+import { copyToClipboard } from '../../components/ui/copyToClipboard';
 import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
-import { documentacionPublica, pasosPublicos } from './tramites-format';
+import { documentacionPublica, pasosPublicos, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import './tramites.css';
 
@@ -153,27 +154,26 @@ export function TramitesCatalogPage() {
 
 
 function AccionesFicha() {
-  const [copiado, setCopiado] = useState(false);
+  const [estado, setEstado] = useState<'idle' | 'copied' | 'error'>('idle');
   async function compartir() {
-    const url = window.location.href;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: document.title, url });
-        return;
-      }
-      await navigator.clipboard.writeText(url);
-      setCopiado(true);
-    } catch {
-      // Cancelar la hoja de compartir no debe alterar la navegación.
-    }
+    // El mismo mecanismo de Agenda: copiar enlace y cambiar el ícono a check.
+    const copiado = await copyToClipboard(window.location.href);
+    setEstado(copiado ? 'copied' : 'error');
   }
-  return <div className="tram-detail-actions">
-    <button type="button" onClick={() => { void compartir(); }}>
-      <MaterialIcon name="share" size={24} /> {copiado ? 'Enlace copiado' : 'Compartir'}
+  return <div className="tram-detail-actions" aria-label="Acciones de la ficha">
+    <button type="button" onClick={() => { void compartir(); }}
+      aria-label={estado === 'copied' ? 'Enlace copiado' : 'Compartir'}
+      title={estado === 'copied' ? 'Enlace copiado' : 'Copiar enlace'}>
+      <MaterialIcon name={estado === 'copied' ? 'check' : 'link'} size={20} />
+      <span>{estado === 'copied' ? 'Enlace copiado' : 'Compartir'}</span>
     </button>
     <button type="button" onClick={() => window.print()}>
-      <MaterialIcon name="print" size={24} /> Imprimir
+      <MaterialIcon name="print" size={20} /><span>Imprimir</span>
     </button>
+    <span className="sr-only" role="status" aria-live="polite">
+      {estado === 'copied' ? 'Enlace copiado al portapapeles' :
+        estado === 'error' ? 'No se pudo copiar el enlace' : ''}
+    </span>
   </div>;
 }
 
@@ -193,7 +193,7 @@ function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
     <p className="tram-document-intro">Para realizar el trámite te van a solicitar la siguiente documentación</p>
     <ul className="tram-documents">{items.map((item, index) => <li key={index}>
       <span className="tram-document-icon"><MaterialIcon name="description" size={24} /></span>
-      <span>{item}</span>
+      <span>{textoPublicoLegible(item)}</span>
     </li>)}</ul>
   </section>;
 }
@@ -238,31 +238,55 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const sedes = [
     { lugar: tramite.direccion, dias: tramite.horarios, turno: tramite.turno },
     ...(tramite.sedeAlternativa ? [tramite.sedeAlternativa] : []),
-  ].filter((sede) => sede.lugar.trim() || sede.dias.trim() || sede.turno.trim());
+  ].filter(sede => sede.lugar.trim() || sede.dias.trim() || sede.turno.trim());
   if (!sedes.length) return null;
   const turno = tramite.turno.trim();
   const turnoLabel = /^no$/i.test(turno) ? 'No requiere turno' :
-    /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : turno;
+    /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : textoPublicoLegible(turno);
   const showMap = /\b\d{2,5}\b/.test(tramite.direccion);
+  const mapsQuery = tramite.direccion + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
     <h2>Dónde y cuándo</h2>
     {turnoLabel && <div className="tram-turno-tags">
-      <span><MaterialIcon name="event" size={18}/> {turnoLabel}</span>
+      <span><MaterialIcon name={/^no$/i.test(turno) ? 'event' : 'event_available'} size={18} />{turnoLabel}</span>
     </div>}
     <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location">
       <div className="tram-location-info">
-        {sede.lugar.trim() && <div className="tram-location-item">
-          <MaterialIcon name="location_on" size={24}/><p>{sede.lugar}</p>
-        </div>}
         {sede.dias.trim() && <div className="tram-location-item">
-          <MaterialIcon name="schedule" size={24}/><p>{sede.dias}</p>
+          <MaterialIcon name="schedule" size={24} className="tram-location-symbol" />
+          <p>{textoPublicoLegible(sede.dias)}</p>
+        </div>}
+        {sede.lugar.trim() && <div className="tram-location-item">
+          <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
+          <p>{textoPublicoLegible(sede.lugar)}</p>
         </div>}
       </div>
-      {index === 0 && showMap && <iframe className="tram-location-map"
-        title={'Mapa de ' + tramite.direccion}
-        src={'https://www.google.com/maps?q=' + encodeURIComponent(tramite.direccion + ', Lomas de Zamora, Buenos Aires') + '&output=embed'}
-        loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
+      {index === 0 && showMap && <div className="tram-location-map-wrap">
+        <iframe className="tram-location-map"
+          title={'Mapa de ' + textoPublicoLegible(tramite.direccion)}
+          src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
+          loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+        <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
+          target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
+          Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
+        </a>
+      </div>}
     </div>)}</div>
+  </section>;
+}
+
+function OtrosTramitesFicha({ items }: { items: readonly Tramite[] }) {
+  if (!items.length) return null;
+  return <section className="tram-detail-section tram-related-section" id="otros-tramites">
+    <h2>Otros trámites del tema</h2>
+    <div className="tram-related-grid">
+      {items.map(item => <Link key={item.id} to={ficha(item.id)}
+        className="tram-related-card" aria-label={'Ver trámite: ' + item.titulo}>
+        <span className="tram-related-icon"><MaterialIcon name="receipt_long" size={24}/></span>
+        <strong>{item.titulo}</strong>
+        <p>{item.descripcion}</p>
+      </Link>)}
+    </div>
   </section>;
 }
 
@@ -275,13 +299,14 @@ export function TramiteDetailPage() {
     <Link to={base} className="tram-btn">Volver al catálogo</Link>
   </PageContainer>;
 
-  // Solo se muestran los bloques aprobados en la ficha: datos de destinatario,
-  // documentación, procedimiento y sede. ORIGEN conserva campos no publicados.
+  // Los bloques siguen Figma; las tarjetas usan únicamente el catálogo editorial.
+  const otrosTramites = otrosTramitesDelTema(tramite, tramites);
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 },
     { id: 'documentacion', titulo: 'Documentación', visible: documentacionPublica(tramite).length > 0 },
     { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: Boolean(tramite.pasos.trim() || tramite.comoIniciar.trim()) },
     { id: 'donde-cuando', titulo: 'Dónde y cuándo', visible: Boolean(tramite.direccion.trim() || tramite.horarios.trim() || tramite.turno.trim()) },
+    { id: 'otros-tramites', titulo: 'Otros trámites del tema', visible: otrosTramites.length > 0 },
   ].filter((seccion) => seccion.visible);
 
   return <PageContainer className="tram-container tram-detail">
@@ -318,6 +343,7 @@ export function TramiteDetailPage() {
         <DocumentacionFicha tramite={tramite}/>
         <ProcedimientoFicha tramite={tramite}/>
         <SedeFicha tramite={tramite}/>
+        <OtrosTramitesFicha items={otrosTramites}/>
         <div className="tram-detail-mobile-help"><AyudaFicha/></div>
       </article>
       <aside className="tram-detail-aside">
