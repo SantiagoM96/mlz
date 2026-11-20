@@ -44,9 +44,9 @@ function events(tax){
 }
 function dateCard(e,highlight){let d=dayDiff(e.date,todayISO());return '<article class="date-card" data-fiscal-year="'+e.fiscalYear+'"><div class="date-head"><strong>'+humanDate(e.date)+'</strong>'+(highlight&&d>=0?'<span class="days">'+(d===0?'Vence hoy':'Faltan '+d+(d===1?' día':' días'))+'</span>':'')+'</div><span class="tag '+e.kind+'">'+e.label+'</span><p class="period">'+period(e.r)+' · '+quotaText(e.r)+'</p>'+ (e.r.tax==='higiene'?'<p class="regime">'+esc(e.r.regime==='Simplificado'?'Régimen Simplificado':e.r.regime)+'</p>':'')+(highlight&&d>=0&&e.kind!=='ddjj'?'<a class="pay-link" href="https://sag.lomasdezamora.gov.ar/" target="_blank" rel="noopener noreferrer">Pagar ahora</a>':'')+'</article>'}
 function calendar(tax){
- const all=events(tax),next=chooseYearIndex(all,currentYear),next2026=chooseYearIndex(all,2026),next2027=chooseYearIndex(all,2027);
+ const all=events(tax),next=chooseYearIndex(all,currentYear),upcoming=all.findIndex(e=>e.date>=todayISO());
  const pending=rows.filter(r=>r.tax===tax&&(r.ddjjPending||r.firstDuePending||r.secondDuePending));
- return '<section class="calendar-section" data-tax="'+tax+'"><div class="heading-row"><div class="calendar-heading-main"><h1>'+titles[tax]+'</h1><p class="muted">Informate sobre todas las fechas de vencimiento y descargate el calendario completo.</p>'+yearControl(tax)+'</div><div class="arrows"><button data-dir="-1" aria-label="Vencimientos anteriores">'+icon('chevron_left')+'</button><button data-dir="1" aria-label="Vencimientos siguientes">'+icon('chevron_right')+'</button></div></div><div class="rail" tabindex="0" aria-label="Vencimientos de '+titles[tax]+' de 2026 y 2027" data-start="'+next+'">'+all.map((e,i)=>dateCard(e,(i===next2026&&e.fiscalYear===2026)||(i===next2027&&e.fiscalYear===2027))).join('')+'</div>'+(pending.length?'<p class="notice">Hay '+pending.length+' fecha'+(pending.length===1?'':'s')+' pendiente'+(pending.length===1?'':'s')+' de precisar. Consultá el calendario completo.</p>':'')+'<div class="controls"><button class="pill" data-open="'+tax+'">'+icon('visibility')+' Ver calendario completo</button><button class="pill" data-pdf="'+tax+'">'+icon('download')+' Descargar calendario completo en PDF</button></div></section>';
+ return '<section class="calendar-section" data-tax="'+tax+'"><div class="heading-row"><div class="calendar-heading-main"><h1>'+titles[tax]+'</h1><p class="muted">Informate sobre todas las fechas de vencimiento y descargate el calendario completo.</p>'+yearControl(tax)+'</div><div class="arrows"><button data-dir="-1" aria-label="Vencimientos anteriores">'+icon('chevron_left')+'</button><button data-dir="1" aria-label="Vencimientos siguientes">'+icon('chevron_right')+'</button></div></div><div class="rail" tabindex="0" aria-label="Vencimientos de '+titles[tax]+' de 2026 y 2027" data-start="'+next+'">'+all.map((e,i)=>dateCard(e,i===upcoming)).join('')+'</div>'+(pending.length?'<p class="notice">Hay '+pending.length+' fecha'+(pending.length===1?'':'s')+' pendiente'+(pending.length===1?'':'s')+' de precisar. Consultá el calendario completo.</p>':'')+'<div class="controls"><button class="pill" data-open="'+tax+'">'+icon('visibility')+' Ver calendario completo</button><button class="pill" data-pdf="'+tax+'">'+icon('download')+' Descargar calendario completo en PDF</button></div></section>';
 }
 function docs(tax){const data=tax==='higiene'?[['Información Útil','Encontrá toda la información correspondiente a la Tasa por Seguridad e Higiene.',['Constancia de Categorización','Mínimos Marzo 2026 (Cuota 3)','Mínimos Febrero 2026 (Cuota 2)','Valores RS Enero 2026 (Cuota 1)','Mínimos Noviembre 2025 (Cuota 11)']],['Formularios de DDJJ','Si vas a hacer el trámite de forma presencial, encontrá los formularios afines.',['DDJJ Régimen General Mensual','DDJJ Anual','Anexo Tasa Vial']],['Ordenanzas','Normativa tributaria, categorías, mínimos y condiciones aplicables.',['Ordenanza Impositiva','Ordenanza Fiscal']]]:[['Información Útil','Códigos de Publicidad.',['Códigos de Publicidad']],['Formularios de DDJJ','Declaración jurada de Derechos de Publicidad y Propaganda.',['DDJJ Publicidad y Propaganda / Ocupación de Espacios Públicos 2026']]];return data.map(([t,d,items])=>'<section class="documents"><h3>'+t+'</h3><p class="muted">'+d+'</p><div class="document-grid">'+items.map(n=>'<article class="doc">'+icon('description')+'<div>'+n+'<small>Documento pendiente de vincular</small></div></article>').join('')+'</div></section>').join('')}
 function setArrowState(rail){let holder=rail.closest('.calendar-section');holder.querySelector('[data-dir="-1"]').disabled=rail.scrollLeft<=2;holder.querySelector('[data-dir="1"]').disabled=rail.scrollLeft>=rail.scrollWidth-rail.clientWidth-2}
@@ -71,11 +71,24 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
     if(e.pointerId!==pointerId)return;
     pointerId=null;
     if(rail.hasPointerCapture(e.pointerId))rail.releasePointerCapture(e.pointerId);
-    rail.classList.remove('is-dragging');
     if(dragged){
+      // El drag es libre. Al soltar, acercamos suavemente la tarjeta más próxima.
+      // Se evita el snap instantáneo del navegador durante el gesto.
+      const cards=[...rail.querySelectorAll('.date-card')];
+      const nearest=cards.reduce((best,card)=>{
+        const distance=Math.abs((card.offsetLeft-rail.offsetLeft)-rail.scrollLeft);
+        return !best||distance<best.distance?{card,distance}:best;
+      },null);
       rail.dataset.suppressClick='true';
       window.setTimeout(()=>{delete rail.dataset.suppressClick},0);
+      if(nearest){
+        rail.scrollTo({
+          left:nearest.card.offsetLeft-rail.offsetLeft,
+          behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'
+        });
+      }
     }
+    rail.classList.remove('is-dragging');
     dragged=false;
     setArrowState(rail);
   };
