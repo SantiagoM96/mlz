@@ -184,39 +184,46 @@
 /* Fichas: distribución desktop del frame R036 (770 + 40 + 390). */
 .tram-detail .tram-detail-grid {
   display: grid;
-  grid-template-columns: minmax(0, 770px) minmax(0, 390px);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 390px);
   align-items: start;
   gap: 40px;
   margin-top: 24px;
 }
 .tram-detail-main { min-width: 0; }
 .tram-detail-header {
-  padding-bottom: 28px;
-  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--color-divider);
 }
+.tram-detail-header :is(.tram-eyebrow, h1, .tram-lead, .tram-modalidad, .tram-tags, .tram-start-link) {
+  margin: 0;
+}
 .tram-eyebrow {
-  margin-bottom: 12px;
   color: var(--color-primary-600);
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 26px;
   text-decoration: underline;
 }
 .tram-lead { margin: 20px 0 16px; color: var(--color-grey-900); font-size: 18px; line-height: 26px; }
 .tram-detail-header .tram-modalidad { margin: 16px 0 12px; }
 .tram-detail-header .tram-start-link { margin-top: 20px; }
 .tram-detail-section {
-  padding-bottom: 28px;
-  margin-bottom: 28px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
   border-bottom: 1px solid var(--color-divider);
   scroll-margin-top: 24px;
 }
 .tram-detail-section h2 {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   color: var(--color-primary-600);
   font-size: 24px;
   font-weight: 700;
-  line-height: 30px;
+  line-height: normal;
 }
 .tram-detail-section p {
   color: var(--color-grey-900);
@@ -352,6 +359,12 @@
   outline-offset: -2px;
 }
 /* Las tres tarjetas de Figma usan exclusivamente el tema editorial actual. */
+.tram-related-section {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.tram-related-section > h2 { margin-bottom: 24px; }
 .tram-related-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -392,13 +405,13 @@
 .tram-related-card strong {
   color: var(--color-primary-600);
   font-size: 18px;
-  line-height: 1.35;
+  line-height: 26px;
   font-weight: 700;
   overflow-wrap: anywhere;
 }
 .tram-related-card p {
   font-size: 18px;
-  line-height: 1.4;
+  line-height: 26px;
   font-weight: 400;
   overflow-wrap: anywhere;
 }
@@ -407,18 +420,18 @@
 .tram-detail .tram-detail-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 16px;
-  margin: 0 0 20px;
+  gap: 12px;
+  margin: 0 0 24px;
 }
 
 .tram-detail .tram-detail-actions button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 4px 0;
   color: var(--color-primary-600);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   background: transparent;
 }
 .tram-detail .tram-detail-actions button:focus-visible { outline: 2px solid var(--color-info-500); outline-offset: 4px; }
@@ -477,19 +490,63 @@
 .tram-support-hours strong { font-size: 18px; line-height: 26px; }
 .tram-support-hours strong + p { margin-top: 8px; }
 
+.tram-detail .tram-detail-aside { padding-top: 24px; }
+
+/* Accesibilidad: flotante solo cuando se recorre el catálogo extenso. */
+.tram-back-to-top {
+  position: fixed;
+  z-index: 30;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--color-divider);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-primary-600);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .14);
+  cursor: pointer;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+.tram-back-to-top:hover {
+  background: var(--color-panel);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
+}
+.tram-back-to-top:focus-visible {
+  outline: 3px solid var(--color-info-500);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tram-back-to-top { transition: none; }
+}
+
 @media (max-width: 1000px) {
   .tram-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tram-search { grid-column: 1 / -1; }
   .tram-filter-more-control { min-width: 0; }
-  .tram-detail .tram-detail-grid { grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; }
+  .tram-detail .tram-detail-grid { gap: 24px; }
   .tram-row-side { flex: 0 0 220px; width: 220px; padding-left: 20px; }
 }
+@media (max-width: 900px) {
+  .tram-detail .tram-detail-grid { display: block; margin-top: 24px; }
+  .tram-detail-mobile-tools { display: block; margin-bottom: 24px; }
+  .tram-detail-aside { display: none; }
+  .tram-detail-mobile-help { display: block; }
+}
 @media (max-width: 680px) {
+  .tram-back-to-top {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    width: 48px;
+    height: 48px;
+  }
   .tram-active-filters { flex-wrap: wrap; align-items: flex-start; }
   .tram-selected-filters { width: 100%; justify-content: flex-start; }
   .tram-container { padding: 0 16px 64px; }
-  .tram-container .tram-title,
-  .tram-detail h1 { font-size: 28px; }
+  .tram-container .tram-title { font-size: 28px; }
+  .tram-detail h1 { font-size: 32px; line-height: normal; }
   .tram-filters { grid-template-columns: minmax(0, 1fr); }
   .tram-search { grid-column: auto; }
   .tram-filter-control, .tram-filter-more-control { min-width: 0; width: 100%; }
@@ -512,6 +569,10 @@
   .tram-detail-mobile-tools { display: block; margin-bottom: 24px; }
   .tram-detail-aside { display: none; }
   .tram-detail .tram-detail-section { margin-bottom: 24px; padding-bottom: 24px; }
+  .tram-detail .tram-related-section { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+  .tram-related-section > h2 { margin-bottom: 16px; }
+  .tram-detail-header { gap: 12px; }
+  .tram-detail .tram-document-intro { font-weight: 700; }
   .tram-related-grid { grid-template-columns: minmax(0, 1fr); }
   .tram-related-card { gap: 12px; }
   .tram-location-map { height: 180px; }
@@ -520,7 +581,8 @@
 }
 @media print {
   .tram-filters,.tram-results,.tram-detail-actions,.tram-detail-aside,
-  .tram-detail-mobile-tools,.tram-contact-help,.tram-sort { display: none !important; }
+  .tram-detail-mobile-tools,.tram-contact-help,.tram-sort,
+  .tram-back-to-top { display: none !important; }
   .tram-detail .tram-detail-grid { display: block; }
   .tram-detail-section { break-inside: avoid; }
 }
