@@ -120,7 +120,7 @@
 }
 .tram-row-body { display: flex; flex: 1 1 auto; min-width: 0; flex-direction: column; align-items: flex-start; gap: 8px; }
 .tram-row-actions { margin-top: 8px; }
-.tram-row h3 { color: var(--color-grey-900); font-size: 24px; font-weight: 700; line-height: 1.4; }
+.tram-row h3 { color: var(--color-grey-900); font-size: 20px; font-weight: 700; line-height: 1.2; }
 .tram-row-body > p { font-size: 16px; line-height: 21px; white-space: pre-line; }
 .tram-row-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 .tram-row-actions .tram-btn { font-size: 16px; font-weight: 500; }
@@ -617,7 +617,7 @@
   .tram-group-heading h2 { font-size: 24px; }
   .tram-group-heading h2 small { display: block; font-size: 14px; font-weight: 400; }
   .tram-row { display: block; padding: 24px 0; }
-  .tram-row h3 { font-size: 24px; }
+  .tram-row h3 { font-size: 20px; line-height: 1.2; }
   .tram-row-actions { align-items: flex-start; flex-direction: column; gap: 12px; }
   .tram-row-side { width: auto; min-height: 0; margin-top: 18px; padding-left: 0; border-left: 0; gap: 8px; }
   .tram-row-side h4 { font-size: 12px; }
