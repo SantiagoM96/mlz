@@ -9,6 +9,7 @@ import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
 import { documentacionPublica, pasosPublicos, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
+import { TramitesBackToTop } from './TramitesBackToTop';
 import './tramites.css';
 
 const base = '/tramites';
@@ -148,6 +149,7 @@ export function TramitesCatalogPage() {
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre} <small>({grupo.items.length})</small></h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver el tema <MaterialIcon name="chevron_right" size={24} /></button>}</div>}
         <div>{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite} />)}</div>
       </section>) : <div className="tram-empty"><h2>No encontramos trámites con esos filtros</h2><p>Probá con otras palabras o quitá alguno de los filtros.</p><button type="button" className="tram-btn" onClick={() => setParams({})}>Ver todos los trámites</button></div>}
+      <TramitesBackToTop />
     </PageContainer>
   );
 }
