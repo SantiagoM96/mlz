@@ -32,27 +32,128 @@ export function documentacionPublica(tramite: Tramite): string[] {
 }
 
 /**
- * Los formularios de ORIGEN suelen separar número y descripción con saltos:
- * 1\nRecepcionarse\n2\nSolicitar alta...  Convertirlo a pasos reales.
- * Si no hay secuencia verificable, conservar el texto sin inventar pasos.
+ * Los registros de ORIGEN usan números sueltos, "1. Paso", "1)Paso",
+ * listas por líneas y textos corridos. Interpretar solo separadores
+ * verificables; conservar siempre el texto de origen y no crear instrucciones.
  */
+export type BloqueProcedimiento =
+  | { tipo: 'pasos'; items: string[] }
+  | { tipo: 'lista'; items: string[] }
+  | { tipo: 'texto'; texto: string };
+
+const numeroSuelto = /^(\d{1,2})[.)]?$/;
+const prefijoNumerado = /^(\d{1,2})[.)]\s*(.+)$/;
+
+function agregarPasos(bloques: BloqueProcedimiento[], pasos: string[]) {
+  const validos = pasos.map(paso => paso.trim()).filter(Boolean);
+  if (validos.length) bloques.push({ tipo: 'pasos', items: validos });
+}
+
+function parsearNumerosSueltos(lineas: string[]): BloqueProcedimiento[] | null {
+  const marcas = lineas.filter(linea => numeroSuelto.test(linea));
+  if (marcas.length < 2) return null;
+  const bloques: BloqueProcedimiento[] = [];
+  const previas: string[] = [];
+  const pasos: string[] = [];
+  let ultimoIndice: number | null = null;
+
+  for (const linea of lineas) {
+    const marca = linea.match(numeroSuelto);
+    if (marca) {
+      ultimoIndice = Number(marca[1]);
+      pasos.push('');
+    } else if (ultimoIndice === null) {
+      previas.push(linea);
+    } else {
+      const indice = pasos.length - 1;
+      pasos[indice] = [pasos[indice], linea].filter(Boolean).join(' ');
+    }
+  }
+  // R030: "Recepcionarse" figura justo antes del marcador 2;
+  // es el primer paso del relevamiento, no un título editorial inventado.
+  const primeraMarca = Number(marcas[0].match(numeroSuelto)?.[1] ?? 0);
+  if (primeraMarca === 2 && previas.length === 1) {
+    pasos.unshift(previas[0]);
+  } else if (previas.length) {
+    bloques.push({ tipo: 'texto', texto: previas.join(' ') });
+  }
+  agregarPasos(bloques, pasos);
+  return bloques;
+}
+
+function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
+  // También reconoce "1)Paso" sin espacio y "1. Paso 2. Paso" en un párrafo.
+  const regex = /(?:^|\s)(\d{1,2})[.)]\s*(?=\S)/gu;
+  const marcas = Array.from(texto.matchAll(regex));
+  if (marcas.length < 2) return null;
+
+  const bloques: BloqueProcedimiento[] = [];
+  const introduccion = texto.slice(0, marcas[0].index).trim();
+  if (introduccion) bloques.push({ tipo: 'texto', texto: introduccion });
+
+  let grupo: string[] = [];
+  for (let i = 0; i < marcas.length; i++) {
+    const marca = marcas[i];
+    const inicio = (marca.index ?? 0) + marca[0].length;
+    const fin = i + 1 < marcas.length ? marcas[i + 1].index : texto.length;
+    let contenido = texto.slice(inicio, fin).trim();
+    const numeroActual = Number(marca[1]);
+    const numeroSiguiente = i + 1 < marcas.length ? Number(marcas[i + 1][1]) : 0;
+
+    // En un trámite puede comenzar una segunda secuencia condicional.
+    // Mantener el encabezado del relevamiento en vez de sumarlo al paso anterior.
+    if (numeroSiguiente === 1 && numeroActual !== 1) {
+      const separacion = contenido.match(/^([\s\S]+?)\n\s*\n([\s\S]+)$/);
+      if (separacion) {
+        contenido = separacion[1].trim();
+        grupo.push(contenido);
+        agregarPasos(bloques, grupo);
+        grupo = [];
+        bloques.push({ tipo: 'texto', texto: separacion[2].trim() });
+        continue;
+      }
+    }
+
+    grupo.push(contenido);
+    if (numeroSiguiente === 1 && numeroActual !== 1) {
+      agregarPasos(bloques, grupo);
+      grupo = [];
+    }
+  }
+  agregarPasos(bloques, grupo);
+  return bloques;
+}
+
+export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
+  if (tramite.id === 'R036') return [{ tipo: 'pasos', items: [...fichaR036.pasos] }];
+
+  const texto = (tramite.pasos || tramite.comoIniciar).trim().replace(/\r\n?/g, '\n');
+  if (!texto || /^[.\s-]+$/.test(texto)) return [];
+
+  const lineas = texto.split('\n').map(linea => linea.trim()).filter(Boolean);
+  const numerosSueltos = parsearNumerosSueltos(lineas);
+  if (numerosSueltos) return numerosSueltos;
+
+  const numerados = parsearNumerosEnTexto(texto);
+  if (numerados) return numerados;
+
+  if (lineas.length > 1) {
+    const items = lineas.map(linea => linea.replace(/^\s*[-•]\s*/, '').trim()).filter(Boolean);
+    // R033 registra documentación en la columna de procedimiento.
+    // No transformar esos nombres de documentos en pasos numerados falsos.
+    const parecenDocumentos = items.some(item =>
+      /^(?:DNI|título de propiedad|formulario \d+|denuncia policial)\b/i.test(item));
+    return [{ tipo: parecenDocumentos ? 'lista' : 'pasos', items }];
+  }
+
+  return [{ tipo: 'texto', texto }];
+}
+
+/** Compatibilidad para consumidores que solamente necesitan un listado de pasos. */
 export function pasosPublicos(tramite: Tramite): string[] {
-  if (tramite.id === 'R036') return [...fichaR036.pasos];
-
-  const texto = (tramite.pasos || tramite.comoIniciar).trim();
-  if (!texto) return [];
-
-  const lineas = texto.split(/\r?\n/).map((linea) => linea.trim()).filter(Boolean);
-  if (lineas.length >= 4 && lineas.length % 2 === 0 &&
-    lineas.every((linea, indice) => indice % 2 === 1 || /^\d{1,2}[).]?$/.test(linea))) {
-    return lineas.filter((_, indice) => indice % 2 === 1);
-  }
-
-  if (lineas.length >= 2 && lineas.every((linea) => /^\d+[).]\s+\S/.test(linea))) {
-    return lineas.map((linea) => linea.replace(/^\d+[).]\s+/, '').trim());
-  }
-
-  return [];
+  return bloquesProcedimiento(tramite)
+    .filter((bloque): bloque is Extract<BloqueProcedimiento, { tipo: 'pasos' }> => bloque.tipo === 'pasos')
+    .flatMap(bloque => bloque.items);
 }
 
 
