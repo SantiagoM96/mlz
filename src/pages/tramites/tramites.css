@@ -668,3 +668,7 @@
 /* Chips medianos informativos para modalidades del catálogo. */
 .tram-modalidad-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .tram-modalidad-chip { display: inline-flex; align-items: center; min-height: 28px; padding: 4px 10px; border-radius: 4px; background: #e5f0f9; color: var(--color-info-500); font-size: 14px; font-weight: 500; line-height: 20px; }
+
+/* Modalidades diferenciadas: violeta para Online y verde para Presencial. */
+.tram-modalidad-chip--online { background: #f0e8ff; color: #6932a8; }
+.tram-modalidad-chip--presencial { background: #e2f5e9; color: #18753b; }
