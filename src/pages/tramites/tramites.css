@@ -206,3 +206,7 @@
   .tram-group-heading h2 { display: flex; flex-direction: column; gap: 8px; }
   .tram-group-heading h2 small { font-size: 14px; font-weight: 400; }
 }
+
+.tram-timeline li { position: relative; }
+.tram-timeline li:not(:last-child)::before { content: ''; position: absolute; top: 36px; bottom: 0; left: 17px; width: 2px; background: var(--color-primary-500); }
+.tram-timeline li:not(:last-child) .tram-timeline-marker::after { display: none; }
