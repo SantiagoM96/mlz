@@ -13,7 +13,7 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await page.getByRole('button', { name: 'Tema', exact: true }).click();
   const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
   await expect(menu).toBeVisible();
-  await menu.getByRole('checkbox', { name: 'Vehículos y tránsito' }).check();
+  await menu.getByText('Vehículos y tránsito', { exact: true }).click();
   await menu.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
@@ -25,7 +25,10 @@ test('ficha R036: índice de Jóvenes, contenido de Figma y sin campos descartad
   await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(4);
   await expect(page.locator('#procedimiento .tram-timeline li')).toHaveCount(3);
   await expect(page.getByRole('navigation', { name: 'Índice de la ficha' }).first()).toBeVisible();
-  await expect(page.locator('.tram-detail-aside').getByRole('heading', { name: 'Índice' })).toBeVisible();
+  const visibleIndex = (page.viewportSize()?.width ?? 1415) <= 680
+    ? page.locator('.tram-detail-mobile-tools')
+    : page.locator('.tram-detail-aside');
+  await expect(visibleIndex.getByRole('heading', { name: 'Índice' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Imprimir' }).first()).toBeVisible();
   await expect(page.locator('#costos')).toHaveCount(0);
   await expect(page.locator('#normativa')).toHaveCount(0);
