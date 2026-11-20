@@ -276,42 +276,68 @@
   font-weight: 700;
   overflow-wrap: anywhere;
 }
-.tram-timeline { padding: 0; margin: 0; list-style: none; }
+/* Timeline de Figma: columna del marcador 36, círculo 30, gap 24 desktop / 16 mobile. */
+.tram-procedure-blocks { display: grid; gap: 16px; min-width: 0; }
+.tram-timeline { display: grid; gap: 0; padding: 0; margin: 0; list-style: none; }
 .tram-timeline li {
   position: relative;
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr);
   align-items: start;
-  gap: 16px;
+  column-gap: 24px;
+  min-width: 0;
   min-height: 70px;
-  padding-bottom: 24px;
+  padding: 12px 0 16px;
   color: var(--color-primary-600);
   font-size: 18px;
   line-height: 26px;
   font-weight: 700;
 }
-.tram-timeline li:last-child { padding-bottom: 0; min-height: 36px; }
+.tram-timeline li:last-child { min-height: 54px; padding-bottom: 0; }
 .tram-timeline li:not(:last-child)::before {
   content: '';
   position: absolute;
   left: 17px;
-  top: 36px;
-  bottom: 0;
+  top: 42px;
+  bottom: -12px;
   width: 2px;
   background: color-mix(in srgb, var(--color-primary-600) 55%, transparent);
 }
 .tram-timeline-marker {
+  position: relative;
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  justify-self: center;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: var(--color-primary-600);
   color: #fff;
+  font-family: Inter, sans-serif;
   font-size: 20px;
   line-height: 1;
   font-weight: 700;
+}
+.tram-timeline-text { display: block; min-width: 0; overflow-wrap: anywhere; }
+.tram-procedure-note {
+  margin: 0;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.tram-procedure-list {
+  display: grid;
+  gap: 12px;
+  padding-left: 24px;
+  margin: 0;
+  list-style: disc;
+}
+.tram-procedure-list li { font-size: 18px; line-height: 26px; overflow-wrap: anywhere; }
+.tram-document-icon [data-material-symbol] {
+  width: 24px;
+  height: 24px;
 }
 .tram-turno-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .tram-sedes { display: grid; gap: 24px; }
@@ -582,6 +608,7 @@
   .tram-related-section > h2 { margin-bottom: 16px; }
   .tram-detail-header { gap: 12px; }
   .tram-detail .tram-document-intro { font-weight: 700; }
+  .tram-timeline li { column-gap: 16px; }
   .tram-related-grid { grid-template-columns: minmax(0, 1fr); }
   .tram-related-card { gap: 12px; }
   .tram-location-map { height: 180px; }
