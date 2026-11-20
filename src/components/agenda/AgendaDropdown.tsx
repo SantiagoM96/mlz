@@ -21,6 +21,8 @@ type FilterDropdownProps = {
   triggerIcon?: 'expand_more' | 'tune';
   panelTitle?: string;
   searchable?: boolean;
+  /** Control visual opcional para selecciones exclusivas de otros módulos; Agenda conserva sus checkboxes. */
+  selectionControl?: 'checkbox' | 'radio';
 };
 
 /**
@@ -29,7 +31,7 @@ type FilterDropdownProps = {
  */
 export function AgendaDropdown({
   label, options, selected, resultCount, onChange, multiple = false, align = 'start',
-  triggerIcon = 'expand_more', panelTitle, searchable,
+  triggerIcon = 'expand_more', panelTitle, searchable, selectionControl = 'checkbox',
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
@@ -130,10 +132,10 @@ export function AgendaDropdown({
                       : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
-                  <input type="checkbox" checked={checked} onChange={() => toggle(option)}
+                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onChange={() => toggle(option)}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <span aria-hidden="true"
-                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center rounded-[2px] border-2
+                    className={`agenda-motion-check relative z-10 grid size-5 shrink-0 place-items-center border-2 ${selectionControl === 'radio' ? 'rounded-full' : 'rounded-[2px]'}
                       ${checked ? 'border-white bg-transparent text-white' : 'border-primary-600 bg-white text-primary-600'}`}>
                     {checked && <MaterialIcon name="check" size={16} className="text-white" />}
                   </span>
