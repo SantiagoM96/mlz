@@ -7,7 +7,7 @@ import { TableOfContents } from '../../components/ui/TableOfContents';
 import { copyToClipboard } from '../../components/ui/copyToClipboard';
 import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
-import { documentacionPublica, pasosPublicos, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
+import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import { TramitesBackToTop } from './TramitesBackToTop';
 import { iconoDestinatario } from './tramites-icons';
@@ -228,17 +228,26 @@ function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
 }
 
 function ProcedimientoFicha({ tramite }: { tramite: Tramite }) {
-  const texto = tramite.pasos || tramite.comoIniciar;
-  const pasos = pasosPublicos(tramite);
-  if (!texto.trim() && !pasos.length) return null;
+  const bloques = bloquesProcedimiento(tramite);
+  if (!bloques.length) return null;
+
   return <section className="tram-detail-section" id="procedimiento">
     <h2>¿Cómo se realiza?</h2>
-    {pasos.length > 0 ? <ol className="tram-timeline">{pasos.map((paso, index) =>
-      <li key={index}>
-        <span className="tram-timeline-marker">{index + 1}</span>
-        <span>{paso}</span>
-      </li>
-    )}</ol> : <p className="tram-longtext">{texto}</p>}
+    <div className="tram-procedure-blocks">
+      {bloques.map((bloque, bloqueIndex) => {
+        if (bloque.tipo === 'texto') return <p key={bloqueIndex}
+          className="tram-longtext tram-procedure-note">{bloque.texto}</p>;
+        if (bloque.tipo === 'lista') return <ul key={bloqueIndex}
+          className="tram-procedure-list">{bloque.items.map((item, indice) =>
+            <li key={indice}>{textoPublicoLegible(item)}</li>)}</ul>;
+        return <ol className="tram-timeline" key={bloqueIndex}>
+          {bloque.items.map((paso, index) => <li key={index}>
+            <span className="tram-timeline-marker">{index + 1}</span>
+            <span className="tram-timeline-text">{textoPublicoLegible(paso)}</span>
+          </li>)}
+        </ol>;
+      })}
+    </div>
   </section>;
 }
 
@@ -333,7 +342,7 @@ export function TramiteDetailPage() {
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 },
     { id: 'documentacion', titulo: 'Documentación', visible: documentacionPublica(tramite).length > 0 },
-    { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: Boolean(tramite.pasos.trim() || tramite.comoIniciar.trim()) },
+    { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: bloquesProcedimiento(tramite).length > 0 },
     { id: 'donde-cuando', titulo: 'Dónde y cuándo', visible: Boolean(tramite.direccion.trim() || tramite.horarios.trim() || tramite.turno.trim()) },
     { id: 'otros-tramites', titulo: 'Otros trámites del tema', visible: otrosTramites.length > 0 },
   ].filter((seccion) => seccion.visible);
