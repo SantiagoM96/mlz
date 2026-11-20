@@ -200,12 +200,15 @@ test('Compartir copia la URL como Agenda y cambia ícono de enlace a check', asy
     });
   });
   await page.goto('/tramites/R018');
-  const share = page.locator('.tram-detail-aside').getByRole('button', { name: 'Compartir' });
+  const actions = (page.viewportSize()?.width ?? 1415) <= 680
+    ? page.locator('.tram-detail-mobile-tools')
+    : page.locator('.tram-detail-aside');
+  const share = actions.getByRole('button', { name: 'Compartir' });
   await expect(share.locator('[data-material-symbol="link"]')).toBeVisible();
   await share.click();
-  const copied = page.locator('.tram-detail-aside').getByRole('button', { name: 'Enlace copiado' });
+  const copied = actions.getByRole('button', { name: 'Enlace copiado' });
   await expect(copied.locator('[data-material-symbol="check"]')).toBeVisible();
-  await expect(page.locator('.tram-detail-aside [role="status"]'))
+  await expect(actions.locator('[role="status"]'))
     .toContainText('Enlace copiado al portapapeles');
   expect(await page.evaluate(() => (window as Window & { lastCopiedLink?: string }).lastCopiedLink))
     .toContain('/tramites/R018');
