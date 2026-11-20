@@ -19,7 +19,8 @@
     "test:e2e": "playwright test",
     "test:visual": "playwright test tests/e2e/visual.spec.ts",
     "test:visual:report": "playwright show-report",
-    "validate:tramites": "node scripts/validate-tramites-editorial.mjs"
+    "validate:tramites": "node scripts/validate-tramites-editorial.mjs",
+    "sync:tramites": "node scripts/generate-tramites-from-base-final.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
