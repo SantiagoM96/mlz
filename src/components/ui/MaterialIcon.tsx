@@ -38,7 +38,12 @@ export type MaterialIconName =
   | 'groups'
   | 'record_voice_over'
   | 'star'
-  | 'info';
+  | 'info'
+  | 'share'
+  | 'print'
+  | 'description'
+  | 'event'
+  | 'receipt_long';
 
 export type MaterialIconProps = {
   name: MaterialIconName;
