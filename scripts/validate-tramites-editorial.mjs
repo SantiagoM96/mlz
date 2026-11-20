@@ -13,6 +13,11 @@ for (const [index, item] of tramites.entries()) {
   assert.match(item.id, idPattern, 'ID inválido en índice ' + index);
   assert.ok(!ids.has(item.id), 'ID duplicado: ' + item.id);
   ids.add(item.id);
+  assert.ok(Number.isInteger(item.filaOrigen) && item.filaOrigen >= 2 && item.filaOrigen <= 134, item.id + ': fila de origen inválida');
+  assert.ok(!/[\\w.+-]+@[\\w.-]+\\.[A-Z]{2,}/i.test(JSON.stringify(item)), item.id + ': posible contacto privado');
+  for (const link of [item.web, item.normativaUrl, ...(item.otrosEnlaces ?? [])]) {
+    if (link) assert.match(link, /^https?:\\/\\/[^\\s]+$/i, item.id + ': URL de origen no válida');
+  }
   for (const key of ['categoria', 'titulo', 'descripcion', 'modalidad']) {
     assert.equal(typeof item[key], 'string', item.id + ': ' + key);
     assert.ok(item[key].trim(), item.id + ': campo editorial vacío ' + key);
@@ -62,6 +67,7 @@ if (process.argv[2]) {
   for (const sourceRow of catalog) {
     const actual = tramites.find(item => item.id === sourceRow[0]);
     assert.ok(actual, 'No existe ' + sourceRow[0]);
+    assert.equal(actual.filaOrigen, Number(sourceRow[15]), actual.id + ': fila de origen incorrecta');
     for (const [position, field] of [[1, 'categoria'], [2, 'titulo'], [3, 'descripcion'], [4, 'modalidad'], [9, 'sinonimos']]) {
       assert.equal(actual[field], sourceRow[position] || '', actual.id + ': difiere ' + field);
     }
