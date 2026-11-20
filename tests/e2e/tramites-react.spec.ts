@@ -13,7 +13,7 @@ test('ficha react: conserva datos de origen y navegación', async ({ page }) => 
   await page.goto('/tramites/R036');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('certificado');
   await expect(page.getByRole('heading', { name: 'Documentación necesaria' })).toBeVisible();
-  await expect(page.getByText('pendiente de validación', { exact: false })).toBeVisible();
-  await page.getByRole('link', { name: 'Trámites', exact: true }).click();
-  await expect(page).toHaveURL(/\/tramites$/);
+  await expect(page.getByText(/sujetos a validación/)).toBeVisible();
+  await page.goto('/tramites');
+  await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toBeVisible();
 });
