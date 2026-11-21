@@ -1235,3 +1235,9 @@
   line-height: 21px;
 }
 .tram-detail .tram-timeline-marker { line-height: 1; }
+
+/* Descripciones de «Otros trámites del tema»: 18/21 px. */
+.tram-detail .tram-related-card p {
+  font-size: 18px;
+  line-height: 21px;
+}
