@@ -991,3 +991,40 @@
 .tram-detail .tram-location-card,
 .tram-detail .tram-contact-help,
 .tram-detail .tram-support-hours { border-radius: 8px; }
+
+/* Tarjeta de sede: cuatro bloques a 16px; mapa a altura de contenido, sin recorte. */
+.tram-detail .tram-location-card-top {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+.tram-detail .tram-location-card-details {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  padding: 24px;
+}
+.tram-detail .tram-location-card-details h2 { margin: 0; }
+.tram-detail .tram-location-card .tram-turno-tags { margin: 0; }
+.tram-detail .tram-location-card .tram-location-info { gap: 16px; }
+.tram-detail .tram-location-card .tram-location-map-link {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0;
+  border: 0;
+}
+.tram-detail .tram-location-address strong,
+.tram-detail .tram-location-address span { display: block; font-size: 18px; line-height: 26px; }
+.tram-detail .tram-location-address strong { font-weight: 700; }
+.tram-detail .tram-location-address span { font-weight: 400; }
+.tram-detail .tram-location-card .tram-location-map {
+  height: 100%;
+  min-height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+@media (max-width: 680px) {
+  .tram-detail .tram-location-card-top { grid-template-columns: minmax(0, 1fr); }
+  .tram-detail .tram-location-card-details { padding: 24px; }
+  .tram-detail .tram-location-card .tram-location-map { height: 220px; min-height: 220px; }
+}
