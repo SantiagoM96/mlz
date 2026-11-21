@@ -12,9 +12,9 @@
 ## Cifras de revisión
 - Registros analizados: **125**.
 - Segmentos propuestos para evaluación: **513**.
-- Familias o nombres normalizados: **143**.
+- Familias o nombres normalizados: **146**.
 - Registros que contienen segmentos de baja certeza: **14**.
-- Fragmentos marcados para revisión editorial/contextual: **132**.
+- Fragmentos marcados para revisión editorial/contextual: **298**.
 - Casos sin segmentos: **0**.
 
 ## Advertencias de método
@@ -31,3 +31,11 @@ Segmentos propuestos: Plano del proyecto · Factura de Edesur vigente · Escritu
 **Pendiente**: «Aysa» no identifica el documento solicitado. También «impuesto municipal» requiere precisar si basta boleta o se pide pago/libre deuda.
 
 **Fuente**: https://github.com/SantiagoM96/mlz/blob/main/src/data/tramites.json
+
+## Consideraciones de clasificación
+- **22 segmentos en 14 trámites** tienen incertidumbres explícitas que impiden afirmar el documento exacto sin consultar al área correspondiente.
+- **298 filas** integran la vista amplia de revisión: incluyen ítems condicionales, datos, notas y otros casos que necesitan clasificación contextual. No deben interpretarse como 298 errores.
+- Los **513 segmentos** son una propuesta auditable, no una versión lista para publicación. Las condiciones y alternativas de cada trámite deben conservarse al separar requisitos en fichas.
+- Se revisaron todas las cadenas disponibles en el catálogo publicado. No se volvió a descargar el Excel editorial original durante esta auditoría; antes de cambiar la web conviene validar las propuestas contra la fuente editorial y las áreas responsables.
+- `R092` («Título de propiedad de D.N.I.»): no se presume que signifique «título de propiedad y DNI».
+- `R051`: las imágenes de estudios clínicos se agrupan como evidencias médicas, no fotografías generales.
