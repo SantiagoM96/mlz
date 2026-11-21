@@ -35,7 +35,13 @@ try{
   assert.equal(await page.locator('.editorial-text-writing .cronica-rich-headline').count(),0,brand+' restored field');
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').click({force:true});
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
-  assert.equal(await field.innerText(),'Probando el editor móvil');
+  assert.equal(await field.textContent(),'Probando el editor móvil');
+  if(brand==='cronica')assert.equal(await field.evaluate(n=>getComputedStyle(n).textTransform),'uppercase');
+  await page.setViewportSize({width:432,height:900});
+  assert.ok(await page.locator('.editorial-text-dialog').evaluate(n=>n.getBoundingClientRect().right<=innerWidth));
+  await page.setViewportSize({width:768,height:1024});
+  await page.waitForTimeout(100);
+  assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   await page.setViewportSize({width:1415,height:900});
   await page.waitForTimeout(100);
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
