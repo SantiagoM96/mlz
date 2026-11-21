@@ -62,7 +62,8 @@ const documentosEnumerados: Record<string, string[]> = {
 /** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
 export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
-  if (documentosEnumerados[tramite.id]) return [...documentosEnumerados[tramite.id]];
+  const documentosDelTramite = documentosEnumerados[tramite.id];
+  if (documentosDelTramite) return [...documentosDelTramite];
 
   const texto = tramite.documentacion.trim();
   if (!texto) return [];
