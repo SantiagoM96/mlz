@@ -724,3 +724,10 @@
 @media (max-width: 680px) {
   .tram-group-grid > .tram-row { padding: 24px; }
 }
+
+/* El estado azul del dropdown de ordenar no debe tocar los bordes del panel. */
+.tram-results [data-agenda-sheet="sort"] > button {
+  width: calc(100% - 16px);
+  margin-inline: 8px;
+  padding-inline: 16px;
+}

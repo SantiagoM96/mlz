@@ -35,6 +35,19 @@ function TramitesBreadcrumb({ items }: { items: React.ComponentProps<typeof Brea
   return <div className="tram-breadcrumb-row"><Breadcrumbs items={items} /><TramitesBuildBadge /></div>;
 }
 
+const VISITAS_KEY = 'mlz-tramites-visitas-v1';
+function leerVisitas(): Record<string, number> {
+  try { return JSON.parse(localStorage.getItem(VISITAS_KEY) || '{}') as Record<string, number>; }
+  catch { return {}; }
+}
+function registrarVisita(id: string) {
+  try {
+    const visitas = leerVisitas();
+    visitas[id] = (visitas[id] || 0) + 1;
+    localStorage.setItem(VISITAS_KEY, JSON.stringify(visitas));
+  } catch { /* El acceso a almacenamiento puede estar bloqueado. */ }
+}
+
 const base = '/tramites';
 const ficha = (id: string) => base + '/' + id;
 function Etiquetas({ items, activa, onSeleccionar }: {
@@ -72,7 +85,7 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
           ))}
         </div>
         <div className="tram-row-actions">
-          <Link className="tram-link-action" to={ficha(tramite.id)}>Ver trámite</Link>
+          <Link className="tram-link-action" to={ficha(tramite.id)} onClick={() => registrarVisita(tramite.id)}>Ver trámite</Link>
         </div>
       </div>
       <div className="tram-row-side">
@@ -111,7 +124,7 @@ export function TramitesCatalogPage() {
   const modalidad = params.get('modalidad') ?? '';
   const turno = params.get('turno') ?? '';
   const etiqueta = params.get('etiqueta') ?? '';
-  const orden = params.get('orden') === 'az' ? 'az' : 'tema';
+  const orden = params.get('orden') === 'az' ? 'az' : params.get('orden') === 'recurrencia' ? 'recurrencia' : 'tema';
   const valores: FiltrosTramites = { destinatario, tema, turno, modalidad, etiqueta };
   const modalidades = useMemo(() => Array.from(new Set(tramites.map(t => t.modalidad))), []);
   const limpiarOpciones = () => setParams(actual => {
@@ -121,7 +134,7 @@ export function TramitesCatalogPage() {
   }, { replace: true });
 
   const limpiarTodo = () => setParams(actual => new URLSearchParams(
-    actual.get('orden') === 'az' ? { orden: 'az' } : {}
+    actual.get('orden') === 'az' ? { orden: 'az' } : actual.get('orden') === 'recurrencia' ? { orden: 'recurrencia' } : {}
   ), { replace: true });
   const cambiarFiltro = (campo: (typeof camposFiltro)[number], valor: string) => {
     if (campo === 'destinatario') {
@@ -149,12 +162,15 @@ export function TramitesCatalogPage() {
       (!turno || (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
         (turno === 'No requiere turno' && /^no$/i.test(t.turno.trim())))
     );
+    const visitas = orden === 'recurrencia' ? leerVisitas() : {};
     return orden === 'az'
       ? [...rows].sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
-      : rows;
+      : orden === 'recurrencia'
+        ? [...rows].sort((a, b) => (visitas[b.id] || 0) - (visitas[a.id] || 0))
+        : rows;
   }, [diferida, tema, destinatario, modalidad, turno, etiqueta, orden]);
 
-  const grupos = useMemo(() => orden === 'az'
+  const grupos = useMemo(() => orden !== 'tema'
     ? [{ nombre: '', items: filtrados }]
     : temas.map((nombre) => ({ nombre, items: filtrados.filter((tramite) => tramite.categoria === nombre) })).filter((grupo) => grupo.items.length > 0), [filtrados, orden]);
 
@@ -223,12 +239,12 @@ export function TramitesCatalogPage() {
         onClear={limpiarTodo}
       />}
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
-        <AgendaSortDropdown ghost value={orden === 'az' ? 'az' : 'default'}
-          options={[{ value: 'default', text: 'Por tema' }, { value: 'az', text: 'Alfabético A–Z' }]}
+        <AgendaSortDropdown ghost value={orden === 'tema' ? 'default' : orden}
+          options={[{ value: 'default', text: 'Por tema' }, { value: 'az', text: 'Alfabético A–Z' }, { value: 'recurrencia', text: 'Por recurrencia' }]}
           title="Ordenar trámites"
-          onChange={(value) => elegirValor(setParams, 'orden', value === 'az' ? 'az' : '')} />
+          onChange={(value) => elegirValor(setParams, 'orden', value === 'az' ? 'az' : value === 'recurrencia' ? 'recurrencia' : '')} />
       </div>
-      {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || 'Trámites ordenados alfabéticamente'}>
+      {grupos.length ? grupos.map((grupo) => <section className="tram-group" key={grupo.nombre || 'az'} aria-label={grupo.nombre || (orden === 'recurrencia' ? 'Trámites ordenados por recurrencia' : 'Trámites ordenados alfabéticamente')}>
         {!!grupo.nombre && <div className="tram-group-heading"><h2>{grupo.nombre}</h2>{!tema && <button type="button" onClick={() => { elegirValor(setParams, 'tema', grupo.nombre); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Ver todo</button>}</div>}
         <div className="tram-group-grid">{grupo.items.map((tramite) => <FilaTramite key={tramite.id} tramite={tramite}
           etiquetaActiva={etiqueta} onElegirEtiqueta={elegirEtiqueta} />)}</div>
