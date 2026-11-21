@@ -16,6 +16,7 @@ export type MaterialIconName =
   | 'search'
   | 'calendar_month'
   | 'event_available'
+  | 'event_busy'
   | 'schedule'
   | 'expand_more'
   | 'filter_list'
