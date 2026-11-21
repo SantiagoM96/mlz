@@ -33,10 +33,8 @@ export function TramitesMoreFilters({
   const buttonRef = useRef<HTMLButtonElement>(null);
   useAgendaOutsideDismiss(open, rootRef, buttonRef, () => setOpen(false));
 
-  // El contador usa la cantidad total de selecciones, como en Agenda.
-  // Las opciones elegidas afuera y dentro del panel leen exactamente el mismo estado.
-  const count = value.destinatario.length +
-    Number(Boolean(value.tema)) + Number(Boolean(value.turno)) +
+  // Contar solo los filtros adicionales: Tema y destinatarios ya tienen control propio.
+  const count = Number(Boolean(value.turno)) +
     Number(Boolean(value.modalidad)) + Number(Boolean(value.etiqueta));
   const groups = [
     { key: 'destinatario', title: '¿Para quién es?', options: destinatarios,
