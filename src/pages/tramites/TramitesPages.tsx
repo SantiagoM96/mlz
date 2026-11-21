@@ -260,7 +260,7 @@ export function TramitesCatalogPage() {
           />
           {busqueda ? (
             <button type="button" aria-label="Borrar búsqueda" onClick={() => elegirValor(setParams, 'q', '')}>
-              <MaterialIcon name="close" size={24}/>
+              <MaterialIcon name="close" size={18}/>
             </button>
           ) : <MaterialIcon name="search" size={24} className="tram-search-icon" />}
         </label>
