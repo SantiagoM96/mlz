@@ -486,12 +486,11 @@ export function TramiteDetailPage() {
         <ProcedimientoFicha tramite={tramite}/>
         <SedeFicha tramite={tramite}/>
         <OtrosTramitesFicha items={otrosTramites}/>
-        <div className="tram-detail-mobile-help"><AyudaFicha/></div>
+        <AyudaFicha/>
       </article>
       <aside className="tram-detail-aside">
         <AccionesFicha />
         <IndiceFicha secciones={secciones} />
-        <AyudaFicha/>
       </aside>
     </div>
   </PageContainer>;
