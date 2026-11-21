@@ -35,7 +35,8 @@ Un párrafo narrativo sin enumeración verificable **no** se divide mecánicamen
 - Cuando ORIGEN da una lista real de documentos, se conservan los ítems y el diseño con ícono de archivo.
 - Cuando indica «No hay», «No se requiere», «Ninguna», «No» o un guion, no se muestra una falsa lista documental.
 - Cuando no identifica la documentación con suficiente precisión («Varias», «No lo dice el portal» o remisión genérica a un área), se oculta el ícono de documento y se marca como pendiente editorial, **sin afirmar falsamente que no requiere documentación**.
-- Total de **13 fichas** sin ítems documentales publicables según esta regla: R124, R031, R043, R057, R058, R059, R060, R061, R064, R070, R072, R035, R051. El índice tampoco muestra anclas a secciones ausentes.
+- Total de **12 fichas** sin documentos ni notas publicables: R124, R031, R043, R057, R058, R059, R060, R061, R064, R070, R072, R035. El índice tampoco muestra anclas a secciones ausentes.
+- **R051 y R116** contienen información documental específica o condicional escrita como texto explicativo. Se conserva íntegra como nota dentro de Documentación, sin mostrar un documento ficticio con ícono.
 
 ## Pendientes editoriales (sin suposiciones)
 
@@ -44,7 +45,7 @@ Un párrafo narrativo sin enumeración verificable **no** se divide mecánicamen
 | R031 | ORIGEN dice «no lo dice el PORTAL»: falta detalle de documentos |
 | R035 | ORIGEN remite a Mesa de Entradas/eLomas para conocer documentación; el circuito interno es un texto sin hitos inequívocos |
 | R043 | ORIGEN sólo dice «varias» como documentación |
-| R051 | ORIGEN remite a «requisitos anteriormente mencionados», sin lista documental pública concreta |
+| R051 | ORIGEN describe documentación por programa y detalla resumen de historia clínica, órdenes médicas e imágenes: se muestra como nota completa; requiere decisión editorial para desglosar los documentos por tipo de gestión |
 | R052 y R125 | ORIGEN registra «.» en lugar del circuito de pasos; se omite «¿Cómo se realiza?» |
 | R033 | La columna de procedimiento enumera documentos, no acciones; se conserva lista simple, no se inventa timeline |
 | R034 | La columna de circuito enumera dependencias internas; validar si esa secuencia debería presentarse al vecino |
@@ -155,7 +156,7 @@ Un párrafo narrativo sin enumeración verificable **no** se divide mecánicamen
 | R011 | Solicitar atención en el servicio terapéutico y TEA | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
 | R012 | Solicitar vacante en el Taller Protegido o un Centro de Día | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
 | R013 | Inscribirse en el relevamiento de personas electrodependientes | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
-| R051 | Solicitar estudios, prótesis, oxígeno o medicamentos | Omitido (no especificado/no requerido) | Descripción sin enumeración inequívoca |
+| R051 | Solicitar estudios, prótesis, oxígeno o medicamentos | Nota documental de ORIGEN (sin ícono ficticio) | Descripción sin enumeración inequívoca |
 | R052 | Solicitar turnos en centros de salud y hospitales | Listado desde ORIGEN | Sin procedimiento informado |
 | R053 | Obtener la libreta sanitaria | Listado desde ORIGEN | Pasos numerados (texto) |
 | R054 | Sacar turno para castrar a una mascota | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
@@ -175,7 +176,7 @@ Un párrafo narrativo sin enumeración verificable **no** se divide mecánicamen
 | R104 | Solicitar un artista o equipo de sonido para una institución | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
 | R114 | Tramitar el DNI o actualizar tus datos | Listado desde ORIGEN | Pasos numerados (1-) |
 | R115 | Solicitar el pasaporte argentino | Listado desde ORIGEN | Pasos numerados (1-) |
-| R116 | Solicitar acompañamiento para tramitar documentación personal | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
+| R116 | Solicitar acompañamiento para tramitar documentación personal | Nota condicional de ORIGEN (sin ícono ficticio) | Descripción sin enumeración inequívoca |
 | R118 | Recibir orientación para regularización migratoria y DNI | Listado desde ORIGEN | Pasos numerados (1-) |
 | R003 | Solicitar el reconocimiento del Municipio para una institución | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
 | R004 | Gestionar la personería jurídica de una institución | Listado desde ORIGEN | Descripción sin enumeración inequívoca |
