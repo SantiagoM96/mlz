@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Tramite } from '../../src/data/tramites';
-import { bloquesProcedimiento, documentacionPublica, notaDocumentacionPublica } from '../../src/pages/tramites/tramites-format';
+import { bloquesProcedimiento, documentacionPublica, notaDocumentacionPublica, textoPublicoLegible } from '../../src/pages/tramites/tramites-format';
 
 const tramites = JSON.parse(readFileSync(resolve('src/data/tramites.json'), 'utf8')) as Tramite[];
 
@@ -51,6 +51,13 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
       .toHaveCount(documentos.length || notaDocumental ? 1 : 0);
     await expect(page.locator('#documentacion .tram-document-note'), registro.id + ': nota documental')
       .toHaveCount(notaDocumental ? 1 : 0);
+    expect(await page.locator('#documentacion .tram-documents li > span:last-child').allTextContents(),
+      registro.id + ': identidad documental por contenido')
+      .toEqual(documentos.map(textoPublicoLegible));
+    if (notaDocumental) {
+      await expect(page.locator('#documentacion .tram-document-note'), registro.id + ': nota de origen')
+        .toHaveText(textoPublicoLegible(notaDocumental));
+    }
     await expect(page.locator('#documentacion .tram-document-intro'),
       registro.id + ': sin frase genérica').toHaveCount(0);
     await expect(page.locator('#procedimiento'), registro.id + ': bloque condicional')
@@ -61,6 +68,15 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
       .toHaveCount(cantidadListas);
     await expect(page.locator('#procedimiento .tram-procedure-note'), registro.id + ': notas')
       .toHaveCount(cantidadTextos);
+    expect(await page.locator('#procedimiento .tram-timeline-text').allTextContents(),
+      registro.id + ': contenido de cada paso, sin cruces con otros trámites')
+      .toEqual(bloques.flatMap(b => b.tipo === 'pasos' ? b.items.map(textoPublicoLegible) : []));
+    expect(await page.locator('#procedimiento .tram-procedure-list li').allTextContents(),
+      registro.id + ': lista fiel al origen')
+      .toEqual(bloques.flatMap(b => b.tipo === 'lista' ? b.items.map(textoPublicoLegible) : []));
+    expect(await page.locator('#procedimiento .tram-procedure-note').allTextContents(),
+      registro.id + ': notas fieles al origen')
+      .toEqual(bloques.flatMap(b => b.tipo === 'texto' ? [b.texto] : []));
     await expect(page.locator('.tram-detail .tram-start-link'), registro.id + ': sin CTA genérico')
       .toHaveCount(0);
 
