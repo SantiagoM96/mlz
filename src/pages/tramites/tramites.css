@@ -1137,10 +1137,10 @@
 
 /* Ayuda: superficie y trazos neutros según Andy Kit (Natural/Grey). */
 .tram-detail .tram-detail-main > .tram-contact-help {
-  background: #e7e7e7; /* Natural/Grey 100 */
+  background: #f6f6f6; /* Natural/Grey 50 */
   border-color: #d1d1d1; /* Natural/Grey 200 */
 }
 .tram-detail .tram-contact-help .tram-help-icon {
-  background: #f6f6f6; /* Natural/Grey 50 */
+  background: #e7e7e7; /* Natural/Grey 100 */
   border: 1px solid #d1d1d1;
 }
