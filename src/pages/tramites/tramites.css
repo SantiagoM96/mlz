@@ -102,14 +102,31 @@
 /* AgendaSelectedFilterChips aporta el estilo visual compartido.
    Aquí solo se ajusta el ritmo vertical propio del catálogo. */
 .tram-active-filters + .tram-results { margin-top: 24px; }
-/* «Limpiar» en los chips y paneles de Trámites usa Info 500, igual que
-   las burbujas de filtros aplicados. No afecta los filtros de Agenda. */
+/* Limpiar: acción terciaria (ghost) en Primario 600.
+   No modificar el estilo de las burbujas Info 500 ni los filtros de Agenda. */
 .tram-container .agenda-filter-clear,
-.tram-container .agenda-filter-popover > div:last-child > button:last-child {
-  color: var(--color-info-500);
+.tram-container .agenda-filter-popover > div:last-child > button:last-child,
+.tram-container .agenda-more-panel > div:last-child > button:last-child {
+  color: var(--color-primary-600);
+}
+.tram-container .agenda-filter-clear {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.tram-container .agenda-filter-clear:hover {
+  color: var(--color-primary-600);
+  background: var(--color-panel);
+  text-decoration: none;
+}
+.tram-container .agenda-filter-clear:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: 2px;
 }
 .tram-container .agenda-more-panel > div:last-child > button:last-child {
-  border-color: var(--color-info-500);
+  border-color: var(--color-primary-600);
 }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
 /* En desktop el wrapper no altera la composición del componente compartido. */
