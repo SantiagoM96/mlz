@@ -14,6 +14,8 @@ type FilterDropdownProps = {
   options: readonly string[];
   selected: string[];
   resultCount: number;
+  /** Conteos contextuales por opción; opcional para no alterar Agenda. */
+  optionCounts?: Readonly<Record<string, number>>;
   onChange: (values: string[]) => void;
   multiple?: boolean;
   align?: 'start' | 'end' | 'end-responsive';
@@ -34,7 +36,7 @@ type FilterDropdownProps = {
  * de MLZ UI KIT, con buscador y acciones explícitas.
  */
 export function AgendaDropdown({
-  label, options, selected, resultCount, onChange, multiple = false, align = 'start',
+  label, options, selected, resultCount, optionCounts, onChange, multiple = false, align = 'start',
   triggerIcon = 'expand_more', panelTitle, searchable, selectionControl = 'checkbox',
   showSelectedLabel = false, reserveCounterSpace = false,
 }: FilterDropdownProps) {
@@ -143,6 +145,7 @@ export function AgendaDropdown({
                       : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
+                  {optionCounts && <span aria-hidden="true" className={`relative z-10 shrink-0 text-[14px] tabular-nums ${checked ? "text-white" : "text-grey-900"}`}>{optionCounts[option] ?? 0}</span>}
                   <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onClick={(event) => { if (selectionControl === 'radio' && checked) { event.preventDefault(); toggle(option); } }} onChange={() => { if (!checked || !(selectionControl === 'radio')) toggle(option); }}
                     className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
                   <MaterialIcon
