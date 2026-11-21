@@ -267,7 +267,6 @@
   font-weight: 500;
 }
 .tram-audience-tag { border-radius: 6px; }
-.tram-document-intro { margin-bottom: 16px; }
 .tram-documents { display: flex; flex-direction: column; gap: 16px; padding: 0; margin: 0; list-style: none; }
 .tram-documents li { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .tram-document-icon {
@@ -638,7 +637,6 @@
   .tram-detail .tram-related-section { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
   .tram-related-section > h2 { margin-bottom: 16px; }
   .tram-detail-header { gap: 12px; }
-  .tram-detail .tram-document-intro { font-weight: 700; }
   .tram-timeline li { column-gap: 16px; }
   .tram-related-grid { grid-template-columns: minmax(0, 1fr); }
   .tram-related-card { gap: 12px; }
