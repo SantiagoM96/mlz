@@ -21,7 +21,7 @@ try{
   await handle.tap();
 
   const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
-  const add=slides.locator('#addPage,.editor-slide-add-fixed');
+  const add=slides.locator('.carousel-add-placeholder,.editor-slide-add-tile');
   for(let i=0;i<2;i++){
    await add.tap();
    await content.waitFor();
@@ -33,6 +33,7 @@ try{
   await page.locator(design).first().evaluate(n=>n.click());
   await handle.tap();
   const initialPreview=await page.locator('#art').boundingBox();
+  assert.ok(initialPreview.width>=280,brand+' mobile preview keeps its width');
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
   const textCard=content.locator('.modern-text-card,.ds-texts-group');
   await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));

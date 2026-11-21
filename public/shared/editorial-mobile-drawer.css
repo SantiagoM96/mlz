@@ -9,10 +9,11 @@
   }
 
   main.has-editorial-mobile-drawer > :is(.modern-mobile-tabs, .ds-mobile-tabs),
-  .has-editorial-mobile-drawer .preview > :is(
-    .modern-preview-text-editor, .modern-preview-identity-editor,
-    .ds-mobile-text-editor, .ds-mobile-content-editor, .bae-credits
-  ) {
+  html body main.has-editorial-mobile-drawer .modern-track > .preview > :is(
+    .modern-preview-text-editor, .modern-preview-identity-editor
+  ),
+  html body main.has-editorial-mobile-drawer .preview > :is(#dsMobileTextEditor, #dsMobileContentEditor),
+  main.has-editorial-mobile-drawer .preview > .bae-credits {
     display: none !important;
   }
 
@@ -29,6 +30,7 @@
 
   .has-editorial-mobile-drawer :is(.modern-track, .ds-mobile-track) > .preview {
     width: 100% !important;
+    max-width: none !important;
   }
 
   .editorial-mobile-drawer {
