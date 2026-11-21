@@ -1273,3 +1273,6 @@
   border-color: var(--tram-grey-100);
   background: var(--tram-grey-25);
 }
+.tram-detail .tram-related-card:hover .tram-related-icon {
+  background: var(--tram-grey-100);
+}
