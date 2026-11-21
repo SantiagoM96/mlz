@@ -717,3 +717,32 @@ test('ficha final: los casos sin secuencia segura conservan notas, listas y ause
   await page.goto('/tramites/R125');
   await expect(page.locator('#procedimiento')).toHaveCount(0);
 });
+
+test('documentación: distingue archivos, aclaraciones y listados sin íconos ficticios', async ({ page }) => {
+  for (const { id, total } of [
+    { id: 'R010', total: 7 },
+    { id: 'R011', total: 3 },
+    { id: 'R012', total: 2 },
+    { id: 'R013', total: 6 },
+  ]) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion .tram-documents li'), id)
+      .toHaveCount(total);
+  }
+  await page.goto('/tramites/R010');
+  await expect(page.locator('#documentacion .tram-documents li').nth(1))
+    .toContainText('Plano de ubicación de la Sede');
+  await page.goto('/tramites/R012');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('En caso de tener');
+
+  for (const id of ['R015', 'R056', 'R062', 'R077', 'R104', 'R131']) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion .tram-document-note'), id)
+      .toHaveCount(1);
+    await expect(page.locator('#documentacion .tram-documents li'), id)
+      .toHaveCount(0);
+  }
+  await page.goto('/tramites/R077');
+  await expect(page.locator('#documentacion')).not.toContainText('agregariamos un campo');
+});
