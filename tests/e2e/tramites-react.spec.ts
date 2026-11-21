@@ -603,7 +603,7 @@ test('R121 en 390 px: procedimiento se organiza en pasos y no genera desborde', 
 test('auditoría editorial: otras listas de pasos verificables se presentan en el timeline', async ({ page }) => {
   for (const { id, cantidad, primero } of [
     { id: 'R009', cantidad: 4, primero: 'Asesoramiento' },
-    { id: 'R010', cantidad: 6, primero: 'Se recepciona' },
+    { id: 'R010', cantidad: 7, primero: 'Se recepciona' },
     { id: 'R037', cantidad: 3, primero: 'Inicia en Direccion de obras particulares' },
     { id: 'R114', cantidad: 5, primero: 'Recepción de la persona solicitante' },
     { id: 'R115', cantidad: 5, primero: 'Recepción de la persona solicitante' },
