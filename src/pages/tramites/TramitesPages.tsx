@@ -246,7 +246,8 @@ export function TramitesCatalogPage() {
     <PageContainer className="tram-container">
       <TramitesBreadcrumb items={[{ label: 'Inicio', to: '/' }, { label: 'Trámites' }]} />
       <h1 className="tram-title">Catálogo de trámites</h1>
-      <div className="tram-filters agenda-search-filterbar" role="search" aria-label="Filtrar trámites">
+      <div className="tram-filter-panel">
+        <div className="tram-filters agenda-search-filterbar" role="search" aria-label="Filtrar trámites">
         <label className="tram-search relative">
           <span className="sr-only">Buscar trámite</span>
           <input
@@ -301,6 +302,7 @@ export function TramitesCatalogPage() {
         onRemove={chip => cambiarFiltro(chip.campo, chip.valor)}
         onClear={limpiarTodo}
       />}
+      </div>
       <div className="tram-results"><strong aria-live="polite">{filtrados.length} {filtrados.length === 1 ? 'trámite' : 'trámites'}</strong>
         <AgendaSortDropdown ghost value={orden === 'tema' ? 'default' : orden}
           options={[{ value: 'default', text: 'Por tema' }, { value: 'az', text: 'Alfabético A–Z' }, { value: 'recurrencia', text: 'Por recurrencia' }]}
