@@ -358,14 +358,16 @@ function ProcedimientoFicha({ tramite }: { tramite: Tramite }) {
 /** Panel institucional del frame de Figma, sin canales operativos de ORIGEN. */
 function AyudaFicha() {
   return <section className="tram-contact-help" aria-label="Ayuda sobre el trámite">
-    <div className="tram-contact-heading">
-      <span className="tram-help-icon"><MaterialIcon name="support_agent" size={24}/></span>
-      <h2>¿Necesitás ayuda?</h2>
+    <div className="tram-contact-main">
+      <div className="tram-contact-heading">
+        <span className="tram-help-icon"><MaterialIcon name="support_agent" size={20}/></span>
+        <h2>¿Necesitás ayuda?</h2>
+      </div>
+      <p>¿Tenés dudas sobre este trámite? Comunicate con el Centro de Atención a la Comunidad.</p>
+      <a className="tram-whatsapp-link" href="https://wa.me/5491121937726" target="_blank" rel="noopener noreferrer">
+        WhatsApp de la Comunidad
+      </a>
     </div>
-    <p>¿Tenés dudas sobre este trámite? Comunicate con el Centro de Atención a la Comunidad.</p>
-    <a className="tram-whatsapp-link" href="https://wa.me/5491121937726" target="_blank" rel="noopener noreferrer">
-      WhatsApp de la Comunidad
-    </a>
     <div className="tram-support-hours">
       <h3><MaterialIcon name="schedule" size={22}/> Horarios de atención</h3>
       <p>Lunes a viernes</p>
