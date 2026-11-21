@@ -537,7 +537,15 @@
 .tram-support-hours strong { font-size: 18px; line-height: 26px; }
 .tram-support-hours strong + p { margin-top: 8px; }
 
-.tram-detail .tram-detail-aside { padding-top: 24px; }
+/* El panel lateral acompaña el scroll y se detiene a 16px del viewport. */
+@media (min-width: 901px) {
+  .tram-detail .tram-detail-aside {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    padding-top: 16px;
+  }
+}
 
 /* Accesibilidad: flotante solo cuando se recorre el catálogo extenso. */
 .tram-back-to-top {
