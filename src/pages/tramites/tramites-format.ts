@@ -100,6 +100,39 @@ export type BloqueProcedimiento =
 
 const numeroSuelto = /^(\d{1,2})[.)]?$/;
 
+/**
+ * Solo los registros verificados cuyo circuito de ORIGEN enumera etapas
+ * mediante guiones. No dividir guiones del resto del catálogo: pueden ser
+ * alternativas, aclaraciones o parte de un nombre.
+ *
+ * R121: solicitud - autorización - confirmación - implementación.
+ * R132: ingreso - confirmación/rechazo/cancelación - ejecución.
+ * R031: portal - petición - resolución.
+ * R034: recorrido por cinco áreas municipales.
+ * R123: carga del pedido - devolución de Tránsito - cobertura del evento.
+ */
+const procedimientosConEtapasSeparadasPorGuiones = new Set([
+  'R121', 'R132', 'R031', 'R034', 'R123',
+]);
+
+function parsearEtapasPorGuiones(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  if (!procedimientosConEtapasSeparadasPorGuiones.has(tramite.id)) return null;
+
+  // Los guiones internos de "autorizado-cancelado-rechazado" de R123
+  // expresan alternativas, no pasos distintos. Solo normalizamos los dos
+  // separadores específicos registrados en ORIGEN.
+  const normalizado = tramite.id === 'R123'
+    ? texto
+      .replace(/(?<=pedido)-(?=esperar)/iu, ' - ')
+      .replace(/\s+-(?=cobertura)/iu, ' - ')
+    : texto;
+  const etapas = normalizado.split(/\s+[-–—]\s*/u)
+    .map(etapa => etapa.trim()).filter(Boolean);
+  if (etapas.length < 3 || etapas.length > 15) return null;
+  return [{ tipo: 'pasos', items: etapas }];
+}
+
+
 function agregarPasos(bloques: BloqueProcedimiento[], pasos: string[]) {
   const validos = pasos.map(paso => paso.trim()).filter(Boolean);
   if (validos.length) bloques.push({ tipo: 'pasos', items: validos });
@@ -199,6 +232,9 @@ export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
 
   const texto = (tramite.pasos || tramite.comoIniciar).trim().replace(/\r\n?/g, '\n');
   if (!texto || /^[.\s-]+$/.test(texto)) return [];
+
+  const guionesVerificados = parsearEtapasPorGuiones(tramite, texto);
+  if (guionesVerificados) return guionesVerificados;
 
   const lineas = texto.split('\n').map(linea => linea.trim()).filter(Boolean);
   const numerosSueltos = parsearNumerosSueltos(lineas);
