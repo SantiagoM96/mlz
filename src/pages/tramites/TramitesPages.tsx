@@ -410,14 +410,13 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
           {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
         target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
         Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
-      </a>
+      </a>}
         </div>
         {index === 0 && showMap && <iframe className="tram-location-map"
           title={'Mapa de ' + textoPublicoLegible(tramite.direccion)}
           src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
           loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
       </div>
-}
     </div>)}</div>
   </section>;
 }
