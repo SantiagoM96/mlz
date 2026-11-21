@@ -368,7 +368,7 @@ function AyudaFicha() {
       </a>
     </div>
     <div className="tram-support-hours">
-      <h3><MaterialIcon name="schedule" size={22}/> Horarios de atención</h3>
+      <h2>Horarios de atención</h2>
       <p>Lunes a viernes</p>
       <strong>08:00 a 20:00</strong>
       <p>Sábados, domingos y feriados</p>
