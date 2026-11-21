@@ -376,13 +376,14 @@ const circuitosConLimitesEspecificos: Record<string, RegExp> = {
 };
 
 function parsearCircuitoNarrativo(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  const separadorEspecifico = circuitosConLimitesEspecificos[tramite.id];
   let partes: string[];
   if (circuitosPorComasVerificados.has(tramite.id)) {
     partes = texto.split(/,\s*/u);
   } else if (circuitosPorOracionesVerificados.has(tramite.id)) {
     partes = texto.split(/(?<=[.!?])\s+(?=[a-záéíóúñ])/iu);
-  } else if (circuitosConLimitesEspecificos[tramite.id]) {
-    partes = texto.split(circuitosConLimitesEspecificos[tramite.id]);
+  } else if (separadorEspecifico) {
+    partes = texto.split(separadorEspecifico);
   } else {
     return null;
   }
