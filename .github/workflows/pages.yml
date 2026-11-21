@@ -41,5 +41,8 @@ jobs:
         with:
           path: dist
           name: github-pages
+      # Dar tiempo a GitHub Actions para indexar el artifact antes de deploy-pages.
+      - name: Esperar registro del artifact de Pages
+        run: sleep 30
       - id: deployment
         uses: actions/deploy-pages@v4
