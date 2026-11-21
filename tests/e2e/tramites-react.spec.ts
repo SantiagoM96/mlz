@@ -1,4 +1,28 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+/** Tema se selecciona por acceso directo en desktop/tablet y en Más filtros a 390px. */
+async function elegirTema(page: Page, tema: string) {
+  const esMobile = (page.viewportSize()?.width ?? 1440) <= 680;
+  if (esMobile) {
+    await page.getByTestId('tramites-more-filters')
+      .getByRole('button', { name: /Más filtros/ }).click();
+    const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+    await panel.getByRole('button', { name: 'Tema', exact: true }).click();
+    const radio = panel.getByRole('radio', { name: tema });
+    await expect(radio).toBeVisible();
+    await radio.click();
+    await panel.getByRole('button', { name: /Ver resultados/ }).click();
+    await expect(panel).toBeHidden();
+  } else {
+    await page.getByRole('button', { name: 'Tema', exact: true }).click();
+    const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole('checkbox')).toHaveCount(0);
+    await menu.getByRole('radio', { name: tema }).click();
+    await menu.getByRole('button', { name: /Ver resultados/ }).click();
+  }
+}
+
 
 test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Agenda', async ({ page }) => {
   await page.goto('/tramites');
@@ -10,12 +34,7 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await page.getByRole('button', { name: 'Limpiar', exact: true }).click();
   await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await expect(menu).toBeVisible();
-  // El checkbox de Agenda cubre toda la fila; activar el control real, no el texto debajo.
-  await menu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await menu.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
 
@@ -97,7 +116,7 @@ test('rutas directas y enlaces públicos verificables', async ({ page }) => {
 });
 
 
-test('Más filtros sincroniza destinatario y tema seleccionados en accesos directos', async ({ page }) => {
+test('Más filtros sincroniza accesos directos sin duplicar sus contadores', async ({ page }) => {
   await page.goto('/tramites');
   const more = page.getByTestId('tramites-more-filters');
   const counter = more.locator('[data-agenda-filter-count]');
@@ -107,13 +126,10 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   const audience = page.getByRole('dialog', { name: 'Opciones de ¿Para quién es?' });
   await audience.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
   await audience.getByRole('button', { name: /Ver resultados/ }).click();
-  await expect(counter).toHaveText('1');
+  await expect(counter).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const topic = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await topic.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await topic.getByRole('button', { name: /Ver resultados/ }).click();
-  await expect(counter).toHaveText('2');
+  await elegirTema(page, 'Vehículos y tránsito');
+  await expect(counter).toHaveCount(0);
 
   await more.getByRole('button', { name: /Más filtros/ }).click();
   const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
@@ -124,7 +140,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
 
   await panel.getByRole('button', { name: 'Turno', exact: true }).click();
   await panel.getByRole('radio', { name: 'No requiere turno' }).click();
-  await expect(counter).toHaveText('3');
+  await expect(counter).toHaveText('1');
   await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
   await expect(panel).toBeHidden();
   await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
@@ -137,7 +153,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).toBeChecked();
   await reopened.getByRole('radio', { name: 'Requiere turno', exact: true }).click();
   await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).not.toBeChecked();
-  await expect(counter).toHaveText('3');
+  await expect(counter).toHaveText('1');
   await reopened.getByRole('button', { name: 'Ver resultados (1)' }).click();
   await expect(reopened).toBeHidden();
   await expect(page.getByText('1 trámite', { exact: true })).toBeVisible();
@@ -286,9 +302,9 @@ test('catálogo: tipografía Geometria y escala Figma desktop/mobile', async ({ 
   await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toHaveCSS('font-size', '32px');
   await expect(page.locator('.tram-group-heading h2').first()).toHaveCSS('font-size', '24px');
   await expect(page.locator('.tram-row h3').first()).toHaveCSS('font-size', '20px');
-  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('font-size', '16px');
-  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('line-height', '21px');
-  await expect(page.locator('.tram-row-actions .tram-btn').first()).toHaveCSS('font-size', '16px');
+  await expect(page.locator('.tram-row-content > p').first()).toHaveCSS('font-size', '16px');
+  await expect(page.locator('.tram-row-content > p').first()).toHaveCSS('line-height', '21px');
+  await expect(page.locator('.tram-row-actions .tram-link-action').first()).toHaveCSS('font-size', '16px');
 });
 
 
@@ -305,24 +321,19 @@ test('destinatarios: varias selecciones, chips individuales y URL reproducible',
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
   await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Vecinos y vecinas' })).toBeVisible();
   await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' })).toBeVisible();
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
   expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
     .toEqual(['Vecinos y vecinas', 'Profesionales']);
 
   await page.reload();
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const temasMenu = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await expect(temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
-  await expect(temasMenu.getByRole('checkbox')).toHaveCount(0);
-  await temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await temasMenu.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
 
   await chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' }).click();
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
   expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
     .toEqual(['Vecinos y vecinas']);
   await chips.getByRole('button', { name: 'Limpiar' }).click();
@@ -337,11 +348,11 @@ test('Más filtros permite varios destinatarios sin duplicar el contador; Tema u
   const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
   await panel.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
   await panel.getByRole('checkbox', { name: 'Profesionales' }).click();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
   await panel.getByRole('button', { name: 'Tema' }).click();
   await expect(panel.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
   await panel.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
   await panel.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(panel).toBeHidden();
   const chips = page.getByRole('group', { name: 'Filtros seleccionados' });
@@ -355,7 +366,7 @@ test('Más filtros permite varios destinatarios sin duplicar el contador; Tema u
   await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeChecked();
   await reopened.getByRole('radio', { name: 'Salud' }).click();
   await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).not.toBeChecked();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
 });
 
 test('procedimientos no uniformes: normaliza R029, R030 y numeración en línea de R089', async ({ page }) => {
@@ -439,13 +450,10 @@ test('etiquetas de ficha: navegan al catálogo filtrado y combinan con tema sin 
   await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
   await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
     .locator('.agenda-filter-chip')).toHaveCount(1);
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const topics = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await topics.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await topics.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
     .locator('.agenda-filter-chip')).toHaveCount(2);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
   await page.getByRole('group', { name: 'Filtros seleccionados' })
     .getByRole('button', { name: 'Limpiar' }).click();
   await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
@@ -529,4 +537,136 @@ test('chips seleccionados en mobile: scroll horizontal y Limpiar fijo como Agend
   await expect(selected.locator('[data-material-symbol="close"]')).toHaveCount(3);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
+});
+
+
+test('procedimiento R121: las cuatro etapas del relevamiento usan el timeline institucional', async ({ page }) => {
+  await page.goto('/tramites/R121');
+  const seccion = page.locator('#procedimiento');
+  const pasos = seccion.locator('.tram-timeline li');
+  await expect(pasos).toHaveCount(4);
+  await expect(pasos.nth(0)).toContainText('Solicitud');
+  await expect(pasos.nth(1)).toContainText('Autorizacion por parte de la direccion');
+  await expect(pasos.nth(2)).toContainText('Confirmacion');
+  await expect(pasos.nth(3)).toContainText('Implementacion');
+  await expect(seccion.locator('.tram-procedure-note')).toHaveCount(0);
+  const marcador = pasos.first().locator('.tram-timeline-marker');
+  await expect(marcador).toHaveCSS('width', '30px');
+  await expect(marcador).toHaveCSS('height', '30px');
+  await expect(pasos.first().locator('.tram-timeline-text')).toHaveCSS('font-size', '18px');
+  await expect(page.getByText('Para realizar el trámite te van a solicitar la siguiente documentación')).toHaveCount(0);
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(1);
+});
+
+test('procedimientos con guiones verificados mantienen etapas, alternativas y orden de ORIGEN', async ({ page }) => {
+  for (const { id, etapas, ultimo } of [
+    { id: 'R031', etapas: 3, ultimo: 'Resolucion' },
+    { id: 'R034', etapas: 5, ultimo: 'Secretaria de Economía y Finanzas' },
+    { id: 'R132', etapas: 3, ultimo: 'ejecución' },
+    { id: 'R123', etapas: 3, ultimo: 'cobertura del evento solicitado' },
+  ]) {
+    await page.goto('/tramites/' + id);
+    const pasos = page.locator('#procedimiento .tram-timeline li');
+    await expect(pasos).toHaveCount(etapas);
+    await expect(pasos.last()).toContainText(ultimo, { ignoreCase: true });
+    await expect(page.locator('#procedimiento .tram-procedure-note')).toHaveCount(0);
+    await expect(page.locator('#documentacion .tram-document-intro')).toHaveCount(0);
+  }
+  // R123: autorizado/cancelado/rechazado son alternativas en un mismo paso.
+  await page.goto('/tramites/R123');
+  await expect(page.locator('#procedimiento .tram-timeline li').nth(1))
+    .toContainText('autorizado-cancelado-rechazado');
+  // R035: guiones internos ambiguos, no dividir un párrafo en pasos ficticios.
+  await page.goto('/tramites/R035');
+  await expect(page.locator('#procedimiento .tram-timeline')).toHaveCount(0);
+  await expect(page.locator('#procedimiento .tram-procedure-note')).toHaveCount(1);
+});
+
+test('documentación: sin texto genérico en fichas y sin modificar la lista real', async ({ page }) => {
+  for (const { id, documentos } of [
+    { id: 'R018', documentos: 3 },
+    { id: 'R036', documentos: 4 },
+    { id: 'R121', documentos: 1 },
+  ]) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(documentos);
+    await expect(page.locator('#documentacion .tram-document-intro')).toHaveCount(0);
+    await expect(page.getByText('Para realizar el trámite te van a solicitar la siguiente documentación')).toHaveCount(0);
+  }
+});
+
+test('R121 en 390 px: procedimiento se organiza en pasos y no genera desborde', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tramites/R121');
+  await expect(page.locator('#procedimiento .tram-timeline-marker')).toHaveCount(4);
+  await expect(page.locator('#procedimiento .tram-timeline li').first().locator('.tram-timeline-marker'))
+    .toHaveCSS('width', '30px');
+  const horizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(horizontalOverflow).toBeLessThanOrEqual(2);
+});
+
+
+test('auditoría editorial: otras listas de pasos verificables se presentan en el timeline', async ({ page }) => {
+  for (const { id, cantidad, primero } of [
+    { id: 'R009', cantidad: 4, primero: 'Asesoramiento' },
+    { id: 'R010', cantidad: 7, primero: 'Se recepciona' },
+    { id: 'R037', cantidad: 3, primero: 'Inicia en Direccion de obras particulares' },
+    { id: 'R114', cantidad: 5, primero: 'Recepción de la persona solicitante' },
+    { id: 'R115', cantidad: 5, primero: 'Recepción de la persona solicitante' },
+    { id: 'R118', cantidad: 4, primero: 'Iniciamos radex' },
+    { id: 'R131', cantidad: 3, primero: 'Ingreso del pedido' },
+    { id: 'R133', cantidad: 4, primero: 'Recepcion del pedido de corte' },
+  ]) {
+    await page.goto('/tramites/' + id);
+    const pasos = page.locator('#procedimiento .tram-timeline li');
+    await expect(pasos, id + ': cantidad de pasos de ORIGEN').toHaveCount(cantidad);
+    await expect(pasos.first(), id).toContainText(primero, { ignoreCase: true });
+  }
+  await page.goto('/tramites/R118');
+  await expect(page.locator('#procedimiento .tram-procedure-note'))
+    .toContainText('regularización migratoria');
+});
+
+test('documentación: sin archivos falsos cuando ORIGEN declara que no hay o no especifica', async ({ page }) => {
+  for (const id of [
+    'R124', 'R031', 'R043', 'R057', 'R058', 'R059', 'R060', 'R061',
+    'R064', 'R070', 'R072', 'R035',
+  ]) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion'), id + ': sin lista inventada').toHaveCount(0);
+    await expect(page.locator('.tram-detail .tram-document-icon'), id).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: 'Índice de la ficha' })
+      .first().getByRole('link', { name: 'Documentación' }), id + ': índice condicional').toHaveCount(0);
+  }
+});
+
+
+test('documentación condicional R051 y R116: conserva datos reales sin ícono de archivo falso', async ({ page }) => {
+  await page.goto('/tramites/R051');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('resumen de historia clinica');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('ordenes medicas');
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(0);
+  await page.goto('/tramites/R116');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('La documentación necesaria se determina en función de cada caso específico');
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(0);
+});
+
+
+test('documentación con viñetas y saltos de línea: no convierte continuaciones en documentos', async ({ page }) => {
+  await page.goto('/tramites/R082');
+  const documentosR082 = page.locator('#documentacion .tram-documents li');
+  await expect(documentosR082).toHaveCount(7);
+  await expect(documentosR082.last()).toContainText('especificando la fecha del cierre solicitado');
+  await expect(documentosR082.last()).toContainText('aclaración del mismo');
+
+  await page.goto('/tramites/R084');
+  const documentosR084 = page.locator('#documentacion .tram-documents li');
+  await expect(documentosR084).toHaveCount(11);
+  await expect(documentosR084.nth(4)).toContainText('propietarios. (comprador)');
+  await expect(page.locator('#documentacion .tram-document-note')).toHaveCount(0);
 });

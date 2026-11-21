@@ -63,6 +63,39 @@ const documentosEnumerados: Record<string, string[]> = {
   ],
 };
 
+/**
+ * Documentación declarada como inexistente o no especificada en ORIGEN.
+ * Nunca mostrar "No hay", "-", "Varias" o una referencia a otra oficina
+ * como si fueran archivos que el vecino debe presentar. La base no cambia.
+ *
+ * R035: el relevamiento no nombra los documentos, por lo que se omite
+ * la falsa lista hasta contar con contenido editorial específico.
+ */
+export function documentacionInformativa(texto: string): boolean {
+  const normalizado = texto.trim().toLocaleLowerCase('es-AR')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[.!]+$/g, '').trim();
+  if (!normalizado || /^[-–—.]$/.test(normalizado)) return false;
+  const sinDocumentos = new Set([
+    'ninguna', 'ninguno', 'no', 'no hay', 'no se requiere',
+    'no es necesaria documentacion',
+    'no es necesario ningun tipo de documentacion',
+    'no lo dice el portal', 'varias', 'no aplica', 'no corresponde',
+    'mesa de entradas o elomas la solicita',
+  ]);
+  if (sinDocumentos.has(normalizado)) return false;
+  return true;
+}
+
+/**
+ * R051 contiene documentación específica en un párrafo explicativo y R116
+ * declara que la documentación se determina caso por caso. Ninguno debe
+ * mostrarse como un documento individual con ícono, ni eliminarse.
+ */
+const notasDocumentales = new Set(['R051', 'R116']);
+export function notaDocumentacionPublica(tramite: Tramite): string {
+  return notasDocumentales.has(tramite.id) ? tramite.documentacion.trim() : '';
+}
+
 /** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
 export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
@@ -81,7 +114,25 @@ export function documentacionPublica(tramite: Tramite): string[] {
   }
 
   const texto = tramite.documentacion.trim();
-  if (!texto) return [];
+  if (!texto || notaDocumentacionPublica(tramite) || !documentacionInformativa(texto)) return [];
+
+  // En las listas con viñetas, una línea que no comienza con viñeta
+  // continúa el documento anterior. Evita que «propietarios. (comprador)»
+  // o «aclaración del mismo» aparezcan como archivos independientes.
+  const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(Boolean);
+  if (lineas.length > 1 && /^[•*]\s*/u.test(lineas[0] ?? '')) {
+    const documentos: string[] = [];
+    for (const linea of lineas) {
+      if (/^[•*]\s*/u.test(linea)) {
+        documentos.push(linea.replace(/^[•*]\s*/u, '').trim());
+      } else if (documentos.length) {
+        const indice = documentos.length - 1;
+        documentos[indice] = [documentos[indice], linea].filter(Boolean).join(' ');
+      }
+    }
+    return documentos.filter(Boolean);
+  }
+
   return texto
     .split(/\r?\n|;\s*|(?:^|\s)[•]\s*/)
     .map((item) => item.replace(/^\s*[-•*]\s*/, '').trim())
@@ -99,6 +150,91 @@ export type BloqueProcedimiento =
   | { tipo: 'texto'; texto: string };
 
 const numeroSuelto = /^(\d{1,2})[.)]?$/;
+
+/**
+ * Solo los registros verificados cuyo circuito de ORIGEN enumera etapas
+ * mediante guiones. No dividir guiones del resto del catálogo: pueden ser
+ * alternativas, aclaraciones o parte de un nombre.
+ *
+ * R121: solicitud - autorización - confirmación - implementación.
+ * R132: ingreso - confirmación/rechazo/cancelación - ejecución.
+ * R031: portal - petición - resolución.
+ * R034: recorrido por cinco áreas municipales.
+ * R123: carga del pedido - devolución de Tránsito - cobertura del evento.
+ */
+const procedimientosConEtapasSeparadasPorGuiones = new Set([
+  'R121', 'R132', 'R031', 'R034', 'R123',
+]);
+
+function parsearEtapasPorGuiones(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  if (!procedimientosConEtapasSeparadasPorGuiones.has(tramite.id)) return null;
+
+  // Los guiones internos de "autorizado-cancelado-rechazado" de R123
+  // expresan alternativas, no pasos distintos. Solo normalizamos los dos
+  // separadores específicos registrados en ORIGEN.
+  const normalizado = tramite.id === 'R123'
+    ? texto
+      .replace(/(?<=pedido)-(?=esperar)/iu, ' - ')
+      .replace(/\s+-(?=cobertura)/iu, ' - ')
+    : tramite.id === 'R034'
+      ? texto.replace(/\s+-(?=Secretaria)/iu, ' - ')
+      : texto;
+  const etapas = normalizado.split(/\s+[-–—]\s*/u)
+    .map(etapa => etapa.trim()).filter(Boolean);
+  if (etapas.length < 3 || etapas.length > 15) return null;
+  return [{ tipo: 'pasos', items: etapas }];
+}
+
+
+
+/**
+ * Enumeración 1- Paso, 2 - Paso, etc. detectada en R010, R114, R115
+ * y R118. Se respetan las notas anteriores a la numeración.
+ */
+function parsearNumerosConGuion(lineas: readonly string[]): BloqueProcedimiento[] | null {
+  const numeroYTexto = /^(\d{1,2})\s*[-–—]\s*(.+)$/u;
+  const pasos: string[] = [];
+  const introduccion: string[] = [];
+  let iniciado = false;
+  for (const linea of lineas) {
+    const match = linea.match(numeroYTexto);
+    if (match && Number(match[1]) === pasos.length + 1) {
+      iniciado = true;
+      pasos.push((match[2] ?? '').trim());
+      continue;
+    }
+    if (!iniciado) {
+      introduccion.push(linea);
+    } else if (pasos.length) {
+      // Una línea de continuación pertenece al paso anterior, no agrega uno nuevo.
+      const index = pasos.length - 1;
+      pasos[index] = [pasos[index], linea].filter(Boolean).join(' ');
+    }
+  }
+  if (pasos.length < 2) return null;
+  return [
+    ...(introduccion.length ? [{ tipo: 'texto' as const, texto: introduccion.join(' ') }] : []),
+    { tipo: 'pasos' as const, items: pasos },
+  ];
+}
+
+/**
+ * Otras delimitaciones de etapas verificadas registro por registro.
+ * Una barra dentro de un documento, alternativa o nombre NO es un
+ * separador general. Solo se admiten estos circuitos concretos.
+ */
+const pasosPorBarras = new Set(['R009', 'R037', 'R133']);
+const pasosPorOraciones = new Set(['R131']);
+function parsearEtapasAlternativas(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  let items: string[];
+  if (pasosPorBarras.has(tramite.id)) {
+    items = texto.split(/\s*\/\s*/u).map(x => x.trim()).filter(Boolean);
+  } else if (pasosPorOraciones.has(tramite.id)) {
+    items = texto.split(/\.\s+/u).map(x => x.trim().replace(/\.$/u, '')).filter(Boolean);
+  } else return null;
+  if (items.length < 3 || items.length > 10) return null;
+  return [{ tipo: 'pasos', items }];
+}
 
 function agregarPasos(bloques: BloqueProcedimiento[], pasos: string[]) {
   const validos = pasos.map(paso => paso.trim()).filter(Boolean);
@@ -197,10 +333,18 @@ function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
 export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
   if (tramite.id === 'R036') return [{ tipo: 'pasos', items: [...fichaR036.pasos] }];
 
-  const texto = (tramite.pasos || tramite.comoIniciar).trim().replace(/\r\n?/g, '\n');
+  // «Cómo inicia» identifica el canal (web, mail, ventanilla); no es un procedimiento.
+  const texto = tramite.pasos.trim().replace(/\r\n?/g, '\n');
   if (!texto || /^[.\s-]+$/.test(texto)) return [];
 
+  const guionesVerificados = parsearEtapasPorGuiones(tramite, texto);
+  if (guionesVerificados) return guionesVerificados;
+
   const lineas = texto.split('\n').map(linea => linea.trim()).filter(Boolean);
+  const numerosConGuion = parsearNumerosConGuion(lineas);
+  if (numerosConGuion) return numerosConGuion;
+  const etapasAlternativas = parsearEtapasAlternativas(tramite, texto);
+  if (etapasAlternativas) return etapasAlternativas;
   const numerosSueltos = parsearNumerosSueltos(lineas);
   if (numerosSueltos) return numerosSueltos;
 

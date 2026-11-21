@@ -9,7 +9,7 @@ import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
 import { AgendaSelectedFilterChips } from '../../components/agenda/AgendaSelectedFilterChips';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
-import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, horarioPublico, sedePublica, otrosTramitesDelTema } from './tramites-format';
+import { documentacionPublica, notaDocumentacionPublica, bloquesProcedimiento, textoPublicoLegible, horarioPublico, sedePublica, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import { TramitesBackToTop } from './TramitesBackToTop';
 import { iconoDestinatario } from './tramites-icons';
@@ -334,14 +334,15 @@ function IndiceFicha({ secciones }: { secciones: { id: string; titulo: string }[
 
 function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
   const items = documentacionPublica(tramite);
-  if (!items.length) return null;
+  const nota = notaDocumentacionPublica(tramite);
+  if (!items.length && !nota) return null;
   return <section className="tram-detail-section" id="documentacion">
     <h2>Documentación</h2>
-    <p className="tram-document-intro">Para realizar el trámite te van a solicitar la siguiente documentación</p>
-    <ul className="tram-documents">{items.map((item, index) => <li key={index}>
+    {nota && <p className="tram-document-note">{textoPublicoLegible(nota)}</p>}
+    {items.length > 0 && <ul className="tram-documents">{items.map((item, index) => <li key={index}>
       <span className="tram-document-icon"><MaterialIcon name="description" size={24} /></span>
       <span>{textoPublicoLegible(item)}</span>
-    </li>)}</ul>
+    </li>)}</ul>}
   </section>;
 }
 
@@ -473,7 +474,7 @@ export function TramiteDetailPage() {
   const otrosTramites = otrosTramitesDelTema(tramite, tramites);
   const secciones = [
     { id: 'destinatarios', titulo: '¿Quién puede solicitarlo?', visible: tramite.destinatarios.length > 0 },
-    { id: 'documentacion', titulo: 'Documentación', visible: documentacionPublica(tramite).length > 0 },
+    { id: 'documentacion', titulo: 'Documentación', visible: documentacionPublica(tramite).length > 0 || Boolean(notaDocumentacionPublica(tramite)) },
     { id: 'procedimiento', titulo: '¿Cómo se realiza?', visible: bloquesProcedimiento(tramite).length > 0 },
     { id: 'donde-cuando', titulo: 'Dónde y cuándo', visible: Boolean(tramite.direccion.trim() || tramite.horarios.trim() || tramite.turno.trim()) },
     { id: 'otros-tramites', titulo: 'Otros trámites del tema', visible: otrosTramites.length > 0 },
