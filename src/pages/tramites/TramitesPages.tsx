@@ -387,30 +387,32 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const mapsQuery = tramite.direccion + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
     <h2>Dónde y cuándo</h2>
-    {turnoLabel && <div className="tram-turno-tags">
-      <span><MaterialIcon name={/^no$/i.test(turno) ? 'event' : 'event_available'} size={18} />{turnoLabel}</span>
-    </div>}
-    <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location">
-      <div className="tram-location-info">
-        {sede.dias.trim() && <div className="tram-location-item">
-          <MaterialIcon name="schedule" size={24} className="tram-location-symbol" />
-          <p>{textoPublicoLegible(sede.dias)}</p>
-        </div>}
-        {sede.lugar.trim() && <div className="tram-location-item">
-          <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
-          <p>{textoPublicoLegible(sede.lugar)}</p>
-        </div>}
-      </div>
-      {index === 0 && showMap && <div className="tram-location-map-wrap">
-        <iframe className="tram-location-map"
+    <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location-card">
+      <div className="tram-location-card-top">
+        <div className="tram-location-card-details">
+          {index === 0 && turnoLabel && <div className="tram-turno-tags">
+            <span><MaterialIcon name={/^no$/i.test(turno) ? 'event' : 'event_available'} size={18} />{turnoLabel}</span>
+          </div>}
+          <div className="tram-location-info">
+            {sede.dias.trim() && <div className="tram-location-item">
+              <MaterialIcon name="schedule" size={24} className="tram-location-symbol" />
+              <p>{textoPublicoLegible(sede.dias)}</p>
+            </div>}
+            {sede.lugar.trim() && <div className="tram-location-item">
+              <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
+              <p>{textoPublicoLegible(sede.lugar)}</p>
+            </div>}
+          </div>
+        </div>
+        {index === 0 && showMap && <iframe className="tram-location-map"
           title={'Mapa de ' + textoPublicoLegible(tramite.direccion)}
           src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
-          loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
-        <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
-          target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
-          Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
-        </a>
-      </div>}
+          loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
+      </div>
+      {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
+        target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
+        Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
+      </a>}
     </div>)}</div>
   </section>;
 }
