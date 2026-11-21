@@ -12,7 +12,7 @@
 ## Cifras de revisión
 - Registros analizados: **125**.
 - Segmentos propuestos para evaluación: **513**.
-- Familias o nombres normalizados: **146**.
+- Familias o nombres normalizados: **147**.
 - Registros que contienen segmentos de baja certeza: **14**.
 - Fragmentos marcados para revisión editorial/contextual: **298**.
 - Casos sin segmentos: **0**.
