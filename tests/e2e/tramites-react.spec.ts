@@ -598,3 +598,38 @@ test('R121 en 390 px: procedimiento se organiza en pasos y no genera desborde', 
   );
   expect(horizontalOverflow).toBeLessThanOrEqual(2);
 });
+
+
+test('auditoría editorial: otras listas de pasos verificables se presentan en el timeline', async ({ page }) => {
+  for (const { id, cantidad, primero } of [
+    { id: 'R009', cantidad: 4, primero: 'Asesoramiento' },
+    { id: 'R010', cantidad: 6, primero: 'Se recepciona' },
+    { id: 'R037', cantidad: 3, primero: 'Inicia en Direccion de obras particulares' },
+    { id: 'R114', cantidad: 5, primero: 'Recepción de la persona solicitante' },
+    { id: 'R115', cantidad: 5, primero: 'Recepción de la persona solicitante' },
+    { id: 'R118', cantidad: 4, primero: 'Iniciamos radex' },
+    { id: 'R131', cantidad: 3, primero: 'Ingreso del pedido' },
+    { id: 'R133', cantidad: 4, primero: 'Recepcion del pedido de corte' },
+  ]) {
+    await page.goto('/tramites/' + id);
+    const pasos = page.locator('#procedimiento .tram-timeline li');
+    await expect(pasos, id + ': cantidad de pasos de ORIGEN').toHaveCount(cantidad);
+    await expect(pasos.first(), id).toContainText(primero, { ignoreCase: true });
+  }
+  await page.goto('/tramites/R118');
+  await expect(page.locator('#procedimiento .tram-procedure-note'))
+    .toContainText('regularización migratoria');
+});
+
+test('documentación: sin archivos falsos cuando ORIGEN declara que no hay o no especifica', async ({ page }) => {
+  for (const id of [
+    'R124', 'R031', 'R043', 'R057', 'R058', 'R059', 'R060', 'R061',
+    'R064', 'R070', 'R072', 'R035', 'R051',
+  ]) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion'), id + ': sin lista inventada').toHaveCount(0);
+    await expect(page.locator('.tram-detail .tram-document-icon'), id).toHaveCount(0);
+    await expect(page.getByRole('navigation', { name: 'Índice de la ficha' })
+      .first().getByRole('link', { name: 'Documentación' }), id + ': índice condicional').toHaveCount(0);
+  }
+});
