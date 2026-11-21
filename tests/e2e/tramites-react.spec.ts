@@ -55,7 +55,7 @@ test('modalidad: catálogo y ficha muestran el valor original precedido por Moda
   await page.goto('/tramites');
   const filas = page.locator('[data-testid="tramite-row"]');
   for (const { id, modalidad } of casos) {
-    const enlace = filas.locator('a.tram-link-action[href$="/' + id + '"]');
+    const enlace = page.locator('a.tram-link-action[href$="/' + id + '"]');
     const fila = filas.filter({ has: enlace });
     await expect(fila.locator('.tram-modalidad')).toHaveText('Modalidad: ' + modalidad);
     await expect(fila.locator('.tram-modalidad-chip')).toHaveCount(0);
