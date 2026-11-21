@@ -23,6 +23,10 @@ type FilterDropdownProps = {
   searchable?: boolean;
   /** Control visual opcional para selecciones exclusivas de otros módulos; Agenda conserva sus checkboxes. */
   selectionControl?: 'checkbox' | 'radio';
+  /** Single-select muestra el valor elegido en lugar del contador. */
+  showSelectedLabel?: boolean;
+  /** Reserva el ancho del badge aunque no haya selecciones. */
+  reserveCounterSpace?: boolean;
 };
 
 /**
@@ -32,6 +36,7 @@ type FilterDropdownProps = {
 export function AgendaDropdown({
   label, options, selected, resultCount, onChange, multiple = false, align = 'start',
   triggerIcon = 'expand_more', panelTitle, searchable, selectionControl = 'checkbox',
+  showSelectedLabel = false, reserveCounterSpace = false,
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   useAgendaMobileScrollLock(isOpen);
@@ -84,8 +89,10 @@ export function AgendaDropdown({
           focus-visible:outline-2 focus-visible:outline-[#006eff]
           ${isOpen || selected.length ? 'agenda-filter-trigger-active' : ''}`}
       >
-        <span className="min-w-0 flex-1 truncate">{label}</span>
-        <AgendaFilterCounter count={selected.length} />
+        <span className="min-w-0 flex-1 truncate">{showSelectedLabel && selected.length ? selected[0] : label}</span>
+        {!showSelectedLabel && (reserveCounterSpace
+          ? <span className="inline-flex w-6 min-w-6 shrink-0 items-center justify-center"><AgendaFilterCounter count={selected.length} /></span>
+          : <AgendaFilterCounter count={selected.length} />)}
         <MaterialIcon name={triggerIcon} size={triggerIcon === 'tune' ? 24 : 20}
           className={`agenda-motion-chevron ml-auto shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>

@@ -906,3 +906,21 @@
   padding-left: 15px;
   padding-right: 43px;
 }
+
+/* Desktop: mantener el ancho fijo de los filtros, independientemente del badge
+   o de la longitud del tema seleccionado. El texto largo se trunca. */
+@media (min-width: 681px) {
+  .tram-filter-control,
+  .tram-filter-control > div,
+  .tram-filter-control .agenda-filter-trigger { min-width: 0; max-width: 100%; }
+  .tram-filter-control .agenda-filter-trigger { overflow: hidden; }
+  .tram-filter-control .agenda-filter-trigger > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tram-filter-more-control [data-tram-counter-slot] {
+    display: inline-flex;
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+    align-items: center;
+    justify-content: center;
+  }
+}
