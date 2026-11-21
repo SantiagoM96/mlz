@@ -25,6 +25,10 @@ const fichaR036 = {
  * interpretan como separadores generales.
  */
 const documentosEnumerados: Record<string, string[]> = {
+  R028: [
+    'Constancia de ARCA', 'DNI', 'Constancia de Ingresos Brutos',
+    'Boleta de Edesur paga', 'Boleta de Tasas Servicios Generales paga', 'Libro de Actas',
+  ],
   R111: [
     'VTV',
     'Cédula verde',
@@ -64,6 +68,17 @@ export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
   const documentosDelTramite = documentosEnumerados[tramite.id];
   if (documentosDelTramite) return [...documentosDelTramite];
+
+  // Enumeraciones de documentos separadas por comas: solo registros con
+  // elementos independientes verificados, sin cláusulas condicionales.
+  const listasPorComas = new Set([
+    'R001','R002','R003','R006','R014','R016','R017','R037','R039',
+    'R069','R071','R075','R079','R083','R085','R089','R091',
+    'R093','R105','R109','R110','R112','R122','R123',
+  ]);
+  if (listasPorComas.has(tramite.id)) {
+    return tramite.documentacion.split(/[,;]+/).map(item => item.trim().replace(/[.]$/, '')).filter(Boolean);
+  }
 
   const texto = tramite.documentacion.trim();
   if (!texto) return [];
@@ -231,6 +246,45 @@ export function textoPublicoLegible(valor: string): string {
     .replace(/^Titulo\b/u, 'Título');
 }
 
+
+
+/** Formato uniforme para intervalos simples; conserva textos especiales. */
+export function horarioPublico(valor: string): string {
+  const texto = valor.trim().replace(/\\s+/g, ' ');
+  if (!texto) return '';
+  const normal = texto
+    .replace(/\\b(?:lun(?:es)?\\s+a\\s+vie(?:rnes)?|l\\s+a\\s+v)\\b/gi, 'Lunes a viernes')
+    .replace(/\\bde\\s+lunes\\s+a\\s+viernes\\b/gi, 'Lunes a viernes')
+    .replace(/\\bentre\\s+las\\s+/gi, 'de ')
+    .replace(/\\b(?:hasta\\s+las|y\\s+las)\\b/gi, 'a')
+    .replace(/\\b(\\d{1,2})[.:](\\d{2})\\s*(?:hs?\\.?|horas?)?\\b/gi, (_m, h: string, min: string) => `${h.padStart(2, '0')}:${min}`)
+    .replace(/\\b(\\d{1,2})\\s*(?:hs?\\.?|horas?)\\b/gi, (_m, h: string) => `${h.padStart(2, '0')}:00`)
+    .replace(/\\s*(?:a\\.?m\\.?|p\\.?m\\.?)\\b/gi, '')
+    .replace(/\\s+/g, ' ').trim();
+  // Solo normalizar horas numéricas con un rango inequívoco (sin horarios múltiples).
+  const rango = normal.match(/^(.*?)(?:de\\s+)?(\\d{1,2})(?::(\\d{2}))?\\s+a\\s+(\\d{1,2})(?::(\\d{2}))?\\s*(?:h|hs|horas)?\\.?$/i);
+  if (!rango) return textoPublicoLegible(valor);
+  const inicio = Number(rango[2]), fin = Number(rango[4]);
+  if (inicio > 23 || fin > 23 || Number(rango[3] || 0) > 59 || Number(rango[5] || 0) > 59) return textoPublicoLegible(valor);
+  const prefijo = (rango[1] || '').replace(/[,\\s-]+$/, '').trim();
+  const hora = (h: number, m: string | undefined) => `${String(h).padStart(2, '0')}:${m || '00'}`;
+  return `${prefijo ? textoPublicoLegible(prefijo) + ', ' : ''}de ${hora(inicio, rango[3])} a ${hora(fin, rango[5])} h`;
+}
+
+/** Sedes conocidas: no atribuir una dirección postal a una oficina sin fuente. */
+export function sedePublica(lugar: string): { oficina: string; direccion: string; detalle: string } {
+  const texto = textoPublicoLegible(lugar);
+  const match = texto.match(/\\b(?:oficina|of[.,])\\s*(?:n[°º.]?\\s*)?(\\d+)\\b/i);
+  if (!match) return { oficina: '', direccion: '', detalle: texto };
+  const numero = match[1];
+  const direccionEncontrada = texto.match(/(?:manuel\\s+castro|m\\.?\\s*castro)\\s*(?:n[°º.]?\\s*)?(\\d+)/i);
+  const direccion = direccionEncontrada
+    ? `Manuel Castro ${direccionEncontrada[1]}, Lomas de Zamora, Buenos Aires`
+    : numero === '37' ? 'Manuel Castro 220, Lomas de Zamora, Buenos Aires' : '';
+  const resto = texto.replace(match[0], '').replace(direccionEncontrada?.[0] || /$^/, '')
+    .replace(/^[\\s,.-]+|[\\s,.-]+$/g, '').trim();
+  return { oficina: `Oficina ${numero}`, direccion, detalle: resto };
+}
 
 /** Tres entradas del mismo tema; R036 respeta los IDs visibles en Figma. */
 export function otrosTramitesDelTema(actual: Tramite, catalogo: readonly Tramite[]): Tramite[] {
