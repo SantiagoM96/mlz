@@ -94,10 +94,10 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
         <div className="tram-row-content">
           <h3>{tramite.titulo}</h3>
           <p>{tramite.descripcion}</p>
-          <span className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></span>
         </div>
         <div className="tram-row-actions">
           <Link className="tram-link-action" to={ficha(tramite.id)} onClick={() => registrarVisita(tramite.id)}>Ver trámite</Link>
+          <span className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></span>
         </div>
       </div>
       <div className="tram-row-side">
