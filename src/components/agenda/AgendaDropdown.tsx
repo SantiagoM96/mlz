@@ -135,6 +135,7 @@ export function AgendaDropdown({
             className="agenda-filter-options min-h-0 flex-1 space-y-[2px] overflow-y-auto overscroll-contain">
             {visibleOptions.length ? visibleOptions.map(option => {
               const checked = selected.includes(option);
+              const disabled = optionCounts !== undefined && (optionCounts[option] ?? 0) === 0 && !checked;
               return (
                 <label key={option}
                   className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center justify-between gap-4 rounded
@@ -142,16 +143,16 @@ export function AgendaDropdown({
                     has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2
                     has-[:focus-visible]:outline-primary-600
                     ${checked ? 'bg-info-500 text-white hover:bg-[#005bd1]'
-                      : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
+                      : disabled ? 'cursor-not-allowed bg-white text-grey-400' : 'bg-white text-primary-600 hover:bg-[#f2f7fc]'}`}
                 >
                   <span className="min-w-0 flex-1">{option}</span>
                   {optionCounts && <span aria-hidden="true" className={`relative z-10 shrink-0 text-[14px] tabular-nums ${checked ? "text-white" : "text-grey-900"}`}>{optionCounts[option] ?? 0}</span>}
-                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} onClick={(event) => { if (selectionControl === 'radio' && checked) { event.preventDefault(); toggle(option); } }} onChange={() => { if (!checked || !(selectionControl === 'radio')) toggle(option); }}
-                    className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0" aria-label={option} />
+                  <input type={selectionControl} name={selectionControl === 'radio' ? menuId : undefined} checked={checked} disabled={disabled} onClick={(event) => { if (selectionControl === 'radio' && checked) { event.preventDefault(); toggle(option); } }} onChange={() => { if (!checked || !(selectionControl === 'radio')) toggle(option); }}
+                    className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed" aria-label={option} />
                   <MaterialIcon
                     name={selectionControl === 'radio' ? (checked ? 'radio_button_checked' : 'radio_button_unchecked') : (checked ? 'check_box' : 'check_box_outline_blank')}
                     size={24} weight={400}
-                    className={`agenda-motion-check pointer-events-none relative z-10 ${checked ? 'text-white' : 'text-primary-600'}`}
+                    className={`agenda-motion-check pointer-events-none relative z-10 ${checked ? 'text-white' : disabled ? 'text-grey-400' : 'text-primary-600'}`}
                   />
                 </label>
               );
