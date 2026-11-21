@@ -89,6 +89,8 @@
   margin: 24px 0 0;
 }
 .tram-results > strong { font-size: 18px; line-height: 26px; }
+/* Ordenar: contorno pill también al pasar el cursor, sin afectar Agenda. */
+.tram-results button[aria-label="Ordenar"] { border-radius: 9999px; }
 .tram-sort { display: flex; align-items: center; gap: 16px; font-size: 16px; }
 .tram-sort-buttons {
   display: flex;
