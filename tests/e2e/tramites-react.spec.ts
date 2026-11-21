@@ -647,3 +647,18 @@ test('documentación condicional R051 y R116: conserva datos reales sin ícono d
     .toContainText('La documentación necesaria se determina en función de cada caso específico');
   await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(0);
 });
+
+
+test('documentación con viñetas y saltos de línea: no convierte continuaciones en documentos', async ({ page }) => {
+  await page.goto('/tramites/R082');
+  const documentosR082 = page.locator('#documentacion .tram-documents li');
+  await expect(documentosR082).toHaveCount(7);
+  await expect(documentosR082.last()).toContainText('especificando la fecha del cierre solicitado');
+  await expect(documentosR082.last()).toContainText('aclaración del mismo');
+
+  await page.goto('/tramites/R084');
+  const documentosR084 = page.locator('#documentacion .tram-documents li');
+  await expect(documentosR084).toHaveCount(11);
+  await expect(documentosR084.nth(4)).toContainText('propietarios. (comprador)');
+  await expect(page.locator('#documentacion .tram-document-note')).toHaveCount(0);
+});
