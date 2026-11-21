@@ -1267,7 +1267,7 @@
   margin: 0;
 }
 .tram-detail .tram-related-icon {
-  background: var(--tram-grey-100);
+  background: #f6f6f6; /* Grey 50 · Lomas UI */
 }
 .tram-detail .tram-related-card:hover {
   border-color: var(--tram-grey-100);
