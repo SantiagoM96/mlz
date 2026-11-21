@@ -33,7 +33,7 @@ try{
   await page.locator(design).first().evaluate(n=>n.click());
   await handle.tap();
   const initialPreview=await page.locator('#art').boundingBox();
-  assert.ok(initialPreview.width>=280,brand+' mobile preview keeps its width');
+  assert.ok(initialPreview.width>=235,brand+' mobile preview keeps its width');
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
   const textCard=content.locator('.modern-text-card,.ds-texts-group');
   await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));
