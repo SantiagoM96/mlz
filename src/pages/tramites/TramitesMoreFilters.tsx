@@ -21,12 +21,13 @@ type Props = {
   destinatarios: readonly string[];
   modalidades: readonly string[];
   resultCount: number;
+  optionCounts: Partial<Record<CampoFiltro, Readonly<Record<string, number>>>>;
   onChange: (campo: CampoFiltro, value: string) => void;
   onReset: () => void;
 };
 
 export function TramitesMoreFilters({
-  value, temas, destinatarios, modalidades, resultCount, onChange, onReset,
+  value, temas, destinatarios, modalidades, resultCount, optionCounts, onChange, onReset,
 }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -38,13 +39,13 @@ export function TramitesMoreFilters({
     Number(Boolean(value.modalidad)) + Number(Boolean(value.etiqueta));
   const groups = [
     { key: 'destinatario', title: '¿Para quién es?', options: destinatarios,
-      selected: value.destinatario, selectionControl: 'checkbox' as const },
+      selected: value.destinatario, optionCounts: optionCounts.destinatario, selectionControl: 'checkbox' as const },
     { key: 'tema', title: 'Tema', options: temas,
-      selected: value.tema ? [value.tema] : [], selectionControl: 'radio' as const },
+      selected: value.tema ? [value.tema] : [], optionCounts: optionCounts.tema, selectionControl: 'radio' as const },
     { key: 'turno', title: 'Turno', options: turnoOpciones,
-      selected: value.turno ? [value.turno] : [], selectionControl: 'radio' as const },
+      selected: value.turno ? [value.turno] : [], optionCounts: optionCounts.turno, selectionControl: 'radio' as const },
     { key: 'modalidad', title: 'Modalidad', options: modalidades,
-      selected: value.modalidad ? [value.modalidad] : [], selectionControl: 'radio' as const },
+      selected: value.modalidad ? [value.modalidad] : [], optionCounts: optionCounts.modalidad, selectionControl: 'radio' as const },
   ];
 
   return <div ref={rootRef} className="relative min-w-0" data-testid="tramites-more-filters">
