@@ -386,10 +386,10 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const showMap = /\b\d{2,5}\b/.test(tramite.direccion);
   const mapsQuery = tramite.direccion + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
-    <h2>Dónde y cuándo</h2>
     <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
         <div className="tram-location-card-details">
+          <h2>Dónde y cuándo</h2>
           {index === 0 && turnoLabel && <div className="tram-turno-tags">
             <span><MaterialIcon name={/^no$/i.test(turno) ? 'event' : 'event_available'} size={18} />{turnoLabel}</span>
           </div>}
