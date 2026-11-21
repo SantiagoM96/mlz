@@ -220,10 +220,10 @@
   font-family: inherit;
   transition: background-color 150ms ease, border-color 150ms ease;
 }
-.tram-tag-action:hover {
-  background: var(--color-panel);
-  border-color: var(--color-primary-600);
-  color: var(--color-primary-600);
+/* Hover sutil de etiquetas: solo varía el fondo, sin remarcar el contorno. */
+.tram-tag-action:hover:not(.tram-tag-selected) {
+  background: #d9eaf7;
+  border-color: transparent;
 }
 .tram-tag-action:focus-visible {
   outline: 2px solid var(--color-info-500);
