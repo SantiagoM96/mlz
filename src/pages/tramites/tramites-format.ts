@@ -93,12 +93,25 @@ export function documentacionInformativa(texto: string): boolean {
  */
 const notasDocumentales = new Set(['R051', 'R116']);
 export function notaDocumentacionPublica(tramite: Tramite): string {
+  // R041 distingue el documento base de los planos adicionales condicionales.
+  // La condición sigue siendo el texto declarado en ORIGEN, no un requisito nuevo.
+  if (tramite.id === 'R041') {
+    return (tramite.documentacion.split(/\r?\n/)[0] ?? '')
+      .replace(/^Debe presentar:\s*Plano Obra\s+y\s+/iu, '').trim();
+  }
   return notasDocumentales.has(tramite.id) ? tramite.documentacion.trim() : '';
 }
 
 /** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
 export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
+  // En R041 la primera línea mezcla un documento obligatorio y una condición.
+  // Evita mostrar la cláusula «dependiendo del trámite» con ícono de archivo.
+  if (tramite.id === 'R041') {
+    const lineas = tramite.documentacion.split(/\r?\n/)
+      .map(linea => linea.trim()).filter(Boolean);
+    return ['Plano Obra', ...lineas.slice(1)];
+  }
   const documentosDelTramite = documentosEnumerados[tramite.id];
   if (documentosDelTramite) return [...documentosDelTramite];
 
@@ -330,6 +343,55 @@ function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
   return bloques;
 }
 
+/**
+ * El relevamiento contiene además circuitos con acciones identificables en un
+ * único párrafo, sin numeración. Solo se separan IDs cotejados con ORIGEN.
+ * No es un parser genérico de comas: una coma también puede unir documentos,
+ * condiciones, modalidades o nombres de oficinas.
+ */
+const circuitosPorComasVerificados = new Set([
+  'R001', 'R003', 'R004', 'R005', 'R027', 'R028', 'R079', 'R081',
+  'R082', 'R083', 'R084', 'R085', 'R086', 'R088', 'R097', 'R100',
+  'R101', 'R103', 'R104', 'R109', 'R110', 'R112', 'R122', 'R124',
+]);
+const circuitosPorOracionesVerificados = new Set([
+  'R007', 'R008', 'R014', 'R058', 'R065', 'R067', 'R087',
+  'R094', 'R099', 'R102', 'R107', 'R108', 'R113', 'R117',
+]);
+
+/**
+ * Delimitaciones que no deben separar comas interiores de una enumeración
+ * («nombre, dirección, tipo de material»), opciones de pago o condiciones.
+ */
+const circuitosConLimitesEspecificos: Record<string, RegExp> = {
+  R057: /,\s*(?=(?:le pedimos|un representante|se establece|se le comunica|en las semanas))/iu,
+  R059: /,\s*(?=(?:un representante|se establece|se le comunica|en las semanas))/iu,
+  R061: /,\s*(?=(?:se les comenta|na vez))/iu,
+  R068: /,\s*(?=se le piden)/iu,
+  R069: /,\s*(?=(?:en cuanto|se realiza))/iu,
+  R070: /,\s*(?=se les asigna)/iu,
+  R071: /,\s*(?=el reclamo)/iu,
+  R073: /,\s*(?=el reclamo)/iu,
+  R075: /,\s*(?=(?:en cuanto|se realiza))/iu,
+};
+
+function parsearCircuitoNarrativo(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  let partes: string[];
+  if (circuitosPorComasVerificados.has(tramite.id)) {
+    partes = texto.split(/,\s*/u);
+  } else if (circuitosPorOracionesVerificados.has(tramite.id)) {
+    partes = texto.split(/(?<=[.!?])\s+(?=[a-záéíóúñ])/iu);
+  } else if (circuitosConLimitesEspecificos[tramite.id]) {
+    partes = texto.split(circuitosConLimitesEspecificos[tramite.id]);
+  } else {
+    return null;
+  }
+  const items = partes.map(parte => parte.trim()).filter(Boolean);
+  // Un cambio en el origen no debe forzar una numeración inválida.
+  if (items.length < 2 || items.length > 18) return null;
+  return [{ tipo: 'pasos', items }];
+}
+
 export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
   if (tramite.id === 'R036') return [{ tipo: 'pasos', items: [...fichaR036.pasos] }];
 
@@ -339,6 +401,8 @@ export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
 
   const guionesVerificados = parsearEtapasPorGuiones(tramite, texto);
   if (guionesVerificados) return guionesVerificados;
+  const circuitoNarrativo = parsearCircuitoNarrativo(tramite, texto);
+  if (circuitoNarrativo) return circuitoNarrativo;
 
   const lineas = texto.split('\n').map(linea => linea.trim()).filter(Boolean);
   const numerosConGuion = parsearNumerosConGuion(lineas);
