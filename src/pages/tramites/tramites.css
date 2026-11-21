@@ -1185,3 +1185,29 @@
   background: var(--color-panel);
   color: var(--color-primary-600);
 }
+
+/* Tarjeta clickeable sin interferir con las etiquetas independientes. */
+.tram-group-grid > .tram-row {
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.tram-group-grid > .tram-row:hover,
+.tram-group-grid > .tram-row:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+.tram-group-grid > .tram-row:focus-visible {
+  outline: 2px solid var(--color-info-500);
+  outline-offset: 3px;
+}
+.tram-group-grid > .tram-row:hover .tram-link-action,
+.tram-group-grid > .tram-row:focus-visible .tram-link-action {
+  text-decoration: underline;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tram-group-grid > .tram-row { transition: none; }
+}
+/* Tarjeta de ayuda sin borde ni icono; el reloj de horarios permanece. */
+.tram-detail .tram-detail-main > .tram-contact-help {
+  border: 0;
+}

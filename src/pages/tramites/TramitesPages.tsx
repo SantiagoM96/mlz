@@ -1,5 +1,5 @@
 import { useDeferredValue, useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { MaterialIcon } from '../../components/ui/MaterialIcon';
@@ -103,8 +103,22 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
   etiquetaActiva: string;
   onElegirEtiqueta: (etiqueta: string) => void;
 }) {
+  const navigate = useNavigate();
+  const abrirFicha = () => { registrarVisita(tramite.id); navigate(ficha(tramite.id)); };
   return (
-    <article className="tram-row" data-testid="tramite-row">
+    <article className="tram-row" data-testid="tramite-row" role="link" tabIndex={0}
+      aria-label={'Ver trámite: ' + tramite.titulo}
+      onClick={(event) => {
+        if ((event.target as HTMLElement).closest('a, button')) return;
+        abrirFicha();
+      }}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          abrirFicha();
+        }
+      }}>
       <div className="tram-row-body">
         <div className="tram-row-content">
           <h3>{tramite.titulo}</h3>
@@ -360,7 +374,6 @@ function AyudaFicha() {
   return <section className="tram-contact-help" aria-label="Ayuda sobre el trámite">
     <div className="tram-contact-main">
       <div className="tram-contact-heading">
-        <span className="tram-help-icon"><MaterialIcon name="support_agent" size={20}/></span>
         <h2>¿Necesitás ayuda?</h2>
       </div>
       <p>¿Tenés dudas sobre este trámite? Comunicate con el Centro de Atención a la Comunidad.</p>
