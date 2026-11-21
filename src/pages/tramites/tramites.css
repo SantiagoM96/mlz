@@ -1122,3 +1122,15 @@
     row-gap: 24px;
   }
 }
+
+/* Estado de turno junto al encabezado, fuera de la tarjeta de sede. */
+.tram-detail .tram-location-section-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-bottom: 16px;
+}
+.tram-detail .tram-location-section-heading h2 { margin: 0; }
+.tram-detail .tram-location-section-heading .tram-turno-tags { margin: 0; }
