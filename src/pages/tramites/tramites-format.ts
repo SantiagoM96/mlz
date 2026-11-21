@@ -99,7 +99,8 @@ export function notaDocumentacionPublica(tramite: Tramite): string {
   // una propuesta interna de agregar un campo de carga de imágenes.
   // La sugerencia interna no es documentación requerida al vecino.
   if (tramite.id === 'R077') {
-    return tramite.documentacion.split(/\.\s*También\b/iu)[0]?.trim() ?? '';
+    return (tramite.documentacion.split(/\.\s*También\b/iu)[0] ?? '')
+      .replace(/^\s*[-•]\s*/u, '').trim();
   }
   // R012 identifica dos documentos y una tercera exigencia opcional.
   if (tramite.id === 'R012') {
