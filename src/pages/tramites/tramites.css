@@ -155,7 +155,7 @@
   padding-left: 32px;
   border-left: 1px solid var(--color-divider);
 }
-.tram-row-side h4 { color: #5d5d5d; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+.tram-row-side h4 { color: #b0b0b0; font-size: 14px; font-weight: 700; text-transform: uppercase; }
 .tram-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .tram-tag {
   display: inline-flex;
