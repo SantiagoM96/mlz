@@ -323,7 +323,6 @@ function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
   if (!items.length) return null;
   return <section className="tram-detail-section" id="documentacion">
     <h2>Documentación</h2>
-    <p className="tram-document-intro">Para realizar el trámite te van a solicitar la siguiente documentación</p>
     <ul className="tram-documents">{items.map((item, index) => <li key={index}>
       <span className="tram-document-icon"><MaterialIcon name="description" size={24} /></span>
       <span>{textoPublicoLegible(item)}</span>
