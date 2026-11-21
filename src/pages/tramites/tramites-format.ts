@@ -68,8 +68,8 @@ const documentosEnumerados: Record<string, string[]> = {
  * Nunca mostrar "No hay", "-", "Varias" o una referencia a otra oficina
  * como si fueran archivos que el vecino debe presentar. La base no cambia.
  *
- * R035/R051: el relevamiento no nombra la documentación, por eso el
- * componente se omite hasta contar con contenido editorial específico.
+ * R035: el relevamiento no nombra los documentos, por lo que se omite
+ * la falsa lista hasta contar con contenido editorial específico.
  */
 export function documentacionInformativa(texto: string): boolean {
   const normalizado = texto.trim().toLocaleLowerCase('es-AR')
@@ -83,8 +83,17 @@ export function documentacionInformativa(texto: string): boolean {
     'mesa de entradas o elomas la solicita',
   ]);
   if (sinDocumentos.has(normalizado)) return false;
-  if (normalizado.startsWith('para iniciar la gestion es importante contar con los requisitos anteriormente mencionados')) return false;
   return true;
+}
+
+/**
+ * R051 contiene documentación específica en un párrafo explicativo y R116
+ * declara que la documentación se determina caso por caso. Ninguno debe
+ * mostrarse como un documento individual con ícono, ni eliminarse.
+ */
+const notasDocumentales = new Set(['R051', 'R116']);
+export function notaDocumentacionPublica(tramite: Tramite): string {
+  return notasDocumentales.has(tramite.id) ? tramite.documentacion.trim() : '';
 }
 
 /** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
@@ -105,7 +114,7 @@ export function documentacionPublica(tramite: Tramite): string[] {
   }
 
   const texto = tramite.documentacion.trim();
-  if (!texto || !documentacionInformativa(texto)) return [];
+  if (!texto || notaDocumentacionPublica(tramite) || !documentacionInformativa(texto)) return [];
   return texto
     .split(/\r?\n|;\s*|(?:^|\s)[•]\s*/)
     .map((item) => item.replace(/^\s*[-•*]\s*/, '').trim())
