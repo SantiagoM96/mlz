@@ -388,13 +388,11 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const showMap = /\b\d{2,5}\b/.test(direccionMapa);
   const mapsQuery = direccionMapa + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
+    <h2>Dónde y cuándo</h2>
     <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
         <div className="tram-location-card-details">
-          <h2>Dónde y cuándo</h2>
-          {index === 0 && turnoLabel && <div className="tram-turno-tags">
-            <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
-          </div>}
+
           <div className="tram-location-info">
             {sede.dias.trim() && <div className="tram-location-item">
               <MaterialIcon name="schedule" size={24} className="tram-location-symbol" />
@@ -407,6 +405,9 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
                 : <p>{textoPublicoLegible(sede.lugar)}</p>}
             </div>}
           </div>
+          {index === 0 && turnoLabel && <div className="tram-turno-tags">
+            <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
+          </div>}
           {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
         target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
         Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
