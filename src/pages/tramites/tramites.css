@@ -126,7 +126,13 @@
   outline-offset: 2px;
 }
 .tram-container .agenda-more-panel > div:last-child > button:last-child {
-  border-color: var(--color-primary-600);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-primary-600);
+}
+.tram-container .agenda-more-panel > div:last-child > button:last-child:hover {
+  background: var(--color-panel);
 }
 .tram-filter-more-control [data-agenda-filter-count] { flex: none; }
 /* En desktop el wrapper no altera la composición del componente compartido. */
