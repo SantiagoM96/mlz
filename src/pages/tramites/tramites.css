@@ -888,3 +888,21 @@
 .tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"][aria-invalid="true"] {
   border-color: #ef284c;
 }
+
+/* Buscadores: el foco prevalece sobre hover (también con puntero encima).
+   Mismo fondo activo que el buscador de Deportes. */
+.tram-filters .tram-search .agenda-search-input:is(:focus, :focus-visible, :focus:hover),
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:is(:focus, :focus-visible, :focus:hover) {
+  border: 2px solid #006eff;
+  background-color: #f6f6f6;
+  outline: none;
+  box-shadow: none;
+}
+.tram-filters .tram-search .agenda-search-input:is(:focus, :focus-visible, :focus:hover) {
+  padding-left: 15px;
+  padding-right: 43px;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:is(:focus, :focus-visible, :focus:hover) {
+  padding-left: 15px;
+  padding-right: 43px;
+}
