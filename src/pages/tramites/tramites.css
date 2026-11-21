@@ -1251,3 +1251,14 @@
 .tram-detail .tram-detail-main > .tram-detail-section:last-of-type {
   border-bottom: 0;
 }
+
+/* Documentación: check de sello ondulado sin contenedor, 24 px Primary 600. */
+.tram-detail .tram-document-icon {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-primary-600);
+}
+.tram-detail .tram-documents { gap: 16px; }
