@@ -624,7 +624,7 @@ test('auditoría editorial: otras listas de pasos verificables se presentan en e
 test('documentación: sin archivos falsos cuando ORIGEN declara que no hay o no especifica', async ({ page }) => {
   for (const id of [
     'R124', 'R031', 'R043', 'R057', 'R058', 'R059', 'R060', 'R061',
-    'R064', 'R070', 'R072', 'R035', 'R051',
+    'R064', 'R070', 'R072', 'R035',
   ]) {
     await page.goto('/tramites/' + id);
     await expect(page.locator('#documentacion'), id + ': sin lista inventada').toHaveCount(0);
@@ -632,4 +632,18 @@ test('documentación: sin archivos falsos cuando ORIGEN declara que no hay o no 
     await expect(page.getByRole('navigation', { name: 'Índice de la ficha' })
       .first().getByRole('link', { name: 'Documentación' }), id + ': índice condicional').toHaveCount(0);
   }
+});
+
+
+test('documentación condicional R051 y R116: conserva datos reales sin ícono de archivo falso', async ({ page }) => {
+  await page.goto('/tramites/R051');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('resumen de historia clinica');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('ordenes medicas');
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(0);
+  await page.goto('/tramites/R116');
+  await expect(page.locator('#documentacion .tram-document-note'))
+    .toContainText('La documentación necesaria se determina en función de cada caso específico');
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(0);
 });
