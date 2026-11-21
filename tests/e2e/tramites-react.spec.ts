@@ -700,8 +700,8 @@ test('ficha R041: documentación condicional no se representa como archivo indiv
   const documentos = page.locator('#documentacion .tram-documents li');
   await expect(documentos).toHaveCount(7);
   await expect(documentos.first()).toContainText('Plano Obra');
-  await expect(page.locator('#documentacion .tram-document-note')).toContainText('dependiendo del tramite');
-  await expect(documentos).not.toContainText('dependiendo del tramite');
+  await expect(page.locator('#documentacion .tram-document-note')).toContainText('Dependiendo del tramite');
+  await expect(documentos.filter({ hasText: 'dependiendo del tramite' })).toHaveCount(0);
 });
 
 test('ficha final: los casos sin secuencia segura conservan notas, listas y ausencias', async ({ page }) => {
