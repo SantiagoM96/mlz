@@ -17,7 +17,7 @@ try{
   const geometry=await page.evaluate(()=>{
    const rect=n=>n.getBoundingClientRect();
    const field=rect(document.querySelector('.editorial-text-writing'));
-   const buttons=[...document.querySelectorAll('.editorial-text-tools button')].map(n=>({id:n.id,w:rect(n).width,h:rect(n).height,radius:getComputedStyle(n).borderRadius}));
+   const buttons=[...document.querySelectorAll('.editorial-text-tools .format-buttons button,.editorial-text-tools .align-buttons button')].map(n=>({id:n.id,w:rect(n).width,h:rect(n).height,radius:getComputedStyle(n).borderRadius}));
    return {buttons,fieldBottom:field.bottom,toolsTop:rect(document.querySelector('.editorial-text-tools')).top,background:getComputedStyle(document.querySelector('.editorial-text-sheet')).backgroundColor,stageInSheet:!!document.querySelector('.editorial-text-preview #photoStage')};
   });
   assert.equal(geometry.background,'rgba(0, 0, 0, 0)');
