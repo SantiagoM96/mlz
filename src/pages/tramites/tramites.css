@@ -22,7 +22,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 200px 200px max-content;
   align-items: start;
-  gap: 8px;
+  gap: 16px;
 }
 .tram-filters .tram-search { display: block; position: relative; min-width: 0; height: 48px; }
 .tram-filters .tram-search input {
