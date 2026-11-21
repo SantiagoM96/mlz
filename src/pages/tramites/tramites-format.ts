@@ -63,6 +63,30 @@ const documentosEnumerados: Record<string, string[]> = {
   ],
 };
 
+/**
+ * Documentación declarada como inexistente o no especificada en ORIGEN.
+ * Nunca mostrar "No hay", "-", "Varias" o una referencia a otra oficina
+ * como si fueran archivos que el vecino debe presentar. La base no cambia.
+ *
+ * R035/R051: el relevamiento no nombra la documentación, por eso el
+ * componente se omite hasta contar con contenido editorial específico.
+ */
+export function documentacionInformativa(texto: string): boolean {
+  const normalizado = texto.trim().toLocaleLowerCase('es-AR')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[.!]+$/g, '').trim();
+  if (!normalizado || /^[-–—.]$/.test(normalizado)) return false;
+  const sinDocumentos = new Set([
+    'ninguna', 'ninguno', 'no', 'no hay', 'no se requiere',
+    'no es necesaria documentacion',
+    'no es necesario ningun tipo de documentacion',
+    'no lo dice el portal', 'varias', 'no aplica', 'no corresponde',
+    'mesa de entradas o elomas la solicita',
+  ]);
+  if (sinDocumentos.has(normalizado)) return false;
+  if (normalizado.startsWith('para iniciar la gestion es importante contar con los requisitos anteriormente mencionados')) return false;
+  return true;
+}
+
 /** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
 export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
@@ -81,7 +105,7 @@ export function documentacionPublica(tramite: Tramite): string[] {
   }
 
   const texto = tramite.documentacion.trim();
-  if (!texto) return [];
+  if (!texto || !documentacionInformativa(texto)) return [];
   return texto
     .split(/\r?\n|;\s*|(?:^|\s)[•]\s*/)
     .map((item) => item.replace(/^\s*[-•*]\s*/, '').trim())
@@ -125,13 +149,65 @@ function parsearEtapasPorGuiones(tramite: Tramite, texto: string): BloqueProcedi
     ? texto
       .replace(/(?<=pedido)-(?=esperar)/iu, ' - ')
       .replace(/\s+-(?=cobertura)/iu, ' - ')
-    : texto;
+    : tramite.id === 'R034'
+      ? texto.replace(/\s+-(?=Secretaria)/iu, ' - ')
+      : texto;
   const etapas = normalizado.split(/\s+[-–—]\s*/u)
     .map(etapa => etapa.trim()).filter(Boolean);
   if (etapas.length < 3 || etapas.length > 15) return null;
   return [{ tipo: 'pasos', items: etapas }];
 }
 
+
+
+/**
+ * Enumeración 1- Paso, 2 - Paso, etc. detectada en R010, R114, R115
+ * y R118. Se respetan las notas anteriores a la numeración.
+ */
+function parsearNumerosConGuion(lineas: readonly string[]): BloqueProcedimiento[] | null {
+  const numeroYTexto = /^(\d{1,2})\s*[-–—]\s*(.+)$/u;
+  const pasos: string[] = [];
+  const introduccion: string[] = [];
+  let iniciado = false;
+  for (const linea of lineas) {
+    const match = linea.match(numeroYTexto);
+    if (match && Number(match[1]) === pasos.length + 1) {
+      iniciado = true;
+      pasos.push((match[2] ?? '').trim());
+      continue;
+    }
+    if (!iniciado) {
+      introduccion.push(linea);
+    } else if (pasos.length) {
+      // Una línea de continuación pertenece al paso anterior, no agrega uno nuevo.
+      const index = pasos.length - 1;
+      pasos[index] = [pasos[index], linea].filter(Boolean).join(' ');
+    }
+  }
+  if (pasos.length < 2) return null;
+  return [
+    ...(introduccion.length ? [{ tipo: 'texto' as const, texto: introduccion.join(' ') }] : []),
+    { tipo: 'pasos' as const, items: pasos },
+  ];
+}
+
+/**
+ * Otras delimitaciones de etapas verificadas registro por registro.
+ * Una barra dentro de un documento, alternativa o nombre NO es un
+ * separador general. Solo se admiten estos circuitos concretos.
+ */
+const pasosPorBarras = new Set(['R009', 'R037', 'R133']);
+const pasosPorOraciones = new Set(['R131']);
+function parsearEtapasAlternativas(tramite: Tramite, texto: string): BloqueProcedimiento[] | null {
+  let items: string[];
+  if (pasosPorBarras.has(tramite.id)) {
+    items = texto.split(/\s*\/\s*/u).map(x => x.trim()).filter(Boolean);
+  } else if (pasosPorOraciones.has(tramite.id)) {
+    items = texto.split(/\.\s+/u).map(x => x.trim().replace(/\.$/u, '')).filter(Boolean);
+  } else return null;
+  if (items.length < 3 || items.length > 10) return null;
+  return [{ tipo: 'pasos', items }];
+}
 
 function agregarPasos(bloques: BloqueProcedimiento[], pasos: string[]) {
   const validos = pasos.map(paso => paso.trim()).filter(Boolean);
@@ -237,6 +313,10 @@ export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
   if (guionesVerificados) return guionesVerificados;
 
   const lineas = texto.split('\n').map(linea => linea.trim()).filter(Boolean);
+  const numerosConGuion = parsearNumerosConGuion(lineas);
+  if (numerosConGuion) return numerosConGuion;
+  const etapasAlternativas = parsearEtapasAlternativas(tramite, texto);
+  if (etapasAlternativas) return etapasAlternativas;
   const numerosSueltos = parsearNumerosSueltos(lineas);
   if (numerosSueltos) return numerosSueltos;
 
