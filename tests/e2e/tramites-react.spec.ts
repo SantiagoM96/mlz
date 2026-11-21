@@ -530,3 +530,71 @@ test('chips seleccionados en mobile: scroll horizontal y Limpiar fijo como Agend
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
 });
+
+
+test('procedimiento R121: las cuatro etapas del relevamiento usan el timeline institucional', async ({ page }) => {
+  await page.goto('/tramites/R121');
+  const seccion = page.locator('#procedimiento');
+  const pasos = seccion.locator('.tram-timeline li');
+  await expect(pasos).toHaveCount(4);
+  await expect(pasos.nth(0)).toContainText('Solicitud');
+  await expect(pasos.nth(1)).toContainText('autorizacion por parte de la direccion');
+  await expect(pasos.nth(2)).toContainText('confirmacion');
+  await expect(pasos.nth(3)).toContainText('implementacion');
+  await expect(seccion.locator('.tram-procedure-note')).toHaveCount(0);
+  const marcador = pasos.first().locator('.tram-timeline-marker');
+  await expect(marcador).toHaveCSS('width', '30px');
+  await expect(marcador).toHaveCSS('height', '30px');
+  await expect(pasos.first().locator('.tram-timeline-text')).toHaveCSS('font-size', '18px');
+  await expect(page.getByText('Para realizar el trámite te van a solicitar la siguiente documentación')).toHaveCount(0);
+  await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(1);
+});
+
+test('procedimientos con guiones verificados mantienen etapas, alternativas y orden de ORIGEN', async ({ page }) => {
+  for (const { id, etapas, ultimo } of [
+    { id: 'R031', etapas: 3, ultimo: 'Resolucion' },
+    { id: 'R034', etapas: 5, ultimo: 'Secretaria de Economía y Finanzas' },
+    { id: 'R132', etapas: 3, ultimo: 'ejecución' },
+    { id: 'R123', etapas: 3, ultimo: 'cobertura del evento solicitado' },
+  ]) {
+    await page.goto('/tramites/' + id);
+    const pasos = page.locator('#procedimiento .tram-timeline li');
+    await expect(pasos).toHaveCount(etapas);
+    await expect(pasos.last()).toContainText(ultimo, { ignoreCase: true });
+    await expect(page.locator('#procedimiento .tram-procedure-note')).toHaveCount(0);
+    await expect(page.locator('#documentacion .tram-document-intro')).toHaveCount(0);
+  }
+  // R123: autorizado/cancelado/rechazado son alternativas en un mismo paso.
+  await page.goto('/tramites/R123');
+  await expect(page.locator('#procedimiento .tram-timeline li').nth(1))
+    .toContainText('autorizado-cancelado-rechazado');
+  // R035: guiones internos ambiguos, no dividir un párrafo en pasos ficticios.
+  await page.goto('/tramites/R035');
+  await expect(page.locator('#procedimiento .tram-timeline')).toHaveCount(0);
+  await expect(page.locator('#procedimiento .tram-procedure-note')).toHaveCount(1);
+});
+
+test('documentación: sin texto genérico en fichas y sin modificar la lista real', async ({ page }) => {
+  for (const { id, documentos } of [
+    { id: 'R018', documentos: 3 },
+    { id: 'R036', documentos: 4 },
+    { id: 'R121', documentos: 1 },
+  ]) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#documentacion .tram-documents li')).toHaveCount(documentos);
+    await expect(page.locator('#documentacion .tram-document-intro')).toHaveCount(0);
+    await expect(page.getByText('Para realizar el trámite te van a solicitar la siguiente documentación')).toHaveCount(0);
+  }
+});
+
+test('R121 en 390 px: procedimiento se organiza en pasos y no genera desborde', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tramites/R121');
+  await expect(page.locator('#procedimiento .tram-timeline-marker')).toHaveCount(4);
+  await expect(page.locator('#procedimiento .tram-timeline li').first().locator('.tram-timeline-marker'))
+    .toHaveCSS('width', '30px');
+  const horizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(horizontalOverflow).toBeLessThanOrEqual(2);
+});
