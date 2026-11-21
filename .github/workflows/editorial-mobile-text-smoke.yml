@@ -1,0 +1,33 @@
+name: Editorial DEV — editor sobre teclado
+on:
+  push:
+    paths:
+      - 'public/shared/editorial-mobile-text.*'
+      - 'public/cronica-dev/index.html'
+      - 'public/bae-dev/index.html'
+      - 'public/diarioshow-dev/index.html'
+      - 'scripts/check-mobile-text.mjs'
+      - '.github/workflows/editorial-mobile-text-smoke.yml'
+  workflow_dispatch:
+jobs:
+  mobile-text:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Servir editores DEV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory public &
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Probar edición y restauración en las tres marcas
+        run: node scripts/check-mobile-text.mjs
