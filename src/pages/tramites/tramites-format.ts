@@ -115,6 +115,24 @@ export function documentacionPublica(tramite: Tramite): string[] {
 
   const texto = tramite.documentacion.trim();
   if (!texto || notaDocumentacionPublica(tramite) || !documentacionInformativa(texto)) return [];
+
+  // En las listas con viñetas, una línea que no comienza con viñeta
+  // continúa el documento anterior. Evita que «propietarios. (comprador)»
+  // o «aclaración del mismo» aparezcan como archivos independientes.
+  const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(Boolean);
+  if (lineas.length > 1 && /^[•*]\s*/u.test(lineas[0] ?? '')) {
+    const documentos: string[] = [];
+    for (const linea of lineas) {
+      if (/^[•*]\s*/u.test(linea)) {
+        documentos.push(linea.replace(/^[•*]\s*/u, '').trim());
+      } else if (documentos.length) {
+        const indice = documentos.length - 1;
+        documentos[indice] = [documentos[indice], linea].filter(Boolean).join(' ');
+      }
+    }
+    return documentos.filter(Boolean);
+  }
+
   return texto
     .split(/\r?\n|;\s*|(?:^|\s)[•]\s*/)
     .map((item) => item.replace(/^\s*[-•*]\s*/, '').trim())
