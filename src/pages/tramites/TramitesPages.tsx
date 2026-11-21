@@ -50,6 +50,35 @@ function registrarVisita(id: string) {
 
 const base = '/tramites';
 const ficha = (id: string) => base + '/' + id;
+/* Abreviaturas de presentación: los filtros y URLs mantienen el nombre completo. */
+const etiquetasCortas: Record<string, string> = {
+  'Instalaciones eléctricas': 'Instal. eléctricas',
+  'Jubilados y pensionados': 'Jubilados y pens.',
+  'Mujeres y diversidades': 'Mujeres y divers.',
+  'Declaraciones juradas': 'DD. JJ.',
+  'Licencia de conducir': 'Lic. de conducir',
+  'Escuelas municipales': 'Escuelas munic.',
+  'Asociaciones civiles': 'Asoc. civiles',
+  'Veteranos de guerra': 'Veteranos de guerra',
+  'Electrodependientes': 'Electrodep.',
+  'Violencia de género': 'Violencia de género',
+  'Educación ambiental': 'Educ. ambiental',
+  'Personería jurídica': 'Personería juríd.',
+  'Barrios populares': 'Barrios populares',
+  'Datos tributarios': 'Datos tributarios',
+  'Residuos textiles': 'Residuos textiles',
+  'Libreta sanitaria': 'Libreta sanitaria',
+  'Asistencia social': 'Asist. social',
+  'Viajes escolares': 'Viajes escolares',
+  'Carga y descarga': 'Carga y descarga',
+  'Espacio público': 'Espacio público',
+  'Reserva natural': 'Reserva natural',
+  'Estacionamiento': 'Estacionam.',
+  'Acompañamiento': 'Acompañam.',
+  'Habilitaciones': 'Habilitaciones',
+};
+function etiquetaVisible(item: string): string { return etiquetasCortas[item] ?? item; }
+
 function Etiquetas({ items, activa, onSeleccionar }: {
   items: readonly string[];
   activa?: string;
@@ -61,11 +90,11 @@ function Etiquetas({ items, activa, onSeleccionar }: {
           className={'tram-tag tram-tag-action' + (activa === item ? ' tram-tag-selected' : '')}
           aria-label={'Filtrar trámites por etiqueta: ' + item}
           aria-pressed={activa === item}
-          onClick={() => onSeleccionar(item)}>{item}</button>
+          onClick={() => onSeleccionar(item)} title={item}>{etiquetaVisible(item)}</button>
       : <Link key={item} to={base + '?etiqueta=' + encodeURIComponent(item)}
           className="tram-tag tram-tag-action"
           aria-label={'Ver trámites con etiqueta: ' + item}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>{item}</Link>)}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })} title={item}>{etiquetaVisible(item)}</Link>)}
   </div>;
 }
 
