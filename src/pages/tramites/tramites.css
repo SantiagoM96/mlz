@@ -1211,3 +1211,22 @@
 .tram-detail .tram-detail-main > .tram-contact-help {
   border: 0;
 }
+
+/* Interlineado unificado: textos de 18 y 20 px a 21 px.
+   No alterar chips, íconos, números de timeline ni controles de altura fija. */
+.tram-results > strong,
+.tram-group-grid > .tram-row h3,
+.tram-detail .tram-lead,
+.tram-detail .tram-detail-section .tram-longtext,
+.tram-detail .tram-documents li,
+.tram-detail .tram-timeline li,
+.tram-detail .tram-procedure-note,
+.tram-detail .tram-procedure-list li,
+.tram-detail .tram-location-address span,
+.tram-detail .tram-related-card strong,
+.tram-detail .tram-contact-help p,
+.tram-detail .tram-support-hours h3,
+.tram-detail .tram-support-hours strong {
+  line-height: 21px;
+}
+.tram-detail .tram-timeline-marker { line-height: 1; }
