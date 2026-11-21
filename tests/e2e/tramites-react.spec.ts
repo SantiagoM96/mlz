@@ -1,4 +1,28 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+/** Tema se selecciona por acceso directo en desktop/tablet y en Más filtros a 390px. */
+async function elegirTema(page: Page, tema: string) {
+  const esMobile = (page.viewportSize()?.width ?? 1440) <= 680;
+  if (esMobile) {
+    await page.getByTestId('tramites-more-filters')
+      .getByRole('button', { name: /Más filtros/ }).click();
+    const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
+    await panel.getByRole('button', { name: 'Tema', exact: true }).click();
+    const radio = panel.getByRole('radio', { name: tema });
+    await expect(radio).toBeVisible();
+    await radio.click();
+    await panel.getByRole('button', { name: /Ver resultados/ }).click();
+    await expect(panel).toBeHidden();
+  } else {
+    await page.getByRole('button', { name: 'Tema', exact: true }).click();
+    const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole('checkbox')).toHaveCount(0);
+    await menu.getByRole('radio', { name: tema }).click();
+    await menu.getByRole('button', { name: /Ver resultados/ }).click();
+  }
+}
+
 
 test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Agenda', async ({ page }) => {
   await page.goto('/tramites');
@@ -10,12 +34,7 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await page.getByRole('button', { name: 'Limpiar', exact: true }).click();
   await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const menu = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await expect(menu).toBeVisible();
-  // El checkbox de Agenda cubre toda la fila; activar el control real, no el texto debajo.
-  await menu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await menu.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
 
@@ -109,10 +128,7 @@ test('Más filtros sincroniza accesos directos sin duplicar sus contadores', asy
   await audience.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(counter).toHaveCount(0);
 
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const topic = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await topic.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await topic.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(counter).toHaveCount(0);
 
   await more.getByRole('button', { name: /Más filtros/ }).click();
@@ -311,12 +327,7 @@ test('destinatarios: varias selecciones, chips individuales y URL reproducible',
 
   await page.reload();
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const temasMenu = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await expect(temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
-  await expect(temasMenu.getByRole('checkbox')).toHaveCount(0);
-  await temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await temasMenu.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
   await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
 
@@ -439,10 +450,7 @@ test('etiquetas de ficha: navegan al catálogo filtrado y combinan con tema sin 
   await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
   await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
     .locator('.agenda-filter-chip')).toHaveCount(1);
-  await page.getByRole('button', { name: 'Tema', exact: true }).click();
-  const topics = page.getByRole('dialog', { name: 'Opciones de Tema' });
-  await topics.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await topics.getByRole('button', { name: /Ver resultados/ }).click();
+  await elegirTema(page, 'Vehículos y tránsito');
   await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
     .locator('.agenda-filter-chip')).toHaveCount(2);
   await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
