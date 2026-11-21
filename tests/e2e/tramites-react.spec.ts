@@ -97,7 +97,7 @@ test('rutas directas y enlaces públicos verificables', async ({ page }) => {
 });
 
 
-test('Más filtros sincroniza destinatario y tema seleccionados en accesos directos', async ({ page }) => {
+test('Más filtros sincroniza accesos directos sin duplicar sus contadores', async ({ page }) => {
   await page.goto('/tramites');
   const more = page.getByTestId('tramites-more-filters');
   const counter = more.locator('[data-agenda-filter-count]');
@@ -107,13 +107,13 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   const audience = page.getByRole('dialog', { name: 'Opciones de ¿Para quién es?' });
   await audience.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
   await audience.getByRole('button', { name: /Ver resultados/ }).click();
-  await expect(counter).toHaveText('1');
+  await expect(counter).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Tema', exact: true }).click();
   const topic = page.getByRole('dialog', { name: 'Opciones de Tema' });
   await topic.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
   await topic.getByRole('button', { name: /Ver resultados/ }).click();
-  await expect(counter).toHaveText('2');
+  await expect(counter).toHaveCount(0);
 
   await more.getByRole('button', { name: /Más filtros/ }).click();
   const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
@@ -124,7 +124,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
 
   await panel.getByRole('button', { name: 'Turno', exact: true }).click();
   await panel.getByRole('radio', { name: 'No requiere turno' }).click();
-  await expect(counter).toHaveText('3');
+  await expect(counter).toHaveText('1');
   await panel.getByRole('button', { name: 'Ver resultados (10)' }).click();
   await expect(panel).toBeHidden();
   await expect(page.getByText('10 trámites', { exact: true })).toBeVisible();
@@ -137,7 +137,7 @@ test('Más filtros sincroniza destinatario y tema seleccionados en accesos direc
   await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).toBeChecked();
   await reopened.getByRole('radio', { name: 'Requiere turno', exact: true }).click();
   await expect(reopened.getByRole('radio', { name: 'No requiere turno' })).not.toBeChecked();
-  await expect(counter).toHaveText('3');
+  await expect(counter).toHaveText('1');
   await reopened.getByRole('button', { name: 'Ver resultados (1)' }).click();
   await expect(reopened).toBeHidden();
   await expect(page.getByText('1 trámite', { exact: true })).toBeVisible();
@@ -286,9 +286,9 @@ test('catálogo: tipografía Geometria y escala Figma desktop/mobile', async ({ 
   await expect(page.getByRole('heading', { name: 'Catálogo de trámites' })).toHaveCSS('font-size', '32px');
   await expect(page.locator('.tram-group-heading h2').first()).toHaveCSS('font-size', '24px');
   await expect(page.locator('.tram-row h3').first()).toHaveCSS('font-size', '20px');
-  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('font-size', '16px');
-  await expect(page.locator('.tram-row-body > p').first()).toHaveCSS('line-height', '21px');
-  await expect(page.locator('.tram-row-actions .tram-btn').first()).toHaveCSS('font-size', '16px');
+  await expect(page.locator('.tram-row-content > p').first()).toHaveCSS('font-size', '16px');
+  await expect(page.locator('.tram-row-content > p').first()).toHaveCSS('line-height', '21px');
+  await expect(page.locator('.tram-row-actions .tram-link-action').first()).toHaveCSS('font-size', '16px');
 });
 
 
@@ -305,7 +305,7 @@ test('destinatarios: varias selecciones, chips individuales y URL reproducible',
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
   await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Vecinos y vecinas' })).toBeVisible();
   await expect(chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' })).toBeVisible();
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
   expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
     .toEqual(['Vecinos y vecinas', 'Profesionales']);
 
@@ -318,11 +318,11 @@ test('destinatarios: varias selecciones, chips individuales y URL reproducible',
   await temasMenu.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
   await temasMenu.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
 
   await chips.getByRole('button', { name: 'Quitar filtro destinatario: Profesionales' }).click();
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(2);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveCount(0);
   expect(await page.evaluate(() => new URLSearchParams(location.search).getAll('destinatario')))
     .toEqual(['Vecinos y vecinas']);
   await chips.getByRole('button', { name: 'Limpiar' }).click();
@@ -337,11 +337,11 @@ test('Más filtros permite varios destinatarios sin duplicar el contador; Tema u
   const panel = page.getByRole('dialog', { name: 'Filtros de trámites' });
   await panel.getByRole('checkbox', { name: 'Vecinos y vecinas' }).click();
   await panel.getByRole('checkbox', { name: 'Profesionales' }).click();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
   await panel.getByRole('button', { name: 'Tema' }).click();
   await expect(panel.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeVisible();
   await panel.getByRole('radio', { name: 'Vehículos y tránsito' }).click();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
   await panel.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(panel).toBeHidden();
   const chips = page.getByRole('group', { name: 'Filtros seleccionados' });
@@ -355,7 +355,7 @@ test('Más filtros permite varios destinatarios sin duplicar el contador; Tema u
   await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).toBeChecked();
   await reopened.getByRole('radio', { name: 'Salud' }).click();
   await expect(reopened.getByRole('radio', { name: 'Vehículos y tránsito' })).not.toBeChecked();
-  await expect(more.locator('[data-agenda-filter-count]')).toHaveText('3');
+  await expect(more.locator('[data-agenda-filter-count]')).toHaveCount(0);
 });
 
 test('procedimientos no uniformes: normaliza R029, R030 y numeración en línea de R089', async ({ page }) => {
@@ -445,7 +445,7 @@ test('etiquetas de ficha: navegan al catálogo filtrado y combinan con tema sin 
   await topics.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(page.getByRole('group', { name: 'Filtros seleccionados' })
     .locator('.agenda-filter-chip')).toHaveCount(2);
-  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('2');
+  await expect(page.getByTestId('tramites-more-filters').locator('[data-agenda-filter-count]')).toHaveText('1');
   await page.getByRole('group', { name: 'Filtros seleccionados' })
     .getByRole('button', { name: 'Limpiar' }).click();
   await expect(page.getByText('125 trámites', { exact: true })).toBeVisible();
