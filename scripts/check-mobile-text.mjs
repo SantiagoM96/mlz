@@ -35,10 +35,10 @@ try{
   await page.locator('.editorial-text-tools #alignLeft').click();
   assert.equal(await page.locator('#alignLeft').getAttribute('aria-pressed'),'true');
   await page.evaluate(()=>{
-   const viewport=window.visualViewport;
+   window.__nativeTestViewport=window.visualViewport;
    Object.defineProperty(window,'visualViewport',{configurable:true,value:{height:440,offsetTop:24}});
    window.dispatchEvent(new Event('resize'));
-   Object.defineProperty(window,'visualViewport',{configurable:true,value:viewport});
+
   });
   assert.equal(await page.locator('.editorial-text-sheet').evaluate(n=>n.style.height),'440px');
   assert.equal(await page.locator('.editorial-text-sheet').evaluate(n=>n.style.top),'24px');
@@ -53,7 +53,7 @@ try{
   assert.ok(Math.abs(previewBounds.width-initialPreview.width)<1,'preview keeps original scale');
   assert.ok(!previewBounds.mini);
   assert.ok(previewBounds.scroll>0);
-  await page.evaluate(()=>window.dispatchEvent(new Event('resize')));
+  await page.evaluate(()=>{Object.defineProperty(window,'visualViewport',{configurable:true,value:window.__nativeTestViewport});window.dispatchEvent(new Event('resize'))});
   await page.locator('.editorial-text-done').click();
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-writing .cronica-rich-headline').count(),0,brand+' restored field');
