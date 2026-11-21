@@ -1266,19 +1266,24 @@
 .tram-detail .tram-related-card p {
   margin: 0;
 }
-/* Tarjetas relacionadas: siempre blancas. El borde hover suma 1px hacia
-   adentro con box-shadow, sin cambiar el box model ni mover el contenido. */
+/* Mismo hover elevado de las tarjetas del catálogo, sin cambios de color. */
 .tram-detail .tram-related-card {
   background: #fff;
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .tram-detail .tram-related-icon,
 .tram-detail .tram-related-card:hover .tram-related-icon {
   background: var(--tram-grey-25);
 }
-.tram-detail .tram-related-card:hover {
+.tram-detail .tram-related-card:hover,
+.tram-detail .tram-related-card:focus-visible {
   background: #fff;
-  border-color: var(--color-primary-600);
-  box-shadow: inset 0 0 0 1px var(--color-primary-600);
+  border-color: var(--color-divider);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tram-detail .tram-related-card { transition: none; }
 }
 
 /* Ayuda al pie: dos bloques con la misma jerarquía y ritmo tipográfico. */
