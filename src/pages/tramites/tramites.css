@@ -1242,8 +1242,12 @@
   line-height: 21px;
 }
 
-/* Ficha final: módulos separados solo por espacio, sin líneas divisorias. */
+/* Ficha final: recuperar los separadores originales entre módulos. */
 .tram-detail .tram-detail-header,
 .tram-detail .tram-detail-main > .tram-detail-section {
+  border-bottom: 1px solid var(--color-divider);
+}
+/* El último módulo no necesita una línea de cierre. */
+.tram-detail .tram-detail-main > .tram-detail-section:last-of-type {
   border-bottom: 0;
 }
