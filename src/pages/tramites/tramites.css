@@ -772,3 +772,29 @@
     text-align: left;
   }
 }
+
+/* Scrollbar compacta para listas de opciones de Trámites.
+   Conserva los tokens de color y los pulgares redondeados compartidos. */
+.tram-filters .agenda-filter-options,
+.tram-filters .agenda-filter-popover {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mlz-scroll-thumb) transparent;
+}
+.tram-filters .agenda-filter-options::-webkit-scrollbar,
+.tram-filters .agenda-filter-popover::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.tram-filters .agenda-filter-options::-webkit-scrollbar-track,
+.tram-filters .agenda-filter-popover::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tram-filters .agenda-filter-options::-webkit-scrollbar-thumb,
+.tram-filters .agenda-filter-popover::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--mlz-scroll-thumb);
+}
+.tram-filters .agenda-filter-options::-webkit-scrollbar-thumb:hover,
+.tram-filters .agenda-filter-popover::-webkit-scrollbar-thumb:hover {
+  background: var(--mlz-scroll-thumb-hover);
+}
