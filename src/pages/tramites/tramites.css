@@ -1135,12 +1135,12 @@
 .tram-detail .tram-location-section-heading h2 { margin: 0; }
 .tram-detail .tram-location-section-heading .tram-turno-tags { margin: 0; }
 
-/* Ayuda: superficie y trazos neutros según Andy Kit (Natural/Grey). */
+/* Ayuda: superficie Grey 25 y trazo sutil Grey 100 según Andy Kit. */
 .tram-detail .tram-detail-main > .tram-contact-help {
-  background: #f6f6f6; /* Natural/Grey 50 */
-  border-color: #d1d1d1; /* Natural/Grey 200 */
+  background: #fafafa; /* Natural/Grey 25 */
+  border-color: #e7e7e7; /* Natural/Grey 100 */
 }
 .tram-detail .tram-contact-help .tram-help-icon {
   background: #e7e7e7; /* Natural/Grey 100 */
-  border: 1px solid #d1d1d1;
+  border: 1px solid #e7e7e7;
 }
