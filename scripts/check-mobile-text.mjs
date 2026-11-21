@@ -48,8 +48,8 @@ try{
    const d=document.querySelector('.editorial-text-dialog').getBoundingClientRect();
    return {left:c.left,right:c.right,top:c.top,bottom:c.bottom,areaTop:a.top,dialogTop:d.top};
   });
-  assert.ok(previewBounds.top>=previewBounds.areaTop);
-  assert.ok(previewBounds.bottom<=previewBounds.dialogTop+1);
+  assert.ok(previewBounds.top>=previewBounds.areaTop,JSON.stringify(previewBounds));
+  assert.ok(previewBounds.bottom<=previewBounds.dialogTop+1,JSON.stringify(previewBounds));
   assert.ok(previewBounds.right>previewBounds.left);
   await page.evaluate(()=>window.dispatchEvent(new Event('resize')));
   await page.locator('.editorial-text-done').click();
