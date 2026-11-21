@@ -62,6 +62,34 @@ test('modalidad: catálogo y ficha muestran el valor original precedido por Moda
   }
 });
 
+test('catálogo: modalidad sin separación excesiva y Ver trámite debajo de etiquetas con chevron', async ({ page }) => {
+  await page.goto('/tramites');
+  const tarjeta = page.getByTestId('tramite-row').first();
+  const descripcion = tarjeta.locator('.tram-row-content > p');
+  const modalidad = tarjeta.locator('.tram-row-content .tram-modalidad');
+  const etiquetas = tarjeta.locator('.tram-row-side');
+  const enlace = tarjeta.locator('.tram-row-actions .tram-link-action');
+
+  await expect(modalidad).toContainText('Modalidad:');
+  await expect(enlace).toContainText('Ver trámite');
+  await expect(enlace.locator('[data-material-symbol="chevron_right"]')).toBeVisible();
+
+  const [descripcionBox, modalidadBox, etiquetasBox, enlaceBox] = await Promise.all([
+    descripcion.boundingBox(), modalidad.boundingBox(), etiquetas.boundingBox(), enlace.boundingBox(),
+  ]);
+  expect(descripcionBox).not.toBeNull();
+  expect(modalidadBox).not.toBeNull();
+  expect(etiquetasBox).not.toBeNull();
+  expect(enlaceBox).not.toBeNull();
+  if (!descripcionBox || !modalidadBox || !etiquetasBox || !enlaceBox) return;
+
+  const separacion = modalidadBox.y - (descripcionBox.y + descripcionBox.height);
+  expect(separacion).toBeGreaterThanOrEqual(-1);
+  expect(separacion).toBeLessThanOrEqual(16);
+  expect(enlaceBox.y).toBeGreaterThanOrEqual(etiquetasBox.y + etiquetasBox.height - 2);
+  expect(enlaceBox.y).toBeGreaterThan(modalidadBox.y);
+});
+
 test('etiquetas: conservar nombres editoriales completos en catálogo y ficha', async ({ page }) => {
   await page.goto('/tramites/R117');
   await expect(page.getByRole('link', { name: 'Ver trámites con etiqueta: Licencia de conducir' }))
