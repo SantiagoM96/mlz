@@ -356,7 +356,6 @@ test('Más filtros permite varios destinatarios sin duplicar el contador; Tema u
   await panel.getByRole('button', { name: /Ver resultados/ }).click();
   await expect(panel).toBeHidden();
   const chips = page.getByRole('group', { name: 'Filtros seleccionados' });
-  console.log('[QA transient] more-filters chips', await chips.locator('.agenda-filter-chip').allTextContents(), await page.url());
   await expect(chips.locator('.agenda-filter-chip')).toHaveCount(3);
 
   await more.getByRole('button', { name: /Más filtros/ }).click();
