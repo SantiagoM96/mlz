@@ -853,3 +853,38 @@
   border-width: 2px;
   border-color: #ef284c;
 }
+
+/* El buscador interno del dropdown es type=text: igualar sus estados al
+   buscador principal, evitando saltos al aumentar el borde de foco. */
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"] {
+  border: 1px solid #5ba8d5;
+  border-radius: 4px;
+  background: #fff;
+  color: #236999;
+  font-size: 16px;
+  line-height: 24px;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]::placeholder {
+  color: #5ba8d5;
+  opacity: 1;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:not(:disabled):hover {
+  border-color: #236999;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:focus,
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:focus-visible {
+  border: 2px solid #006eff;
+  background: #f6f6f6;
+  outline: none;
+  box-shadow: none;
+  padding-left: 15px;
+  padding-right: 43px;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"]:disabled {
+  background: #e5f0f9;
+  cursor: not-allowed;
+}
+.tram-filters .agenda-mobile-sheet[data-agenda-sheet="filter"] input[placeholder="Buscar"][aria-invalid="true"] {
+  border-color: #ef284c;
+}
