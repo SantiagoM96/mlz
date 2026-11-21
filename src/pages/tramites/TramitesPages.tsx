@@ -478,8 +478,13 @@ export function TramiteDetailPage() {
         <header className="tram-detail-header">
           <h1>{tramite.titulo}</h1>
           <p className="tram-lead">{tramite.descripcion}</p>
-          <p className="tram-modalidad">Modalidad: <strong>{tramite.modalidad}</strong></p>
-          <Etiquetas items={tramite.etiquetas} />
+          <div className="tram-detail-header-chips">
+            <Etiquetas items={tramite.etiquetas} />
+            <div className="tram-detail-modalidad-chips" aria-label="Modalidad del trámite">
+              {tramite.modalidad.split(/\s+y\s+|\s*,\s*/).filter(Boolean).map(opcion =>
+                <span className="tram-modalidad-chip" key={opcion}>{opcion.trim()}</span>)}
+            </div>
+          </div>
         </header>
         <div className="tram-detail-mobile-tools">
           <AccionesFicha />
