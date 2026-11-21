@@ -11,6 +11,7 @@ try{
   assert.equal(count,1,brand+' sheet initialized: '+errors.join(';'));
   const design=brand==='cronica'?'[data-page-variant="internal"]':brand==='bae'?'[data-theme="dark"]':'[data-variant="pink"].ds-variant-option';
   await page.locator(design).first().evaluate(n=>n.click());
+  const initialPreview=await page.locator('#art').boundingBox();
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').click({force:true});
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   await page.waitForTimeout(100);
@@ -18,12 +19,12 @@ try{
    const rect=n=>n.getBoundingClientRect();
    const field=rect(document.querySelector('.editorial-text-writing'));
    const buttons=[...document.querySelectorAll('.editorial-text-tools .format-buttons button,.editorial-text-tools .align-buttons button')].map(n=>({id:n.id,w:rect(n).width,h:rect(n).height,radius:getComputedStyle(n).borderRadius}));
-   return {buttons,fieldBottom:field.bottom,toolsTop:rect(document.querySelector('.editorial-text-tools')).top,background:getComputedStyle(document.querySelector('.editorial-text-sheet')).backgroundColor,stageInSheet:!!document.querySelector('.editorial-text-preview #photoStage')};
+   return {buttons,fieldBottom:field.bottom,toolsTop:rect(document.querySelector('.editorial-text-tools')).top,background:getComputedStyle(document.querySelector('.editorial-text-sheet')).backgroundColor,stageInPage:!!document.querySelector('.preview #photoStage')};
   });
   assert.equal(geometry.background,'rgba(0, 0, 0, 0)');
-  assert.ok(geometry.stageInSheet);
+  assert.ok(geometry.stageInPage);
   assert.ok(geometry.toolsTop>=geometry.fieldBottom+10);
-  for(const b of geometry.buttons){assert.equal(b.w,22,b.id+' width');assert.equal(b.h,22,b.id+' height')}
+  for(const b of geometry.buttons){assert.equal(b.w,32,b.id+' width');assert.equal(b.h,32,b.id+' height')}
   assert.equal(geometry.buttons.find(b=>b.id==='formatItalic').radius,'0px');
   const field=page.locator('.editorial-text-writing .cronica-rich-headline');
   await field.fill('Probando el editor móvil');
@@ -43,14 +44,15 @@ try{
   assert.equal(await page.locator('.editorial-text-sheet').evaluate(n=>n.style.top),'24px');
   await page.waitForTimeout(100);
   const previewBounds=await page.evaluate(()=>{
-   const a=document.querySelector('.editorial-text-preview').getBoundingClientRect();
-   const c=document.querySelector('#art').getBoundingClientRect();
-   const d=document.querySelector('.editorial-text-dialog').getBoundingClientRect();
-   return {left:c.left,right:c.right,top:c.top,bottom:c.bottom,areaTop:a.top,dialogTop:d.top};
+   const hit=document.querySelector('.modern-text-hit,#dsHeadlineHitButton').getBoundingClientRect();
+   const art=document.querySelector('#art').getBoundingClientRect();
+   const panel=document.querySelector('.editorial-text-dialog').getBoundingClientRect();
+   return {center:(hit.top+hit.bottom)/2,target:(24+panel.top)/2,width:art.width,scroll:scrollY,mini:!!document.querySelector('.editorial-text-preview')};
   });
-  assert.ok(previewBounds.top>=previewBounds.areaTop,JSON.stringify(previewBounds));
-  assert.ok(previewBounds.bottom<=previewBounds.dialogTop+1,JSON.stringify(previewBounds));
-  assert.ok(previewBounds.right>previewBounds.left);
+  assert.ok(Math.abs(previewBounds.center-previewBounds.target)<3,JSON.stringify(previewBounds));
+  assert.ok(Math.abs(previewBounds.width-initialPreview.width)<1,'preview keeps original scale');
+  assert.ok(!previewBounds.mini);
+  assert.ok(previewBounds.scroll>0);
   await page.evaluate(()=>window.dispatchEvent(new Event('resize')));
   await page.locator('.editorial-text-done').click();
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
