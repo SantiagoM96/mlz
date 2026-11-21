@@ -731,3 +731,28 @@
   margin-inline: 8px;
   padding-inline: 16px;
 }
+
+/* Drawers del catálogo en mobile: altura según contenido y límite para listas largas. */
+@media (max-width: 680px) {
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="filter"],
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="more"] {
+    height: auto;
+    max-height: 86dvh !important;
+    padding: 0 16px max(16px, env(safe-area-inset-bottom, 0px));
+  }
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="filter"] .agenda-filter-options,
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="more"] .agenda-filter-options {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="filter"] > div:last-child,
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="more"] > div:last-child {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding: 16px 0 0;
+    border-top: 1px solid #e1e7eb;
+    background: #fff;
+  }
+}
