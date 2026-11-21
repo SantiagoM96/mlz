@@ -1,13 +1,16 @@
 name: Editorial DEV — editor sobre teclado
 on:
-  push:
-    paths:
+  pull_request:
+    paths: &editorial_paths
       - 'public/shared/editorial-mobile-text.*'
+      - 'public/shared/editorial-mobile-drawer.*'
       - 'public/cronica-dev/index.html'
       - 'public/bae-dev/index.html'
       - 'public/diarioshow-dev/index.html'
       - 'scripts/check-mobile-text.mjs'
       - '.github/workflows/editorial-mobile-text-smoke.yml'
+  push:
+    paths: *editorial_paths
   workflow_dispatch:
 jobs:
   mobile-text:
