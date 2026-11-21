@@ -756,3 +756,19 @@
     background: #fff;
   }
 }
+
+/* Mobile: sin separador entre buscador y título del drawer; título al borde
+   izquierdo del área de contenido (el panel ya tiene 16px de padding). */
+@media (max-width: 680px) {
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="filter"] .agenda-sheet-heading,
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="more"] .agenda-sheet-heading {
+    padding-inline: 0;
+    border-bottom: 0;
+    justify-content: flex-start;
+  }
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="filter"] .agenda-sheet-heading > strong,
+  body:has(.tram-filters) .agenda-mobile-sheet[data-agenda-sheet="more"] .agenda-sheet-heading > strong {
+    margin-inline: 0;
+    text-align: left;
+  }
+}
