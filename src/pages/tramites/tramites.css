@@ -491,7 +491,7 @@
   padding: 24px;
   margin-top: 24px;
   border: 1px solid #e5f0f9;
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--color-panel);
 }
 .tram-contact-heading { display: flex; align-items: center; gap: 12px; }
@@ -529,7 +529,7 @@
   gap: 4px;
   padding: 16px;
   border: 1px solid var(--color-divider);
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fff;
 }
 .tram-support-hours h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--color-primary-600); font-weight: 700; font-size: 18px; }
@@ -977,3 +977,11 @@
   }
   .tram-detail .tram-location-card .tram-location-map-link { padding: 16px; }
 }
+
+/* Unificar el radio de las tarjetas de la ficha, sin modificar InfoCard global. */
+.tram-detail .tram-detail-aside > section:first-of-type,
+.tram-detail .tram-detail-mobile-tools > section:first-of-type,
+.tram-detail .tram-related-card,
+.tram-detail .tram-location-card,
+.tram-detail .tram-contact-help,
+.tram-detail .tram-support-hours { border-radius: 8px; }
