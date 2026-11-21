@@ -538,9 +538,9 @@ test('procedimiento R121: las cuatro etapas del relevamiento usan el timeline in
   const pasos = seccion.locator('.tram-timeline li');
   await expect(pasos).toHaveCount(4);
   await expect(pasos.nth(0)).toContainText('Solicitud');
-  await expect(pasos.nth(1)).toContainText('autorizacion por parte de la direccion');
-  await expect(pasos.nth(2)).toContainText('confirmacion');
-  await expect(pasos.nth(3)).toContainText('implementacion');
+  await expect(pasos.nth(1)).toContainText('Autorizacion por parte de la direccion');
+  await expect(pasos.nth(2)).toContainText('Confirmacion');
+  await expect(pasos.nth(3)).toContainText('Implementacion');
   await expect(seccion.locator('.tram-procedure-note')).toHaveCount(0);
   const marcador = pasos.first().locator('.tram-timeline-marker');
   await expect(marcador).toHaveCSS('width', '30px');
