@@ -19,9 +19,50 @@ const fichaR036 = {
   ],
 } as const;
 
-/** Nunca partir nombres de documentos por comas o diagonales arbitrarias. */
+/**
+ * Registros del catálogo que contienen enumeraciones verificables en una sola
+ * línea. Las barras dentro de nombres o alternativas (DNI/CUIL, y/o) NO se
+ * interpretan como separadores generales.
+ */
+const documentosEnumerados: Record<string, string[]> = {
+  R111: [
+    'VTV',
+    'Cédula verde',
+    'DNI',
+    'Monotributo',
+    'Libreta sanitaria del titular o conductor',
+    'Contrato de sociedad o poder ante escribano',
+    'Libro de actas de 200 fojas',
+    'Libre deuda',
+  ],
+  R088: [
+    'Contrato de locación',
+    'Habilitación del comercio',
+    'Croquis de la estructura / ocupación',
+    'Fotomontaje',
+    'Libre deuda de tasas',
+    'DNI',
+    'Seguro contra terceros',
+  ],
+  R005: [
+    'Nota de solicitud',
+    'Reconocimiento municipal/vigencia',
+    'Recibo municipal',
+    'Último balance aprobado',
+    'Acta de la última asamblea',
+    'DNI del representante legal con poder o designación',
+  ],
+  R024: [
+    'DNI',
+    'Constancia de CUIT/CUIL',
+    'Correo electrónico y teléfono',
+  ],
+};
+
+/** Separar solo enumeraciones explícitas; conservar las alternativas internas. */
 export function documentacionPublica(tramite: Tramite): string[] {
   if (tramite.id === 'R036') return [...fichaR036.documentos];
+  if (documentosEnumerados[tramite.id]) return [...documentosEnumerados[tramite.id]];
 
   const texto = tramite.documentacion.trim();
   if (!texto) return [];
