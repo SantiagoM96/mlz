@@ -203,13 +203,13 @@ export function TramitesCatalogPage() {
         </label>
         <div className="tram-filter-control tram-filter-audience-control">
           <AgendaDropdown label="¿Para quién es?" options={destinatarios}
-            selected={destinatario} multiple resultCount={filtrados.length}
+            selected={destinatario} multiple reserveCounterSpace resultCount={filtrados.length}
             onChange={(seleccion) => elegirDestinatarios(setParams, seleccion)}
             align="end" />
         </div>
         <div className="tram-filter-control tram-filter-topic-control">
           <AgendaDropdown label="Tema" options={temas} selectionControl="radio"
-            selected={tema ? [tema] : []} resultCount={filtrados.length}
+            selected={tema ? [tema] : []} showSelectedLabel resultCount={filtrados.length}
             onChange={(seleccion) => elegirValor(setParams, 'tema', seleccion[0] ?? '')}
             align="end-responsive" />
         </div>
