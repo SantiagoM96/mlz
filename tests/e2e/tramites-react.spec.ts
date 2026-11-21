@@ -38,6 +38,48 @@ test('catálogo: 125 trámites, búsqueda, limpieza y dropdown compartido con Ag
   await expect(page.getByText('18 trámites', { exact: true })).toBeVisible();
 });
 
+test('modalidad: catálogo y ficha muestran el valor original precedido por Modalidad:', async ({ page }) => {
+  const casos = [
+    { id: 'R121', modalidad: 'Online' },
+    { id: 'R023', modalidad: 'Presencial' },
+    { id: 'R018', modalidad: 'Online y Presencial' },
+  ];
+
+  for (const { id, modalidad } of casos) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('.tram-detail-header .tram-modalidad'))
+      .toHaveText('Modalidad: ' + modalidad);
+    await expect(page.locator('.tram-detail-header .tram-modalidad-chip')).toHaveCount(0);
+  }
+
+  await page.goto('/tramites');
+  const filas = page.locator('[data-testid="tramite-row"]');
+  for (const { id, modalidad } of casos) {
+    const enlace = page.locator('a.tram-link-action[href$="/' + id + '"]');
+    const fila = filas.filter({ has: enlace });
+    await expect(fila.locator('.tram-modalidad')).toHaveText('Modalidad: ' + modalidad);
+    await expect(fila.locator('.tram-modalidad-chip')).toHaveCount(0);
+  }
+});
+
+test('etiquetas: conservar nombres editoriales completos en catálogo y ficha', async ({ page }) => {
+  await page.goto('/tramites/R117');
+  await expect(page.getByRole('link', { name: 'Ver trámites con etiqueta: Licencia de conducir' }))
+    .toHaveText('Licencia de conducir');
+
+  await page.goto('/tramites/R014');
+  await expect(page.getByRole('link', { name: 'Ver trámites con etiqueta: Jubilados y pensionados' }))
+    .toHaveText('Jubilados y pensionados');
+
+  await page.goto('/tramites?etiqueta=Instalaciones%20el%C3%A9ctricas');
+  const etiqueta = page.getByRole('button', {
+    name: 'Filtrar trámites por etiqueta: Instalaciones eléctricas',
+  }).first();
+  await expect(etiqueta).toHaveText('Instalaciones eléctricas');
+  await expect(etiqueta).toHaveCSS('white-space', 'normal');
+  await expect(etiqueta).not.toHaveCSS('text-overflow', 'ellipsis');
+});
+
 test('ficha R036: índice de Jóvenes, contenido de Figma y sin campos descartados', async ({ page }) => {
   await page.goto('/tramites/R036');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Solicitar un certificado para escribanía');
