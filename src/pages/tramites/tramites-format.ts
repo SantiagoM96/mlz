@@ -91,8 +91,20 @@ export function documentacionInformativa(texto: string): boolean {
  * declara que la documentación se determina caso por caso. Ninguno debe
  * mostrarse como un documento individual con ícono, ni eliminarse.
  */
-const notasDocumentales = new Set(['R051', 'R116']);
+const notasDocumentales = new Set([
+  'R051', 'R116', 'R015', 'R056', 'R062', 'R077', 'R104', 'R131',
+]);
 export function notaDocumentacionPublica(tramite: Tramite): string {
+  // El relevamiento de R077 mezcla datos para identificar el reclamo con
+  // una propuesta interna de agregar un campo de carga de imágenes.
+  // La sugerencia interna no es documentación requerida al vecino.
+  if (tramite.id === 'R077') {
+    return tramite.documentacion.split(/\.\s*También\b/iu)[0]?.trim() ?? '';
+  }
+  // R012 identifica dos documentos y una tercera exigencia opcional.
+  if (tramite.id === 'R012') {
+    return tramite.documentacion.match(/en caso de tener,\s*documentación de trayectoria educativa previa\.?/iu)?.[0] ?? '';
+  }
   // R041 distingue el documento base de los planos adicionales condicionales.
   // La condición sigue siendo el texto declarado en ORIGEN, no un requisito nuevo.
   if (tramite.id === 'R041') {
@@ -111,6 +123,22 @@ export function documentacionPublica(tramite: Tramite): string[] {
     const lineas = tramite.documentacion.split(/\r?\n/)
       .map(linea => linea.trim()).filter(Boolean);
     return ['Plano Obra', ...lineas.slice(1)];
+  }
+  // No convertir una enumeración por guiones o comas en un único «archivo».
+  // Solo se aplican estas separaciones cuando los ítems están identificados.
+  if (tramite.id === 'R010') {
+    return tramite.documentacion.split(/\s+-\s+/u).map(item => item.trim()).filter(Boolean);
+  }
+  if (tramite.id === 'R013') {
+    return tramite.documentacion.split(/,\s*/u).map(item => item.trim()).filter(Boolean);
+  }
+  if (tramite.id === 'R011') {
+    return tramite.documentacion.replace(/^Se requiere\s+/iu, '')
+      .replace(/\s+y\s+dni\s*$/iu, ', dni')
+      .split(/,\s*/u).map(item => item.trim()).filter(Boolean);
+  }
+  if (tramite.id === 'R012') {
+    return ['fotocopia del DNI con domicilio en Lomas de Zamora', 'fotocopia del CUD'];
   }
   const documentosDelTramite = documentosEnumerados[tramite.id];
   if (documentosDelTramite) return [...documentosDelTramite];
