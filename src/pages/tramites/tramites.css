@@ -806,3 +806,50 @@
 .tram-filters .agenda-filter-popover::-webkit-scrollbar-thumb:hover {
   background: var(--mlz-scroll-thumb-hover);
 }
+
+/* MLZ UI Kit / Input New: estados de controles del catálogo.
+   Default #5BA8D5; Hover #236999; Focus #006EFF;
+   Completo #236999; Disable #E5F0F9; Error #EF284C. */
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger),
+.tram-filters .agenda-mobile-sheet input[type="search"] {
+  border-radius: 4px;
+  border: 1px solid #5ba8d5;
+  background-color: #fff;
+  color: #236999;
+  font-size: 16px;
+  line-height: 24px;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger)::placeholder,
+.tram-filters .agenda-mobile-sheet input[type="search"]::placeholder {
+  color: #5ba8d5;
+  opacity: 1;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger):not(:disabled):hover,
+.tram-filters .agenda-mobile-sheet input[type="search"]:not(:disabled):hover {
+  border-color: #236999;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger):focus-visible,
+.tram-filters .agenda-mobile-sheet input[type="search"]:focus-visible {
+  border: 2px solid #006eff;
+  outline: none;
+  background-color: #f6f6f6;
+}
+.tram-filters .agenda-filter-trigger:focus-visible {
+  padding-inline: 15px;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger):disabled,
+.tram-filters .agenda-mobile-sheet input[type="search"]:disabled {
+  border-color: #5ba8d5;
+  background-color: #e5f0f9;
+  cursor: not-allowed;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger)[aria-invalid="true"],
+.tram-filters .agenda-mobile-sheet input[type="search"][aria-invalid="true"] {
+  border-color: #ef284c;
+}
+.tram-filters :is(.agenda-search-input, .agenda-filter-trigger)[aria-invalid="true"]:focus-visible,
+.tram-filters .agenda-mobile-sheet input[type="search"][aria-invalid="true"]:focus-visible {
+  border-width: 2px;
+  border-color: #ef284c;
+}
