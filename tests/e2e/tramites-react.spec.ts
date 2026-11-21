@@ -670,3 +670,50 @@ test('documentación con viñetas y saltos de línea: no convierte continuacione
   await expect(documentosR084.nth(4)).toContainText('propietarios. (comprador)');
   await expect(page.locator('#documentacion .tram-document-note')).toHaveCount(0);
 });
+
+test('ficha final: secuencias comprobadas se muestran como pasos, sin convertir documentos en pasos', async ({ page }) => {
+  for (const { id, pasos, primero } of [
+    { id: 'R117', pasos: 4, primero: 'El trámite se inicia con la solicitud de turno' },
+    { id: 'R081', pasos: 14, primero: 'Se inicia por el portal' },
+    { id: 'R084', pasos: 4, primero: 'Se ingresa formulario por elomas' },
+    { id: 'R003', pasos: 8, primero: 'Visita a la institucion' },
+    { id: 'R069', pasos: 3, primero: 'El vecino realiza la solicitud mediante el CAV' },
+    { id: 'R071', pasos: 2, primero: 'El vecino realiza el pedido' },
+    { id: 'R068', pasos: 2, primero: 'La persona se acerca a la Secretaría' },
+  ]) {
+    await page.goto('/tramites/' + id);
+    const timeline = page.locator('#procedimiento .tram-timeline li');
+    await expect(timeline, id + ': pasos fieles a ORIGEN').toHaveCount(pasos);
+    await expect(timeline.first(), id).toContainText(primero, { ignoreCase: true });
+    await expect(page.locator('#procedimiento .tram-procedure-note'), id)
+      .toHaveCount(0);
+  }
+  // R068 contiene una condición: no se convierte «si está todo acorde»
+  // en una etapa obligatoria independiente.
+  await page.goto('/tramites/R068');
+  await expect(page.locator('#procedimiento .tram-timeline li').last())
+    .toContainText('si está todo acorde');
+});
+
+test('ficha R041: documentación condicional no se representa como archivo individual', async ({ page }) => {
+  await page.goto('/tramites/R041');
+  const documentos = page.locator('#documentacion .tram-documents li');
+  await expect(documentos).toHaveCount(7);
+  await expect(documentos.first()).toContainText('Plano Obra');
+  await expect(page.locator('#documentacion .tram-document-note')).toContainText('dependiendo del tramite');
+  await expect(documentos).not.toContainText('dependiendo del tramite');
+});
+
+test('ficha final: los casos sin secuencia segura conservan notas, listas y ausencias', async ({ page }) => {
+  for (const id of ['R015', 'R035', 'R050', 'R051', 'R062', 'R116']) {
+    await page.goto('/tramites/' + id);
+    await expect(page.locator('#procedimiento .tram-timeline'), id)
+      .toHaveCount(0);
+    await expect(page.locator('#procedimiento .tram-procedure-note'), id)
+      .toHaveCount(1);
+  }
+  await page.goto('/tramites/R033');
+  await expect(page.locator('#procedimiento .tram-procedure-list li')).toHaveCount(5);
+  await page.goto('/tramites/R125');
+  await expect(page.locator('#procedimiento')).toHaveCount(0);
+});
