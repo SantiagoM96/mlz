@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Tramite } from '../../src/data/tramites';
-import { bloquesProcedimiento, documentacionPublica } from '../../src/pages/tramites/tramites-format';
+import { bloquesProcedimiento, documentacionPublica, notaDocumentacionPublica } from '../../src/pages/tramites/tramites-format';
 
 const tramites = JSON.parse(readFileSync(resolve('src/data/tramites.json'), 'utf8')) as Tramite[];
 
@@ -21,6 +21,7 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
     registros: tramites.length,
     conDocumentacion: 0,
     sinDocumentacionPublica: 0,
+    conNotaDocumental: 0,
     conTimeline: 0,
     conTextoDescriptivo: 0,
     sinProcedimiento: 0,
@@ -32,6 +33,7 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
     expect(ids.has(registro.id), 'ID duplicado ' + registro.id).toBe(false);
     ids.add(registro.id);
     const documentos = documentacionPublica(registro);
+    const notaDocumental = notaDocumentacionPublica(registro);
     const bloques = bloquesProcedimiento(registro);
     const cantidadPasos = bloques.filter(b => b.tipo === 'pasos')
       .reduce((total, bloque) => total + (bloque.tipo === 'pasos' ? bloque.items.length : 0), 0);
@@ -46,7 +48,9 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
       registro.id + ': cantidad de documentos públicos')
       .toHaveCount(documentos.length);
     await expect(page.locator('#documentacion'), registro.id + ': bloque de documentación')
-      .toHaveCount(documentos.length ? 1 : 0);
+      .toHaveCount(documentos.length || notaDocumental ? 1 : 0);
+    await expect(page.locator('#documentacion .tram-document-note'), registro.id + ': nota documental')
+      .toHaveCount(notaDocumental ? 1 : 0);
     await expect(page.locator('#documentacion .tram-document-intro'),
       registro.id + ': sin frase genérica').toHaveCount(0);
     await expect(page.locator('#procedimiento'), registro.id + ': bloque condicional')
@@ -68,7 +72,8 @@ test('auditoría integral: 125 fichas conservan identidad, bloques y contenido d
     }
 
     if (documentos.length) reporte.conDocumentacion++;
-    else reporte.sinDocumentacionPublica++;
+    if (notaDocumental) reporte.conNotaDocumental++;
+    if (!documentos.length && !notaDocumental) reporte.sinDocumentacionPublica++;
     if (cantidadPasos) reporte.conTimeline++;
     if (cantidadListas) reporte.conListaNoNumerada++;
     if (cantidadTextos) reporte.conTextoDescriptivo++;
