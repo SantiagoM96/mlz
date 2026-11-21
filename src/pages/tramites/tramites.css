@@ -1083,3 +1083,42 @@
 .tram-group-grid > .tram-row .tram-row-actions {
   margin-top: 16px;
 }
+
+/* Ayuda: composición horizontal, contacto a la izquierda y horarios a la derecha. */
+.tram-detail .tram-detail-main > .tram-contact-help {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: start;
+  column-gap: 32px;
+}
+.tram-detail .tram-contact-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+}
+.tram-detail .tram-help-icon {
+  flex-basis: 40px;
+  width: 40px;
+  height: 40px;
+}
+.tram-detail .tram-support-hours {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.tram-detail .tram-support-hours h3 {
+  margin-bottom: 8px;
+}
+.tram-detail .tram-support-hours strong + p {
+  margin-top: 12px;
+}
+@media (max-width: 680px) {
+  .tram-detail .tram-detail-main > .tram-contact-help {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 24px;
+  }
+}
