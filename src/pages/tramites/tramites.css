@@ -686,12 +686,17 @@
   .tram-group-grid > .tram-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(140px, 36%);
+    grid-template-rows: minmax(0, 1fr) auto;
     align-items: stretch;
     gap: 16px;
     min-width: 0;
     box-sizing: border-box;
   }
   .tram-group-grid > .tram-row .tram-row-body { min-width: 0; }
+  .tram-group-grid > .tram-row .tram-row-actions {
+    grid-column: 1 / -1;
+    align-self: end;
+  }
   .tram-group-grid > .tram-row .tram-row-side {
     flex: none;
     width: auto;
@@ -1061,11 +1066,11 @@
   .tram-detail .tram-support-hours p:nth-of-type(2) { margin-top: 12px; }
 }
 
-/* Tarjetas de búsqueda: bloque de contenido arriba y CTA alineado al fondo,
-   sin modificar la altura estándar de las tarjetas. */
+/* Mantener modalidad junto a la descripción, sin un espacio artificial
+   generado por justify-content: space-between. El CTA va debajo de etiquetas. */
 .tram-group-grid > .tram-row .tram-row-body {
   align-self: stretch;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .tram-group-grid > .tram-row .tram-row-content {
   display: flex;
