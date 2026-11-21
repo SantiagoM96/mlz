@@ -200,6 +200,38 @@ export function TramitesCatalogPage() {
         : rows;
   }, [diferida, tema, destinatario, modalidad, turno, etiqueta, orden]);
 
+  // Conteos facetados: cada opción respeta la búsqueda y los demás filtros,
+  // pero no restringe por las selecciones del mismo grupo.
+  const optionCounts = useMemo(() => {
+    const q = normalizarBusqueda(diferida);
+    const coincide = (t: Tramite, excluir: 'destinatario' | 'tema' | 'turno' | 'modalidad') =>
+      (!q || normalizarBusqueda([t.titulo, t.descripcion, t.sinonimos, ...t.etiquetas].join(' ')).includes(q)) &&
+      (excluir === 'tema' || !tema || t.categoria === tema) &&
+      (!etiqueta || t.etiquetas.some(item => normalizarBusqueda(item) === normalizarBusqueda(etiqueta))) &&
+      (excluir === 'destinatario' || !destinatario.length || destinatario.some(item => t.destinatarios.includes(item))) &&
+      (excluir === 'modalidad' || !modalidad || t.modalidad === modalidad) &&
+      (excluir === 'turno' || !turno ||
+        (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
+        (turno === 'No requiere turno' && /^no$/i.test(t.turno.trim())));
+    const base = {
+      destinatario: tramites.filter(t => coincide(t, 'destinatario')),
+      tema: tramites.filter(t => coincide(t, 'tema')),
+      turno: tramites.filter(t => coincide(t, 'turno')),
+      modalidad: tramites.filter(t => coincide(t, 'modalidad')),
+    };
+    return {
+      destinatario: Object.fromEntries(destinatarios.map(item =>
+        [item, base.destinatario.filter(t => t.destinatarios.includes(item)).length])),
+      tema: Object.fromEntries(temas.map(item =>
+        [item, base.tema.filter(t => t.categoria === item).length])),
+      turno: Object.fromEntries(['Requiere turno', 'No requiere turno'].map(item =>
+        [item, base.turno.filter(t => item === 'Requiere turno'
+          ? /^(s[ií])$/i.test(t.turno.trim()) : /^no$/i.test(t.turno.trim())).length])),
+      modalidad: Object.fromEntries(modalidades.map(item =>
+        [item, base.modalidad.filter(t => t.modalidad === item).length])),
+    };
+  }, [diferida, tema, etiqueta, destinatario, modalidad, turno, modalidades]);
+
   const grupos = useMemo(() => orden !== 'tema'
     ? [{ nombre: '', items: filtrados }]
     : temas.map((nombre) => ({ nombre, items: filtrados.filter((tramite) => tramite.categoria === nombre) })).filter((grupo) => grupo.items.length > 0), [filtrados, orden]);
@@ -233,13 +265,13 @@ export function TramitesCatalogPage() {
         </label>
         <div className="tram-filter-control tram-filter-audience-control">
           <AgendaDropdown label="¿Para quién es?" options={destinatarios}
-            selected={destinatario} multiple reserveCounterSpace resultCount={filtrados.length}
+            selected={destinatario} multiple reserveCounterSpace resultCount={filtrados.length} optionCounts={optionCounts.destinatario}
             onChange={(seleccion) => elegirDestinatarios(setParams, seleccion)}
             align="end" />
         </div>
         <div className="tram-filter-control tram-filter-topic-control">
           <AgendaDropdown label="Tema" options={temas} selectionControl="radio"
-            selected={tema ? [tema] : []} showSelectedLabel resultCount={filtrados.length}
+            selected={tema ? [tema] : []} showSelectedLabel resultCount={filtrados.length} optionCounts={optionCounts.tema}
             onChange={(seleccion) => elegirValor(setParams, 'tema', seleccion[0] ?? '')}
             align="end-responsive" />
         </div>
@@ -249,6 +281,7 @@ export function TramitesCatalogPage() {
             temas={temas}
             destinatarios={destinatarios}
             modalidades={modalidades}
+            optionCounts={optionCounts}
             resultCount={filtrados.length}
             onChange={cambiarFiltro}
             onReset={limpiarOpciones}
