@@ -162,10 +162,11 @@ export function TramitesCatalogPage() {
       (!turno || (turno === 'Requiere turno' && /^(s[ií])$/i.test(t.turno.trim())) ||
         (turno === 'No requiere turno' && /^no$/i.test(t.turno.trim())))
     );
+    const visitas = orden === 'recurrencia' ? leerVisitas() : {};
     return orden === 'az'
       ? [...rows].sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'))
       : orden === 'recurrencia'
-        ? [...rows].sort((a, b) => (leerVisitas()[b.id] || 0) - (leerVisitas()[a.id] || 0))
+        ? [...rows].sort((a, b) => (visitas[b.id] || 0) - (visitas[a.id] || 0))
         : rows;
   }, [diferida, tema, destinatario, modalidad, turno, etiqueta, orden]);
 
