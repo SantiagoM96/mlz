@@ -393,7 +393,7 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
         <div className="tram-location-card-details">
           <h2>Dónde y cuándo</h2>
           {index === 0 && turnoLabel && <div className="tram-turno-tags">
-            <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event' : 'event_available'} size={18} />{turnoLabel}</span>
+            <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
           </div>}
           <div className="tram-location-info">
             {sede.dias.trim() && <div className="tram-location-item">
