@@ -1144,3 +1144,44 @@
   background: #e7e7e7; /* Natural/Grey 100 */
   border: 1px solid #e7e7e7;
 }
+
+/* Timeline: pasos más compactos, numeración de 18 px y conector de 2 px. */
+.tram-detail .tram-timeline li {
+  min-height: 35px;
+  padding-top: 6px;
+  padding-bottom: 8px;
+}
+.tram-detail .tram-timeline li:last-child {
+  min-height: 35px;
+  padding-bottom: 0;
+}
+.tram-detail .tram-timeline-marker { font-size: 18px; }
+.tram-detail .tram-timeline li:not(:last-child)::before {
+  width: 2px;
+  top: 36px;
+  bottom: -6px;
+}
+/* Chips de modalidad junto a las etiquetas en el encabezado de la ficha. */
+.tram-detail .tram-detail-header-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tram-detail .tram-detail-header-chips .tram-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tram-detail .tram-detail-modalidad-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tram-detail .tram-detail-modalidad-chips .tram-modalidad-chip {
+  margin: 0;
+  background: var(--color-panel);
+  color: var(--color-primary-600);
+}
