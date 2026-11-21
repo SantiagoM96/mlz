@@ -388,10 +388,15 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const turnoLabel = /^no$/i.test(turno) ? 'No requiere turno' :
     /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : textoPublicoLegible(turno);
   const direccionMapa = sedePublica(tramite.direccion).direccion || tramite.direccion;
-  const showMap = /(?:azara|castro|fr[ií]as|heras|entre r[ií]os|catamarca|collivadino)\s*(?:n[°º.]?\s*)?\d{2,5}/i.test(direccionMapa);
+  // Mostrar siempre el mapa de la primera sede, aunque la fuente solo indique oficina o dependencia.
   const mapsQuery = direccionMapa + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
-    <h2>Dónde y cuándo</h2>
+    <div className="tram-location-section-heading">
+      <h2>Dónde y cuándo</h2>
+      {turnoLabel && <div className="tram-turno-tags">
+        <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
+      </div>}
+    </div>
     <div className="tram-sedes">{sedes.map((sede, index) => { const lugar = sedePublica(sede.lugar); return <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
         <div className="tram-location-card-details">
@@ -412,15 +417,13 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
                 : <p>{lugar.detalle}</p>}
             </div>}
           </div>
-          {index === 0 && turnoLabel && <div className="tram-turno-tags">
-            <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
-          </div>}
-          {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
+
+          {index === 0 && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
         target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
         Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
       </a>}
         </div>
-        {index === 0 && showMap && <iframe className="tram-location-map"
+        {index === 0 && <iframe className="tram-location-map"
           title={'Mapa de ' + textoPublicoLegible(tramite.direccion)}
           src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
           loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
