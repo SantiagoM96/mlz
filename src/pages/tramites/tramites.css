@@ -693,6 +693,9 @@
 /* Trámites: estilos consolidados posteriores a ECC.
    Mantener aquí la tarjeta, las modalidades y los títulos del listado. */
 .tram-group-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 1024px) {
+  .tram-group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .tram-group-grid > .tram-row {
   padding: 24px;
   border: 1px solid var(--color-divider);
