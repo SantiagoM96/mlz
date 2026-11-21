@@ -719,21 +719,6 @@
   font-size: 20px;
   line-height: 1.05;
 }
-.tram-modalidad-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.tram-modalidad-chip,
-.tram-modalidad-chip--online,
-.tram-modalidad-chip--presencial {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  background: var(--color-panel);
-  color: var(--color-primary-600);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-}
 @media (max-width: 680px) {
   .tram-group-grid > .tram-row { padding: 24px; }
 }
@@ -930,13 +915,13 @@
   }
 }
 
-/* Chips siempre en una línea, sin desbordar tarjetas estrechas. */
+/* Etiquetas completas: permitir varias líneas cuando la tarjeta es estrecha. */
 .tram-tags .tram-tag {
   max-width: 100%;
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
 }
 
 /* Dónde y cuándo: fondo blanco, mapa al ras y padding solo en datos. */
@@ -1165,30 +1150,6 @@
   width: 2px;
   top: 36px;
   bottom: -6px;
-}
-/* Chips de modalidad junto a las etiquetas en el encabezado de la ficha. */
-.tram-detail .tram-detail-header-chips {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tram-detail .tram-detail-header-chips .tram-tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tram-detail .tram-detail-modalidad-chips {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.tram-detail .tram-detail-modalidad-chips .tram-modalidad-chip {
-  margin: 0;
-  background: var(--color-panel);
-  color: var(--color-primary-600);
 }
 
 /* Tarjeta clickeable sin interferir con las etiquetas independientes. */
