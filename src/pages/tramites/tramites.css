@@ -1274,7 +1274,7 @@
   background: var(--tram-grey-25);
 }
 .tram-detail .tram-related-card:hover .tram-related-icon {
-  background: var(--tram-grey-100);
+  background: #fff;
 }
 
 /* Ayuda al pie: dos bloques con la misma jerarquía y ritmo tipográfico. */
