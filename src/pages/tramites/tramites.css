@@ -50,6 +50,24 @@
   outline-offset: 2px;
 }
 .tram-filters .tram-search input::placeholder { color: #5ba8d5; opacity: 1; }
+/* Ocultar el botón nativo de limpieza del input search: usamos un único
+   Material Symbol de Google controlado por React. */
+.tram-filters .tram-search input::-webkit-search-cancel-button,
+.tram-filters .tram-search input::-webkit-search-decoration,
+.tram-filters .tram-search input::-webkit-search-results-button,
+.tram-filters .tram-search input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+.tram-filters .tram-search > button[aria-label="Borrar búsqueda"] {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary-600);
+}
+
 .tram-filters .tram-search > button,
 .tram-filters .tram-search > .tram-search-icon {
   position: absolute;
