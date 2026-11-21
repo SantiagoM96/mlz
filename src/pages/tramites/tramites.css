@@ -1241,3 +1241,9 @@
   font-size: 18px;
   line-height: 21px;
 }
+
+/* Ficha final: módulos separados solo por espacio, sin líneas divisorias. */
+.tram-detail .tram-detail-header,
+.tram-detail .tram-detail-main > .tram-detail-section {
+  border-bottom: 0;
+}
