@@ -60,24 +60,25 @@ export function AgendaFilterGroupPanel({
             className="agenda-motion-accordion mt-2 grid grid-cols-1 gap-x-3 gap-y-1 sm:grid-cols-2">
             {group.options.map(option => {
               const checked = group.selected.includes(option);
+              const disabled = group.optionCounts !== undefined && (group.optionCounts[option] ?? 0) === 0 && !checked;
               const isRadio = group.selectionControl === 'radio';
               return <label key={option}
                 className={`agenda-motion-option relative flex min-h-12 cursor-pointer items-center gap-3 rounded
                   px-2 py-2 text-[16px] leading-6 text-grey-900 transition-colors duration-150
-                  hover:bg-[#eff7fd] has-[:focus-visible]:outline-2
+                  ${disabled ? 'cursor-not-allowed text-grey-400' : 'hover:bg-[#eff7fd]'} has-[:focus-visible]:outline-2
                   has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-primary-600`}>
                 <input type={isRadio ? 'radio' : 'checkbox'}
                   name={isRadio ? dialogId + '-' + group.key : undefined}
-                  className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                  checked={checked} onClick={(event) => { if (isRadio && checked) { event.preventDefault(); onToggle(group.key, option); } }} onChange={() => { if (!checked || !(isRadio)) onToggle(group.key, option); }}
+                  className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                  checked={checked} disabled={disabled} onClick={(event) => { if (isRadio && checked) { event.preventDefault(); onToggle(group.key, option); } }} onChange={() => { if (!checked || !(isRadio)) onToggle(group.key, option); }}
                   aria-label={option} />
                 <MaterialIcon
                   name={isRadio ? (checked ? 'radio_button_checked' : 'radio_button_unchecked') : (checked ? 'check_box' : 'check_box_outline_blank')}
                   size={24} weight={400}
-                  className="agenda-motion-check pointer-events-none relative z-10 text-primary-600"
+                  className={`agenda-motion-check pointer-events-none relative z-10 ${disabled ? "text-grey-400" : "text-primary-600"}`}
                 />
                 <span className={`min-w-0 flex-1 ${checked ? 'font-bold' : 'font-normal'}`}>{option}</span>
-                {group.optionCounts && <span aria-hidden="true" className="shrink-0 text-[14px] tabular-nums text-grey-900">{group.optionCounts[option] ?? 0}</span>}
+                {group.optionCounts && <span aria-hidden="true" className={`shrink-0 text-[14px] tabular-nums ${disabled ? "text-grey-400" : "text-grey-900"}`}>{group.optionCounts[option] ?? 0}</span>}
               </label>;
             })}
           </div>}
