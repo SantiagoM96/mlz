@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Breadcrumbs } from '../../components/navigation/Breadcrumbs';
 import { PageContainer } from '../../components/layout/PageContainer';
@@ -162,6 +162,13 @@ function elegirValor(setSearchParams: ReturnType<typeof useSearchParams>[1], key
 
 export function TramitesCatalogPage() {
   const [params, setParams] = useSearchParams();
+  // useSearchParams no acumula múltiples actualizaciones funcionales en la
+  // misma tanda. Conservar el estado más reciente evita perder destinatarios
+  // al seleccionar varias opciones rápidamente desde «Más filtros».
+  const parametrosPendientes = useRef(new URLSearchParams(params));
+  useEffect(() => {
+    parametrosPendientes.current = new URLSearchParams(params);
+  }, [params]);
   const busqueda = params.get('q') ?? '';
   const diferida = useDeferredValue(busqueda);
   const tema = params.get('tema') ?? '';
@@ -182,13 +189,22 @@ export function TramitesCatalogPage() {
     actual.get('orden') === 'az' ? { orden: 'az' } : actual.get('orden') === 'recurrencia' ? { orden: 'recurrencia' } : {}
   ), { replace: true });
   const cambiarFiltro = (campo: (typeof camposFiltro)[number], valor: string) => {
+    const siguiente = new URLSearchParams(parametrosPendientes.current);
     if (campo === 'destinatario') {
-      elegirDestinatarios(setParams, destinatario.includes(valor)
-        ? destinatario.filter(item => item !== valor)
-        : [...destinatario, valor]);
+      const anteriores = [...new Set(siguiente.getAll('destinatario'))];
+      const nuevos = anteriores.includes(valor)
+        ? anteriores.filter(item => item !== valor)
+        : [...anteriores, valor];
+      siguiente.delete('destinatario');
+      nuevos.filter(item => destinatarios.includes(item)).forEach(item =>
+        siguiente.append('destinatario', item));
+    } else if (siguiente.get(campo) === valor) {
+      siguiente.delete(campo);
     } else {
-      elegirValor(setParams, campo, valores[campo] === valor ? '' : valor);
+      siguiente.set(campo, valor);
     }
+    parametrosPendientes.current = siguiente;
+    setParams(siguiente, { replace: true });
   };
   const chips: { campo: (typeof camposFiltro)[number]; valor: string }[] = [
     ...destinatario.map((valor) => ({ campo: 'destinatario' as const, valor })),
