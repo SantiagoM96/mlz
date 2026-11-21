@@ -185,8 +185,8 @@
   outline-offset: 3px;
 }
 .tram-tag-action.tram-tag-selected {
-  border-color: var(--color-primary-600);
-  background: var(--color-primary-600);
+  border-color: var(--color-info-500);
+  background: var(--color-info-500);
   color: #fff;
 }
 @media (prefers-reduced-motion: reduce) {
