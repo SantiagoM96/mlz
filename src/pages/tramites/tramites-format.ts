@@ -306,7 +306,8 @@ function parsearNumerosEnTexto(texto: string): BloqueProcedimiento[] | null {
 export function bloquesProcedimiento(tramite: Tramite): BloqueProcedimiento[] {
   if (tramite.id === 'R036') return [{ tipo: 'pasos', items: [...fichaR036.pasos] }];
 
-  const texto = (tramite.pasos || tramite.comoIniciar).trim().replace(/\r\n?/g, '\n');
+  // «Cómo inicia» identifica el canal (web, mail, ventanilla); no es un procedimiento.
+  const texto = tramite.pasos.trim().replace(/\r\n?/g, '\n');
   if (!texto || /^[.\s-]+$/.test(texto)) return [];
 
   const guionesVerificados = parsearEtapasPorGuiones(tramite, texto);
