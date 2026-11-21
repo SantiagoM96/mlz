@@ -11,6 +11,7 @@ export type AgendaFilterGroupOption = {
   title: string;
   options: readonly string[];
   selected: readonly string[];
+  optionCounts?: Readonly<Record<string, number>>;
   /** Por defecto Agenda mantiene su selección múltiple actual. */
   selectionControl?: 'checkbox' | 'radio';
 };
@@ -76,6 +77,7 @@ export function AgendaFilterGroupPanel({
                   className="agenda-motion-check pointer-events-none relative z-10 text-primary-600"
                 />
                 <span className={`min-w-0 flex-1 ${checked ? 'font-bold' : 'font-normal'}`}>{option}</span>
+                {group.optionCounts && <span aria-hidden="true" className="shrink-0 text-[14px] tabular-nums text-grey-900">{group.optionCounts[option] ?? 0}</span>}
               </label>;
             })}
           </div>}
