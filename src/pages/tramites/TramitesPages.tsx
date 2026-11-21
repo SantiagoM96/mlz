@@ -356,7 +356,7 @@ function DocumentacionFicha({ tramite }: { tramite: Tramite }) {
     <h2>Documentación</h2>
     {nota && <p className="tram-document-note">{textoPublicoLegible(nota)}</p>}
     {items.length > 0 && <ul className="tram-documents">{items.map((item, index) => <li key={index}>
-      <span className="tram-document-icon"><MaterialIcon name="description" size={24} /></span>
+      <span className="tram-document-icon"><MaterialIcon name="verified" size={24} /></span>
       <span>{textoPublicoLegible(item)}</span>
     </li>)}</ul>}
   </section>;

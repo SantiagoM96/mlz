@@ -48,6 +48,7 @@ export type MaterialIconName =
   | 'share'
   | 'print'
   | 'description'
+  | 'verified'
   | 'event'
   | 'receipt_long'
   | 'support_agent'
