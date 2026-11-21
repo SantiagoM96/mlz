@@ -1266,15 +1266,19 @@
 .tram-detail .tram-related-card p {
   margin: 0;
 }
-.tram-detail .tram-related-icon {
-  background: #f6f6f6; /* Grey 50 · Lomas UI */
+/* Tarjetas relacionadas: siempre blancas. El borde hover suma 1px hacia
+   adentro con box-shadow, sin cambiar el box model ni mover el contenido. */
+.tram-detail .tram-related-card {
+  background: #fff;
 }
-.tram-detail .tram-related-card:hover {
-  border-color: var(--tram-grey-100);
+.tram-detail .tram-related-icon,
+.tram-detail .tram-related-card:hover .tram-related-icon {
   background: var(--tram-grey-25);
 }
-.tram-detail .tram-related-card:hover .tram-related-icon {
+.tram-detail .tram-related-card:hover {
   background: #fff;
+  border-color: var(--color-primary-600);
+  box-shadow: inset 0 0 0 1px var(--color-primary-600);
 }
 
 /* Ayuda al pie: dos bloques con la misma jerarquía y ritmo tipográfico. */
