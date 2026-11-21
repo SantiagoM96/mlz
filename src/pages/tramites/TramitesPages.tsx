@@ -106,12 +106,14 @@ function FilaTramite({ tramite, etiquetaActiva, onElegirEtiqueta }: {
   return (
     <article className="tram-row" data-testid="tramite-row">
       <div className="tram-row-body">
-        <h3>{tramite.titulo}</h3>
-        <p>{tramite.descripcion}</p>
-        <div className="tram-modalidad-chips" aria-label="Modalidad del trámite">
+        <div className="tram-row-content">
+          <h3>{tramite.titulo}</h3>
+          <p>{tramite.descripcion}</p>
+          <div className="tram-modalidad-chips" aria-label="Modalidad del trámite">
           {tramite.modalidad.split(/\s+y\s+|\s*,\s*/).map((opcion) => (
             <span key={opcion} className={`tram-modalidad-chip ${/online|digital|virtual/i.test(opcion) ? 'tram-modalidad-chip--online' : /presencial/i.test(opcion) ? 'tram-modalidad-chip--presencial' : ''}`}>{opcion}</span>
           ))}
+          </div>
         </div>
         <div className="tram-row-actions">
           <Link className="tram-link-action" to={ficha(tramite.id)} onClick={() => registrarVisita(tramite.id)}>Ver trámite</Link>
