@@ -9,20 +9,45 @@ try{
   await page.evaluate(()=>{document.querySelectorAll('[class*="onboarding"]').forEach(n=>n.remove())});
   const count=await page.locator('.editorial-text-sheet').count();
   assert.equal(count,1,brand+' sheet initialized: '+errors.join(';'));
+  const drawer=page.locator('.editorial-mobile-drawer');
+  const handle=drawer.locator('.editorial-drawer-handle');
+  const content=drawer.locator('.editorial-drawer-content');
+  assert.ok(await drawer.isVisible());
+  assert.ok(!(await content.isVisible()));
+  assert.ok(!(await page.locator('.bae-credits').isVisible()));
+  assert.equal(await drawer.locator('.preview-actions button:visible').count(),3);
+  await handle.tap();
+  assert.ok(await content.isVisible());
+  await handle.tap();
+
+  const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
+  const add=slides.locator('#addPage,.editor-slide-add-fixed');
+  for(let i=0;i<2;i++){
+   await add.tap();
+   await content.waitFor();
+   assert.match(await slides.innerText(),/Sin diseño/i);
+   const designToggle=content.locator('.modern-design-group > button,.ds-plate-design-group > button');
+   assert.equal(await designToggle.getAttribute('aria-expanded'),'true');
+  }
   const design=brand==='cronica'?'[data-page-variant="internal"]':brand==='bae'?'[data-theme="dark"]':'[data-variant="pink"].ds-variant-option';
   await page.locator(design).first().evaluate(n=>n.click());
+  await handle.tap();
   const initialPreview=await page.locator('#art').boundingBox();
-  await page.locator('.modern-text-hit,#dsHeadlineHitButton').click({force:true});
+  await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
+  const textCard=content.locator('.modern-text-card,.ds-texts-group');
+  await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   await page.waitForTimeout(100);
   const geometry=await page.evaluate(()=>{
    const rect=n=>n.getBoundingClientRect();
    const field=rect(document.querySelector('.editorial-text-writing'));
+   const iconSize=getComputedStyle(document.querySelector('.editorial-text-tools #formatItalic :is(.material-icons,.material-symbols-outlined)')).fontSize;
    const buttons=[...document.querySelectorAll('.editorial-text-tools .format-buttons button,.editorial-text-tools .align-buttons button')].map(n=>({id:n.id,w:rect(n).width,h:rect(n).height,radius:getComputedStyle(n).borderRadius}));
-   return {buttons,fieldBottom:field.bottom,toolsTop:rect(document.querySelector('.editorial-text-tools')).top,background:getComputedStyle(document.querySelector('.editorial-text-sheet')).backgroundColor,stageInPage:!!document.querySelector('.preview #photoStage')};
+   return {buttons,iconSize,fieldBottom:field.bottom,toolsTop:rect(document.querySelector('.editorial-text-tools')).top,background:getComputedStyle(document.querySelector('.editorial-text-sheet')).backgroundColor,stageInPage:!!document.querySelector('.preview #photoStage')};
   });
   assert.equal(geometry.background,'rgba(0, 0, 0, 0)');
   assert.ok(geometry.stageInPage);
+  assert.equal(geometry.iconSize,'18px');
   assert.ok(geometry.toolsTop>=geometry.fieldBottom+10);
   for(const b of geometry.buttons){assert.equal(b.w,32,b.id+' width');assert.equal(b.h,32,b.id+' height')}
   assert.equal(geometry.buttons.find(b=>b.id==='formatItalic').radius,'0px');
@@ -58,7 +83,8 @@ try{
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-writing .cronica-rich-headline').count(),0,brand+' restored field');
   assert.equal(await page.locator('.preview #photoStage').count(),1,brand+' restored preview');
-  await page.locator('.modern-text-hit,#dsHeadlineHitButton').click({force:true});
+  await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
+  await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   assert.equal(await field.textContent(),'Probando el editor móvil');
   if(brand==='cronica')assert.equal(await field.evaluate(n=>getComputedStyle(n).textTransform),'uppercase');
@@ -71,6 +97,7 @@ try{
   await page.waitForTimeout(100);
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-tools .typography-row').count(),0);
+  assert.deepEqual(errors,[]);
   console.log(brand+': editing, formatting, alignment, close/reopen and desktop restore OK; page errors: '+JSON.stringify(errors));
   await page.close();
  }
