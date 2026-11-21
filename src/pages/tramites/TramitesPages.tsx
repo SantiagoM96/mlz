@@ -383,8 +383,10 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const turno = tramite.turno.trim();
   const turnoLabel = /^no$/i.test(turno) ? 'No requiere turno' :
     /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : textoPublicoLegible(turno);
-  const showMap = /\b\d{2,5}\b/.test(tramite.direccion);
-  const mapsQuery = tramite.direccion + ', Lomas de Zamora, Buenos Aires, Argentina';
+  const oficina37 = /oficina\s*(?:n[°º.]?\s*)?37\b/i.test(tramite.direccion);
+  const direccionMapa = oficina37 ? 'Manuel Castro 220' : tramite.direccion;
+  const showMap = /\b\d{2,5}\b/.test(direccionMapa);
+  const mapsQuery = direccionMapa + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
     <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
@@ -400,19 +402,22 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
             </div>}
             {sede.lugar.trim() && <div className="tram-location-item">
               <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
-              <p>{textoPublicoLegible(sede.lugar)}</p>
+              {index === 0 && oficina37
+                ? <p className="tram-location-address"><strong>Oficina 37</strong><span>Manuel Castro 220, Lomas de Zamora, Buenos Aires</span></p>
+                : <p>{textoPublicoLegible(sede.lugar)}</p>}
             </div>}
           </div>
+          {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
+        target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
+        Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
+      </a>
         </div>
         {index === 0 && showMap && <iframe className="tram-location-map"
           title={'Mapa de ' + textoPublicoLegible(tramite.direccion)}
           src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
           loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
       </div>
-      {index === 0 && showMap && <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(mapsQuery)}
-        target="_blank" rel="noopener noreferrer" className="tram-location-map-link">
-        Ver en Google Maps <MaterialIcon name="chevron_right" size={20}/>
-      </a>}
+}
     </div>)}</div>
   </section>;
 }
