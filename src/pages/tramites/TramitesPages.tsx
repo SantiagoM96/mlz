@@ -9,7 +9,7 @@ import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
 import { AgendaSelectedFilterChips } from '../../components/agenda/AgendaSelectedFilterChips';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
-import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, otrosTramitesDelTema } from './tramites-format';
+import { documentacionPublica, bloquesProcedimiento, textoPublicoLegible, horarioPublico, sedePublica, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import { TramitesBackToTop } from './TramitesBackToTop';
 import { iconoDestinatario } from './tramites-icons';
@@ -385,26 +385,29 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const turno = tramite.turno.trim();
   const turnoLabel = /^no$/i.test(turno) ? 'No requiere turno' :
     /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : textoPublicoLegible(turno);
-  const oficina37 = /oficina\s*(?:n[°º.]?\s*)?37\b/i.test(tramite.direccion);
-  const direccionMapa = oficina37 ? 'Manuel Castro 220' : tramite.direccion;
-  const showMap = /\b\d{2,5}\b/.test(direccionMapa);
+  const direccionMapa = sedePublica(tramite.direccion).direccion || tramite.direccion;
+  const showMap = /(?:azara|castro|fr[ií]as|heras|entre r[ií]os|catamarca|collivadino)\s*(?:n[°º.]?\s*)?\d{2,5}/i.test(direccionMapa);
   const mapsQuery = direccionMapa + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
     <h2>Dónde y cuándo</h2>
-    <div className="tram-sedes">{sedes.map((sede, index) => <div key={index} className="tram-location-card">
+    <div className="tram-sedes">{sedes.map((sede, index) => { const lugar = sedePublica(sede.lugar); return <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
         <div className="tram-location-card-details">
 
           <div className="tram-location-info">
             {sede.dias.trim() && <div className="tram-location-item">
               <MaterialIcon name="schedule" size={24} className="tram-location-symbol" />
-              <p>{textoPublicoLegible(sede.dias)}</p>
+              <p>{horarioPublico(sede.dias)}</p>
             </div>}
             {sede.lugar.trim() && <div className="tram-location-item">
               <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
-              {index === 0 && oficina37
-                ? <p className="tram-location-address"><strong>Oficina 37</strong><span>Manuel Castro 220, Lomas de Zamora, Buenos Aires</span></p>
-                : <p>{textoPublicoLegible(sede.lugar)}</p>}
+              {lugar.oficina
+                ? <div className="tram-location-address">
+                    <strong>{lugar.oficina}</strong>
+                    {lugar.direccion && <span>{lugar.direccion}</span>}
+                    {lugar.detalle && <span>{lugar.detalle}</span>}
+                  </div>
+                : <p>{lugar.detalle}</p>}
             </div>}
           </div>
           {index === 0 && turnoLabel && <div className="tram-turno-tags">
@@ -420,7 +423,7 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
           src={'https://www.google.com/maps?q=' + encodeURIComponent(mapsQuery) + '&output=embed'}
           loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
       </div>
-    </div>)}</div>
+    </div>; })}</div>
   </section>;
 }
 
