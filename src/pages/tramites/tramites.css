@@ -17,6 +17,17 @@
 .tram-title { margin: 16px 0 24px; }
 .tram-detail h1 { line-height: normal; }
 
+/* Contenedor único para búsqueda, filtros y chips activos. */
+.tram-filter-panel {
+  padding: 24px;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: #fff;
+}
+.tram-filter-panel .tram-active-filters {
+  margin-top: 24px;
+}
+
 /* Buscador y dropdowns: componentes compartidos con Agenda. */
 .tram-filters {
   display: grid;
