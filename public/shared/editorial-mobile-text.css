@@ -49,7 +49,7 @@ html body .editorial-text-writing :is(textarea,input) {
 }
 
 .editorial-text-header-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex:none}
-.editorial-text-done.has-changes{background:#c90000!important;border-color:#c90000!important}
+.editorial-text-done.has-changes{background:var(--text-accent)!important;border-color:var(--text-accent)!important}
 
 .editorial-headline-spacing{display:flex;align-items:center;justify-content:space-between;gap:8px;color:inherit;font-size:13px}
 .editorial-headline-spacing [role=group]{display:flex;gap:4px}
