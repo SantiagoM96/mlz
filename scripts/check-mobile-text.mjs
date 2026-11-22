@@ -41,12 +41,11 @@ try{
   await drawer.evaluate(node=>Promise.allSettled(node.getAnimations().map(animation=>animation.finished)));
   await touch.detach();
 
-  await handle.tap();
-  const closeFrames=await drawer.evaluate(async node=>{
+  const sampleDrawer=()=>drawer.evaluate(async node=>{
    const bar=node.querySelector('.editorial-drawer-actions');
    const grip=node.querySelector('.editorial-drawer-handle');
    const before=bar.getBoundingClientRect().top;
-   const openHeight=node.getBoundingClientRect().height;
+   const startHeight=node.getBoundingClientRect().height;
    grip.click();
    const frames=[];
    const start=performance.now();
@@ -54,11 +53,16 @@ try{
     await new Promise(requestAnimationFrame);
     frames.push({top:bar.getBoundingClientRect().top,height:node.getBoundingClientRect().height});
    } while(performance.now()-start<240);
-   return {before,openHeight,frames};
+   return {before,startHeight,frames};
   });
-  const closedHeight=closeFrames.frames.at(-1).height;
-  assert.ok(closeFrames.frames.some(frame=>frame.height<closeFrames.openHeight-1&&frame.height>closedHeight+1),brand+' tap close animates');
-  assert.ok(closeFrames.frames.every(frame=>Math.abs(frame.top-closeFrames.before)<1),brand+' actions stay fixed throughout closing');
+  for(const direction of ['opening','closing']){
+   const {before,startHeight,frames}=await sampleDrawer();
+   const endHeight=frames.at(-1).height;
+   const min=Math.min(startHeight,endHeight);
+   const max=Math.max(startHeight,endHeight);
+   assert.ok(frames.some(frame=>frame.height>min+1&&frame.height<max-1),brand+' tap drawer animates while '+direction);
+   assert.ok(frames.every(frame=>Math.abs(frame.top-before)<1),brand+' actions stay fixed while '+direction);
+  }
 
   const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
   const add=slides.locator('.carousel-add-placeholder,.editor-slide-add-tile');
@@ -132,8 +136,8 @@ try{
   const textTop=()=>page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.style.top);
   const standardTop=await textTop();
   assert.equal(await spacing.getByRole('button',{name:'S · Estándar'}).getAttribute('aria-pressed'),'true');
-  await spacing.getByRole('button',{name:'L · Triple'}).click();
-  assert.equal(await page.locator('#headlineSpacing').inputValue(),'3');
+  await spacing.getByRole('button',{name:'L · 100 % más'}).click();
+  assert.equal(await page.locator('#headlineSpacing').inputValue(),'2');
   assert.notEqual(await textTop(),standardTop,brand+' spacing repositions text on canvas');
   await spacing.getByRole('button',{name:'S · Estándar'}).click();
   assert.equal(await textTop(),standardTop);
@@ -188,12 +192,12 @@ try{
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-tools .typography-row').count(),0);
   const desktopSpacing=page.locator('.editorial-spacing-desktop');
-  const medium=desktopSpacing.getByRole('button',{name:'M · Doble'});
+  const medium=desktopSpacing.getByRole('button',{name:'M · 50 % más'});
   if(!(await medium.isVisible())){
    await page.locator('main .editor-panel :is(.modern-text-card,.ds-texts-group)').first().locator(':scope > button').click();
   }
   await medium.click();
-  assert.equal(await page.locator('#headlineSpacing').inputValue(),'2');
+  assert.equal(await page.locator('#headlineSpacing').inputValue(),'1.5');
   assert.equal(await medium.getAttribute('aria-pressed'),'true');
   assert.deepEqual(errors,[]);
   console.log(brand+': editing, formatting, alignment, close/reopen and desktop restore OK; page errors: '+JSON.stringify(errors));

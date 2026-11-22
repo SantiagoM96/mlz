@@ -174,7 +174,7 @@ export function connectDrawer(
 
   function toggleFromHandle() {
     const opening = content.hidden;
-    drawer.classList.toggle("is-settling", !opening);
+    drawer.classList.add("is-settling");
     if (opening) revealAll();
     setOpen(opening);
   }

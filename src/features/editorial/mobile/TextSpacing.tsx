@@ -3,8 +3,8 @@ import { renderEvent } from "./legacyEditor";
 
 const options = [
   { value: "1", label: "S", title: "Estándar" },
-  { value: "2", label: "M", title: "Doble" },
-  { value: "3", label: "L", title: "Triple" },
+  { value: "1.5", label: "M", title: "50 % más" },
+  { value: "2", label: "L", title: "100 % más" },
 ];
 
 function subscribe(sync: () => void) {
