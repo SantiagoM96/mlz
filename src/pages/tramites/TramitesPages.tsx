@@ -9,7 +9,7 @@ import { AgendaDropdown } from '../../components/agenda/AgendaDropdown';
 import { AgendaSortDropdown } from '../../features/agenda/components/filters/AgendaSortDropdown';
 import { AgendaSelectedFilterChips } from '../../components/agenda/AgendaSelectedFilterChips';
 import { TramitesMoreFilters, camposFiltro, type FiltrosTramites } from './TramitesMoreFilters';
-import { documentacionPublica, notaDocumentacionPublica, bloquesProcedimiento, textoPublicoLegible, horarioPublico, sedePublica, otrosTramitesDelTema } from './tramites-format';
+import { documentacionPublica, notaDocumentacionPublica, bloquesProcedimiento, textoPublicoLegible, horarioPublico, sedePublica, direccionesPublicas, otrosTramitesDelTema } from './tramites-format';
 import { destinatarios, normalizarBusqueda, temas, tramites, type Tramite } from '../../data/tramites';
 import { TramitesBackToTop } from './TramitesBackToTop';
 import { iconoDestinatario } from './tramites-icons';
@@ -421,7 +421,8 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
   const turno = tramite.turno.trim();
   const turnoLabel = /^no$/i.test(turno) ? 'No requiere turno' :
     /^(sí|si)$/i.test(turno) ? 'Requiere turno previo' : textoPublicoLegible(turno);
-  const direccionMapa = sedePublica(tramite.direccion).direccion || tramite.direccion;
+  const primeraDireccion = sedes.flatMap(sede => direccionesPublicas(sede.lugar))[0];
+  const direccionMapa = primeraDireccion?.direccion || sedePublica(tramite.direccion).direccion || tramite.direccion;
   // Mostrar siempre el mapa de la primera sede, aunque la fuente solo indique oficina o dependencia.
   const mapsQuery = direccionMapa + ', Lomas de Zamora, Buenos Aires, Argentina';
   return <section className="tram-detail-section" id="donde-cuando">
@@ -431,7 +432,7 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
         <span className="tram-audience-tag"><MaterialIcon name={/^no$/i.test(turno) ? 'event_busy' : 'event_available'} size={18} />{turnoLabel}</span>
       </div>}
     </div>
-    <div className="tram-sedes">{sedes.map((sede, index) => { const lugar = sedePublica(sede.lugar); return <div key={index} className="tram-location-card">
+    <div className="tram-sedes">{sedes.map((sede, index) => { const lugar = sedePublica(sede.lugar); const direcciones = direccionesPublicas(sede.lugar); return <div key={index} className="tram-location-card">
       <div className="tram-location-card-top">
         <div className="tram-location-card-details">
 
@@ -442,13 +443,18 @@ function SedeFicha({ tramite }: { tramite: Tramite }) {
             </div>}
             {sede.lugar.trim() && <div className="tram-location-item">
               <MaterialIcon name="location_on" size={24} className="tram-location-symbol" />
-              {lugar.oficina
-                ? <div className="tram-location-address">
-                    <strong>{lugar.oficina}</strong>
-                    {lugar.direccion && <span>{lugar.direccion}</span>}
-                    {lugar.detalle && <span>{lugar.detalle}</span>}
-                  </div>
-                : <p>{lugar.detalle}</p>}
+              <div className="tram-location-address">
+                {direcciones.length > 0
+                  ? direcciones.map((item, indice) => <div className="tram-location-address-entry" key={indice}>
+                      <strong>{item.nombre}</strong>
+                      <span>{item.direccion}</span>
+                    </div>)
+                  : <div className="tram-location-address-entry">
+                      <strong>{lugar.oficina || 'Nombre del lugar'}</strong>
+                      {lugar.direccion && <span>{lugar.direccion}</span>}
+                      {lugar.detalle && <span>{lugar.detalle}</span>}
+                    </div>}
+              </div>
             </div>}
           </div>
 
