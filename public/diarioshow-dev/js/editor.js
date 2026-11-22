@@ -385,8 +385,10 @@ function renderQuoteVariant(size,footerBaseline,footerTop,textPadding,includeHov
  }
  const firstTop=main.length?baselines[0]-lineMetrics[0].ascent:authorTop-textPadding;
  const quoteHeight=76,quoteWidth=100;
- const iconY=firstTop-quoteHeight-30;
- const gradientTop=Math.max(180,firstTop-(quoteHeight+30+100)*(textPadding/50));
+ const spacingRatio=textPadding/50;
+ const quoteGap=30;
+ const iconY=firstTop-quoteHeight-quoteGap*spacingRatio;
+ const gradientTop=Math.max(180,firstTop-(quoteHeight+quoteGap+100)*spacingRatio);
  // La fotografía ocupa todo el lienzo; el degradé se superpone sin crear caja opaca.
  ctx.clearRect(0,0,W,H);
  ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
