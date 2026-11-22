@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { TextSpacing } from "./TextSpacing";
 import { connectTextEditor } from "./connectTextEditor";
 
 export function MobileTextEditor() {
@@ -37,6 +38,7 @@ export function MobileTextEditor() {
           </div>
         </header>
         <div className="editorial-text-writing" />
+        <TextSpacing />
         <div className="editorial-text-tools">
           <div ref={sizeHome} hidden>
             <div

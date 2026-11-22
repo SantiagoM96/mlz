@@ -360,7 +360,7 @@ function wrapRich(text,size,quote=false){const result=[];for(const paragraph of 
 
 /* Variante 3: cita editorial. El degradé cubre parte de la fotografía
    y la distribución vertical mantiene márgenes reales de 80 y espacios de 50 px. */
-function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
+function renderQuoteVariant(size,footerBaseline,footerTop,textPadding,includeHover=true){
  const main=wrapRich(headlineForPreview(),size);
  const author=el('showQuoteAuthor').checked?el('quoteAuthor').value.trim():'';
  const hasAuthor=Boolean(author);
@@ -380,13 +380,13 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  const baselines=new Array(main.length);
  if(main.length){
   const last=main.length-1;
-  baselines[last]=authorTop-50-lineMetrics[last].descent;
+  baselines[last]=authorTop-textPadding-lineMetrics[last].descent;
   for(let i=last-1;i>=0;i--)baselines[i]=baselines[i+1]-lineHeight;
  }
- const firstTop=main.length?baselines[0]-lineMetrics[0].ascent:authorTop-50;
+ const firstTop=main.length?baselines[0]-lineMetrics[0].ascent:authorTop-textPadding;
  const quoteHeight=76,quoteWidth=100;
  const iconY=firstTop-quoteHeight-30;
- const gradientTop=Math.max(180,iconY-100);
+ const gradientTop=Math.max(180,firstTop-(quoteHeight+30+100)*(textPadding/50));
  // La fotografía ocupa todo el lienzo; el degradé se superpone sin crear caja opaca.
  ctx.clearRect(0,0,W,H);
  ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
@@ -530,8 +530,9 @@ const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
 const footerTop=footerBaseline-footerAscent;
+const textPadding=50*Number(el('headlineSpacing').value);
 if(['quote','quote-blue'].includes(el('theme').value)){
- renderQuoteVariant(size,footerBaseline,footerTop,includeHover);
+ renderQuoteVariant(size,footerBaseline,footerTop,textPadding,includeHover);
  return;
 }
 // Construir las líneas en orden visual y posicionarlas desde abajo.
@@ -544,15 +545,15 @@ const lineMetrics=lines.map(line=>{
 const baselines=new Array(lines.length);
 if(lines.length){
  const last=lines.length-1;
- baselines[last]=footerTop-50-lineMetrics[last].descent;
+ baselines[last]=footerTop-textPadding-lineMetrics[last].descent;
  for(let i=last-1;i>=0;i--){
   const groupGap=!lines[i].quote&&lines[i+1].quote?20:0;
   baselines[i]=baselines[i+1]-lineHeight-groupGap;
  }
 }
-const firstBaseline=baselines[0]??footerTop-50;
+const firstBaseline=baselines[0]??footerTop-textPadding;
 const firstAscent=lineMetrics[0]?.ascent??size;
-const boxTop=Math.max(80,firstBaseline-firstAscent-50);
+const boxTop=Math.max(80,firstBaseline-firstAscent-textPadding);
 photoBottom=boxTop-GRADIENT_BAR_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
@@ -831,7 +832,9 @@ el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zo
  canvas.addEventListener('pointerleave',()=>photoStage.classList.remove('hover-left','hover-right'));
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
+el('headlineSpacing').addEventListener('input',()=>render());
 el('clearAll').addEventListener('click',()=>{
+ el('headlineSpacing').value='1';
  footerStyle='center';document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  circleEditing=false;circlePhoto=newCirclePhoto();
  el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('quoteAuthor').dataset.sizeOffset=0;el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
@@ -1394,7 +1397,7 @@ installCirclePhoto();
 window.DiarioShowEditor={
  getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
  headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,authorSizeOffset:Number(el('quoteAuthor').dataset.sizeOffset||0),showQuoteAuthor:el('showQuoteAuthor').checked,
- size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
+ headlineSpacing:el('headlineSpacing').value,size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
  image,zoom,offsetX,offsetY,photoLayout,activePhotoSide,
  splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
  selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
@@ -1406,6 +1409,7 @@ window.DiarioShowEditor={
   el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';el('quoteAuthor').dataset.sizeOffset=s.authorSizeOffset??0;
   el('showQuoteAuthor').checked=Boolean(s.showQuoteAuthor);
   el('quoteAuthorInputField').hidden=!s.showQuoteAuthor;
+  el('headlineSpacing').value=s.headlineSpacing||'1';
   el('size').value=s.size||'70';el('dots').value=s.dots||'5';
   textAlignment=s.alignment||'center';
   el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));
