@@ -145,6 +145,18 @@ try{
   assert.notEqual(await textTop(),standardTop,brand+' spacing repositions text on canvas');
   await spacing.getByRole('button',{name:'S · Estándar'}).click();
   assert.equal(await textTop(),standardTop);
+  const headerActions=page.locator('.editorial-text-header-actions');
+  assert.equal(await headerActions.evaluate(node=>getComputedStyle(node).gap),'8px');
+  for(const button of await headerActions.getByRole('button').all()){
+   const box=await button.boundingBox();
+   assert.equal(box.height,32);
+   assert.equal(box.width,68);
+  }
+  await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+  await page.evaluate(()=>navigator.clipboard.writeText('Texto pegado desde el portapapeles'));
+  await headerActions.getByRole('button',{name:'Pegar',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('#headline').value==='Texto pegado desde el portapapeles');
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),true);
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize+2);

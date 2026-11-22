@@ -32,12 +32,19 @@ export function MobileTextEditor() {
             <button type="button" className="editorial-text-select-all" aria-label="Seleccionar todo">
               Sel. todo
             </button>
+            <button type="button" className="editorial-text-paste">
+              <span className="material-icons" aria-hidden="true">
+                content_paste
+              </span>
+              Pegar
+            </button>
             <button type="button" className="editorial-text-done">
               Listo
             </button>
           </div>
         </header>
         <div className="editorial-text-writing" />
+        <p className="editorial-text-paste-status" role="status" hidden />
         <TextSpacing />
         <div className="editorial-text-tools">
           <div ref={sizeHome} hidden>
