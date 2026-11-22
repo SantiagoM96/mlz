@@ -2,7 +2,7 @@
 .editorial-text-sheet{position:fixed;inset:0 0 auto;z-index:100000;display:flex;flex-direction:column;justify-content:flex-end;background:transparent;box-sizing:border-box;pointer-events:none}
 .editorial-text-dialog{pointer-events:auto;--text-accent:#ed0000;width:100%;flex:0 0 auto;max-height:100%;box-sizing:border-box;background:#24272c;color:#fff;border:1px solid #42464f;border-bottom:0;border-radius:12px 12px 0 0;padding:12px 16px max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;overflow:auto;font:14px Arial,sans-serif}
 .editorial-text-dialog header{padding:0;margin:0;border:0;width:auto;background:transparent;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.editorial-text-done{box-sizing:border-box!important;height:32px!important;min-height:32px!important;padding:0 8px!important;border:1px solid #4a4e56!important;border-radius:4px!important;background:#363b43!important;color:#fff;font:600 12px Arial,sans-serif;cursor:pointer}
+.editorial-text-done,.editorial-text-select-all{box-sizing:border-box!important;height:32px!important;min-height:32px!important;padding:0 8px!important;border:1px solid #4a4e56!important;border-radius:4px!important;background:#363b43!important;color:#fff;font:600 12px Arial,sans-serif;cursor:pointer}
 .editorial-text-tools .typography-row{display:flex!important;flex-wrap:nowrap!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:0!important;padding:0!important}
 .editorial-text-tools .control-field{margin:0!important;padding:0!important;width:auto!important;flex:0 0 auto!important;min-width:0!important}
 .editorial-text-tools .align-field{margin-left:0!important}
@@ -47,3 +47,6 @@ html body .editorial-text-writing :is(textarea,input) {
 @media(max-width:360px) {
  .editorial-text-tools .typography-row {flex-wrap:wrap!important}
 }
+
+.editorial-text-header-actions{display:flex;align-items:center;gap:4px;margin-left:auto;flex:none}
+.editorial-text-done.has-changes{background:#c90000!important;border-color:#c90000!important}
