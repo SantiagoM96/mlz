@@ -300,7 +300,7 @@ export function connectDrawer(
       if (
         event.target instanceof Element &&
         event.target.closest(
-          "#addPage, .editor-slide-add-fixed, .editor-slide-add-tile, .carousel-page-thumb, .editor-slide-thumb",
+          "#addPage, .editor-slide-add-fixed, .editor-slide-add-tile, .carousel-page-thumb[data-variant='blank'], .editor-slide-thumb[data-variant='blank']",
         )
       ) {
         openDesign();
