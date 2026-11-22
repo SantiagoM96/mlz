@@ -94,7 +94,8 @@
     scrollbar-width: none;
     overscroll-behavior-y: contain;
     margin-inline: -8px;
-    padding: 8px;
+    margin-bottom: 8px;
+    padding: 8px 8px 16px;
   }
 
   .editorial-drawer-content::-webkit-scrollbar {

@@ -150,13 +150,15 @@ export function connectDrawer(
   function fitOpenHeight() {
     if (content.hidden) return;
     const style = getComputedStyle(content);
-    const padding =
-      parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    const spacing =
+      parseFloat(style.paddingTop) +
+      parseFloat(style.paddingBottom) +
+      parseFloat(style.marginBottom);
     const min = measureClosedHeight();
     const max = (window.visualViewport?.height ?? innerHeight) * 0.62;
     const height = Math.max(
       min,
-      Math.min(max, min + panel.offsetHeight + padding),
+      Math.min(max, min + panel.offsetHeight + spacing),
     );
     const value = height + "px";
     if (drawer.style.getPropertyValue("--drawer-open-height") === value) return;
