@@ -307,10 +307,17 @@ ctx.globalAlpha=Number(el('dots').value)/100;if(halftone){
 ctx.fillStyle=el('theme').value==='white'?'#D82626':'#ffffff';ctx.fillRect(0,boxTop-DIVIDER_HEIGHT,W,DIVIDER_HEIGHT);
 const centered=textAlignment==='center';
 let visibleTextTop=Infinity,visibleTextBottom=-Infinity;
+let quoteBounds=null;
 ctx.textAlign=centered?'center':'left';ctx.textBaseline='alphabetic';
 for(let i=0;i<lines.length;i++){
  const line=lines[i],total=line.parts.reduce((sum,p)=>sum+p.width,0);
  let x=centered?(W-total)/2:80;
+ if(line.quote){
+  const top=baselines[i]-size*.85,bottom=baselines[i]+size*.22;
+  quoteBounds=quoteBounds
+   ?{left:Math.min(quoteBounds.left,x),right:Math.max(quoteBounds.right,x+total),top:quoteBounds.top,bottom}
+   :{left:x,right:x+total,top,bottom};
+ }
  for(const part of line.parts){
   ctx.font=((line.quote||part.italic)?'italic ':'')+size+'px "DM Serif Display",Georgia,serif';
   ctx.textAlign='left';ctx.fillStyle=(line.quote||part.accent)?colors.accent:colors.text;
@@ -342,6 +349,7 @@ const estimatedBottom=(baselines.at(-1)??footerTop)+size*.28+10;
 const textOffsetY=Number.isFinite(visibleTextTop)&&Number.isFinite(visibleTextBottom)
  ?(visibleTextTop+visibleTextBottom-estimatedTop-estimatedBottom)/2:0;
 window.__editorialHotspotBounds={
+ secondary:quoteBounds,
  // Los márgenes laterales se conservan; solo se corrige el centrado vertical.
  text:{left:Math.max(0,minX-26),right:Math.min(W,maxX+26),
   top:Math.max(0,estimatedTop+textOffsetY),

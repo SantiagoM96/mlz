@@ -364,7 +364,7 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  const main=wrapRich(headlineForPreview(),size);
  const author=el('showQuoteAuthor').checked?el('quoteAuthor').value.trim():'';
  const hasAuthor=Boolean(author);
- const authorSize=36;
+ const authorSize=36+Number(el('quoteAuthor').dataset.sizeOffset||0);
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
  const authorMetrics=ctx.measureText(author||' ');
  const authorAscent=authorMetrics.actualBoundingBoxAscent||authorSize;
@@ -435,7 +435,11 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  }
  ctx.fillStyle='#FFFFFF';ctx.textAlign='center';
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
- if(hasAuthor)ctx.fillText(author,W/2,authorBaseline);
+ if(hasAuthor){
+  ctx.fillText(author,W/2,authorBaseline);
+  const half=authorMetrics.width/2;
+  window.__editorialSecondaryTextBounds={left:W/2-half,right:W/2+half,top:authorTop,bottom:authorBaseline+authorDescent};
+ }
  ctx.font='500 30px "Inter",Arial,sans-serif';
  drawFooter('#FFFFFF',footerBaseline);
  ctx.textAlign='left';
@@ -512,6 +516,7 @@ el('size').addEventListener('keydown',event=>{
 });
 el('size').addEventListener('keyup',()=>setSizeAdjusting(false));
 function render(includeHover=true){
+ window.__editorialSecondaryTextBounds=null;
 try{
  if(pageBlank){ctx.clearRect(0,0,W,H);ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);photoBottom=H;return;}
 headlineHitRegions=[];
@@ -829,7 +834,7 @@ el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zo
 el('clearAll').addEventListener('click',()=>{
  footerStyle='center';document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  circleEditing=false;circlePhoto=newCirclePhoto();
- el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
+ el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('quoteAuthor').dataset.sizeOffset=0;el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  forceUppercase=false;syncUppercaseUI();
@@ -1388,7 +1393,7 @@ setPreviewContext('text');
 installCirclePhoto();
 window.DiarioShowEditor={
  getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
- headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,showQuoteAuthor:el('showQuoteAuthor').checked,
+ headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,authorSizeOffset:Number(el('quoteAuthor').dataset.sizeOffset||0),showQuoteAuthor:el('showQuoteAuthor').checked,
  size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
  image,zoom,offsetX,offsetY,photoLayout,activePhotoSide,
  splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
@@ -1398,7 +1403,7 @@ window.DiarioShowEditor={
   if(s.circlePhoto&&s.circlePhoto.positioned===undefined)circlePhoto.positioned=true;
   setVariant(s.theme||'pink');
   pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
-  el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
+  el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';el('quoteAuthor').dataset.sizeOffset=s.authorSizeOffset??0;
   el('showQuoteAuthor').checked=Boolean(s.showQuoteAuthor);
   el('quoteAuthorInputField').hidden=!s.showQuoteAuthor;
   el('size').value=s.size||'70';el('dots').value=s.dots||'5';

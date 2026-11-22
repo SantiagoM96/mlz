@@ -43,21 +43,40 @@ try{
 
   const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
   const add=slides.locator('.carousel-add-placeholder,.editor-slide-add-tile');
+  let blankHeight;
   for(let i=0;i<2;i++){
    await add.tap();
    await content.waitFor();
    assert.match(await slides.innerText(),/Sin diseño/i);
    const designToggle=content.locator('.modern-design-group > button,.ds-plate-design-group > button');
    assert.equal(await designToggle.getAttribute('aria-expanded'),'true');
+   blankHeight=(await drawer.boundingBox()).height;
+   assert.ok(blankHeight<844*.62,brand+' blank design fits its own content');
   }
   const design=brand==='cronica'?'[data-page-variant="internal"]':brand==='bae'?'[data-theme="dark"]':'[data-variant="pink"].ds-variant-option';
   await page.locator(design).first().evaluate(n=>n.click());
+  await page.waitForFunction(previous=>document.querySelector('.editorial-mobile-drawer').offsetHeight>previous, blankHeight);
   await handle.tap();
+  const existing=slides.locator('.carousel-page-thumb,.editor-slide-thumb').first();
+  await existing.tap();
+  assert.ok(await content.isVisible());
+  await handle.tap();
+  await page.locator('.modern-logo-hit,#dsLogoHitButton').first().evaluate(node=>node.click());
+  assert.ok(await content.locator('.editor-logo-layout-row,.ds-logo-layout-row').isVisible());
+  assert.ok(!(await content.locator('.modern-design-group > button,.ds-plate-design-group > button').isVisible()));
+  await handle.tap();
+  if(brand==='cronica'){
+   await page.getByRole('button',{name:'Editar volanta'}).tap();
+   const strap=page.locator('.editorial-text-writing #strapText');
+   assert.ok(await strap.isVisible());
+   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
+   assert.equal(await strap.getAttribute('data-size-offset'),'2');
+   await page.locator('.editorial-text-done').click();
+  }
   const initialPreview=await page.locator('#art').boundingBox();
   assert.ok(initialPreview.width>=235,brand+' mobile preview keeps its width');
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
-  const textCard=content.locator('.modern-text-card,.ds-texts-group');
-  await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));
+  assert.ok(!(await content.locator('.modern-text-card,.ds-texts-group').isVisible()));
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   await page.waitForTimeout(100);
   const geometry=await page.evaluate(()=>{
@@ -74,6 +93,12 @@ try{
   for(const b of geometry.buttons){assert.equal(b.w,32,b.id+' width');assert.equal(b.h,32,b.id+' height')}
   assert.equal(geometry.buttons.find(b=>b.id==='formatItalic').radius,'0px');
   const field=page.locator('.editorial-text-writing .cronica-rich-headline');
+  const size=page.locator('#size');
+  const previousSize=Number(await size.inputValue());
+  await page.getByRole('button',{name:'Aumentar tamaño'}).click();
+  assert.equal(Number(await size.inputValue()),previousSize+2);
+  await page.getByRole('button',{name:'Reducir tamaño'}).click();
+  assert.equal(Number(await size.inputValue()),previousSize);
   await field.fill('Probando el editor móvil');
   assert.equal(await page.locator('#headline').inputValue(),'Probando el editor móvil',brand+' source sync');
   await field.evaluate(n=>{const r=document.createRange();r.selectNodeContents(n);const s=getSelection();s.removeAllRanges();s.addRange(r)});
@@ -106,7 +131,6 @@ try{
   assert.equal(await page.locator('.editorial-text-writing .cronica-rich-headline').count(),0,brand+' restored field');
   assert.equal(await page.locator('.preview #photoStage').count(),1,brand+' restored preview');
   await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
-  await textCard.locator('.cronica-rich-headline').evaluate(node=>node.focus({preventScroll:true}));
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   assert.equal(await field.textContent(),'Probando el editor móvil');
   if(brand==='cronica')assert.equal(await field.evaluate(n=>getComputedStyle(n).textTransform),'uppercase');
