@@ -34,6 +34,7 @@ export function connectTextEditor(
     !sizeInput
   )
     return;
+  const headlineSource: HTMLTextAreaElement = source;
   const editor: HTMLElement = headlineEditor;
   const toolbar: HTMLElement = formatRow;
   const canvas: HTMLCanvasElement = drawing;
@@ -135,7 +136,7 @@ export function connectTextEditor(
     const field = activeEditor;
     if (field === editor) {
       return JSON.stringify([
-        source!.value,
+        headlineSource.value,
         sizeRange.value,
         [...toolbar.querySelectorAll("button[aria-pressed]")].map(
           (button) => button.getAttribute("aria-pressed"),

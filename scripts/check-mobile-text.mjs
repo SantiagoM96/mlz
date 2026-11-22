@@ -117,7 +117,7 @@ try{
   const done=page.getByRole('button',{name:'Listo',exact:true});
   assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
   await page.getByRole('button',{name:'Seleccionar todo',exact:true}).click();
-  assert.equal(await field.evaluate(node=>getSelection().toString()===node.textContent),true);
+  assert.equal(await field.evaluate(node=>getSelection().rangeCount===1&&getSelection().getRangeAt(0).cloneContents().textContent===node.textContent),true);
   assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
