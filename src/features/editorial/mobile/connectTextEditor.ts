@@ -40,11 +40,9 @@ export function connectTextEditor(
   const canvas: HTMLCanvasElement = drawing;
   const sizeRange: HTMLInputElement = sizeInput;
   const dialog = sheet.querySelector<HTMLElement>(".editorial-text-dialog")!;
-  const done = sheet.querySelector<HTMLButtonElement>(".editorial-text-done")!;
+  const handle = sheet.querySelector<HTMLButtonElement>(".editorial-text-handle")!;
   const selectAll = sheet.querySelector<HTMLButtonElement>(".editorial-text-select-all")!;
-  const paste = sheet.querySelector<HTMLButtonElement>(".editorial-text-paste")!;
-  const pasteStatus = sheet.querySelector<HTMLElement>(".editorial-text-paste-status")!;
-  let pasteRequest = 0;
+  const reset = sheet.querySelector<HTMLButtonElement>(".editorial-text-reset")!;
   const writing = sheet.querySelector<HTMLElement>(".editorial-text-writing")!;
   const tools = sheet.querySelector<HTMLElement>(".editorial-text-tools")!;
   const title = sheet.querySelector<HTMLElement>("#editorialTextTitle")!;
@@ -135,29 +133,30 @@ export function connectTextEditor(
   let scrollY = 0,
     oldOverflow = "",
     oldInert = false;
-  function editSnapshot() {
-    const field = activeEditor;
-    if (field === editor) {
-      return JSON.stringify([
-        headlineSource.value,
-        sizeRange.value,
-        (document.getElementById("headlineSpacing") as HTMLInputElement | null)?.value,
-        [...toolbar.querySelectorAll("button[aria-pressed]")].map(
-          (button) => button.getAttribute("aria-pressed"),
-        ),
-      ]);
-    }
-    if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)) return "";
-    return JSON.stringify([
-      field.value,
-      (document.getElementById("headlineSpacing") as HTMLInputElement | null)?.value,
-      field.id === "quote" ? sizeRange.value : field.dataset.sizeOffset ?? "0",
-    ]);
-  }
+  let resetSession = () => {};
+  function captureSession(field: HTMLInputElement | HTMLTextAreaElement | null | undefined) {
+    const textField = field ?? headlineSource;
+    const spacing = document.querySelector<HTMLInputElement>("#headlineSpacing");
+    const values = [textField, sizeRange, ...(spacing ? [spacing] : [])].map(
+      (input) => ({ input, value: input.value }),
+    );
+    const offset = field?.dataset.sizeOffset;
+    const uppercase = !field ? toolbar.querySelector<HTMLButtonElement>("#formatUppercase") : null;
+    const wasUppercase = uppercase?.getAttribute("aria-pressed");
+    const align = !field ? toolbar.querySelector<HTMLButtonElement>('.align-buttons [aria-pressed="true"]') : null;
 
-  let initialEdit = "";
-  function syncDone() {
-    if (!sheet.hidden) done.classList.toggle("has-changes", editSnapshot() !== initialEdit);
+    return () => {
+      if (uppercase && uppercase.getAttribute("aria-pressed") !== wasUppercase) uppercase.click();
+      if (align?.getAttribute("aria-pressed") === "false") align.click();
+      if (field) {
+        if (offset === undefined) delete field.dataset.sizeOffset;
+        else field.dataset.sizeOffset = offset;
+      }
+      for (const { input, value } of values) {
+        input.value = value;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    };
   }
 
   function fit() {
@@ -190,10 +189,7 @@ export function connectTextEditor(
     if (!mobile.matches || !sheet.hidden) return;
     const field = trigger === secondaryHit ? secondary?.field : null;
     activeEditor = field ?? editor;
-    pasteRequest++;
-    pasteStatus.hidden = true;
-    initialEdit = editSnapshot();
-    done.classList.remove("has-changes");
+    resetSession = captureSession(field);
     title.textContent = field
       ? (secondary?.label ?? "Texto")
       : "Texto principal";
@@ -286,8 +282,6 @@ export function connectTextEditor(
     },
     { signal },
   );
-  writing.addEventListener("input", syncDone, { signal });
-  tools.addEventListener("click", syncDone, { signal });
   selectAll.addEventListener("pointerdown", (event) => event.preventDefault(), { signal });
   selectAll.addEventListener("click", () => {
     activeEditor.focus({ preventScroll: true });
@@ -297,47 +291,40 @@ export function connectTextEditor(
       getSelection()?.selectAllChildren(activeEditor);
     }
   }, { signal });
-  paste.addEventListener("pointerdown", (event) => event.preventDefault(), { signal });
-  paste.addEventListener("click", async () => {
-    const request = ++pasteRequest;
-    const field = activeEditor;
-    const plain = field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement;
-    const selectedStart = plain ? field.selectionStart : null;
-    const selectedEnd = plain ? field.selectionEnd : null;
-    const hasSelection = selectedStart !== null && selectedEnd !== null && selectedStart < selectedEnd;
-    const selection = getSelection();
-    const range = selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
-    pasteStatus.hidden = true;
-    try {
-      const value = await navigator.clipboard.readText();
-      if (sheet.hidden || request !== pasteRequest || !value) return;
-      field.focus({ preventScroll: true });
-      if (plain) {
-        const start = hasSelection ? selectedStart : field.value.length;
-        const end = hasSelection ? selectedEnd : field.value.length;
-        const text = field instanceof HTMLInputElement ? value.replace(/[\r\n]+/g, " ") : value;
-        field.setRangeText(text, start, end, "end");
-        field.dispatchEvent(new Event("input", { bubbles: true }));
-      } else {
-        const insertion = range && !range.collapsed && field.contains(range.commonAncestorContainer)
-          ? range
-          : document.createRange();
-        if (insertion !== range) {
-          insertion.selectNodeContents(field);
-          insertion.collapse(false);
-        }
-        selection?.removeAllRanges();
-        selection?.addRange(insertion);
-        document.execCommand("insertText", false, value);
-      }
-    } catch {
-      if (sheet.hidden || request !== pasteRequest) return;
-      field.focus({ preventScroll: true });
-      pasteStatus.textContent = "Mantené presionado el texto y elegí Pegar.";
-      pasteStatus.hidden = false;
-    }
+  reset.addEventListener("pointerdown", (event) => event.preventDefault(), { signal });
+  reset.addEventListener("click", () => {
+    resetSession();
+    activeEditor.focus({ preventScroll: true });
   }, { signal });
-  done.addEventListener("click", close, { signal });
+
+  let drag: { id: number; start: number; distance: number } | null = null;
+  let suppressTap = false;
+  handle.addEventListener("pointerdown", (event) => {
+    if (!event.isPrimary || event.button !== 0) return;
+    event.preventDefault();
+    suppressTap = false;
+    drag = { id: event.pointerId, start: event.clientY, distance: 0 };
+    handle.setPointerCapture(event.pointerId);
+  }, { signal });
+  handle.addEventListener("pointermove", (event) => {
+    if (!drag || event.pointerId !== drag.id) return;
+    drag.distance = Math.max(0, event.clientY - drag.start);
+    dialog.style.setProperty("--editorial-text-drag", drag.distance + "px");
+  }, { signal });
+  function endDrag(event: PointerEvent) {
+    if (!drag || event.pointerId !== drag.id) return;
+    const distance = drag.distance;
+    drag = null;
+    suppressTap = distance > 8 || event.type !== "pointerup";
+    dialog.style.removeProperty("--editorial-text-drag");
+    if (event.type === "pointerup" && distance >= 48) close();
+  }
+  for (const type of ["pointerup", "pointercancel", "lostpointercapture"] as const) {
+    handle.addEventListener(type, endDrag, { signal });
+  }
+  handle.addEventListener("click", (event) => {
+    if (!suppressTap || event.detail === 0) close();
+  }, { signal });
   sheet.addEventListener(
     "click",
     (event) => {
@@ -380,7 +367,6 @@ export function connectTextEditor(
     renderEvent,
     () => {
       syncSecondaryHit();
-      syncDone();
       queueCenter();
     },
     { signal },
