@@ -108,7 +108,7 @@ try{
    assert.ok(await strap.isVisible());
    await page.getByRole('button',{name:'Aumentar tamaño'}).click();
    assert.equal(await strap.getAttribute('data-size-offset'),'2');
-   await page.locator('.editorial-text-handle').click();
+   await page.locator('.editorial-text-done').click();
   }
   const initialPreview=await page.locator('#art').boundingBox();
   assert.ok(initialPreview.width>=235,brand+' mobile preview keeps its width');
@@ -131,8 +131,11 @@ try{
   assert.equal(geometry.buttons.find(b=>b.id==='formatItalic').radius,'0px');
   const field=page.locator('.editorial-text-writing .cronica-rich-headline');
   const size=page.locator('#size');
+  const done=page.getByRole('button',{name:'Listo',exact:true});
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
   await page.getByRole('button',{name:'Seleccionar todo',exact:true}).click();
   assert.equal(await field.evaluate(node=>getSelection().rangeCount===1&&getSelection().getRangeAt(0).cloneContents().textContent===node.textContent),true);
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
   const spacing=page.locator('.editorial-text-dialog').getByRole('group',{name:'Espaciado del texto'});
   const textTop=()=>page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.style.top);
   const standardTop=await textTop();
@@ -149,14 +152,10 @@ try{
    assert.equal(box.height,32);
    assert.equal(box.width,68);
   }
-  const initialText=await page.locator('#headline').inputValue();
-  await field.fill('Cambio para probar Reset');
-  await headerActions.getByRole('button',{name:'Reset',exact:true}).click();
-  assert.equal(await page.locator('#headline').inputValue(),initialText);
-  assert.ok(await field.isVisible());
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize+2);
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),true);
   await page.getByRole('button',{name:'Reducir tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize);
   await field.fill('Probando el editor móvil');
@@ -185,8 +184,8 @@ try{
   assert.ok(Math.abs(previewBounds.width-initialPreview.width)<1,'preview keeps original scale');
   assert.ok(!previewBounds.mini);
   assert.ok(previewBounds.scroll>0);
-  await page.locator('.editorial-text-handle').click();
   await page.evaluate(()=>{Object.defineProperty(window,'visualViewport',{configurable:true,value:window.__nativeTestViewport});window.dispatchEvent(new Event('resize'))});
+  await page.locator('.editorial-text-done').click();
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-writing .cronica-rich-headline').count(),0,brand+' restored field');
   assert.equal(await page.locator('.preview #photoStage').count(),1,brand+' restored preview');
@@ -194,15 +193,6 @@ try{
   await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   assert.equal(await field.textContent(),'Probando el editor móvil');
   if(brand==='cronica')assert.equal(await field.evaluate(n=>getComputedStyle(n).textTransform),'uppercase');
-  const textHandle=page.locator('.editorial-text-handle');
-  const grip=await textHandle.boundingBox();
-  await page.mouse.move(grip.x+grip.width/2,grip.y+grip.height/2);
-  await page.mouse.down();
-  await page.mouse.move(grip.x+grip.width/2,grip.y+grip.height/2+60,{steps:4});
-  await page.mouse.up();
-  assert.ok(!(await field.isVisible()),brand+' dragging grip closes editor without keyboard inset');
-  await page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.click());
-  await page.locator('.editorial-text-sheet:not([hidden])').waitFor();
   await page.setViewportSize({width:432,height:900});
   assert.ok(await page.locator('.editorial-text-dialog').evaluate(n=>n.getBoundingClientRect().right<=innerWidth));
   await page.setViewportSize({width:768,height:1024});
