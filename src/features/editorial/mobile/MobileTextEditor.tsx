@@ -26,25 +26,23 @@ export function MobileTextEditor() {
         aria-modal="true"
         aria-labelledby="editorialTextTitle"
       >
+        <button
+          type="button"
+          className="editorial-text-handle"
+          aria-label="Cerrar editor de texto"
+        />
         <header>
           <strong id="editorialTextTitle">Texto principal</strong>
           <div className="editorial-text-header-actions">
             <button type="button" className="editorial-text-select-all" aria-label="Seleccionar todo">
               Sel. todo
             </button>
-            <button type="button" className="editorial-text-paste">
-              <span className="material-icons" aria-hidden="true">
-                content_paste
-              </span>
-              Pegar
-            </button>
-            <button type="button" className="editorial-text-done">
-              Listo
+            <button type="button" className="editorial-text-reset">
+              Reset
             </button>
           </div>
         </header>
         <div className="editorial-text-writing" />
-        <p className="editorial-text-paste-status" role="status" hidden />
         <TextSpacing />
         <div className="editorial-text-tools">
           <div ref={sizeHome} hidden>
