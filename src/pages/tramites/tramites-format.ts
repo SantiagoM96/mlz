@@ -534,3 +534,35 @@ export function otrosTramitesDelTema(actual: Tramite, catalogo: readonly Tramite
     .map(id => mismoTema.find(item => item.id === id))
     .filter((item): item is Tramite => Boolean(item));
 }
+
+/** Extrae las direcciones postales presentes en la base, sin inventar números de calle. */
+export function direccionesPublicas(valor: string): { nombre: string; direccion: string }[] {
+  const texto = textoPublicoLegible(valor);
+  const patron = /(?:Rep[uú]blica [AÁ]rabe de Siria|Dr\\.? Carlos Collivadino|Manuel Castro|M\\.? Castro|Castro Barros|Entre R[ií]os|Las Heras|Catamarca|Recondo|Azara|Av\\.? Fr[ií]as|Fr[ií]as)\\s*(?:n[°º.]?\\s*)?(\\d{1,5})/gi;
+  const hallazgos = Array.from(texto.matchAll(patron));
+  const nombres: Record<string, string> = {
+    'm castro': 'Manuel Castro', 'manuel castro': 'Manuel Castro',
+    'av frias': 'Av. Frías', 'frias': 'Av. Frías',
+    'entre rios': 'Entre Ríos', 'republica arabe de siria': 'República Árabe de Siria',
+    'dr carlos collivadino': 'Dr. Carlos Collivadino', 'castro barros': 'Castro Barros',
+    'las heras': 'Las Heras', 'catamarca': 'Catamarca', 'recondo': 'Recondo', 'azara': 'Azara',
+  };
+  return hallazgos.map((hallazgo, index) => {
+    const calle = hallazgo[0].replace(/\\s*(?:n[°º.]?\\s*)?\\d{1,5}$/, '').replace(/\\.$/, '').trim();
+    const clave = calle.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/\\./g, '').replace(/\\s+/g, ' ');
+    const direccion = (nombres[clave] || calle) + ' ' + hallazgo[1];
+    const segmento = texto.slice(index === 0 ? 0 : hallazgos[index - 1].index! + hallazgos[index - 1][0].length, hallazgo.index!);
+    const posterior = texto.slice(hallazgo.index! + hallazgo[0].length, hallazgos[index + 1]?.index ?? texto.length);
+    const contexto = segmento + ' ' + posterior;
+    let nombre = 'Nombre del lugar';
+    if (/Hogar F[aá]tima Cat[aá]n/i.test(contexto)) nombre = 'Hogar Fátima Catán';
+    else if (/Direcci[oó]n de Asistencia/i.test(contexto)) nombre = 'Dirección de Asistencia';
+    else if (/Secretar[ií]a de Desarrollo Social/i.test(contexto)) nombre = 'Secretaría de Desarrollo Social';
+    else if (/Mesa General de Entradas|Mesa de Entradas/i.test(contexto)) nombre = 'Mesa General de Entradas';
+    else if (/Obras Particulares/i.test(contexto)) nombre = 'Obras Particulares';
+    else if (/Industrias/i.test(contexto)) nombre = 'Oficina de Industrias';
+    else if (/oficina\\s*(?:n[°º.]?\\s*)?\\d+/i.test(contexto)) nombre = contexto.match(/oficina\\s*(?:n[°º.]?\\s*)?\\d+/i)![0].replace(/^oficina/i, 'Oficina');
+    else if (/Palacio Municipal|Municipalidad|Municipio de Lomas/i.test(contexto)) nombre = 'Palacio Municipal';
+    return { nombre, direccion };
+  }).filter((item, index, items) => items.findIndex(other => other.direccion.toLowerCase() === item.direccion.toLowerCase()) === index);
+}
