@@ -16,9 +16,30 @@ try{
   assert.ok(!(await content.isVisible()));
   assert.ok(!(await page.locator('.bae-credits').isVisible()));
   assert.equal(await drawer.locator('.preview-actions button:visible').count(),3);
-  await handle.tap();
+  const actions=drawer.locator('.editorial-drawer-actions');
+  assert.equal(await actions.evaluate(node=>getComputedStyle(node).paddingBottom),'24px');
+  const divider=()=>actions.evaluate(node=>getComputedStyle(node,'::before').borderTopWidth);
+  assert.equal(await divider(),'0px');
+  const touch=await page.context().newCDPSession(page);
+  const drag=async (dy)=>{
+   const grip=await handle.boundingBox();
+   const x=Math.round(grip.x+grip.width/2), y=Math.round(grip.y+grip.height/2);
+   await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
+   await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y+dy}]});
+   const moved=await handle.boundingBox();
+   assert.ok(Math.abs(moved.y-grip.y-dy)<2,brand+' drawer tracks the finger before release');
+   await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  };
+  await drag(-96);
   assert.ok(await content.isVisible());
-  await handle.tap();
+  assert.equal(await divider(),'1px');
+  assert.equal(await content.evaluate(node=>getComputedStyle(node).scrollbarWidth),'none');
+  assert.equal(await content.locator(':is(.modern-toggle,.ds-control-card-toggle)[aria-expanded="false"]:visible').count(),0);
+  await drawer.evaluate(node=>Promise.allSettled(node.getAnimations().map(animation=>animation.finished)));
+  await drag(96);
+  assert.ok(!(await content.isVisible()));
+  await drawer.evaluate(node=>Promise.allSettled(node.getAnimations().map(animation=>animation.finished)));
+  await touch.detach();
 
   const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
   const add=slides.locator('.carousel-add-placeholder,.editor-slide-add-tile');

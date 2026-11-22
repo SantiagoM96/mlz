@@ -35,7 +35,7 @@
   slideRoom.setAttribute('aria-hidden', 'true');
   slides.before(slideRoom);
 
-  let pointerStart = null;
+  let gesture = null;
   let dragged = false;
   let centerFrame = 0;
   let desktopCards = [];
@@ -57,7 +57,9 @@
 
   function setOpen(open) {
     if (!open && content.contains(document.activeElement)) handle.focus({ preventScroll: true });
+    drawer.classList.toggle('is-open', open);
     content.hidden = !open;
+    content.inert = !open;
     handle.setAttribute('aria-expanded', String(open));
     handle.setAttribute('aria-label', open ? 'Cerrar formato' : 'Abrir formato');
     if (!open) {
@@ -84,6 +86,7 @@
     if (!card || card.hidden) return;
     slideRoom.style.height = '';
     cards.forEach(item => expandCard(item, item === card));
+    drawer.classList.remove('is-settling');
     setOpen(true);
     cancelAnimationFrame(centerFrame);
     centerFrame = requestAnimationFrame(() => {
@@ -107,11 +110,13 @@
       panel.removeAttribute('role');
       panel.removeAttribute('aria-labelledby');
       panel.inert = false;
-      cards.forEach(card => expandCard(card, false));
+      measureClosedHeight();
       main.classList.add('has-editorial-mobile-drawer');
       return;
     }
     if (drawer.hidden) return;
+    if (gesture) finishDrag(false);
+    drawer.classList.remove('is-settling');
     setOpen(false);
     panelHome.after(panel);
     actionsHome.after(actions);
@@ -121,21 +126,81 @@
     main.classList.remove('has-editorial-mobile-drawer');
   }
 
+  function measureClosedHeight() {
+    const style = getComputedStyle(drawer);
+    const height = handle.offsetHeight + actionBar.offsetHeight
+      + parseFloat(style.paddingBottom) + parseFloat(style.borderTopWidth);
+    drawer.style.setProperty('--drawer-closed-height', height + 'px');
+    return height;
+  }
+
+  function revealAll() {
+    cards.forEach(card => expandCard(card, true));
+  }
+
+  function toggleFromHandle() {
+    drawer.classList.remove('is-settling');
+    if (content.hidden) revealAll();
+    setOpen(content.hidden);
+  }
+
+  function moveDrawer(event) {
+    if (event.pointerId !== gesture?.id) return;
+    const delta = gesture.y - event.clientY;
+    if (!dragged && Math.abs(delta) < 4) return;
+    dragged = true;
+    if (!drawer.classList.contains('is-dragging') && (gesture.open ? delta >= 0 : delta <= 0)) return;
+    if (content.hidden) {
+      revealAll();
+      content.hidden = false;
+      content.inert = true;
+    }
+    const height = Math.max(gesture.min, Math.min(gesture.max, gesture.height + delta));
+    drawer.style.setProperty('--drawer-drag-height', height + 'px');
+    drawer.classList.add('is-dragging');
+  }
+
+  function finishDrag(accept) {
+    if (!gesture) return;
+    const { open, height, min, max } = gesture;
+    gesture = null;
+    if (!dragged) return;
+    const current = drawer.getBoundingClientRect().height;
+    const snapDistance = Math.min(48, (max - min) / 2);
+    const changed = current !== height && Math.abs(current - height) >= snapDistance;
+    const next = accept && changed ? current > height : open;
+    drawer.classList.replace('is-dragging', 'is-settling');
+    drawer.style.removeProperty('--drawer-drag-height');
+    setOpen(next);
+  }
+
+  const actionResize = new ResizeObserver(() => {
+    if (!drawer.hidden) measureClosedHeight();
+  });
+  actionResize.observe(actionBar);
   handle.addEventListener('pointerdown', event => {
+    if (gesture || !event.isPrimary || event.button !== 0) return;
     dragged = false;
-    pointerStart = event.clientY;
+    drawer.classList.remove('is-settling');
+    const min = measureClosedHeight();
+    const viewport = document.documentElement.clientHeight;
+    gesture = {
+      id: event.pointerId, y: event.clientY, open: !content.hidden,
+      height: drawer.getBoundingClientRect().height, min, max: Math.max(min, viewport * 0.62),
+    };
     handle.setPointerCapture(event.pointerId);
   });
+  handle.addEventListener('pointermove', moveDrawer);
   handle.addEventListener('pointerup', event => {
-    if (pointerStart === null) return;
-    const delta = event.clientY - pointerStart;
-    pointerStart = null;
-    dragged = Math.abs(delta) >= 24;
-    if (dragged) setOpen(delta < 0);
+    if (event.pointerId === gesture?.id) finishDrag(true);
   });
-  handle.addEventListener('pointercancel', () => { pointerStart = null; });
+  for (const type of ['pointercancel', 'lostpointercapture']) {
+    handle.addEventListener(type, event => {
+      if (event.pointerId === gesture?.id) finishDrag(false);
+    });
+  }
   handle.addEventListener('click', event => {
-    if (!dragged || event.detail === 0) setOpen(content.hidden);
+    if (!dragged || event.detail === 0) toggleFromHandle();
     dragged = false;
   });
   drawer.addEventListener('keydown', event => {
