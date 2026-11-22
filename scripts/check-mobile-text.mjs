@@ -153,9 +153,20 @@ try{
    assert.equal(box.width,68);
   }
   await page.context().grantPermissions(['clipboard-read','clipboard-write']);
-  await page.evaluate(()=>navigator.clipboard.writeText('Texto pegado desde el portapapeles'));
+  await page.evaluate(()=>navigator.clipboard.write([new ClipboardItem({
+   'text/plain':new Blob(['Texto pegado desde el portapapeles'],{type:'text/plain'}),
+   'text/html':new Blob(['<i>Texto pegado desde el portapapeles</i>'],{type:'text/html'}),
+  })]));
   await headerActions.getByRole('button',{name:'Pegar',exact:true}).click();
   await page.waitForFunction(()=>document.querySelector('#headline').value==='Texto pegado desde el portapapeles');
+  await field.evaluate(node=>{
+   const selection=getSelection();
+   selection.selectAllChildren(node);
+   selection.collapseToStart();
+  });
+  await page.evaluate(()=>navigator.clipboard.writeText(' adicional'));
+  await headerActions.getByRole('button',{name:'Pegar',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('#headline').value==='Texto pegado desde el portapapeles adicional');
   assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),true);
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
