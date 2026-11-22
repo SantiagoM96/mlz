@@ -302,8 +302,9 @@ export function connectTextEditor(
     const request = ++pasteRequest;
     const field = activeEditor;
     const plain = field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement;
-    const start = plain ? field.selectionStart ?? field.value.length : 0;
-    const end = plain ? field.selectionEnd ?? start : 0;
+    const selectedStart = plain ? field.selectionStart : null;
+    const selectedEnd = plain ? field.selectionEnd : null;
+    const hasSelection = selectedStart !== null && selectedEnd !== null && selectedStart < selectedEnd;
     const selection = getSelection();
     const range = selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
     pasteStatus.hidden = true;
@@ -312,13 +313,21 @@ export function connectTextEditor(
       if (sheet.hidden || request !== pasteRequest || !value) return;
       field.focus({ preventScroll: true });
       if (plain) {
-        field.setRangeText(field instanceof HTMLInputElement ? value.replace(/[\r\n]+/g, " ") : value, start, end, "end");
+        const start = hasSelection ? selectedStart : field.value.length;
+        const end = hasSelection ? selectedEnd : field.value.length;
+        const text = field instanceof HTMLInputElement ? value.replace(/[\r\n]+/g, " ") : value;
+        field.setRangeText(text, start, end, "end");
         field.dispatchEvent(new Event("input", { bubbles: true }));
       } else {
-        if (range && field.contains(range.commonAncestorContainer)) {
-          selection?.removeAllRanges();
-          selection?.addRange(range);
+        const insertion = range && !range.collapsed && field.contains(range.commonAncestorContainer)
+          ? range
+          : document.createRange();
+        if (insertion !== range) {
+          insertion.selectNodeContents(field);
+          insertion.collapse(false);
         }
+        selection?.removeAllRanges();
+        selection?.addRange(insertion);
         document.execCommand("insertText", false, value);
       }
     } catch {
