@@ -41,6 +41,25 @@ try{
   await drawer.evaluate(node=>Promise.allSettled(node.getAnimations().map(animation=>animation.finished)));
   await touch.detach();
 
+  await handle.tap();
+  const closeFrames=await drawer.evaluate(async node=>{
+   const bar=node.querySelector('.editorial-drawer-actions');
+   const grip=node.querySelector('.editorial-drawer-handle');
+   const before=bar.getBoundingClientRect().top;
+   const openHeight=node.getBoundingClientRect().height;
+   grip.click();
+   const frames=[];
+   const start=performance.now();
+   do {
+    await new Promise(requestAnimationFrame);
+    frames.push({top:bar.getBoundingClientRect().top,height:node.getBoundingClientRect().height});
+   } while(performance.now()-start<240);
+   return {before,openHeight,frames};
+  });
+  const closedHeight=closeFrames.frames.at(-1).height;
+  assert.ok(closeFrames.frames.some(frame=>frame.height<closeFrames.openHeight-1&&frame.height>closedHeight+1),brand+' tap close animates');
+  assert.ok(closeFrames.frames.every(frame=>Math.abs(frame.top-closeFrames.before)<1),brand+' actions stay fixed throughout closing');
+
   const slides=page.locator('.cronica-preview-pages,.editor-slide-nav');
   const add=slides.locator('.carousel-add-placeholder,.editor-slide-add-tile');
   let blankHeight;

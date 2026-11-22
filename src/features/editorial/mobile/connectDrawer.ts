@@ -204,9 +204,10 @@ export function connectDrawer(
   }
 
   function toggleFromHandle() {
-    drawer.classList.remove("is-settling");
-    if (content.hidden) revealAll();
-    setOpen(content.hidden);
+    const opening = content.hidden;
+    drawer.classList.toggle("is-settling", !opening);
+    if (opening) revealAll();
+    setOpen(opening);
   }
 
   function moveDrawer(event: PointerEvent) {
