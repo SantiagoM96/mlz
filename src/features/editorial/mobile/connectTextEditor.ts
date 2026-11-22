@@ -42,6 +42,9 @@ export function connectTextEditor(
   const dialog = sheet.querySelector<HTMLElement>(".editorial-text-dialog")!;
   const done = sheet.querySelector<HTMLButtonElement>(".editorial-text-done")!;
   const selectAll = sheet.querySelector<HTMLButtonElement>(".editorial-text-select-all")!;
+  const paste = sheet.querySelector<HTMLButtonElement>(".editorial-text-paste")!;
+  const pasteStatus = sheet.querySelector<HTMLElement>(".editorial-text-paste-status")!;
+  let pasteRequest = 0;
   const writing = sheet.querySelector<HTMLElement>(".editorial-text-writing")!;
   const tools = sheet.querySelector<HTMLElement>(".editorial-text-tools")!;
   const title = sheet.querySelector<HTMLElement>("#editorialTextTitle")!;
@@ -187,6 +190,8 @@ export function connectTextEditor(
     if (!mobile.matches || !sheet.hidden) return;
     const field = trigger === secondaryHit ? secondary?.field : null;
     activeEditor = field ?? editor;
+    pasteRequest++;
+    pasteStatus.hidden = true;
     initialEdit = editSnapshot();
     done.classList.remove("has-changes");
     title.textContent = field
@@ -290,6 +295,37 @@ export function connectTextEditor(
       activeEditor.select();
     } else {
       getSelection()?.selectAllChildren(activeEditor);
+    }
+  }, { signal });
+  paste.addEventListener("pointerdown", (event) => event.preventDefault(), { signal });
+  paste.addEventListener("click", async () => {
+    const request = ++pasteRequest;
+    const field = activeEditor;
+    const plain = field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement;
+    const start = plain ? field.selectionStart ?? field.value.length : 0;
+    const end = plain ? field.selectionEnd ?? start : 0;
+    const selection = getSelection();
+    const range = selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
+    pasteStatus.hidden = true;
+    try {
+      const value = await navigator.clipboard.readText();
+      if (sheet.hidden || request !== pasteRequest || !value) return;
+      field.focus({ preventScroll: true });
+      if (plain) {
+        field.setRangeText(field instanceof HTMLInputElement ? value.replace(/[\r\n]+/g, " ") : value, start, end, "end");
+        field.dispatchEvent(new Event("input", { bubbles: true }));
+      } else {
+        if (range && field.contains(range.commonAncestorContainer)) {
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+        }
+        document.execCommand("insertText", false, value);
+      }
+    } catch {
+      if (sheet.hidden || request !== pasteRequest) return;
+      field.focus({ preventScroll: true });
+      pasteStatus.textContent = "Mantené presionado el texto y elegí Pegar.";
+      pasteStatus.hidden = false;
     }
   }, { signal });
   done.addEventListener("click", close, { signal });
