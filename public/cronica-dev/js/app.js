@@ -278,7 +278,7 @@ function wrappedLines(text,size){
 function drawStrap(y,isCover){
  if(!el('showStrap').checked)return;
  const content=el('strapText').value.replace(/\s+/g,' ').trim().toLocaleUpperCase('es-AR'),maxWidth=W-EDGE*2;
- let size=isCover?40:38;
+ let size=(isCover?40:38)+Number(el('strapText').dataset.sizeOffset||0);
  ctx.textBaseline='middle';
  while(size>16){ctx.font='800 '+size+'px Inter,Arial,sans-serif';if(ctx.measureText(content).width<=maxWidth-44)break;size--}
  const textWidth=ctx.measureText(content).width,barHeight=isCover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT;
@@ -288,6 +288,7 @@ function drawStrap(y,isCover){
  if(content){ctx.font='800 '+size+'px Inter,Arial,sans-serif';ctx.fillStyle=pageVariant==='red'?RED:'#fff';ctx.textAlign='center';
  ctx.fillText(content,W/2,y+barHeight/2,maxWidth-24)}
  ctx.textAlign='left';ctx.textBaseline='alphabetic';
+ return {left,top:y,right:left+width,bottom:y+barHeight};
 }
 function drawText(lines,size,baselines){
  const centered=textAlignment==='center';
@@ -376,7 +377,7 @@ function render(includeHover=true){
   // Línea roja permanente en el límite entre fotografía y caja blanca.
   // En portada atraviesa horizontalmente el centro de la volanta.
   ctx.fillStyle=red?'#fff':RED;ctx.fillRect(0,panelTop-DIVIDER_HEIGHT/2,W,DIVIDER_HEIGHT);
-  if(showBar)drawStrap(barY,cover);
+  const strap=showBar?drawStrap(barY,cover):null;
   drawText(lines,size,baselines);
   // Ubicaciones en píxeles reales de la placa, usadas solo por el overlay HTML.
   // La unión de renglones evita seleccionar toda la caja blanca.
@@ -390,7 +391,7 @@ function render(includeHover=true){
   const logoX=logoPosition==='left'?EDGE:W-EDGE-LOGO_WIDTH;
   const logoRect={left:logoX-54,top:EDGE-54,
    right:logoX+LOGO_WIDTH+54,bottom:EDGE+LOGO_HEIGHT+54};
-  window.__editorialHotspotBounds={text:textRect,logo:logoRect};
+  window.__editorialHotspotBounds={text:textRect,logo:logoRect,secondary:strap};
 
   if(cover||red){
    // Pie: texto en caja baja y flecha alineados por su centro vertical.
@@ -417,7 +418,7 @@ finally{syncPhotoZoom();syncCirclePhotoUI();window.dispatchEvent(new Event('mode
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
  return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
-  size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant,footerStyle,circlePhoto:{...circlePhoto}};
+  strapSizeOffset:Number(el('strapText').dataset.sizeOffset||0),size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant,footerStyle,circlePhoto:{...circlePhoto}};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
 const COVER_STRAP="CULTURA EN LA CIUDAD";
@@ -444,6 +445,7 @@ function loadPage(page){
  clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto={...newCirclePhoto(),...page.circlePhoto};
  pageVariant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';syncVariantUI();
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
+ el('strapText').dataset.sizeOffset=page.strapSizeOffset??0;
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
  footerStyle=page.footerStyle||(page.variant==='cover'?'carousel':'center');
  document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
@@ -707,6 +709,7 @@ canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.ge
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
 el('clearAll').addEventListener('click',()=>{
+ el('strapText').dataset.sizeOffset=0;
  clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto=newCirclePhoto();
  const initial=newBlankPage();initial.variant=pageVariant;initial.samplePending=false;
  if(pageVariant==='cover'){initial.footerStyle='carousel';initial.headline=COVER_HEADLINE;initial.strapText=COVER_STRAP;initial.showStrap=true;initial.size='64';initial.alignment='center'}

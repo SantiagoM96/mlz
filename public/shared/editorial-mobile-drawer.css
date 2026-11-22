@@ -50,7 +50,7 @@
   }
 
   .editorial-mobile-drawer.is-open {
-    height: max(62dvh, var(--drawer-closed-height, 0px));
+    height: var(--drawer-open-height, var(--drawer-closed-height));
   }
 
   .editorial-mobile-drawer.is-dragging {
@@ -115,6 +115,14 @@
 
   .editorial-drawer-content .editor-panel > :is(.modern-card, .ds-control-card) {
     margin: 0 !important;
+  }
+
+  .editorial-drawer-content .editor-panel > :is(.modern-text-card, .ds-texts-group),
+  .editorial-mobile-drawer.is-logo-only .editor-panel > :not(.modern-design-group, .ds-plate-design-group),
+  .editorial-mobile-drawer.is-logo-only :is(.modern-design-group, .ds-plate-design-group) > button,
+  .editorial-mobile-drawer.is-logo-only :is(.modern-design-group, .ds-plate-design-group)
+    > :is(.modern-body, .ds-control-card-body) > :not(.editor-logo-layout-row, .ds-logo-layout-row) {
+    display: none !important;
   }
 
   .editorial-drawer-actions {

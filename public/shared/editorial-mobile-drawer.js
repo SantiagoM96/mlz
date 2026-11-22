@@ -29,7 +29,6 @@
   const content = drawer.querySelector('.editorial-drawer-content');
   const actionBar = drawer.querySelector('.editorial-drawer-actions');
   const design = panel.querySelector('.modern-design-group, .ds-plate-design-group');
-  const texts = panel.querySelector('.modern-text-card, .ds-texts-group');
   const cards = [...panel.querySelectorAll(':scope > .modern-card, :scope > .ds-control-card')];
   const slideRoom = document.createElement('div');
   slideRoom.setAttribute('aria-hidden', 'true');
@@ -40,6 +39,7 @@
   let centerFrame = 0;
   let desktopCards = [];
   let panelLabel = null;
+  let backgroundTarget = null;
 
   function cardControls(card) {
     return {
@@ -60,10 +60,13 @@
     drawer.classList.toggle('is-open', open);
     content.hidden = !open;
     content.inert = !open;
+    if (open) fitOpenHeight();
     handle.setAttribute('aria-expanded', String(open));
     handle.setAttribute('aria-label', open ? 'Cerrar formato' : 'Abrir formato');
     if (!open) {
       content.scrollTop = 0;
+      backgroundTarget = null;
+      drawer.classList.remove('is-logo-only');
       cancelAnimationFrame(centerFrame);
       slideRoom.style.height = '';
     }
@@ -76,22 +79,24 @@
     const center = (visibleTop + drawer.getBoundingClientRect().top) / 2;
     const rect = target.getBoundingClientRect();
     const scrollTop = window.scrollY + (rect.top + rect.bottom) / 2 - center;
-    if (target === slides && scrollTop < 0) {
-      slideRoom.style.height = Math.ceil(-scrollTop) + 'px';
+    if (scrollTop < 0) {
+      slideRoom.style.height = Math.ceil(slideRoom.offsetHeight-scrollTop) + 'px';
     }
     window.scrollTo({ top: Math.max(0, scrollTop), behavior: 'instant' });
   }
 
-  function openCard(card, background) {
-    if (!card || card.hidden) return;
+  function openDesign(background, logoOnly = false) {
+    if (!design || design.hidden) return;
+    backgroundTarget = background;
+    drawer.classList.toggle('is-logo-only', logoOnly);
     slideRoom.style.height = '';
-    cards.forEach(item => expandCard(item, item === card));
+    cards.forEach(item => expandCard(item, item === design));
     drawer.classList.remove('is-settling');
     setOpen(true);
     cancelAnimationFrame(centerFrame);
     centerFrame = requestAnimationFrame(() => {
       if (content.hidden) return;
-      const rect = card.getBoundingClientRect();
+      const rect = design.getBoundingClientRect();
       const viewport = content.getBoundingClientRect();
       const offset = rect.height > viewport.height ? 0 : (viewport.height - rect.height) / 2;
       content.scrollTop += rect.top - viewport.top - offset;
@@ -134,7 +139,25 @@
     return height;
   }
 
+  function fitOpenHeight() {
+    if (content.hidden) return;
+    const style = getComputedStyle(content);
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    const min = measureClosedHeight();
+    const max = (window.visualViewport?.height ?? innerHeight) * 0.62;
+    const height = Math.max(min, Math.min(max, min + panel.offsetHeight + padding));
+    const value = height + 'px';
+    if (drawer.style.getPropertyValue('--drawer-open-height') === value) return;
+    drawer.style.setProperty('--drawer-open-height', value);
+    if (backgroundTarget?.isConnected && !drawer.classList.contains('is-dragging')) {
+      centerBackground(backgroundTarget);
+    }
+  }
+
   function revealAll() {
+    backgroundTarget = null;
+    drawer.classList.remove('is-logo-only');
+
     cards.forEach(card => expandCard(card, true));
   }
 
@@ -175,15 +198,20 @@
   }
 
   const actionResize = new ResizeObserver(() => {
-    if (!drawer.hidden) measureClosedHeight();
+    if (!drawer.hidden) {
+      measureClosedHeight();
+      fitOpenHeight();
+    }
   });
   actionResize.observe(actionBar);
+  actionResize.observe(panel);
+  window.addEventListener('resize', fitOpenHeight);
   handle.addEventListener('pointerdown', event => {
     if (gesture || !event.isPrimary || event.button !== 0) return;
     dragged = false;
     drawer.classList.remove('is-settling');
     const min = measureClosedHeight();
-    const viewport = document.documentElement.clientHeight;
+    const viewport = window.visualViewport?.height ?? innerHeight;
     gesture = {
       id: event.pointerId, y: event.clientY, open: !content.hidden,
       height: drawer.getBoundingClientRect().height, min, max: Math.max(min, viewport * 0.62),
@@ -209,19 +237,24 @@
 
   document.addEventListener('click', event => {
     if (drawer.hidden) return;
-    const hit = event.target.closest('.modern-text-hit, #dsHeadlineHitButton, .modern-logo-hit, #dsLogoHitButton');
+    const hit = event.target.closest('.modern-logo-hit, #dsLogoHitButton');
     if (!hit || hit.hidden || hit.disabled) return;
-    const isText = hit.matches('.modern-text-hit, #dsHeadlineHitButton');
     event.preventDefault();
     event.stopImmediatePropagation();
-    openCard(isText ? texts : design, hit);
+    openDesign(hit, true);
   }, true);
 
   document.addEventListener('click', event => {
-    if (drawer.hidden || !event.target.closest('#addPage, .editor-slide-add-fixed, .editor-slide-add-tile')) return;
-    openCard(design, slides);
+    if (drawer.hidden) return;
+    if (event.target.closest('#addPage, .editor-slide-add-fixed, .editor-slide-add-tile, .carousel-page-thumb, .editor-slide-thumb')) {
+      openDesign(slides);
+    }
   });
 
+  window.addEventListener('editorial:text-editing', () => {
+    drawer.classList.remove('is-settling');
+    if (!drawer.hidden) setOpen(false);
+  });
   mobile.addEventListener('change', syncLayout);
   syncLayout();
 })();

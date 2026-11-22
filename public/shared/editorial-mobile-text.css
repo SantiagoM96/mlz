@@ -5,7 +5,7 @@
 .editorial-text-done{box-sizing:border-box!important;height:32px!important;min-height:32px!important;padding:0 8px!important;border:1px solid #4a4e56!important;border-radius:4px!important;background:#363b43!important;color:#fff;font:600 12px Arial,sans-serif;cursor:pointer}
 .editorial-text-tools .typography-row{display:flex!important;flex-wrap:nowrap!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:0!important;padding:0!important}
 .editorial-text-tools .control-field{margin:0!important;padding:0!important;width:auto!important;flex:0 0 auto!important;min-width:0!important}
-.editorial-text-tools .align-field{margin-left:auto!important}
+.editorial-text-tools .align-field{margin-left:0!important}
 .editorial-text-tools .help-label-row,.editorial-text-tools label,.editorial-text-tools .help-trigger{display:none!important}
 .editorial-text-tools .format-buttons,.editorial-text-tools .align-buttons{display:flex!important;gap:0!important;width:max-content!important;height:32px!important}
 html body .editorial-text-tools .typography-row button{box-sizing:border-box!important;flex:0 0 32px!important;width:32px!important;min-width:32px!important;max-width:32px!important;height:32px!important;min-height:32px!important;padding:0!important;margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;background:#292c32!important;color:#f4f4f4!important;border:1px solid #4a4e56!important;border-radius:0!important;box-shadow:none!important;outline:none!important;cursor:pointer}
@@ -27,3 +27,23 @@ html body .editorial-text-writing .cronica-rich-headline:focus,html body .editor
 .editorial-text-writing .uppercase-preview{text-transform:uppercase}
 .editorial-text-dialog button:focus-visible{outline:1px solid white!important;outline-offset:2px!important}
 @media(min-width:701px){.editorial-text-sheet{display:none!important}}
+
+.editorial-text-tools .editorial-text-size {display:flex;flex:none;width:max-content}
+html body .editorial-text-tools .editorial-text-size button {
+ width:32px;height:32px;min-height:32px;padding:0;display:inline-grid;place-items:center;
+ border:1px solid #4a4e56;background:#292c32;color:#f4f4f4;border-radius:0;
+}
+html body .editorial-text-tools .editorial-text-size button:first-child {border-radius:4px 0 0 4px!important}
+html body .editorial-text-tools .editorial-text-size button:last-child {border-radius:0 4px 4px 0!important;border-left:0!important}
+html body .editorial-text-writing :is(textarea,input) {
+ display:block;width:100%;min-height:44px;max-height:22dvh;margin:0;padding:10px;
+ border:0;background:transparent;color:#fff;font:400 16px/1.4 Arial,sans-serif;
+}
+.editorial-secondary-text-hit {
+ position:absolute;z-index:20;padding:0;border:0;background:transparent;touch-action:pan-y;
+}
+.editorial-secondary-text-hit[hidden] {display:none!important}
+.editorial-secondary-text-hit:focus-visible {outline:2px dashed var(--editor-accent,#ed0000)}
+@media(max-width:360px) {
+ .editorial-text-tools .typography-row {flex-wrap:wrap!important}
+}
