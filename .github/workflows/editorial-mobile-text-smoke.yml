@@ -2,14 +2,17 @@ name: Editorial DEV — editor sobre teclado
 on:
   pull_request:
     paths: &editorial_paths
+      - 'src/features/editorial/**'
+      - 'vite.config.ts'
       - 'public/shared/editorial-mobile-text.*'
       - 'public/shared/editorial-mobile-drawer.*'
-      - 'public/cronica-dev/index.html'
-      - 'public/bae-dev/index.html'
-      - 'public/diarioshow-dev/index.html'
+      - 'public/cronica-dev/**'
+      - 'public/bae-dev/**'
+      - 'public/diarioshow-dev/**'
       - 'scripts/check-mobile-text.mjs'
       - '.github/workflows/editorial-mobile-text-smoke.yml'
   push:
+    branches: [main]
     paths: *editorial_paths
   workflow_dispatch:
 jobs:
@@ -24,9 +27,10 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
+      - run: npx vite build --mode pages
       - name: Servir editores DEV
         run: |
-          python3 -m http.server 8765 --bind 127.0.0.1 --directory public &
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory dist &
           for i in $(seq 1 20); do
             if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
             sleep 1
