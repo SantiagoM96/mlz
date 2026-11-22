@@ -1374,3 +1374,7 @@
 .tram-detail .tram-support-hours > strong + p {
   margin-top: 0;
 }
+
+/* Direcciones múltiples: institución en negrita y calle/número en segunda línea. */
+.tram-detail .tram-location-address { display: grid; gap: 16px; }
+.tram-detail .tram-location-address-entry { display: grid; gap: 4px; }
