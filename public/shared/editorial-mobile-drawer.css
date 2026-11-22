@@ -41,7 +41,8 @@
     grid-template-rows: auto minmax(0, 1fr) auto;
     box-sizing: border-box;
     height: var(--drawer-closed-height, auto);
-    padding: 0 16px env(safe-area-inset-bottom);
+    --drawer-action-padding: 16px;
+    padding: 0 var(--drawer-action-padding) env(safe-area-inset-bottom);
     border: 1px solid #42464f;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
@@ -131,12 +132,12 @@
     grid-row: 3;
     position: relative;
     background: inherit;
-    padding: 8px 0 24px;
+    padding: var(--drawer-action-padding) 0;
   }
 
   .editorial-mobile-drawer:has(.editorial-drawer-content:not([hidden])) .editorial-drawer-actions::before {
     position: absolute;
-    inset: 0 -16px auto;
+    inset: 0 calc(-1 * var(--drawer-action-padding)) auto;
     border-top: 1px solid #42464f;
     content: '';
   }

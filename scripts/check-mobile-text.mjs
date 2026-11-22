@@ -17,7 +17,11 @@ try{
   assert.ok(!(await page.locator('.bae-credits').isVisible()));
   assert.equal(await drawer.locator('.preview-actions button:visible').count(),3);
   const actions=drawer.locator('.editorial-drawer-actions');
-  assert.equal(await actions.evaluate(node=>getComputedStyle(node).paddingBottom),'24px');
+  assert.deepEqual(await actions.evaluate(node=>{
+   const bar=getComputedStyle(node);
+   const drawer=getComputedStyle(node.parentElement);
+   return [bar.paddingTop,drawer.paddingRight,bar.paddingBottom,drawer.paddingLeft];
+  }),['16px','16px','16px','16px']);
   const divider=()=>actions.evaluate(node=>getComputedStyle(node,'::before').borderTopWidth);
   assert.equal(await divider(),'0px');
   const touch=await page.context().newCDPSession(page);
