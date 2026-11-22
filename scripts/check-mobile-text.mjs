@@ -128,6 +128,15 @@ try{
   await page.getByRole('button',{name:'Seleccionar todo',exact:true}).click();
   assert.equal(await field.evaluate(node=>getSelection().rangeCount===1&&getSelection().getRangeAt(0).cloneContents().textContent===node.textContent),true);
   assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
+  const spacing=page.locator('.editorial-text-dialog').getByRole('group',{name:'Espaciado del texto'});
+  const textTop=()=>page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.style.top);
+  const standardTop=await textTop();
+  assert.equal(await spacing.getByRole('button',{name:'S · Estándar'}).getAttribute('aria-pressed'),'true');
+  await spacing.getByRole('button',{name:'L · Triple'}).click();
+  assert.equal(await page.locator('#headlineSpacing').inputValue(),'3');
+  assert.notEqual(await textTop(),standardTop,brand+' spacing repositions text on canvas');
+  await spacing.getByRole('button',{name:'S · Estándar'}).click();
+  assert.equal(await textTop(),standardTop);
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize+2);
@@ -178,6 +187,14 @@ try{
   await page.waitForTimeout(100);
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-tools .typography-row').count(),0);
+  const desktopSpacing=page.locator('.editorial-spacing-desktop');
+  const medium=desktopSpacing.getByRole('button',{name:'M · Doble'});
+  if(!(await medium.isVisible())){
+   await page.locator('main .editor-panel :is(.modern-text-card,.ds-texts-group)').first().locator(':scope > button').click();
+  }
+  await medium.click();
+  assert.equal(await page.locator('#headlineSpacing').inputValue(),'2');
+  assert.equal(await medium.getAttribute('aria-pressed'),'true');
   assert.deepEqual(errors,[]);
   console.log(brand+': editing, formatting, alignment, close/reopen and desktop restore OK; page errors: '+JSON.stringify(errors));
   await page.close();

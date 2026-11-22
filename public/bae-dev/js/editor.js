@@ -250,6 +250,7 @@ const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
 const footerTop=footerBaseline-footerAscent;
+const textPadding=50*Number(el('headlineSpacing').value);
 // Construir las líneas en orden visual y posicionarlas desde abajo.
 const lines=[...main,...quotes];
 const lineMetrics=lines.map(line=>{
@@ -260,15 +261,15 @@ const lineMetrics=lines.map(line=>{
 const baselines=new Array(lines.length);
 if(lines.length){
  const last=lines.length-1;
- baselines[last]=footerTop-50-lineMetrics[last].descent;
+ baselines[last]=footerTop-textPadding-lineMetrics[last].descent;
  for(let i=last-1;i>=0;i--){
   const groupGap=!lines[i].quote&&lines[i+1].quote?20:0;
   baselines[i]=baselines[i+1]-lineHeight-groupGap;
  }
 }
-const firstBaseline=baselines[0]??footerTop-50;
+const firstBaseline=baselines[0]??footerTop-textPadding;
 const firstAscent=lineMetrics[0]?.ascent??size;
-const boxTop=Math.max(80,firstBaseline-firstAscent-50);
+const boxTop=Math.max(80,firstBaseline-firstAscent-textPadding);
 photoBottom=boxTop-DIVIDER_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
@@ -434,7 +435,9 @@ el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zo
 canvas.addEventListener('pointerdown',event=>{if(!image)return;const r=canvas.getBoundingClientRect();if((event.clientY-r.top)*H/r.height>photoBottom)return;dragging=true;lastX=event.clientX;lastY=event.clientY;canvas.setPointerCapture(event.pointerId)});
 canvas.addEventListener('pointermove',event=>{if(!dragging)return;const ratio=W/canvas.getBoundingClientRect().width;offsetX+=(event.clientX-lastX)*ratio;offsetY+=(event.clientY-lastY)*ratio;lastX=event.clientX;lastY=event.clientY;render()});
 canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('pointercancel',()=>dragging=false);
+el('headlineSpacing').addEventListener('input',()=>render());
 el('clearAll').addEventListener('click',()=>{
+ el('headlineSpacing').value='1';
  clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto=newCirclePhoto();
  footerStyle='center';document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  el('articleUrl').value='';el('headline').value='';el('quote').value='';el('enableQuote').checked=false;el('quote').hidden=true;el('file').value='';
@@ -537,7 +540,7 @@ scheduleBrowserZoomTipPosition();
 window.BAEEditor={
  getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
  headline:el('headline').value,quote:el('quote').value,enableQuote:el('enableQuote').checked,
- size:el('size').value,dots:el('dots').value,alignment:textAlignment,
+ headlineSpacing:el('headlineSpacing').value,size:el('size').value,dots:el('dots').value,alignment:textAlignment,
  uppercase:el('formatUppercase')?.getAttribute('aria-pressed')==='true',
  image,zoom,offsetX,offsetY,selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
  setPageState(s){
@@ -547,6 +550,7 @@ window.BAEEditor={
   document.querySelectorAll('.theme-swatch').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===s.variant)));
   el('headline').value=s.headline||'';el('quote').value=s.quote||'';
   el('enableQuote').checked=Boolean(s.enableQuote);el('quote').hidden=!s.enableQuote;
+  el('headlineSpacing').value=s.headlineSpacing||'1';
   el('size').value=s.size||'70';el('dots').value=s.dots||'5';
   textAlignment=s.alignment||'left';
   el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));

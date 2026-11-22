@@ -339,27 +339,29 @@ function render(includeHover=true){
   }
   const cover=pageVariant==='cover',red=pageVariant==='red',requestedSize=Number(el('size').value);
   const footerBaseline=H-EDGE,footerTop=footerBaseline-28;
-  const availableBottom=(cover||red)?footerTop-50:H-EDGE;
+  const spacing=Number(el('headlineSpacing').value);
+  const textPadding=50*spacing;
+  const availableBottom=(cover||red)?footerTop-textPadding:H-EDGE*spacing;
   const desired=forceUppercase?el('headline').value.toLocaleUpperCase('es-AR'):el('headline').value;
   let size=requestedSize,lines=wrappedLines(desired,size);
   const lineHeight=()=>Math.round(size*1.09);
   function textTop(){return availableBottom-(lines.length?size*0.85+(lines.length-1)*lineHeight():0)}
   const showBar=el('showStrap').checked;
   const barHeight=showBar?(cover?COVER_STRAP_HEIGHT:INTERNAL_STRAP_HEIGHT):0;
-  const requiredGap=cover?80:80;
-  while(size>32&&textTop()-(showBar?barHeight+requiredGap:80)<230){
+  const requiredGap=textPadding+30;
+  while(size>32&&textTop()-(showBar?barHeight+requiredGap:requiredGap)<230){
     size-=2;lines=wrappedLines(desired,size);
   }
   const gap=lineHeight(),baselines=lines.map((_,i)=>availableBottom-(lines.length-1-i)*gap);
   const top=lines.length?baselines[0]-size:availableBottom;
   let panelTop,barY;
   if(cover){
-   // La distancia desde el borde inferior de la volanta hasta el texto es 50 px.
+   // El espaciado se mide desde el borde inferior de la volanta.
    // Sin volanta, se mide desde el borde inferior de la línea roja de 24 px.
-   panelTop=Math.max(160,top-(showBar?50+COVER_STRAP_HEIGHT/2:50+DIVIDER_HEIGHT/2));
+   panelTop=Math.max(160,top-(showBar?textPadding+COVER_STRAP_HEIGHT/2:textPadding+DIVIDER_HEIGHT/2));
    barY=panelTop-COVER_STRAP_HEIGHT/2;
   }else{
-   panelTop=Math.max(160,top-50-(showBar?barHeight:0));
+   panelTop=Math.max(160,top-textPadding-(showBar?barHeight:0));
    barY=panelTop;
   }
   const imageBottom=cover?panelTop:panelTop;
@@ -417,7 +419,7 @@ finally{syncPhotoZoom();syncCirclePhotoUI();window.dispatchEvent(new Event('mode
 /* Cada placa conserva sus propios controles, foto, zoom y encuadre durante la edición. */
 let carouselPages=[],activePage=0;
 function readCurrentPage(){
- return {headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
+ return {headlineSpacing:el('headlineSpacing').value,headline:el('headline').value,strapText:el('strapText').value.toLocaleUpperCase('es-AR'),showStrap:el('showStrap').checked,
   strapSizeOffset:Number(el('strapText').dataset.sizeOffset||0),size:el('size').value,alignment:textAlignment,forceUppercase,logo:selectedLogo,logoPosition,image,zoom,offsetX,offsetY,variant:pageVariant,footerStyle,circlePhoto:{...circlePhoto}};
 }
 // Textos de orientación que muestran cómo aprovechar portada, volanta y placas internas.
@@ -444,6 +446,7 @@ function syncVariantUI(){
 function loadPage(page){
  clearTimeout(circlePhotoClickTimer);circleEditing=false;circlePhoto={...newCirclePhoto(),...page.circlePhoto};
  pageVariant=['blank','cover','internal','red'].includes(page.variant)?page.variant:'blank';syncVariantUI();
+ el('headlineSpacing').value=page.headlineSpacing||'1';
  el('headline').value=page.headline;el('strapText').value=String(page.strapText||'').toLocaleUpperCase('es-AR');
  el('strapText').dataset.sizeOffset=page.strapSizeOffset??0;
  el('showStrap').checked=page.showStrap;el('strapField').hidden=!page.showStrap;el('size').value=page.size;
@@ -617,7 +620,7 @@ document.querySelectorAll('.cronica-variant-option').forEach(button=>button.addE
 }));
 document.querySelectorAll('.logo-choice').forEach(button=>button.addEventListener('click',()=>{selectedLogo=button.dataset.logo;syncLogoChoices();render()}));
 el('showStrap').addEventListener('change',()=>{el('strapField').hidden=!el('showStrap').checked;render()});
-for(const id of ['headline','size'])el(id).addEventListener('input',render);
+for(const id of ['headline','size','headlineSpacing'])el(id).addEventListener('input',render);
 el('strapText').addEventListener('input',()=>{
  const field=el('strapText'),start=field.selectionStart,end=field.selectionEnd;
  const value=field.value.toLocaleUpperCase('es-AR');

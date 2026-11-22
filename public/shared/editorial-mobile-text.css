@@ -50,3 +50,10 @@ html body .editorial-text-writing :is(textarea,input) {
 
 .editorial-text-header-actions{display:flex;align-items:center;gap:4px;margin-left:auto;flex:none}
 .editorial-text-done.has-changes{background:#c90000!important;border-color:#c90000!important}
+
+.editorial-headline-spacing{display:flex;align-items:center;justify-content:space-between;gap:8px;color:inherit;font-size:13px}
+.editorial-headline-spacing [role=group]{display:flex;gap:4px}
+.editorial-headline-spacing button{min-width:32px;height:32px;padding:0 6px;border:1px solid #4a4e56;border-radius:4px;background:#363b43;color:#fff;font:600 12px Arial,sans-serif;cursor:pointer}
+.editorial-headline-spacing button[aria-pressed=true]{background:#f1f2f4;color:#24272c;border-color:#f1f2f4}
+.editorial-spacing-desktop{margin:8px 0}
+@media(max-width:700px){.editorial-spacing-desktop{display:none!important}}

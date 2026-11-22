@@ -138,6 +138,7 @@ export function connectTextEditor(
       return JSON.stringify([
         headlineSource.value,
         sizeRange.value,
+        (document.getElementById("headlineSpacing") as HTMLInputElement | null)?.value,
         [...toolbar.querySelectorAll("button[aria-pressed]")].map(
           (button) => button.getAttribute("aria-pressed"),
         ),
@@ -146,6 +147,7 @@ export function connectTextEditor(
     if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)) return "";
     return JSON.stringify([
       field.value,
+      (document.getElementById("headlineSpacing") as HTMLInputElement | null)?.value,
       field.id === "quote" ? sizeRange.value : field.dataset.sizeOffset ?? "0",
     ]);
   }
