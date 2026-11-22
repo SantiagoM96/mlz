@@ -27,9 +27,14 @@ export function MobileTextEditor() {
       >
         <header>
           <strong id="editorialTextTitle">Texto principal</strong>
-          <button type="button" className="editorial-text-done">
-            Listo
-          </button>
+          <div className="editorial-text-header-actions">
+            <button type="button" className="editorial-text-select-all" aria-label="Seleccionar todo">
+              Sel. todo
+            </button>
+            <button type="button" className="editorial-text-done">
+              Listo
+            </button>
+          </div>
         </header>
         <div className="editorial-text-writing" />
         <div className="editorial-text-tools">

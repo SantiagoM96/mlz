@@ -23,13 +23,9 @@ export function connectDrawer(
     ".modern-track > .editor-panel, #dsMobileControlsPanel",
   );
   const actionNode = main?.querySelector<HTMLElement>(".preview-actions");
-  const slideNode = main?.querySelector<HTMLElement>(
-    ".cronica-preview-pages, .editor-slide-nav",
-  );
-  if (!main || !panelNode || !actionNode || !slideNode) return;
+  if (!main || !panelNode || !actionNode) return;
   const panel: HTMLElement = panelNode;
   const actions: HTMLElement = actionNode;
-  const slides: HTMLElement = slideNode;
   const workArea: HTMLElement = main;
 
   const panelHome = document.createComment("format panel");
@@ -45,16 +41,13 @@ export function connectDrawer(
       ":scope > .modern-card, :scope > .ds-control-card",
     ),
   ];
-  const slideRoom = document.createElement("div");
-  slideRoom.setAttribute("aria-hidden", "true");
-  slides.before(slideRoom);
 
   let gesture: DrawerGesture | null = null;
   let dragged = false;
   let centerFrame = 0;
   let desktopCards: boolean[] = [];
   let panelLabel: string | null = null;
-  let backgroundTarget: HTMLElement | null = null;
+
 
   function cardControls(card: HTMLElement) {
     return {
@@ -88,34 +81,14 @@ export function connectDrawer(
     );
     if (!open) {
       content.scrollTop = 0;
-      backgroundTarget = null;
       drawer.classList.remove("is-logo-only");
       cancelAnimationFrame(centerFrame);
-      slideRoom.style.height = "";
     }
   }
 
-  function centerBackground(target: HTMLElement) {
-    const viewportTop = window.visualViewport?.offsetTop ?? 0;
-    const headerBottom =
-      document.querySelector("body > header")?.getBoundingClientRect().bottom ??
-      0;
-    const visibleTop = Math.max(viewportTop, headerBottom);
-    const center = (visibleTop + drawer.getBoundingClientRect().top) / 2;
-    const rect = target.getBoundingClientRect();
-    const scrollTop = window.scrollY + (rect.top + rect.bottom) / 2 - center;
-    if (scrollTop < 0) {
-      slideRoom.style.height =
-        Math.ceil(slideRoom.offsetHeight - scrollTop) + "px";
-    }
-    window.scrollTo({ top: Math.max(0, scrollTop), behavior: "instant" });
-  }
-
-  function openDesign(background: HTMLElement, logoOnly = false) {
+  function openDesign(logoOnly = false) {
     if (!design || design.hidden) return;
-    backgroundTarget = background;
     drawer.classList.toggle("is-logo-only", logoOnly);
-    slideRoom.style.height = "";
     cards.forEach((item) => expandCard(item, item === design));
     drawer.classList.remove("is-settling");
     setOpen(true);
@@ -127,7 +100,7 @@ export function connectDrawer(
       const offset =
         rect.height > viewport.height ? 0 : (viewport.height - rect.height) / 2;
       content.scrollTop += rect.top - viewport.top - offset;
-      if (background) centerBackground(background);
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
   }
 
@@ -188,16 +161,10 @@ export function connectDrawer(
     const value = height + "px";
     if (drawer.style.getPropertyValue("--drawer-open-height") === value) return;
     drawer.style.setProperty("--drawer-open-height", value);
-    if (
-      backgroundTarget?.isConnected &&
-      !drawer.classList.contains("is-dragging")
-    ) {
-      centerBackground(backgroundTarget);
-    }
+
   }
 
   function revealAll() {
-    backgroundTarget = null;
     drawer.classList.remove("is-logo-only");
 
     cards.forEach((card) => expandCard(card, true));
@@ -321,7 +288,7 @@ export function connectDrawer(
       if (!hit || hit.hidden || hit.disabled) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      openDesign(hit, true);
+      openDesign(true);
     },
     { capture: true, signal },
   );
@@ -336,7 +303,7 @@ export function connectDrawer(
           "#addPage, .editor-slide-add-fixed, .editor-slide-add-tile, .carousel-page-thumb, .editor-slide-thumb",
         )
       ) {
-        openDesign(slides);
+        openDesign();
       }
     },
     { signal },
@@ -364,7 +331,6 @@ export function connectDrawer(
       const expanded = desktopCards[index];
       if (expanded !== undefined) expandCard(card, expanded);
     });
-    slideRoom.remove();
     workArea.classList.remove("has-editorial-mobile-drawer");
   };
 }

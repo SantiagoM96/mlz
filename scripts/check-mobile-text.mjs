@@ -66,6 +66,7 @@ try{
   for(let i=0;i<2;i++){
    await add.tap();
    await content.waitFor();
+   await page.waitForFunction(()=>scrollY===0);
    assert.match(await slides.innerText(),/Sin diseño/i);
    const designToggle=content.locator('.modern-design-group > button,.ds-plate-design-group > button');
    assert.equal(await designToggle.getAttribute('aria-expanded'),'true');
@@ -113,9 +114,15 @@ try{
   assert.equal(geometry.buttons.find(b=>b.id==='formatItalic').radius,'0px');
   const field=page.locator('.editorial-text-writing .cronica-rich-headline');
   const size=page.locator('#size');
+  const done=page.getByRole('button',{name:'Listo',exact:true});
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
+  await page.getByRole('button',{name:'Seleccionar todo',exact:true}).click();
+  assert.equal(await field.evaluate(node=>getSelection().toString()===node.textContent),true);
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),false);
   const previousSize=Number(await size.inputValue());
   await page.getByRole('button',{name:'Aumentar tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize+2);
+  assert.equal(await done.evaluate(node=>node.classList.contains('has-changes')),true);
   await page.getByRole('button',{name:'Reducir tamaño'}).click();
   assert.equal(Number(await size.inputValue()),previousSize);
   await field.fill('Probando el editor móvil');

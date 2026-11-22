@@ -40,6 +40,7 @@ export function connectTextEditor(
   const sizeRange: HTMLInputElement = sizeInput;
   const dialog = sheet.querySelector<HTMLElement>(".editorial-text-dialog")!;
   const done = sheet.querySelector<HTMLButtonElement>(".editorial-text-done")!;
+  const selectAll = sheet.querySelector<HTMLButtonElement>(".editorial-text-select-all")!;
   const writing = sheet.querySelector<HTMLElement>(".editorial-text-writing")!;
   const tools = sheet.querySelector<HTMLElement>(".editorial-text-tools")!;
   const title = sheet.querySelector<HTMLElement>("#editorialTextTitle")!;
@@ -130,6 +131,29 @@ export function connectTextEditor(
   let scrollY = 0,
     oldOverflow = "",
     oldInert = false;
+  function editSnapshot() {
+    const field = activeEditor;
+    if (field === editor) {
+      return JSON.stringify([
+        source!.value,
+        sizeRange.value,
+        [...toolbar.querySelectorAll("button[aria-pressed]")].map(
+          (button) => button.getAttribute("aria-pressed"),
+        ),
+      ]);
+    }
+    if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)) return "";
+    return JSON.stringify([
+      field.value,
+      field.id === "quote" ? sizeRange.value : field.dataset.sizeOffset ?? "0",
+    ]);
+  }
+
+  let initialEdit = "";
+  function syncDone() {
+    if (!sheet.hidden) done.classList.toggle("has-changes", editSnapshot() !== initialEdit);
+  }
+
   function fit() {
     if (sheet.hidden) return;
     const viewport = window.visualViewport;
@@ -160,6 +184,8 @@ export function connectTextEditor(
     if (!mobile.matches || !sheet.hidden) return;
     const field = trigger === secondaryHit ? secondary?.field : null;
     activeEditor = field ?? editor;
+    initialEdit = editSnapshot();
+    done.classList.remove("has-changes");
     title.textContent = field
       ? (secondary?.label ?? "Texto")
       : "Texto principal";
@@ -252,6 +278,17 @@ export function connectTextEditor(
     },
     { signal },
   );
+  writing.addEventListener("input", syncDone, { signal });
+  tools.addEventListener("click", syncDone, { signal });
+  selectAll.addEventListener("pointerdown", (event) => event.preventDefault(), { signal });
+  selectAll.addEventListener("click", () => {
+    activeEditor.focus({ preventScroll: true });
+    if (activeEditor instanceof HTMLInputElement || activeEditor instanceof HTMLTextAreaElement) {
+      activeEditor.select();
+    } else {
+      getSelection()?.selectAllChildren(activeEditor);
+    }
+  }, { signal });
   done.addEventListener("click", close, { signal });
   sheet.addEventListener(
     "click",
@@ -295,6 +332,7 @@ export function connectTextEditor(
     renderEvent,
     () => {
       syncSecondaryHit();
+      syncDone();
       queueCenter();
     },
     { signal },
