@@ -80,10 +80,12 @@ export function connectModuleOrder() {
     const naturalTop = () => card.getBoundingClientRect().top - translation;
     const panelOrigin = naturalTop() - card.offsetTop;
     const index = cards.indexOf(card);
+    const draggedTop = y - drag.grabOffset;
+    const leadingEdge = direction > 0 ? draggedTop + card.offsetHeight : draggedTop;
     const crossed = (item: HTMLElement) => {
       const entry = direction > 0 ? 0 : item.offsetHeight;
       const threshold = panelOrigin + item.offsetTop + entry + direction * item.offsetHeight * reorderThreshold;
-      return direction > 0 ? y >= threshold : y <= threshold;
+      return direction > 0 ? leadingEdge >= threshold : leadingEdge <= threshold;
     };
     const candidates = direction > 0 ? cards.slice(index + 1) : cards.slice(0, index).reverse();
     let destination: HTMLElement | undefined;
