@@ -1,8 +1,9 @@
 import { mobileQuery } from './mobile/legacyEditor';
 
 export function connectModuleOrder() {
-  const panel = document.querySelector<HTMLElement>('.editor-panel');
-  if (!panel) return;
+  const editorPanel = document.querySelector<HTMLElement>('.editor-panel');
+  if (!editorPanel) return;
+  const panel = editorPanel;
 
   const selector = ':scope > .modern-card, :scope > .ds-control-card';
   const titles = new Map<HTMLElement, string>();
@@ -47,24 +48,19 @@ export function connectModuleOrder() {
   status.setAttribute('role', 'status');
   panel.append(status);
 
-  let dragged: HTMLElement | undefined;
-  let target: HTMLElement | undefined;
-  let after = false;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const animations = new Map<HTMLElement, Animation>();
+  let drag: {
+    card: HTMLElement;
+    pointerId: number;
+    grabOffset: number;
+    y: number;
+    translation: number;
+    direction: number;
+  } | undefined;
+  let scrollFrame = 0;
 
-  function clearTarget() {
-    target?.removeAttribute('data-editorial-drop');
-    target = undefined;
-  }
-
-  function resetDrag() {
-    clearTarget();
-    dragged?.classList.remove('editorial-module-dragging');
-    dragged = undefined;
-  }
-
-  function move(card: HTMLElement, destination: HTMLElement, insertAfter: boolean) {
-    if (insertAfter) destination.after(card);
-    else destination.before(card);
+  function saveOrder(card: HTMLElement) {
     desktopOrder = orderedCards();
     try {
       localStorage.setItem(storageKey, JSON.stringify(desktopOrder.map(item => titles.get(item))));
@@ -73,69 +69,145 @@ export function connectModuleOrder() {
     status.textContent = `${titles.get(card)}, posición ${visible.indexOf(card) + 1} de ${visible.length}.`;
   }
 
+  function updateDrag() {
+    if (!drag) return;
+    if (!drag.direction) return;
+    const { card, y, direction, translation } = drag;
+    const cards = visibleCards();
+    const peers = cards.filter(item => item !== card);
+    const naturalTop = () => card.getBoundingClientRect().top - translation;
+    const panelOrigin = naturalTop() - card.offsetTop;
+    const index = cards.indexOf(card);
+    const crossed = (item: HTMLElement) => {
+      const middle = panelOrigin + item.offsetTop + item.offsetHeight / 2;
+      return direction > 0 ? y > middle : y < middle;
+    };
+    const candidates = direction > 0 ? cards.slice(index + 1) : cards.slice(0, index).reverse();
+    let destination: HTMLElement | undefined;
+    for (const candidate of candidates) {
+      if (!crossed(candidate)) break;
+      destination = candidate;
+    }
+    if (destination) {
+      const previous = peers.map(item => item.getBoundingClientRect().top);
+      for (const animation of animations.values()) animation.cancel();
+      animations.clear();
+      if (direction > 0) destination.after(card);
+      else destination.before(card);
+
+      if (!reducedMotion.matches) {
+        peers.forEach((item, i) => {
+          const offset = previous[i]! - item.getBoundingClientRect().top;
+          if (offset === 0) return;
+          const animation = item.animate(
+            [{ translate: `0 ${offset}px` }, { translate: '0 0' }],
+            { duration: 160, easing: 'ease-out' },
+          );
+          animations.set(item, animation);
+          animation.onfinish = () => animations.delete(item);
+        });
+      }
+    }
+    drag.translation = y - drag.grabOffset - naturalTop();
+    card.style.setProperty('--editorial-drag-y', `${drag.translation}px`);
+  }
+
+  function scrollWhileDragging() {
+    if (!drag) return;
+    const edge = 56;
+    const delta = drag.y < edge ? drag.y - edge : Math.max(0, drag.y - innerHeight + edge);
+    if (delta) {
+      const previous = window.scrollY;
+      window.scrollBy({ top: Math.max(-18, Math.min(18, delta / 4)), behavior: 'instant' });
+      if (window.scrollY !== previous) {
+        drag.direction = Math.sign(delta);
+        updateDrag();
+      }
+    }
+    scrollFrame = requestAnimationFrame(scrollWhileDragging);
+  }
+
+  function finishDrag(commit: boolean) {
+    if (!drag) return;
+    const { card, pointerId } = drag;
+    drag = undefined;
+    cancelAnimationFrame(scrollFrame);
+    if (panel.hasPointerCapture(pointerId)) panel.releasePointerCapture(pointerId);
+    panel.classList.remove('editorial-module-sorting');
+    card.classList.remove('editorial-module-dragging');
+    card.style.removeProperty('--editorial-drag-y');
+    if (commit) saveOrder(card);
+    else {
+      for (const animation of animations.values()) animation.cancel();
+      animations.clear();
+      applyOrder(desktopOrder);
+    }
+    if (!mobile.matches) card.querySelector<HTMLElement>('.editorial-module-handle')?.focus({ preventScroll: true });
+  }
+
   for (const [card, title] of titles) {
     card.classList.add('editorial-reorderable-module');
     const handle = document.createElement('button');
     handle.type = 'button';
     handle.className = 'editorial-module-handle';
-    handle.draggable = true;
     handle.title = 'Arrastrá para mover o usá las flechas ↑ y ↓';
     handle.setAttribute('aria-label', `Mover ${title}`);
     handle.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown');
     card.prepend(handle);
 
-    handle.addEventListener('dragstart', event => {
-      if (mobile.matches || !event.dataTransfer) {
-        event.preventDefault();
-        return;
-      }
-      dragged = card;
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', title);
-      event.dataTransfer.setDragImage(card, 18, 22);
+    handle.addEventListener('pointerdown', event => {
+      if (mobile.matches || drag || event.button !== 0) return;
+      event.preventDefault();
+      handle.focus({ preventScroll: true });
+      panel.setPointerCapture(event.pointerId);
+      drag = {
+        card,
+        pointerId: event.pointerId,
+        grabOffset: event.clientY - card.getBoundingClientRect().top,
+        y: event.clientY,
+        translation: 0,
+        direction: 0,
+      };
       card.classList.add('editorial-module-dragging');
+      panel.classList.add('editorial-module-sorting');
+      scrollFrame = requestAnimationFrame(scrollWhileDragging);
     });
-    handle.addEventListener('dragend', resetDrag);
     handle.addEventListener('keydown', event => {
-      if (mobile.matches || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
+      if (drag || mobile.matches || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
       event.preventDefault();
       const down = event.key === 'ArrowDown';
       const visible = visibleCards();
       const neighbor = visible[visible.indexOf(card) + (down ? 1 : -1)];
       if (neighbor) {
-        move(card, neighbor, down);
+        if (down) neighbor.after(card);
+        else neighbor.before(card);
+        saveOrder(card);
         handle.focus();
       }
     });
-    card.addEventListener('dragover', event => {
-      if (!dragged || dragged === card) {
-        if (dragged) clearTarget();
-        return;
-      }
-      event.preventDefault();
-      if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
-      if (target !== card) clearTarget();
-      target = card;
-      const bounds = card.getBoundingClientRect();
-      after = event.clientY >= bounds.top + bounds.height / 2;
-      card.dataset.editorialDrop = after ? 'after' : 'before';
-    });
-    card.addEventListener('drop', event => {
-      if (!dragged || target !== card) return;
-      event.preventDefault();
-      const source = dragged;
-      resetDrag();
-      move(source, card, after);
-    });
   }
 
-  document.addEventListener('dragover', event => {
-    if (!dragged || !target) return;
-    if (!(event.target instanceof Node) || !target.contains(event.target)) clearTarget();
+  panel.addEventListener('pointermove', event => {
+    if (!drag || drag.pointerId !== event.pointerId || drag.y === event.clientY) return;
+    drag.direction = Math.sign(event.clientY - drag.y);
+    drag.y = event.clientY;
+    updateDrag();
+  });
+  panel.addEventListener('pointerup', event => {
+    if (drag?.pointerId === event.pointerId) finishDrag(true);
+  });
+  panel.addEventListener('lostpointercapture', event => {
+    if (drag?.pointerId === event.pointerId) finishDrag(false);
+  });
+  window.addEventListener('keydown', event => {
+    if (drag && event.key === 'Escape') {
+      event.preventDefault();
+      finishDrag(false);
+    }
   });
 
   const syncViewport = () => {
-    resetDrag();
+    finishDrag(false);
     applyOrder(mobile.matches ? original : desktopOrder);
   };
   mobile.addEventListener('change', syncViewport);

@@ -36,6 +36,7 @@
     background: transparent;
     color: #c3c7d0;
     cursor: grab;
+    touch-action: none;
   }
 
   .editorial-module-handle::before {
@@ -61,25 +62,15 @@
     cursor: grabbing;
   }
 
-  .editorial-module-dragging {
-    opacity: .55;
+  .editorial-module-sorting,
+  .editorial-module-sorting .editorial-module-handle {
+    cursor: grabbing;
+    user-select: none;
   }
 
-  .editorial-reorderable-module[data-editorial-drop]::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    height: 3px;
-    border-radius: 3px;
-    background: #c3c7d0;
-    pointer-events: none;
-  }
-
-  .editorial-reorderable-module[data-editorial-drop="before"]::after {
-    top: -7px;
-  }
-
-  .editorial-reorderable-module[data-editorial-drop="after"]::after {
-    bottom: -7px;
+  .editor-panel > .editorial-module-dragging {
+    z-index: 5;
+    translate: 0 var(--editorial-drag-y, 0);
+    box-shadow: 0 8px 24px #0008 !important;
   }
 }
