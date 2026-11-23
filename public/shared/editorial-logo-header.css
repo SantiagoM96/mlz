@@ -27,3 +27,22 @@
  .editorial-header-home--diarioshow { --editorial-header-logo-width: 136px; }
  .editorial-header-home--bae { --editorial-header-logo-width: 148px; }
 }
+
+.editorial-build-badge {
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
+ flex: none;
+ margin-inline-start: auto;
+ padding: 6px 12px;
+ border: 1px solid #454952;
+ border-radius: 50px;
+ color: #c3c7d0;
+ font-size: 12px;
+ font-weight: 500;
+ line-height: 1;
+ font-variant-numeric: tabular-nums;
+ white-space: nowrap;
+}
+
+.editorial-build-badge strong { font-weight: 700; }
