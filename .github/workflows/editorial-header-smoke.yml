@@ -8,6 +8,7 @@ on:
       - 'public/bae-dev/css/modern-editor.css'
       - 'public/diarioshow-dev/index.html'
       - 'public/diarioshow-dev/css/editor.css'
+      - 'public/shared/editorial-logo-header.css'
       - 'scripts/editorial-platform-header-smoke.mjs'
       - '.github/workflows/editorial-header-smoke.yml'
   workflow_dispatch:
@@ -23,9 +24,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npx vite build --mode pages
       - name: Levantar editores DEV
         run: |
-          python3 -m http.server 8765 --bind 127.0.0.1 --directory public >/tmp/editorial-header.log 2>&1 &
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory dist >/tmp/editorial-header.log 2>&1 &
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:8765/cronica-dev/ >/dev/null; then exit 0; fi
             sleep 1
