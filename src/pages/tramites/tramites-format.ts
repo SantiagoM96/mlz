@@ -551,7 +551,9 @@ export function direccionesPublicas(valor: string): { nombre: string; direccion:
     const calle = hallazgo[0].replace(/\\s*(?:n[°º.]?\\s*)?\\d{1,5}$/, '').replace(/\\.$/, '').trim();
     const clave = calle.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/\\./g, '').replace(/\\s+/g, ' ');
     const direccion = (nombres[clave] || calle) + ' ' + hallazgo[1];
-    const segmento = texto.slice(index === 0 ? 0 : hallazgos[index - 1].index! + hallazgos[index - 1][0].length, hallazgo.index!);
+    const anterior = hallazgos[index - 1];
+    const inicioSegmento = anterior ? anterior.index! + anterior[0].length : 0;
+    const segmento = texto.slice(inicioSegmento, hallazgo.index!);
     const posterior = texto.slice(hallazgo.index! + hallazgo[0].length, hallazgos[index + 1]?.index ?? texto.length);
     const contexto = segmento + ' ' + posterior;
     let nombre = 'Nombre del lugar';
