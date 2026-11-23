@@ -1,9 +1,13 @@
 import "@vitejs/plugin-react/preamble";
+import { connectModuleOrder } from "../connectModuleOrder";
 import { createPortal } from "react-dom";
 import { TextSpacing } from "./TextSpacing";
 import { createRoot } from "react-dom/client";
 import { MobileDrawer } from "./MobileDrawer";
 import { MobileTextEditor } from "./MobileTextEditor";
+
+if (document.readyState === "complete") connectModuleOrder();
+else document.addEventListener("DOMContentLoaded", connectModuleOrder, { once: true });
 
 const main = document.querySelector("main");
 if (main) {
