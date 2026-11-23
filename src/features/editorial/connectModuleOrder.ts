@@ -1,5 +1,7 @@
 import { mobileQuery } from './mobile/legacyEditor';
 
+const reorderThreshold = 0.3;
+
 export function connectModuleOrder() {
   const editorPanel = document.querySelector<HTMLElement>('.editor-panel');
   if (!editorPanel) return;
@@ -79,8 +81,9 @@ export function connectModuleOrder() {
     const panelOrigin = naturalTop() - card.offsetTop;
     const index = cards.indexOf(card);
     const crossed = (item: HTMLElement) => {
-      const middle = panelOrigin + item.offsetTop + item.offsetHeight / 2;
-      return direction > 0 ? y > middle : y < middle;
+      const entry = direction > 0 ? 0 : item.offsetHeight;
+      const threshold = panelOrigin + item.offsetTop + entry + direction * item.offsetHeight * reorderThreshold;
+      return direction > 0 ? y >= threshold : y <= threshold;
     };
     const candidates = direction > 0 ? cards.slice(index + 1) : cards.slice(0, index).reverse();
     let destination: HTMLElement | undefined;
