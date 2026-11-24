@@ -97,6 +97,7 @@ function loadCirclePhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
+ window.EditorialDrafts?.remember(photo,file);
  circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
  circlePhoto.filename=file.name;
  circlePhoto.image=photo;
@@ -674,9 +675,11 @@ function loadPhoto(file){
  setPhotoHover(false);
  if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
  const pageIndex=activePage,url=URL.createObjectURL(file),img=new Image();
+ window.EditorialDrafts?.remember(img,file);
  img.onload=()=>{
   if(pageIndex===activePage){image=img;zoom=1;offsetX=0;offsetY=0;render()}
   else if(carouselPages[pageIndex]){carouselPages[pageIndex].image=img;carouselPages[pageIndex].zoom=1;carouselPages[pageIndex].offsetX=0;carouselPages[pageIndex].offsetY=0}
+  if(pageIndex!==activePage)window.dispatchEvent(new Event('modern:render'));
   URL.revokeObjectURL(url);
  };
  img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
@@ -905,6 +908,14 @@ if(typeof ResizeObserver!=='undefined'){
 el('dismissBrowserZoomTip').addEventListener('click',()=>{el('browserZoomTip').hidden=true;});
 scheduleBrowserZoomTipPosition();
 initializeCarousel();syncUppercaseUI();render();document.fonts.ready.then(render);
+window.EditorialDrafts?.connect('cronica',{
+ read(){if(exportBusy)return null;saveActivePage();return {pages:carouselPages.slice(),active:activePage}},
+ restore(state){
+  carouselPages=state.pages.slice();
+  activePage=Math.max(0,Math.min(Number.isInteger(state.active)?state.active:0,carouselPages.length-1));
+  loadPage(carouselPages[activePage]);renderCarouselNavigation();
+ }
+});
 document.addEventListener('DOMContentLoaded',()=>{installCirclePhoto();render()},{once:true});
 
 window.addEventListener('editorial:preview-snapshot',event=>{
