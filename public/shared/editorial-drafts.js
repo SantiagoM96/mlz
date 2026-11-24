@@ -167,9 +167,30 @@
     let saved = fingerprint(initial);
     let pending;
     let queued = false;
+    let feedbackTimer;
+    let animationTimer;
+
+    function cancelFeedback() {
+      clearTimeout(feedbackTimer);
+      clearTimeout(animationTimer);
+      feedbackTimer = animationTimer = undefined;
+    }
+
+    function scheduleFeedback() {
+      if (feedbackTimer !== undefined) return;
+      feedbackTimer = setTimeout(() => {
+        feedbackTimer = undefined;
+        report('Guardando…');
+        animationTimer = setTimeout(() => {
+          animationTimer = undefined;
+          report('Borrador guardado');
+        }, 450);
+      }, 5000);
+    }
 
     function setBusy(value) {
       busy = value;
+      if (value) cancelFeedback();
       main.inert = value;
       trigger.disabled = value || !db;
     }
@@ -208,18 +229,19 @@
         const draft = { version: 1, state: encode(state) };
         const target = keyFor(profile);
         saved = signature;
-        report('Guardando…');
         const write = transact(db, 'readwrite', store => store.put(draft, target));
         pending = write;
         write.then(() => {
-          if (pending === write) report('Borrador guardado');
+          if (pending === write) scheduleFeedback();
         }, () => {
           if (pending !== write) return;
           saved = null;
+          cancelFeedback();
           report('No se pudo guardar el borrador en este navegador.');
         });
         return write;
       } catch {
+        cancelFeedback();
         report('No se pudo guardar el borrador en este navegador.');
         return pending;
       }
@@ -251,6 +273,7 @@
       setBusy(true);
       try {
         await save();
+        cancelFeedback();
         const draft = await readDraft(name);
         localStorage.setItem(preference, name);
         editor.restore(draft ?? copy ?? initial);
@@ -331,6 +354,7 @@
       setBusy(true);
       try {
         await pending?.catch(() => {});
+        cancelFeedback();
         await transact(db, 'readwrite', store => store.delete(keyFor(profile)));
         editor.restore(initial);
         saved = fingerprint(editor.read());
