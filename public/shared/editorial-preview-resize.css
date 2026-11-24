@@ -23,6 +23,7 @@
   }
 
   .editorial-preview-resize {
+    --grip-width: 36px;
     z-index: 3;
     display: grid;
     place-items: center;
@@ -44,19 +45,19 @@
 
   .editorial-preview-resize::before {
     z-index: 1;
-    width: 36px;
+    width: var(--grip-width);
     height: 4px;
     background: #858991;
     transition: background-color 180ms ease;
   }
 
   .editorial-preview-resize::after {
-    width: min(100%, var(--editorial-preview-width, 540px));
+    width: calc(var(--grip-width) * 3);
     height: 1px;
     background: #3d4047;
     opacity: 0;
     transform: scaleX(0);
-    transition: transform 180ms ease, opacity 180ms ease;
+    transition: transform 300ms ease, opacity 300ms ease;
   }
 
   .editorial-preview-resize:is(:focus-visible:not(.is-pointer-focused), .is-dragging)::before {
