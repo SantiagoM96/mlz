@@ -52,7 +52,7 @@
 
   .editorial-preview-resize::after {
     width: min(100%, var(--editorial-preview-width, 540px));
-    height: 2px;
+    height: 1px;
     background: #eef0f4;
     opacity: 0;
     transform: scaleX(0);
