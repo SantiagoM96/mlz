@@ -57,9 +57,39 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
   const oldBehavior=rail.style.scrollBehavior;rail.style.scrollBehavior='auto';rail.scrollLeft=start*304;rail.style.scrollBehavior=oldBehavior;
   setArrowState(rail);
   rail.addEventListener('scroll',()=>setArrowState(rail),{passive:true});
-  let pointerId=null,originX=0,originScroll=0,dragged=false;
+  let pointerId=null,originX=0,originScroll=0,dragged=false,settleFrame=null;
+  const stopSettle=()=>{
+    if(settleFrame!==null){cancelAnimationFrame(settleFrame);settleFrame=null}
+    rail.classList.remove('is-settling');
+  };
+  const easeOutCubic=t=>1-Math.pow(1-t,3);
+  const settleTo=target=>{
+    stopSettle();
+    const from=rail.scrollLeft,delta=target-from;
+    if(Math.abs(delta)<1)return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      rail.scrollTo({left:target,behavior:'instant'});return;
+    }
+    // Sin snap nativo durante la animación: evita el salto brusco del navegador.
+    rail.classList.add('is-settling');
+    const duration=620;
+    let started=null;
+    const frame=now=>{
+      if(started===null)started=now;
+      const progress=Math.min(1,(now-started)/duration);
+      rail.scrollLeft=from+delta*easeOutCubic(progress);
+      if(progress<1){settleFrame=requestAnimationFrame(frame)}
+      else{
+        settleFrame=null;
+        rail.scrollLeft=target;
+        rail.classList.remove('is-settling');
+      }
+    };
+    settleFrame=requestAnimationFrame(frame);
+  };
   rail.addEventListener('pointerdown',e=>{
     if(e.pointerType!=='mouse'||e.button!==0||pointerId!==null)return;
+    stopSettle();
     pointerId=e.pointerId;originX=e.clientX;originScroll=rail.scrollLeft;dragged=false;
     rail.setPointerCapture(e.pointerId);
   });
@@ -83,14 +113,11 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
       },null);
       rail.dataset.suppressClick='true';
       window.setTimeout(()=>{delete rail.dataset.suppressClick},0);
-      if(nearest){
-        rail.scrollTo({
-          left:nearest.card.offsetLeft-rail.offsetLeft,
-          behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'
-        });
-      }
+      rail.classList.remove('is-dragging');
+      if(nearest)settleTo(nearest.card.offsetLeft-rail.offsetLeft);
+    }else{
+      rail.classList.remove('is-dragging');
     }
-    rail.classList.remove('is-dragging');
     dragged=false;
     setArrowState(rail);
   };
