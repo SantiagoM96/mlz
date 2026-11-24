@@ -80,7 +80,7 @@
     const header = document.querySelector('header .header-inner');
     const logo = header?.querySelector('.editorial-header-home');
     if (!main || !initial || !header || !logo) return;
-    const icon = name => `<span class="material-icons" aria-hidden="true">${name}</span>`;
+    const icon = name => `<span class="material-symbols-outlined" aria-hidden="true">${name}</span>`;
     const brand = document.createElement('div');
     brand.className = 'editorial-draft-brand';
     const status = document.createElement('span');
@@ -95,16 +95,21 @@
     controls.className = 'editorial-draft-controls';
     controls.innerHTML = `
       <button type="button" class="editorial-profile-trigger" aria-expanded="false" aria-controls="editorial-profile-options">
-        ${icon('person_outline')}<span data-profile-name></span>${icon('expand_more')}
+        ${icon('person')}<span data-profile-name></span>${icon('expand_more')}
       </button>
       <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de perfil" hidden>
         <div data-profiles></div>
         <div class="editorial-profile-actions">
-          <button type="button" data-new>${icon('person_add_alt')} Nuevo perfil</button>
+          <button type="button" data-new>${icon('person_add')} Nuevo perfil</button>
           <button type="button" data-reset>${icon('restart_alt')} Empezar de cero</button>
         </div>
       </div>`;
-    header.append(controls);
+    const tools = document.createElement('div');
+    tools.className = 'editorial-draft-tools';
+    const badge = header.querySelector('.editorial-build-badge');
+    if (badge) tools.append(badge);
+    tools.append(controls);
+    header.append(tools);
     const trigger = controls.querySelector('.editorial-profile-trigger');
     const options = controls.querySelector('.editorial-profile-options');
     const profileList = options.querySelector('[data-profiles]');
@@ -123,8 +128,6 @@
             <button type="button" data-close>Cancelar</button>
             <button class="editorial-profile-primary" type="submit">Crear perfil</button>
           </div>
-          <button type="button" class="editorial-profile-link" data-existing>Elegir un perfil existente</button>
-          <button type="button" class="editorial-profile-link" data-guest-reset>Empezar de cero</button>
         </form>
       </dialog>
       <dialog aria-labelledby="editorial-reset-title" data-reset-dialog>
@@ -140,8 +143,6 @@
     document.body.append(dialogs);
     const createDialog = dialogs.querySelector('[data-create-dialog]');
     const resetDialog = dialogs.querySelector('[data-reset-dialog]');
-    const guestReset = dialogs.querySelector('[data-guest-reset]');
-    const existingProfiles = dialogs.querySelector('[data-existing]');
     const form = createDialog.querySelector('form');
     const nameField = form.querySelector('input');
     const preference = `editorial-local-profile:${tool}`;
@@ -154,7 +155,7 @@
       status.title = message;
       status.classList.toggle('is-saving', saving);
       status.classList.toggle('has-error', error);
-      status.firstElementChild.textContent = error ? 'error_outline' : saving ? 'sync' : ready ? 'check_circle_outline' : 'schedule';
+      status.firstElementChild.textContent = error ? 'error' : saving ? 'sync' : ready ? 'check_circle' : 'schedule';
       status.lastElementChild.textContent = ready ? 'Guardado' : error ? 'Error de guardado' : message;
     }
     report('Buscando borrador…');
@@ -180,13 +181,12 @@
     }
 
     function showProfiles() {
-      trigger.querySelector('[data-profile-name]').textContent = profile || 'Crear perfil';
-      trigger.classList.toggle('has-options', Boolean(profile));
+      trigger.querySelector('[data-profile-name]').textContent = profile || (names.length ? 'Elegir perfil' : 'Crear perfil');
       profileList.replaceChildren();
-      for (const name of [guest, ...names]) {
+      for (const name of [...names, ...(names.length ? [guest] : [])]) {
         const item = document.createElement('button');
         item.type = 'button';
-        item.innerHTML = `${icon(name === profile ? 'check' : 'person_outline')}<span></span>`;
+        item.innerHTML = `${icon(name === profile ? 'check' : 'person')}<span></span>`;
         item.lastElementChild.textContent = name || 'Sin perfil';
         if (name === profile) item.setAttribute('aria-current', 'true');
         item.addEventListener('click', async () => {
@@ -269,8 +269,6 @@
 
     function showCreate() {
       closeOptions();
-      guestReset.hidden = Boolean(profile);
-      existingProfiles.hidden = Boolean(profile) || !names.length;
       createDialog.showModal();
     }
 
@@ -287,8 +285,7 @@
     }
 
     trigger.addEventListener('click', () => {
-      if (!profile) showCreate();
-      else if (!options.hidden) closeOptions();
+      if (!options.hidden) closeOptions();
       else openOptions();
     });
     document.addEventListener('pointerdown', event => {
@@ -303,14 +300,6 @@
     create.addEventListener('click', showCreate);
     reset.addEventListener('click', showReset);
     createDialog.querySelector('[data-close]').addEventListener('click', () => createDialog.close());
-    existingProfiles.addEventListener('click', () => {
-      createDialog.close();
-      openOptions();
-    });
-    guestReset.addEventListener('click', () => {
-      createDialog.close();
-      showReset();
-    });
     createDialog.addEventListener('close', () => {
       form.reset();
       if (!resetDialog.open) trigger.focus();
