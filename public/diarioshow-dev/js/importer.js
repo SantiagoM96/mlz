@@ -109,7 +109,7 @@ async function fetchImage(url){
   if(!blob.size||(!blob.type.startsWith('image/')&&blob.type!=='application/octet-stream'))throw Error('Respuesta sin imagen');
   const objectURL=URL.createObjectURL(blob);
   try{
-   const img=new Image();img.src=objectURL;
+   const img=new Image();window.EditorialDrafts?.remember(img,blob);img.src=objectURL;
    await img.decode();
    return validateExportableImage(img);
   }finally{URL.revokeObjectURL(objectURL)}

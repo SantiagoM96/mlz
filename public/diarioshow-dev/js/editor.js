@@ -96,6 +96,7 @@ function loadCirclePhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
+ window.EditorialDrafts?.remember(photo,file);
  circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
  circlePhoto.filename=file.name;
  circlePhoto.image=photo;
@@ -721,6 +722,7 @@ function loadPhoto(file,side=photoLayout==='split'?activePhotoSide:null){
  const revision=++photoRevision;
  if(target)target.revision=revision;
  const url=URL.createObjectURL(file),img=new Image();
+ window.EditorialDrafts?.remember(img,file);
  img.onload=()=>{
   if(target){
    if(target.revision===revision){target.image=img;target.zoom=1;target.x=0;target.y=0;setPhotoSide(side);render()}

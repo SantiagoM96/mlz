@@ -95,6 +95,7 @@ function loadCirclePhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
+ window.EditorialDrafts?.remember(photo,file);
  circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
  circlePhoto.filename=file.name;
  circlePhoto.image=photo;
@@ -399,6 +400,7 @@ function loadPhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Seleccioná un archivo de imagen válido.';return}
  const url=URL.createObjectURL(file),img=new Image();
+ window.EditorialDrafts?.remember(img,file);
  img.onload=()=>{image=img;zoom=1;offsetX=0;offsetY=0;render();URL.revokeObjectURL(url)};
  img.onerror=()=>{el('status').textContent='No se pudo abrir esta fotografía';URL.revokeObjectURL(url)};
  img.src=url;

@@ -230,6 +230,13 @@ originalDownload.addEventListener('click',event=>{
 },true);
 // «Limpiar» modifica solo la placa actual. El estado guardado se refresca después.
 document.getElementById('clearAll')?.addEventListener('click',()=>queueMicrotask(()=>{save();draw()}));
+window.EditorialDrafts?.connect('bae',{
+ read(){if(exporting)return null;save();return {pages:pages.slice(),active}},
+ restore(state){
+  pages=state.pages.slice();
+  load(Math.max(0,Math.min(Number.isInteger(state.active)?state.active:0,pages.length-1)));
+ }
+});
 window.EditorialSlides={count:()=>pages.length,active:()=>active,add,remove,select,save,exportSlides};
 draw();
 })();
