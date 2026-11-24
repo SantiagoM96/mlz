@@ -167,25 +167,33 @@
     let saved = fingerprint(initial);
     let pending;
     let queued = false;
-    let feedbackTimer;
+    let nextFeedbackAt = 0;
+    let feedbackStartedAt;
     let animationTimer;
 
     function cancelFeedback() {
-      clearTimeout(feedbackTimer);
       clearTimeout(animationTimer);
-      feedbackTimer = animationTimer = undefined;
+      feedbackStartedAt = undefined;
+      nextFeedbackAt = 0;
     }
 
-    function scheduleFeedback() {
-      if (feedbackTimer !== undefined) return;
-      feedbackTimer = setTimeout(() => {
-        feedbackTimer = undefined;
+    function startFeedback() {
+      const now = performance.now();
+      if (now >= nextFeedbackAt) {
+        nextFeedbackAt = now + 3000;
+        feedbackStartedAt = now;
         report('Guardando…');
-        animationTimer = setTimeout(() => {
-          animationTimer = undefined;
-          report('Borrador guardado');
-        }, 450);
-      }, 5000);
+      }
+      clearTimeout(animationTimer);
+    }
+
+    function finishFeedback() {
+      if (feedbackStartedAt === undefined) return;
+      const remaining = Math.max(0, 450 - (performance.now() - feedbackStartedAt));
+      animationTimer = setTimeout(() => {
+        feedbackStartedAt = undefined;
+        report('Borrador guardado');
+      }, remaining);
     }
 
     function setBusy(value) {
@@ -231,8 +239,9 @@
         saved = signature;
         const write = transact(db, 'readwrite', store => store.put(draft, target));
         pending = write;
+        startFeedback();
         write.then(() => {
-          if (pending === write) scheduleFeedback();
+          if (pending === write) finishFeedback();
         }, () => {
           if (pending !== write) return;
           saved = null;
