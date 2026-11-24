@@ -19,39 +19,39 @@
 .editorial-cover-help-row > .editorial-cover-help-button {
   grid-column: 2;
   grid-row: 1;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: #aeb4bf;
-  cursor: pointer;
 }
 
-.editorial-cover-help-button .material-icons {
-  font-size: 17px;
-}
-
-.editorial-cover-help-button:is(:hover, :focus-visible, [aria-expanded="true"]) {
-  background: #34373e;
-  color: #fff;
-}
-
-.editorial-cover-help-tip {
+.editor-panel .editorial-cover-help-tip.help-tooltip {
   position: fixed;
   inset: auto;
-  box-sizing: border-box;
-  width: min(240px, calc(100vw - 24px));
+  min-width: 0;
   margin: 0;
-  padding: 10px 12px;
-  border: 1px solid #4a4e56;
-  border-radius: 8px;
-  background: #24262b;
-  color: #f4f4f5;
-  box-shadow: 0 6px 18px #0005;
-  font: 400 13px/1.4 system-ui, sans-serif;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
   pointer-events: none;
+}
+
+.editor-panel .editorial-cover-help-tip[data-direction="right"]::before {
+  top: var(--cover-arrow-y);
+}
+
+.editor-panel .editorial-cover-help-tip[data-direction="left"]::before {
+  left: auto;
+  right: -6px;
+  top: var(--cover-arrow-y);
+  transform: translateY(-50%) rotate(225deg);
+}
+
+.editor-panel .editorial-cover-help-tip[data-direction="bottom"]::before {
+  left: var(--cover-arrow-x);
+  top: -6px;
+  transform: translateX(-50%) rotate(135deg);
+}
+
+.editor-panel .editorial-cover-help-tip[data-direction="top"]::before {
+  left: var(--cover-arrow-x);
+  top: auto;
+  bottom: -6px;
+  transform: translateX(-50%) rotate(315deg);
 }
