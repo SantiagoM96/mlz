@@ -4,7 +4,8 @@
   const imageIds = new WeakMap();
   let nextImageId = 0;
   const profilesKey = 'editorial-local-profiles-v1';
-  const guest = '';
+  const sessionKey = ['browser-session', 1];
+  const defaultName = 'Sesión';
 
   function openDatabase() {
     return new Promise((resolve, reject) => {
@@ -69,9 +70,68 @@
     });
   }
 
-  function readProfiles() {
-    const names = JSON.parse(localStorage.getItem(profilesKey) ?? '[]');
-    return Array.isArray(names) ? names.filter(name => typeof name === 'string' && name.trim()) : [];
+  function browserLabel() {
+    const agent = navigator.userAgent;
+    const platform = navigator.userAgentData?.platform ?? agent;
+    const browser = /Edg(?:e|A|iOS)?\//.test(agent) ? 'Edge'
+      : /OPR\//.test(agent) ? 'Opera'
+      : /Firefox\/|FxiOS\//.test(agent) ? 'Firefox'
+      : /SamsungBrowser\//.test(agent) ? 'Samsung Internet'
+      : /Chrome\/|CriOS\//.test(agent) ? 'Chrome'
+      : /Safari\//.test(agent) ? 'Safari' : 'Navegador';
+    const system = /Windows/i.test(platform) ? 'Windows'
+      : /Android/i.test(platform) ? 'Android'
+      : /iPhone|iPad|iPod|iOS/i.test(platform) ||
+        (/Mac/i.test(platform) && navigator.maxTouchPoints > 1) ? 'iOS'
+      : /CrOS|Chrome OS/i.test(platform) ? 'ChromeOS'
+      : /Mac/i.test(platform) ? 'macOS'
+      : /Linux/i.test(platform) ? 'Linux' : '';
+    return system ? browser + ' en ' + system : browser;
+  }
+
+  function legacyProfile(tool) {
+    try {
+      const names = JSON.parse(localStorage.getItem(profilesKey) ?? '[]');
+      const preferred = localStorage.getItem(`editorial-local-profile:${tool}`);
+      return Array.isArray(names) && names.includes(preferred) && typeof preferred === 'string' ? preferred : '';
+    } catch {
+      return '';
+    }
+  }
+
+  async function initializeSession(db) {
+    let session;
+    await transact(db, 'readwrite', store => {
+      const request = store.get(sessionKey);
+      request.onsuccess = () => {
+        session = request.result;
+        if (session) return;
+        const id = Array.from(crypto.getRandomValues(new Uint8Array(16)), byte =>
+          byte.toString(16).padStart(2, '0')).join('');
+        session = { id, name: defaultName };
+        store.add(session, sessionKey);
+      };
+      return request;
+    });
+    return session;
+  }
+
+  async function migrateDraft(db, key, legacyKey) {
+    let draft;
+    await transact(db, 'readwrite', store => {
+      const current = store.get(key);
+      current.onsuccess = () => {
+        draft = current.result;
+        if (draft !== undefined) return;
+        const legacy = store.get(legacyKey);
+        legacy.onsuccess = () => {
+          draft = legacy.result ?? { version: 1, state: null };
+          store.add(draft, key);
+        };
+      };
+      return current;
+    });
+    return draft;
   }
 
   async function connect(tool, editor) {
@@ -95,12 +155,11 @@
     controls.className = 'editorial-draft-controls';
     controls.innerHTML = `
       <button type="button" class="editorial-profile-trigger" aria-expanded="false" aria-controls="editorial-profile-options">
-        ${icon('person')}<span data-profile-name></span>${icon('expand_more')}
+        ${icon('devices')}<span class="editorial-session-label"><span data-session-name></span><span data-session-device></span></span>${icon('expand_more')}
       </button>
-      <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de perfil" hidden>
-        <div data-profiles></div>
+      <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de sesión" hidden>
         <div class="editorial-profile-actions">
-          <button type="button" data-new>${icon('person_add')} Nuevo perfil</button>
+          <button type="button" data-rename>${icon('edit')} Editar nombre de esta sesión</button>
           <button type="button" data-reset>${icon('restart_alt')} Empezar de cero</button>
         </div>
       </div>`;
@@ -112,28 +171,31 @@
     header.append(tools);
     const trigger = controls.querySelector('.editorial-profile-trigger');
     const options = controls.querySelector('.editorial-profile-options');
-    const profileList = options.querySelector('[data-profiles]');
-    const create = options.querySelector('[data-new]');
+    const rename = options.querySelector('[data-rename]');
+    const sessionName = trigger.querySelector('[data-session-name]');
+    sessionName.textContent = defaultName;
+    trigger.querySelector('[data-session-device]').textContent = browserLabel();
     const reset = options.querySelector('[data-reset]');
 
     const dialogs = document.createElement('div');
     dialogs.className = 'editorial-draft-dialogs';
     dialogs.innerHTML = `
-      <dialog aria-labelledby="editorial-profile-title" data-create-dialog>
+      <dialog aria-labelledby="editorial-session-title" data-rename-dialog>
         <form>
-          <h2 id="editorial-profile-title">Crear perfil</h2>
-          <p>Tus placas y fotos se guardan automáticamente en este navegador. Elegí tu perfil para retomar tu borrador.</p>
+          <h2 id="editorial-session-title">Editar nombre de la sesión</h2>
+          <p>Este nombre se muestra en las tres herramientas de este navegador.</p>
           <label>Nombre <input required maxlength="40" autocomplete="off" autofocus></label>
+          <span role="alert" data-name-error></span>
           <div class="editorial-dialog-actions">
             <button type="button" data-close>Cancelar</button>
-            <button class="editorial-profile-primary" type="submit">Crear perfil</button>
+            <button class="editorial-profile-primary" type="submit">Guardar nombre</button>
           </div>
         </form>
       </dialog>
       <dialog aria-labelledby="editorial-reset-title" data-reset-dialog>
         <form method="dialog">
           <h2 id="editorial-reset-title">¿Empezar de cero?</h2>
-          <p>Se borrarán las placas y fotos del borrador de este perfil en esta herramienta.</p>
+          <p>Se borrarán las placas y fotos del borrador de esta sesión en esta herramienta.</p>
           <div class="editorial-dialog-actions">
             <button value="cancel" autofocus>Cancelar</button>
             <button class="editorial-profile-danger" value="reset">Borrar borrador</button>
@@ -141,12 +203,12 @@
         </form>
       </dialog>`;
     document.body.append(dialogs);
-    const createDialog = dialogs.querySelector('[data-create-dialog]');
+    const renameDialog = dialogs.querySelector('[data-rename-dialog]');
     const resetDialog = dialogs.querySelector('[data-reset-dialog]');
-    const form = createDialog.querySelector('form');
+    const form = renameDialog.querySelector('form');
     const nameField = form.querySelector('input');
-    const preference = `editorial-local-profile:${tool}`;
-    const keyFor = name => [tool, name];
+    const nameError = form.querySelector('[data-name-error]');
+    const nameSubmit = form.querySelector('[type=submit]');
 
     function report(message) {
       const saving = message === 'Guardando…';
@@ -159,8 +221,8 @@
       status.lastElementChild.textContent = ready ? 'Guardado' : error ? 'Error de guardado' : message;
     }
     report('Buscando borrador…');
-    let names = [];
-    let profile = guest;
+    let session;
+    let draftKey;
     let db;
     let busy = true;
     let writable = false;
@@ -200,31 +262,13 @@
       busy = value;
       if (value) cancelFeedback();
       main.inert = value;
-      trigger.disabled = value || !db;
+      trigger.disabled = value || !session;
     }
 
     function closeOptions(restoreFocus = false) {
       options.hidden = true;
       trigger.setAttribute('aria-expanded', 'false');
       if (restoreFocus) trigger.focus();
-    }
-
-    function showProfiles() {
-      trigger.querySelector('[data-profile-name]').textContent = profile || (names.length ? 'Elegir perfil' : 'Crear perfil');
-      profileList.replaceChildren();
-      for (const name of [...names, ...(names.length ? [guest] : [])]) {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.innerHTML = `${icon(name === profile ? 'check' : 'person')}<span></span>`;
-        item.lastElementChild.textContent = name || 'Sin perfil';
-        if (name === profile) item.setAttribute('aria-current', 'true');
-        item.addEventListener('click', async () => {
-          closeOptions();
-          await switchProfile(name);
-          trigger.focus();
-        });
-        profileList.append(item);
-      }
     }
 
     function save() {
@@ -235,9 +279,8 @@
       if (signature === saved) return pending;
       try {
         const draft = { version: 1, state: encode(state) };
-        const target = keyFor(profile);
         saved = signature;
-        const write = transact(db, 'readwrite', store => store.put(draft, target));
+        const write = transact(db, 'readwrite', store => store.put(draft, draftKey));
         pending = write;
         startFeedback();
         write.then(() => {
@@ -265,43 +308,12 @@
       });
     }
 
-    async function readDraft(name) {
-      const draft = await transact(db, 'readonly', store => store.get(keyFor(name)));
-      if (!draft) return null;
-      if (draft.version !== 1 || !Array.isArray(draft.state?.pages) || !draft.state.pages.length) {
-        throw new Error('El borrador tiene un formato incompatible.');
-      }
-      return decode(draft.state);
-    }
-
-    async function switchProfile(name, copyGuest = false) {
-      if (busy || profile === name || !editor.read()) {
-        return;
-      }
-      const copy = copyGuest && profile === guest ? editor.read() : null;
-      setBusy(true);
-      try {
-        await save();
-        cancelFeedback();
-        const draft = await readDraft(name);
-        localStorage.setItem(preference, name);
-        editor.restore(draft ?? copy ?? initial);
-        profile = name;
-        writable = true;
-        saved = copy && !draft ? null : fingerprint(editor.read());
-        report(draft ? 'Borrador recuperado' : 'Activo');
-        if (copy && !draft) await save();
-      } catch {
-        report('No se pudo cambiar de perfil. Se conservó el borrador guardado.');
-      } finally {
-        showProfiles();
-        setBusy(false);
-      }
-    }
-
-    function showCreate() {
+    function showRename() {
       closeOptions();
-      createDialog.showModal();
+      nameField.value = session.name;
+      nameError.textContent = '';
+      renameDialog.showModal();
+      nameField.select();
     }
 
     function showReset() {
@@ -329,29 +341,29 @@
         closeOptions(true);
       }
     });
-    create.addEventListener('click', showCreate);
+    rename.addEventListener('click', showRename);
     reset.addEventListener('click', showReset);
-    createDialog.querySelector('[data-close]').addEventListener('click', () => createDialog.close());
-    createDialog.addEventListener('close', () => {
+    renameDialog.querySelector('[data-close]').addEventListener('click', () => renameDialog.close());
+    renameDialog.addEventListener('close', () => {
       form.reset();
       if (!resetDialog.open) trigger.focus();
     });
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const name = nameField.value.trim();
-      if (!name || busy) return;
-      const existing = names.find(item => item.localeCompare(name, 'es', { sensitivity: 'base' }) === 0);
+      if (!name || busy || nameSubmit.disabled) return;
+      nameSubmit.disabled = true;
+      nameError.textContent = '';
       try {
-        if (!existing) {
-          const updated = [...names, name];
-          localStorage.setItem(profilesKey, JSON.stringify(updated));
-          names = updated;
-        }
-        createDialog.close();
-        await switchProfile(existing ?? name, !existing);
-        trigger.focus();
+        const updated = { ...session, name };
+        await transact(db, 'readwrite', store => store.put(updated, sessionKey));
+        session = updated;
+        sessionName.textContent = name;
+        renameDialog.close();
       } catch {
-        report('No se pudo crear el perfil en este navegador.');
+        nameError.textContent = 'No se pudo guardar el nombre de la sesión.';
+      } finally {
+        nameSubmit.disabled = false;
       }
     });
 
@@ -364,7 +376,7 @@
       try {
         await pending?.catch(() => {});
         cancelFeedback();
-        await transact(db, 'readwrite', store => store.delete(keyFor(profile)));
+        await transact(db, 'readwrite', store => store.put({ version: 1, state: null }, draftKey));
         editor.restore(initial);
         saved = fingerprint(editor.read());
         pending = undefined;
@@ -380,19 +392,21 @@
 
     setBusy(true);
     try {
-      names = readProfiles();
-      const preferred = localStorage.getItem(preference);
-      profile = names.includes(preferred) ? preferred : guest;
       db = await openDatabase();
-      const draft = await readDraft(profile);
-      if (draft) editor.restore(draft);
+      session = await initializeSession(db);
+      sessionName.textContent = session.name;
+      draftKey = [tool, 'browser-session', session.id];
+      const draft = await migrateDraft(db, draftKey, [tool, legacyProfile(tool)]);
+      if (draft.version !== 1 || (draft.state !== null && (!Array.isArray(draft.state?.pages) || !draft.state.pages.length))) {
+        throw new Error('El borrador tiene un formato incompatible.');
+      }
+      if (draft.state) editor.restore(await decode(draft.state));
       saved = fingerprint(editor.read());
       writable = true;
-      report(draft ? 'Borrador recuperado' : 'Activo');
+      report(draft.state ? 'Borrador recuperado' : 'Activo');
     } catch {
       report('No se pudo abrir el borrador. El guardado automático está pausado.');
     } finally {
-      showProfiles();
       setBusy(false);
     }
 

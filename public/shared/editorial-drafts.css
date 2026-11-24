@@ -67,13 +67,20 @@ header .header-inner.editorial-draft-header {
 .editorial-profile-trigger:hover,
 .editorial-draft-controls .editorial-profile-trigger[aria-expanded="true"] { background: #26282d; }
 .editorial-profile-trigger:disabled { opacity: .55; cursor: default; }
-.editorial-profile-trigger [data-profile-name],
-.editorial-profile-options [data-profiles] span:last-child {
+.editorial-session-label {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-align: start;
+  line-height: 1.1;
+}
+.editorial-session-label > span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.editorial-session-label [data-session-device] { color: #c4cbd7; font-size: 11px; }
 .editorial-profile-trigger .material-symbols-outlined,
 .editorial-profile-options .material-symbols-outlined {
   flex: none;
@@ -94,13 +101,6 @@ header .header-inner.editorial-draft-header {
   box-shadow: 0 12px 32px #0008;
 }
 .editorial-profile-options[hidden] { display: none; }
-.editorial-profile-options [data-profiles] {
-  display: grid;
-  gap: 4px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-.editorial-profile-options [data-profiles]:empty + .editorial-profile-actions { margin: 0; padding: 0; border: 0; }
 .editorial-profile-options button {
   display: flex;
   align-items: center;
@@ -110,9 +110,8 @@ header .header-inner.editorial-draft-header {
   padding: 8px 10px;
   text-align: start;
 }
-.editorial-profile-options button:hover,
-.editorial-profile-options button[aria-current="true"] { background: #292b30; }
-.editorial-profile-actions { display: grid; gap: 4px; margin-top: 5px; padding-top: 5px; border-top: 1px solid #373940; }
+.editorial-profile-options button:hover { background: #292b30; }
+.editorial-profile-actions { display: grid; gap: 4px; }
 .editorial-profile-actions [data-reset] { color: #ff4d4d; }
 .editorial-draft-dialogs dialog {
   width: min(440px, calc(100% - 32px));
@@ -160,14 +159,6 @@ header .header-inner.editorial-draft-header {
   .editorial-draft-status { gap: 3px; font-size: 11px; }
   .editorial-draft-status .material-symbols-outlined { font-size: 15px; }
   .editorial-draft-controls .editorial-profile-trigger { padding-inline: 10px; gap: 5px; }
-}
-@media (max-width: 360px) {
-  .editorial-profile-trigger [data-profile-name] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    clip-path: inset(50%);
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .editorial-draft-status.is-saving .material-symbols-outlined { animation: none; }
