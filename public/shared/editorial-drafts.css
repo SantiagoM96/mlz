@@ -94,7 +94,12 @@ header .header-inner.editorial-draft-header {
   box-shadow: 0 12px 32px #0008;
 }
 .editorial-profile-options[hidden] { display: none; }
-.editorial-profile-options [data-profiles] { max-height: 200px; overflow-y: auto; }
+.editorial-profile-options [data-profiles] {
+  display: grid;
+  gap: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
 .editorial-profile-options [data-profiles]:empty + .editorial-profile-actions { margin: 0; padding: 0; border: 0; }
 .editorial-profile-options button {
   display: flex;
@@ -107,7 +112,7 @@ header .header-inner.editorial-draft-header {
 }
 .editorial-profile-options button:hover,
 .editorial-profile-options button[aria-current="true"] { background: #292b30; }
-.editorial-profile-actions { margin-top: 5px; padding-top: 5px; border-top: 1px solid #373940; }
+.editorial-profile-actions { display: grid; gap: 4px; margin-top: 5px; padding-top: 5px; border-top: 1px solid #373940; }
 .editorial-profile-actions [data-reset] { color: #ff4d4d; }
 .editorial-draft-dialogs dialog {
   width: min(440px, calc(100% - 32px));
@@ -140,17 +145,29 @@ header .header-inner.editorial-draft-header {
 .editorial-dialog-actions .editorial-profile-primary { border-color: #ed0000; background: #ed0000; color: #fff; }
 .editorial-dialog-actions .editorial-profile-primary:hover { background: #c90000; }
 .editorial-dialog-actions .editorial-profile-danger { border-color: #ed0000; color: #ff4d4d; }
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   header .header-inner.editorial-draft-header {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 6px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
   }
-  .editorial-draft-tools { justify-self: end; max-width: 100%; }
-  .editorial-draft-controls { max-width: min(170px, 52vw); }
-  .editorial-draft-brand { gap: 6px; }
+  .editorial-draft-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+  .editorial-draft-brand .editorial-header-home { min-height: 30px; }
+  .editorial-draft-controls { max-width: min(150px, 40vw); }
   .editorial-draft-status { gap: 3px; font-size: 11px; }
   .editorial-draft-status .material-symbols-outlined { font-size: 15px; }
   .editorial-draft-controls .editorial-profile-trigger { padding-inline: 10px; gap: 5px; }
+}
+@media (max-width: 360px) {
+  .editorial-profile-trigger [data-profile-name] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .editorial-draft-status.is-saving .material-symbols-outlined { animation: none; }
