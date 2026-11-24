@@ -94,7 +94,7 @@
 }
 
 /* Carruseles: ajuste más amable y alineación suavizada al soltar el mouse. */
-.rail{scroll-snap-type:x proximity;scroll-behavior:smooth}
+.rail{scroll-snap-type:none;scroll-behavior:auto}
 .rail.is-dragging,.rail.is-settling{scroll-snap-type:none;scroll-behavior:auto}
 @media(prefers-reduced-motion:reduce){.rail{scroll-behavior:auto}}
 
