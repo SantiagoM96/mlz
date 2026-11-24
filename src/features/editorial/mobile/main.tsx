@@ -1,4 +1,5 @@
 import "@vitejs/plugin-react/preamble";
+import { connectPreviewResize } from "../connectPreviewResize";
 import { connectModuleOrder } from "../connectModuleOrder";
 import { createPortal } from "react-dom";
 import { TextSpacing } from "./TextSpacing";
@@ -6,8 +7,13 @@ import { createRoot } from "react-dom/client";
 import { MobileDrawer } from "./MobileDrawer";
 import { MobileTextEditor } from "./MobileTextEditor";
 
-if (document.readyState === "complete") connectModuleOrder();
-else document.addEventListener("DOMContentLoaded", connectModuleOrder, { once: true });
+function connectEditorialControls() {
+  connectModuleOrder();
+  connectPreviewResize();
+}
+
+if (document.readyState === "complete") connectEditorialControls();
+else document.addEventListener("DOMContentLoaded", connectEditorialControls, { once: true });
 
 const main = document.querySelector("main");
 if (main) {
