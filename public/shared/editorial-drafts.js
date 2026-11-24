@@ -77,30 +77,87 @@
   async function connect(tool, editor) {
     const main = document.querySelector('main');
     const initial = editor.read();
-    if (!main || !initial) return;
-    const bar = document.createElement('section');
-    bar.className = 'editorial-drafts';
-    bar.setAttribute('aria-label', 'Borrador local');
-    bar.innerHTML = `
-      <label>Perfil <select aria-label="Perfil de borradores"></select></label>
-      <button type="button" data-new>Nuevo perfil</button>
-      <button type="button" data-reset>Empezar de cero</button>
-      <span role="status">Buscando borrador…</span>
-      <form hidden>
-        <label>Nombre <input required maxlength="40" autocomplete="off"></label>
-        <button type="submit">Crear perfil</button>
-        <button type="button" data-cancel>Cancelar</button>
-      </form>`;
-    main.before(bar);
-    const select = bar.querySelector('select');
-    const create = bar.querySelector('[data-new]');
-    const reset = bar.querySelector('[data-reset]');
-    const status = bar.querySelector('[role="status"]');
-    const form = bar.querySelector('form');
+    const header = document.querySelector('header .header-inner');
+    const logo = header?.querySelector('.editorial-header-home');
+    if (!main || !initial || !header || !logo) return;
+    const icon = name => `<span class="material-icons" aria-hidden="true">${name}</span>`;
+    const brand = document.createElement('div');
+    brand.className = 'editorial-draft-brand';
+    const status = document.createElement('span');
+    status.className = 'editorial-draft-status';
+    status.setAttribute('role', 'status');
+    status.innerHTML = `${icon('schedule')}<span></span>`;
+    logo.before(brand);
+    brand.append(logo, status);
+    header.classList.add('editorial-draft-header');
+
+    const controls = document.createElement('div');
+    controls.className = 'editorial-draft-controls';
+    controls.innerHTML = `
+      <button type="button" class="editorial-profile-trigger" aria-expanded="false" aria-controls="editorial-profile-options">
+        ${icon('person_outline')}<span data-profile-name></span>${icon('expand_more')}
+      </button>
+      <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de perfil" hidden>
+        <div data-profiles></div>
+        <div class="editorial-profile-actions">
+          <button type="button" data-new>${icon('person_add_alt')} Nuevo perfil</button>
+          <button type="button" data-reset>${icon('restart_alt')} Empezar de cero</button>
+        </div>
+      </div>`;
+    header.append(controls);
+    const trigger = controls.querySelector('.editorial-profile-trigger');
+    const options = controls.querySelector('.editorial-profile-options');
+    const profileList = options.querySelector('[data-profiles]');
+    const create = options.querySelector('[data-new]');
+    const reset = options.querySelector('[data-reset]');
+
+    const dialogs = document.createElement('div');
+    dialogs.className = 'editorial-draft-dialogs';
+    dialogs.innerHTML = `
+      <dialog aria-labelledby="editorial-profile-title" data-create-dialog>
+        <form>
+          <h2 id="editorial-profile-title">Crear perfil</h2>
+          <p>Tus placas y fotos se guardan automáticamente en este navegador. Elegí tu perfil para retomar tu borrador.</p>
+          <label>Nombre <input required maxlength="40" autocomplete="off" autofocus></label>
+          <div class="editorial-dialog-actions">
+            <button type="button" data-close>Cancelar</button>
+            <button class="editorial-profile-primary" type="submit">Crear perfil</button>
+          </div>
+          <button type="button" class="editorial-profile-link" data-existing>Elegir un perfil existente</button>
+          <button type="button" class="editorial-profile-link" data-guest-reset>Empezar de cero</button>
+        </form>
+      </dialog>
+      <dialog aria-labelledby="editorial-reset-title" data-reset-dialog>
+        <form method="dialog">
+          <h2 id="editorial-reset-title">¿Empezar de cero?</h2>
+          <p>Se borrarán las placas y fotos del borrador de este perfil en esta herramienta.</p>
+          <div class="editorial-dialog-actions">
+            <button value="cancel" autofocus>Cancelar</button>
+            <button class="editorial-profile-danger" value="reset">Borrar borrador</button>
+          </div>
+        </form>
+      </dialog>`;
+    document.body.append(dialogs);
+    const createDialog = dialogs.querySelector('[data-create-dialog]');
+    const resetDialog = dialogs.querySelector('[data-reset-dialog]');
+    const guestReset = dialogs.querySelector('[data-guest-reset]');
+    const existingProfiles = dialogs.querySelector('[data-existing]');
+    const form = createDialog.querySelector('form');
     const nameField = form.querySelector('input');
     const preference = `editorial-local-profile:${tool}`;
     const keyFor = name => [tool, name];
-    const report = message => { status.textContent = message; };
+
+    function report(message) {
+      const saving = message === 'Guardando…';
+      const ready = ['Borrador guardado', 'Borrador recuperado'].includes(message);
+      const error = message.startsWith('No se pudo');
+      status.title = message;
+      status.classList.toggle('is-saving', saving);
+      status.classList.toggle('has-error', error);
+      status.firstElementChild.textContent = error ? 'error_outline' : saving ? 'sync' : ready ? 'check_circle_outline' : 'schedule';
+      status.lastElementChild.textContent = ready ? 'Guardado' : error ? 'Error de guardado' : message;
+    }
+    report('Buscando borrador…');
     let names = [];
     let profile = guest;
     let db;
@@ -113,12 +170,32 @@
     function setBusy(value) {
       busy = value;
       main.inert = value;
-      select.disabled = create.disabled = reset.disabled = value || !db;
+      trigger.disabled = value || !db;
+    }
+
+    function closeOptions(restoreFocus = false) {
+      options.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) trigger.focus();
     }
 
     function showProfiles() {
-      select.replaceChildren(new Option('Sin perfil', guest), ...names.map(name => new Option(name, name)));
-      select.value = profile;
+      trigger.querySelector('[data-profile-name]').textContent = profile || 'Crear perfil';
+      trigger.classList.toggle('has-options', Boolean(profile));
+      profileList.replaceChildren();
+      for (const name of [guest, ...names]) {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.innerHTML = `${icon(name === profile ? 'check' : 'person_outline')}<span></span>`;
+        item.lastElementChild.textContent = name || 'Sin perfil';
+        if (name === profile) item.setAttribute('aria-current', 'true');
+        item.addEventListener('click', async () => {
+          closeOptions();
+          await switchProfile(name);
+          trigger.focus();
+        });
+        profileList.append(item);
+      }
     }
 
     function save() {
@@ -168,7 +245,6 @@
 
     async function switchProfile(name, copyGuest = false) {
       if (busy || profile === name || !editor.read()) {
-        select.value = profile;
         return;
       }
       const copy = copyGuest && profile === guest ? editor.read() : null;
@@ -191,9 +267,54 @@
       }
     }
 
-    select.addEventListener('change', () => switchProfile(select.value));
-    create.addEventListener('click', () => { form.hidden = false; nameField.focus(); });
-    bar.querySelector('[data-cancel]').addEventListener('click', () => { form.hidden = true; create.focus(); });
+    function showCreate() {
+      closeOptions();
+      guestReset.hidden = Boolean(profile);
+      existingProfiles.hidden = Boolean(profile) || !names.length;
+      createDialog.showModal();
+    }
+
+    function showReset() {
+      if (busy || !editor.read()) return;
+      closeOptions();
+      resetDialog.returnValue = '';
+      resetDialog.showModal();
+    }
+
+    function openOptions() {
+      options.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    trigger.addEventListener('click', () => {
+      if (!profile) showCreate();
+      else if (!options.hidden) closeOptions();
+      else openOptions();
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!controls.contains(event.target)) closeOptions();
+    });
+    controls.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !options.hidden) {
+        event.preventDefault();
+        closeOptions(true);
+      }
+    });
+    create.addEventListener('click', showCreate);
+    reset.addEventListener('click', showReset);
+    createDialog.querySelector('[data-close]').addEventListener('click', () => createDialog.close());
+    existingProfiles.addEventListener('click', () => {
+      createDialog.close();
+      openOptions();
+    });
+    guestReset.addEventListener('click', () => {
+      createDialog.close();
+      showReset();
+    });
+    createDialog.addEventListener('close', () => {
+      form.reset();
+      if (!resetDialog.open) trigger.focus();
+    });
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const name = nameField.value.trim();
@@ -205,16 +326,19 @@
           localStorage.setItem(profilesKey, JSON.stringify(updated));
           names = updated;
         }
-        form.reset();
-        form.hidden = true;
+        createDialog.close();
         await switchProfile(existing ?? name, !existing);
+        trigger.focus();
       } catch {
         report('No se pudo crear el perfil en este navegador.');
       }
     });
 
-    reset.addEventListener('click', async () => {
-      if (busy || !editor.read() || !confirm('¿Borrar todo el borrador de este perfil en este editor?')) return;
+    resetDialog.addEventListener('close', async () => {
+      if (resetDialog.returnValue !== 'reset' || busy) {
+        trigger.focus();
+        return;
+      }
       setBusy(true);
       try {
         await pending?.catch(() => {});
@@ -228,6 +352,7 @@
         report('No se pudo eliminar el borrador.');
       } finally {
         setBusy(false);
+        trigger.focus();
       }
     });
 
