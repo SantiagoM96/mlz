@@ -1,4 +1,5 @@
 import "@vitejs/plugin-react/preamble";
+import { connectCarouselCoverHelp } from "../connectCarouselCoverHelp";
 import { connectPreviewResize } from "../connectPreviewResize";
 import { connectModuleOrder } from "../connectModuleOrder";
 import { createPortal } from "react-dom";
@@ -10,6 +11,7 @@ import { MobileTextEditor } from "./MobileTextEditor";
 function connectEditorialControls() {
   connectModuleOrder();
   connectPreviewResize();
+  connectCarouselCoverHelp();
 }
 
 if (document.readyState === "complete") connectEditorialControls();
