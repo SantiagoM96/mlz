@@ -57,12 +57,21 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
   const oldBehavior=rail.style.scrollBehavior;rail.style.scrollBehavior='auto';rail.scrollLeft=start*304;rail.style.scrollBehavior=oldBehavior;
   setArrowState(rail);
   rail.addEventListener('scroll',()=>setArrowState(rail),{passive:true});
-  let pointerId=null,originX=0,originScroll=0,dragged=false,settleFrame=null;
+  let pointerId=null,originX=0,originScroll=0,dragged=false,settleFrame=null,wheelTimer=null;
   const stopSettle=()=>{
     if(settleFrame!==null){cancelAnimationFrame(settleFrame);settleFrame=null}
     rail.classList.remove('is-settling');
   };
   const easeOutCubic=t=>1-Math.pow(1-t,3);
+  const closestCard=()=>[...rail.querySelectorAll('.date-card')].reduce((best,card)=>{
+    const distance=Math.abs((card.offsetLeft-rail.offsetLeft)-rail.scrollLeft);
+    return !best||distance<best.distance?{card,distance}:best;
+  },null);
+  const settleNearest=()=>{
+    if(pointerId!==null)return;
+    const closest=closestCard();
+    if(closest)settleTo(closest.card.offsetLeft-rail.offsetLeft);
+  };
   const settleTo=target=>{
     stopSettle();
     const from=rail.scrollLeft,delta=target-from;
@@ -72,7 +81,7 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
     }
     // Sin snap nativo durante la animación: evita el salto brusco del navegador.
     rail.classList.add('is-settling');
-    const duration=620;
+    const duration=720;
     let started=null;
     const frame=now=>{
       if(started===null)started=now;
@@ -89,6 +98,7 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
   };
   rail.addEventListener('pointerdown',e=>{
     if(e.pointerType!=='mouse'||e.button!==0||pointerId!==null)return;
+    if(wheelTimer!==null){clearTimeout(wheelTimer);wheelTimer=null}
     stopSettle();
     pointerId=e.pointerId;originX=e.clientX;originScroll=rail.scrollLeft;dragged=false;
     rail.setPointerCapture(e.pointerId);
@@ -106,15 +116,11 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
     if(dragged){
       // El drag es libre. Al soltar, acercamos suavemente la tarjeta más próxima.
       // Se evita el snap instantáneo del navegador durante el gesto.
-      const cards=[...rail.querySelectorAll('.date-card')];
-      const nearest=cards.reduce((best,card)=>{
-        const distance=Math.abs((card.offsetLeft-rail.offsetLeft)-rail.scrollLeft);
-        return !best||distance<best.distance?{card,distance}:best;
-      },null);
+
       rail.dataset.suppressClick='true';
       window.setTimeout(()=>{delete rail.dataset.suppressClick},0);
       rail.classList.remove('is-dragging');
-      if(nearest)settleTo(nearest.card.offsetLeft-rail.offsetLeft);
+      settleNearest();
     }else{
       rail.classList.remove('is-dragging');
     }
@@ -124,6 +130,17 @@ function initRails(){document.querySelectorAll('.rail').forEach(rail=>{
   rail.addEventListener('pointerup',endDrag);
   rail.addEventListener('pointercancel',endDrag);
   rail.addEventListener('lostpointercapture',endDrag);
+  // Trackpad y rueda horizontal: después de finalizar el gesto, encaje progresivo.
+  // El snap nativo permanece deshabilitado para que nunca adelante la animación.
+  rail.addEventListener('wheel',e=>{
+    if(!e.deltaX&&!e.shiftKey)return;
+    stopSettle();
+    if(wheelTimer!==null)clearTimeout(wheelTimer);
+    wheelTimer=setTimeout(()=>{
+      wheelTimer=null;
+      settleNearest();
+    },300);
+  },{passive:true});
   rail.addEventListener('click',e=>{
     if(rail.dataset.suppressClick==='true'){
       e.preventDefault();e.stopPropagation();delete rail.dataset.suppressClick;
