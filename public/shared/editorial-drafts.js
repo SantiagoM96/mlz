@@ -156,8 +156,14 @@
     controls.innerHTML = `
       <button type="button" class="editorial-profile-trigger" aria-expanded="false" aria-controls="editorial-profile-options">
         ${icon('devices')}<span class="editorial-session-label"><span data-session-name></span><span data-session-device></span></span>${icon('expand_more')}
+        <span class="editorial-session-menu-icon">${icon('menu')}<span class="editorial-session-menu-label">Menú de sesión</span></span>
       </button>
       <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de sesión" hidden>
+        <div class="editorial-session-summary">
+          <span class="editorial-session-summary-title">Sesión</span>
+          <strong data-session-name></strong>
+          <span data-session-device></span>
+        </div>
         <div class="editorial-profile-actions">
           <button type="button" data-rename>${icon('edit')} Editar nombre de esta sesión</button>
           <button type="button" data-reset>${icon('restart_alt')} Empezar de cero</button>
@@ -172,9 +178,14 @@
     const trigger = controls.querySelector('.editorial-profile-trigger');
     const options = controls.querySelector('.editorial-profile-options');
     const rename = options.querySelector('[data-rename]');
-    const sessionName = trigger.querySelector('[data-session-name]');
-    sessionName.textContent = defaultName;
-    trigger.querySelector('[data-session-device]').textContent = browserLabel();
+    const sessionNames = controls.querySelectorAll('[data-session-name]');
+    const showSessionName = name => {
+      sessionNames.forEach(label => { label.textContent = name; });
+      options.querySelector('.editorial-session-summary-title').hidden = name === defaultName;
+    };
+    showSessionName(defaultName);
+    const device = browserLabel();
+    controls.querySelectorAll('[data-session-device]').forEach(label => { label.textContent = device; });
     const reset = options.querySelector('[data-reset]');
 
     const dialogs = document.createElement('div');
@@ -358,7 +369,7 @@
         const updated = { ...session, name };
         await transact(db, 'readwrite', store => store.put(updated, sessionKey));
         session = updated;
-        sessionName.textContent = name;
+        showSessionName(name);
         renameDialog.close();
       } catch {
         nameError.textContent = 'No se pudo guardar el nombre de la sesión.';
@@ -394,7 +405,7 @@
     try {
       db = await openDatabase();
       session = await initializeSession(db);
-      sessionName.textContent = session.name;
+      showSessionName(session.name);
       draftKey = [tool, 'browser-session', session.id];
       const draft = await migrateDraft(db, draftKey, [tool, legacyProfile(tool)]);
       if (draft.version !== 1 || (draft.state !== null && (!Array.isArray(draft.state?.pages) || !draft.state.pages.length))) {
