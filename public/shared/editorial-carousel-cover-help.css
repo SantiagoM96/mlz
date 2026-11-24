@@ -23,6 +23,7 @@
 
 .editor-panel .editorial-cover-help-tip.help-tooltip {
   position: fixed;
+  overflow: visible;
   inset: auto;
   min-width: 0;
   margin: 0;
