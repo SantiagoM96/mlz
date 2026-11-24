@@ -160,12 +160,15 @@
       </button>
       <div id="editorial-profile-options" class="editorial-profile-options" aria-label="Opciones de sesión" hidden>
         <div class="editorial-session-summary">
-          <span class="editorial-session-summary-title">Sesión</span>
-          <strong data-session-name></strong>
-          <span data-session-device></span>
+          <div class="editorial-session-details">
+            <span class="editorial-session-summary-title">Sesión</span>
+            <strong data-session-name></strong>
+            <span data-session-device></span>
+            <span>Actividad · <time data-session-activity>Sin registro</time></span>
+          </div>
+          <button type="button" data-rename aria-label="Editar nombre de esta sesión" title="Editar nombre de esta sesión">${icon('edit')}</button>
         </div>
         <div class="editorial-profile-actions">
-          <button type="button" data-rename>${icon('edit')} Editar nombre de esta sesión</button>
           <button type="button" data-reset>${icon('restart_alt')} Empezar de cero</button>
         </div>
       </div>`;
@@ -187,6 +190,11 @@
     const device = browserLabel();
     controls.querySelectorAll('[data-session-device]').forEach(label => { label.textContent = device; });
     const reset = options.querySelector('[data-reset]');
+    const activity = options.querySelector('[data-session-activity]');
+    const clock = new Intl.DateTimeFormat('es-AR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    const calendar = new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: '2-digit' });
+    const fullDate = new Intl.DateTimeFormat('es-AR', { dateStyle: 'long', timeStyle: 'short' });
+
 
     const dialogs = document.createElement('div');
     dialogs.className = 'editorial-draft-dialogs';
@@ -234,6 +242,7 @@
     report('Buscando borrador…');
     let session;
     let draftKey;
+    let activityKey;
     let db;
     let busy = true;
     let writable = false;
@@ -282,6 +291,26 @@
       if (restoreFocus) trigger.focus();
     }
 
+    function showActivity(timestamp) {
+      if (!Number.isFinite(timestamp) || timestamp < 0) return;
+      const date = new Date(timestamp);
+      const today = new Date();
+      const day = date.toDateString() === today.toDateString()
+        ? 'Hoy'
+        : calendar.format(date) + (date.getFullYear() === today.getFullYear() ? '' : '/' + date.getFullYear());
+      activity.dateTime = date.toISOString();
+      activity.title = fullDate.format(date);
+      activity.textContent = day + ', ' + clock.format(date);
+    }
+
+    function writeWithActivity(data, key) {
+      const timestamp = Date.now();
+      return transact(db, 'readwrite', store => {
+        store.put(timestamp, activityKey);
+        return store.put(data, key);
+      }).then(() => { showActivity(timestamp); });
+    }
+
     function save() {
       if (!writable) return pending;
       const state = editor.read();
@@ -291,7 +320,7 @@
       try {
         const draft = { version: 1, state: encode(state) };
         saved = signature;
-        const write = transact(db, 'readwrite', store => store.put(draft, draftKey));
+        const write = writeWithActivity(draft, draftKey);
         pending = write;
         startFeedback();
         write.then(() => {
@@ -336,6 +365,7 @@
 
     function openOptions() {
       options.hidden = false;
+      transact(db, 'readonly', store => store.get(activityKey)).then(showActivity, () => {});
       trigger.setAttribute('aria-expanded', 'true');
     }
 
@@ -367,7 +397,7 @@
       nameError.textContent = '';
       try {
         const updated = { ...session, name };
-        await transact(db, 'readwrite', store => store.put(updated, sessionKey));
+        await writeWithActivity(updated, sessionKey);
         session = updated;
         showSessionName(name);
         renameDialog.close();
@@ -387,7 +417,7 @@
       try {
         await pending?.catch(() => {});
         cancelFeedback();
-        await transact(db, 'readwrite', store => store.put({ version: 1, state: null }, draftKey));
+        await writeWithActivity({ version: 1, state: null }, draftKey);
         editor.restore(initial);
         saved = fingerprint(editor.read());
         pending = undefined;
@@ -407,6 +437,7 @@
       session = await initializeSession(db);
       showSessionName(session.name);
       draftKey = [tool, 'browser-session', session.id];
+      activityKey = ['browser-session-activity', session.id];
       const draft = await migrateDraft(db, draftKey, [tool, legacyProfile(tool)]);
       if (draft.version !== 1 || (draft.state !== null && (!Array.isArray(draft.state?.pages) || !draft.state.pages.length))) {
         throw new Error('El borrador tiene un formato incompatible.');

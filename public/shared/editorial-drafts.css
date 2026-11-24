@@ -88,8 +88,7 @@ header .header-inner.editorial-draft-header {
   font-size: 19px;
 }
 .editorial-profile-trigger[aria-expanded="true"] > .material-symbols-outlined:nth-of-type(3) { transform: rotate(180deg); }
-.editorial-session-menu-icon,
-.editorial-session-summary { display: none; }
+.editorial-session-menu-icon { display: none; }
 .editorial-profile-options {
   position: absolute;
   z-index: 60;
@@ -113,6 +112,26 @@ header .header-inner.editorial-draft-header {
   text-align: start;
 }
 .editorial-profile-options button:hover { background: #292b30; }
+.editorial-session-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 4px;
+  padding: 8px 10px 12px;
+  border-bottom: 1px solid #373940;
+}
+.editorial-session-details { display: grid; gap: 3px; overflow-wrap: anywhere; }
+.editorial-session-details strong { font-size: 16px; }
+.editorial-session-details > span { color: #c4cbd7; font-size: 12px; }
+.editorial-profile-options [data-rename] {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-color: #373940;
+}
 .editorial-profile-actions { display: grid; gap: 4px; }
 .editorial-profile-actions [data-reset] { color: #ff4d4d; }
 .editorial-draft-dialogs dialog {
@@ -183,16 +202,6 @@ header .header-inner.editorial-draft-header {
     width: min(340px, 100%);
     box-sizing: border-box;
   }
-  .editorial-session-summary {
-    display: grid;
-    gap: 3px;
-    margin-bottom: 4px;
-    padding: 8px 10px 12px;
-    border-bottom: 1px solid #373940;
-    overflow-wrap: anywhere;
-  }
-  .editorial-session-summary strong { font-size: 16px; }
-  .editorial-session-summary > span { color: #c4cbd7; font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .editorial-draft-status.is-saving .material-symbols-outlined { animation: none; }
