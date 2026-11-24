@@ -13,7 +13,7 @@ export function connectPreviewResize() {
   handle.setAttribute('aria-label', 'Tamaño de la vista previa');
   handle.setAttribute('aria-orientation', 'vertical');
   handle.setAttribute('aria-controls', stage.id);
-  handle.title = 'Arrastrá hacia arriba para agrandar o hacia abajo para achicar';
+  handle.title = 'Arrastrá hacia arriba para achicar o hacia abajo para agrandar';
   actions.before(handle);
 
   const maximum = () => {
@@ -43,19 +43,49 @@ export function connectPreviewResize() {
   observer.observe(stage);
   observer.observe(preview);
 
-  let drag: { pointerId: number; y: number; width: number } | undefined;
+  let drag: { pointerId: number; y: number; offset: number } | undefined;
+  let scrollFrame = 0;
+
+  const resizeToPointer = () => {
+    if (!drag) return;
+    const distance = drag.y - drag.offset - handle.getBoundingClientRect().top;
+    resize(current() + distance * canvas.width / canvas.height);
+  };
+
+  const scrollWhileDragging = () => {
+    if (!drag) return;
+    const distanceToBottom = window.innerHeight - drag.y;
+    if (distanceToBottom < 48 && current() < maximum() - 1) {
+      const previousY = window.scrollY;
+      window.scrollBy({ top: Math.min(16, (48 - distanceToBottom) / 3), behavior: 'instant' });
+      if (window.scrollY !== previousY) resizeToPointer();
+    }
+    scrollFrame = requestAnimationFrame(scrollWhileDragging);
+  };
+
   handle.addEventListener('pointerdown', event => {
     if (event.button !== 0 || drag) return;
     event.preventDefault();
     handle.focus({ preventScroll: true });
     handle.setPointerCapture(event.pointerId);
-    drag = { pointerId: event.pointerId, y: event.clientY, width: current() };
+    drag = {
+      pointerId: event.pointerId,
+      y: event.clientY,
+      offset: event.clientY - handle.getBoundingClientRect().top,
+    };
+    handle.classList.add('is-dragging');
+    scrollFrame = requestAnimationFrame(scrollWhileDragging);
   });
   handle.addEventListener('pointermove', event => {
     if (!drag || event.pointerId !== drag.pointerId) return;
-    resize(drag.width + (drag.y - event.clientY) * canvas.width / canvas.height);
+    drag.y = event.clientY;
+    resizeToPointer();
   });
-  handle.addEventListener('lostpointercapture', () => { drag = undefined; });
+  handle.addEventListener('lostpointercapture', () => {
+    drag = undefined;
+    cancelAnimationFrame(scrollFrame);
+    handle.classList.remove('is-dragging');
+  });
   handle.addEventListener('keydown', event => {
     switch (event.key) {
       case 'ArrowUp': resize(current() + 24); break;
