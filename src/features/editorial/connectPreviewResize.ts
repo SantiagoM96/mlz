@@ -66,6 +66,7 @@ export function connectPreviewResize() {
   handle.addEventListener('pointerdown', event => {
     if (event.button !== 0 || drag) return;
     event.preventDefault();
+    handle.classList.add('is-pointer-focused');
     handle.focus({ preventScroll: true });
     handle.setPointerCapture(event.pointerId);
     drag = {
@@ -86,7 +87,9 @@ export function connectPreviewResize() {
     cancelAnimationFrame(scrollFrame);
     handle.classList.remove('is-dragging');
   });
+  handle.addEventListener('blur', () => handle.classList.remove('is-pointer-focused'));
   handle.addEventListener('keydown', event => {
+    handle.classList.remove('is-pointer-focused');
     switch (event.key) {
       case 'ArrowUp': resize(current() + 24); break;
       case 'ArrowDown': resize(current() - 24); break;
