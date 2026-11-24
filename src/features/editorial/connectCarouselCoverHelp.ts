@@ -11,7 +11,7 @@ export function connectCarouselCoverHelp() {
 
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'editorial-cover-help-button';
+    button.className = 'editorial-cover-help-button help-button';
     button.setAttribute('aria-label', 'Ayuda sobre Portada carrusel');
     button.setAttribute('aria-expanded', 'false');
     const icon = document.createElement('span');
@@ -22,7 +22,7 @@ export function connectCarouselCoverHelp() {
 
     const tip = document.createElement('span');
     tip.id = `editorial-cover-help-${index}`;
-    tip.className = 'editorial-cover-help-tip';
+    tip.className = 'editorial-cover-help-tip help-tooltip';
     tip.setAttribute('popover', 'auto');
     tip.setAttribute('role', 'tooltip');
     tip.textContent = coverHelp;
@@ -35,12 +35,33 @@ export function connectCarouselCoverHelp() {
     const show = () => {
       if (tip.matches(':popover-open')) return;
       const anchor = button.getBoundingClientRect();
-      const left = Math.max(12, Math.min(anchor.left, document.documentElement.clientWidth - 252));
-      tip.style.left = `${left}px`;
+      const panel = row.closest('.editor-panel')?.getBoundingClientRect();
+      const margin = 16;
+      const gap = 12;
+      const viewportWidth = document.documentElement.clientWidth;
+      const leftEdge = Math.max(margin, (panel?.left ?? 0) + margin);
+      const rightEdge = Math.min(viewportWidth - margin, (panel?.right ?? viewportWidth) - margin);
+      const rightSpace = rightEdge - anchor.right - gap;
+      const leftSpace = anchor.left - leftEdge - gap;
+      const side = rightSpace >= 160 ? 'right' : leftSpace >= 160 ? 'left' : undefined;
+      const width = Math.min(240, side === 'right' ? rightSpace : side === 'left' ? leftSpace : rightEdge - leftEdge);
+      const centerX = (anchor.left + anchor.right) / 2;
+      const centerY = (anchor.top + anchor.bottom) / 2;
+      const left = side === 'right' ? anchor.right + gap : side === 'left' ? anchor.left - gap - width
+        : Math.max(leftEdge, Math.min(rightEdge - width, centerX - width / 2));
+      tip.style.width = `${width}px`;
       tip.showPopover();
-      const height = tip.offsetHeight;
-      const above = anchor.bottom + height + 8 > window.innerHeight - 12;
-      tip.style.top = `${Math.max(12, above ? anchor.top - height - 8 : anchor.bottom + 8)}px`;
+      const height = tip.getBoundingClientRect().height;
+      const bottomEdge = window.innerHeight - margin;
+      const direction = side ?? (anchor.bottom + gap + height <= bottomEdge ? 'bottom' : 'top');
+      const top = direction === 'bottom' ? anchor.bottom + gap : direction === 'top'
+        ? Math.max(margin, anchor.top - gap - height)
+        : Math.max(margin, Math.min(bottomEdge - height, centerY - height / 2));
+      tip.dataset.direction = direction;
+      tip.style.left = `${left}px`;
+      tip.style.top = `${top}px`;
+      tip.style.setProperty('--cover-arrow-x', `${Math.max(12, Math.min(width - 12, centerX - left))}px`);
+      tip.style.setProperty('--cover-arrow-y', `${Math.max(12, Math.min(height - 12, centerY - top))}px`);
       button.setAttribute('aria-expanded', 'true');
     };
     const hide = () => {
@@ -52,8 +73,11 @@ export function connectCarouselCoverHelp() {
     button.addEventListener('pointerenter', event => {
       if (event.pointerType === 'mouse') show();
     });
-    button.addEventListener('pointerleave', () => { if (!pinned) hide(); });
-    button.addEventListener('click', () => {
+    button.addEventListener('pointerleave', () => { if (!pinned && !button.matches(':focus-visible')) hide(); });
+    button.addEventListener('focus', () => { if (button.matches(':focus-visible')) show(); });
+    button.addEventListener('blur', () => { if (!pinned) hide(); });
+    button.addEventListener('click', event => {
+      event.stopPropagation();
       if (pinned && tip.matches(':popover-open')) hide();
       else {
         pinned = true;
