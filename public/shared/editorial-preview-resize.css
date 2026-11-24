@@ -53,7 +53,7 @@
   .editorial-preview-resize::after {
     width: min(100%, var(--editorial-preview-width, 540px));
     height: 1px;
-    background: #eef0f4;
+    background: #3d4047;
     opacity: 0;
     transform: scaleX(0);
     transition: transform 180ms ease, opacity 180ms ease;
