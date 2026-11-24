@@ -289,7 +289,7 @@
         profile = name;
         writable = true;
         saved = copy && !draft ? null : fingerprint(editor.read());
-        report(draft ? 'Borrador recuperado' : 'Guardado automático activo');
+        report(draft ? 'Borrador recuperado' : 'Activo');
         if (copy && !draft) await save();
       } catch {
         report('No se pudo cambiar de perfil. Se conservó el borrador guardado.');
@@ -388,7 +388,7 @@
       if (draft) editor.restore(draft);
       saved = fingerprint(editor.read());
       writable = true;
-      report(draft ? 'Borrador recuperado' : 'Guardado automático activo');
+      report(draft ? 'Borrador recuperado' : 'Activo');
     } catch {
       report('No se pudo abrir el borrador. El guardado automático está pausado.');
     } finally {
