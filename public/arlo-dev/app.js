@@ -192,7 +192,7 @@ window.addEventListener('hashchange',route);
 async function start(){try{
  const [cal26,cal27,pay]=await Promise.all([
  fetch('./data/vencimientos.json').then(r=>{if(!r.ok)throw Error('No se pudo cargar calendario 2026');return r.json()}),
- fetch('./data/vencimientos-2027.json').then(r=>{if(!r.ok)throw Error('No se pudo cargar calendario 2027');return r.json()}),
+ fetch('./data/vencimientos-2027.json?v=20261124-cuota12-v2').then(r=>{if(!r.ok)throw Error('No se pudo cargar calendario 2027');return r.json()}),
  fetch('./data/medios-pago.json').then(r=>{if(!r.ok)throw Error('No se pudo cargar medios de pago');return r.json()})
  ]);
  calendarYears={2026:cal26,2027:cal27};rows=cal27.rows;months=cal27.months;payments=pay.rows;
