@@ -58,6 +58,12 @@ try {
     await addPage.waitFor();
     const deletePage = pages.locator('#removePage, .editor-slide-delete');
     assert.ok((await addPage.boundingBox()).x < (await deletePage.boundingBox()).x);
+    const thumbnails = pages.locator(".carousel-page-thumb, .editor-slide-thumb");
+    const originalCount = await thumbnails.count();
+    await addPage.click();
+    assert.equal(await thumbnails.count(), originalCount + 1);
+    await deletePage.click();
+    assert.equal(await thumbnails.count(), originalCount);
     const session = page.locator('.editorial-sidebar-footer .editorial-profile-trigger');
     await session.click();
     const menu = page.locator('.editorial-sidebar-footer .editorial-profile-options');

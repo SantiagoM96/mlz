@@ -205,19 +205,33 @@
   }
 
   .editorial-desktop-layout .editorial-sidebar-pages :is(.cronica-preview-pages, .editor-slide-nav) :is(.carousel-actions, .editor-slide-actions) {
-    display: flex !important;
-    align-items: center;
+    display: grid !important;
+    grid-template-columns: repeat(2, 32px) !important;
+    grid-template-rows: 32px !important;
     gap: 6px;
-    flex: none !important;
-    flex-wrap: nowrap;
-    flex-direction: row !important;
+    flex: 0 0 70px !important;
     align-self: center;
-    min-width: max-content !important;
-    width: auto !important;
-    height: auto;
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .editorial-desktop-layout .editorial-sidebar-pages :is(.carousel-actions, .editor-slide-actions) > button {
+    position: relative;
+    inset: auto;
+    overflow: hidden;
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+  }
+
+  .editorial-desktop-layout .editorial-sidebar-pages :is(.carousel-actions, .editor-slide-actions) > :is(#removePage, .editor-slide-delete) {
+    grid-area: 1 / 2 !important;
   }
 
   .editorial-desktop-layout .editorial-sidebar-pages :is(.carousel-actions, .editor-slide-actions) > :is(#addPage, .editor-slide-add-fixed) {
+    grid-area: 1 / 1 !important;
     display: flex !important;
     visibility: visible !important;
     pointer-events: auto !important;
