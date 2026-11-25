@@ -24,7 +24,7 @@ try {
    await header.waitFor();
    const logo = header.getByRole('img', { name: brand, exact: true });
    assert.equal(await header.locator('img').count(), 1);
-   const badge = page.locator(mobile ? 'header .editorial-build-badge' : '.editorial-sidebar-footer .editorial-build-badge');
+   const badge = page.locator(mobile ? 'header .editorial-build-badge' : '.editorial-workspace-version .editorial-build-badge');
    const time = badge.locator('time');
    assert.equal(await badge.locator('strong').textContent(), revision.slice(-3).toUpperCase());
    assert.equal(await time.textContent(), formatTime.format(new Date(await time.getAttribute('datetime'))));
@@ -52,7 +52,33 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollHeight), 900);
     await badge.waitFor();
     assert.ok((await preview.boundingBox()).x >= (await header.boundingBox()).width);
-    await page.getByRole('button', { name: 'Contraer barra lateral' }).click();
+    assert.equal(await page.locator('aside.editor-panel').evaluate(panel => getComputedStyle(panel).padding), '16px');
+    await header.locator('.editorial-draft-status').waitFor();
+    const addPage = pages.locator('#addPage, .editor-slide-add-fixed');
+    await addPage.waitFor();
+    const deletePage = pages.locator('#removePage, .editor-slide-delete');
+    assert.ok((await addPage.boundingBox()).x < (await deletePage.boundingBox()).x);
+    const thumbnails = pages.locator(".carousel-page-thumb, .editor-slide-thumb");
+    const originalCount = await thumbnails.count();
+    await addPage.click();
+    assert.equal(await thumbnails.count(), originalCount + 1);
+    await deletePage.click();
+    assert.equal(await thumbnails.count(), originalCount);
+    const session = page.locator('.editorial-sidebar-footer .editorial-profile-trigger');
+    await session.click();
+    const menu = page.locator('.editorial-sidebar-footer .editorial-profile-options');
+    await menu.waitFor();
+    assert.ok(await menu.evaluate(node => {
+      const rect = node.getBoundingClientRect();
+      return node.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2));
+    }), slug + ': menú de sesión sobre los módulos');
+    await session.press('Escape');
+    const collapse = page.getByRole('button', { name: 'Contraer barra lateral' });
+    const expandedPosition = await collapse.boundingBox();
+    await collapse.click();
+    const collapsedPosition = await page.getByRole('button', { name: 'Expandir barra lateral' }).boundingBox();
+    assert.equal(collapsedPosition.x, expandedPosition.x);
+    assert.equal(collapsedPosition.y, expandedPosition.y);
     await page.getByRole('navigation', { name: 'Módulos del editor' })
       .getByRole('button', { name: 'Diapositivas' }).click();
     await page.locator('.editorial-sidebar-pages:popover-open').waitFor();
