@@ -2,7 +2,7 @@
    Las placas guardan sus propios estados del motor nativo; no se sustituye el canvas. */
 (()=>{
 'use strict';
-const isDS=location.pathname.includes('diarioshow');
+const isDS=location.pathname.includes('diarioshow-dev');
 const editor=isDS?window.DiarioShowEditor:window.BAEEditor;
 const main=document.querySelector('main'),preview=main?.querySelector('.preview');
 if(!editor||!preview)return;
@@ -46,7 +46,7 @@ function sampleForVariant(variant){
 }
 function blankPage(){
  const initial=editor.getPageState();
- return {...initial,variant:'blank',samplePending:true,footerStyle:'center',headline:'',circlePhoto:{enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0},image:null,zoom:1,offsetX:0,offsetY:0,
+ return {...initial,headlineSpacing:'1',variant:'blank',samplePending:true,footerStyle:'center',headline:'',circlePhoto:{enabled:false,image:null,x:380,y:80,positioned:false,color:'white',zoom:1,offsetX:0,offsetY:0},image:null,zoom:1,offsetX:0,offsetY:0,
   quote:'',enableQuote:false,quoteAuthor:'',showQuoteAuthor:false,
   photoLayout:'single',splitPhotos:{left:{image:null,zoom:1,x:0,y:0},right:{image:null,zoom:1,x:0,y:0}}};
 }
@@ -230,6 +230,13 @@ originalDownload.addEventListener('click',event=>{
 },true);
 // «Limpiar» modifica solo la placa actual. El estado guardado se refresca después.
 document.getElementById('clearAll')?.addEventListener('click',()=>queueMicrotask(()=>{save();draw()}));
+window.EditorialDrafts?.connect('bae',{
+ read(){if(exporting)return null;save();return {pages:pages.slice(),active}},
+ restore(state){
+  pages=state.pages.slice();
+  load(Math.max(0,Math.min(Number.isInteger(state.active)?state.active:0,pages.length-1)));
+ }
+});
 window.EditorialSlides={count:()=>pages.length,active:()=>active,add,remove,select,save,exportSlides};
 draw();
 })();

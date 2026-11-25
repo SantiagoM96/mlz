@@ -5,7 +5,7 @@
  const mq=window.matchMedia('(min-width:701px)');
  // QA y vista convencional pueden desactivar el recorrido con ?onboarding=off.
  if(new URLSearchParams(location.search).get('onboarding')==='off')return;
- const storageKey='bae-tour-desktop-v1';
+ const storageKey='bae-dev-tour-desktop-v1';
  const qs=s=>document.querySelector(s);
  const steps=[
   {selector:"section.modern-design-group",title:"Elegí el diseño de tu placa",description:"Seleccioná el estilo visual que querés usar en esta placa.",group:'panel'},
