@@ -1,7 +1,11 @@
 @media (min-width: 701px) {
   body.editorial-desktop-workspace {
+    position: fixed;
+    inset: 0;
     height: 100dvh;
-    overflow: clip;
+    min-height: 0;
+    margin: 0;
+    overflow: clip !important;
   }
 
   .editorial-desktop-workspace > header { display: none; }
@@ -15,6 +19,7 @@
     width: 100% !important;
     max-width: none;
     height: 100dvh;
+    min-height: 0;
     padding: 0 !important;
     margin: 0;
     overflow: clip;
@@ -68,6 +73,8 @@
 
   .editorial-sidebar-footer {
     grid-area: 3 / 1;
+    position: relative;
+    z-index: 2;
     display: grid;
     gap: 8px;
     padding: 12px;
@@ -172,6 +179,7 @@
     padding: 12px;
     gap: 8px;
     overflow: clip;
+    isolation: isolate;
   }
 
   .editorial-desktop-layout .preview > * { flex: 0 0 auto; }
