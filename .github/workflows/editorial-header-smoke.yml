@@ -1,7 +1,7 @@
 name: Header de plataformas DEV
 on:
-  push:
-    paths:
+  pull_request:
+    paths: &editorial_header_paths
       - 'public/cronica-dev/index.html'
       - 'public/cronica-dev/css/modern-editor.css'
       - 'public/bae-dev/index.html'
@@ -9,8 +9,12 @@ on:
       - 'public/diarioshow-dev/index.html'
       - 'public/diarioshow-dev/css/editor.css'
       - 'public/shared/editorial-logo-header.css'
+      - 'public/shared/editorial-desktop-sidebar.*'
       - 'scripts/editorial-platform-header-smoke.mjs'
       - '.github/workflows/editorial-header-smoke.yml'
+  push:
+    branches: [main]
+    paths: *editorial_header_paths
   workflow_dispatch:
 jobs:
   header:
