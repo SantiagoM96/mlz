@@ -10,6 +10,7 @@
     const header = document.querySelector('body > header');
     const logo = header?.querySelector('.editorial-header-home');
     const controls = header?.querySelector('.editorial-draft-tools');
+    const badge = header?.querySelector('.editorial-build-badge');
     const status = header?.querySelector('.editorial-draft-status');
     if (!layout || !panel || !preview || !stage || !pages || !header || !logo || !('showPopover' in HTMLElement.prototype)) return;
 
@@ -17,6 +18,8 @@
     const top = document.createElement('div');
     const rail = document.createElement('nav');
     const footer = document.createElement('div');
+    const release = document.createElement('div');
+    release.className = 'editorial-workspace-version';
     top.className = 'editorial-sidebar-top';
     rail.className = 'editorial-sidebar-rail';
     rail.setAttribute('aria-label', 'Módulos del editor');
@@ -37,8 +40,8 @@
     }
 
     const collapse = iconButton('left_panel_close', 'Contraer barra lateral');
-    top.append(collapse);
-    layout.prepend(top, rail, footer);
+    footer.append(collapse);
+    layout.prepend(top, rail, footer, release);
 
     const pagesCard = document.createElement('div');
     pagesCard.className = 'editorial-sidebar-pages';
@@ -182,6 +185,7 @@
         }, 0);
         const width = Math.max(0, (preview.clientHeight - vertical - gap - occupied - 2) * 0.75);
         preview.style.setProperty('--editorial-fitted-width', width + 'px');
+        release.style.setProperty('--editorial-version-top', Math.max(16, stage.getBoundingClientRect().top) + 'px');
       });
     }
 
@@ -198,8 +202,9 @@
         panel.prepend(pagesCard);
         move(pages, pagesCard);
         move(logo, top, true);
-        move(status, footer);
+        move(status, top);
         move(controls, footer);
+        move(badge, release);
         document.body.classList.add('editorial-desktop-workspace');
         layout.classList.add('editorial-desktop-layout');
         syncModules();
