@@ -384,7 +384,7 @@
  display:inline-block;flex:none;letter-spacing:normal;font-feature-settings:"liga";
 }
 
-/* Adaptación editorial de bae: miniatura primera variante. */
+/* Adaptación editorial de bae-dev: miniatura primera variante. */
 .preview .browser-zoom-tip{background:#24262b;border-color:#464b54}
 .preview .browser-zoom-demo-percent{background:#D82626}
 .preview .browser-zoom-demo-percent span{color:#fff}

@@ -96,6 +96,7 @@ function loadCirclePhoto(file){
  if(!file)return;
  if(!file.type.startsWith('image/')){el('status').textContent='Elegí una imagen para la foto bolita.';return}
  const photo=new Image(),url=URL.createObjectURL(file);
+ window.EditorialDrafts?.remember(photo,file);
  circleEditing=false;circlePhoto.zoom=1;circlePhoto.offsetX=0;circlePhoto.offsetY=0;
  circlePhoto.filename=file.name;
  circlePhoto.image=photo;
@@ -360,11 +361,11 @@ function wrapRich(text,size,quote=false){const result=[];for(const paragraph of 
 
 /* Variante 3: cita editorial. El degradé cubre parte de la fotografía
    y la distribución vertical mantiene márgenes reales de 80 y espacios de 50 px. */
-function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
+function renderQuoteVariant(size,footerBaseline,footerTop,textPadding,includeHover=true){
  const main=wrapRich(headlineForPreview(),size);
  const author=el('showQuoteAuthor').checked?el('quoteAuthor').value.trim():'';
  const hasAuthor=Boolean(author);
- const authorSize=36;
+ const authorSize=36+Number(el('quoteAuthor').dataset.sizeOffset||0);
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
  const authorMetrics=ctx.measureText(author||' ');
  const authorAscent=authorMetrics.actualBoundingBoxAscent||authorSize;
@@ -380,13 +381,15 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  const baselines=new Array(main.length);
  if(main.length){
   const last=main.length-1;
-  baselines[last]=authorTop-50-lineMetrics[last].descent;
+  baselines[last]=authorTop-textPadding-lineMetrics[last].descent;
   for(let i=last-1;i>=0;i--)baselines[i]=baselines[i+1]-lineHeight;
  }
- const firstTop=main.length?baselines[0]-lineMetrics[0].ascent:authorTop-50;
+ const firstTop=main.length?baselines[0]-lineMetrics[0].ascent:authorTop-textPadding;
  const quoteHeight=76,quoteWidth=100;
- const iconY=firstTop-quoteHeight-30;
- const gradientTop=Math.max(180,iconY-100);
+ const spacingRatio=textPadding/50;
+ const quoteGap=30;
+ const iconY=firstTop-quoteHeight-quoteGap*spacingRatio;
+ const gradientTop=Math.max(180,firstTop-(quoteHeight+quoteGap+100)*spacingRatio);
  // La fotografía ocupa todo el lienzo; el degradé se superpone sin crear caja opaca.
  ctx.clearRect(0,0,W,H);
  ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);
@@ -435,7 +438,11 @@ function renderQuoteVariant(size,footerBaseline,footerTop,includeHover=true){
  }
  ctx.fillStyle='#FFFFFF';ctx.textAlign='center';
  ctx.font='600 '+authorSize+'px "Poppins",Arial,sans-serif';
- if(hasAuthor)ctx.fillText(author,W/2,authorBaseline);
+ if(hasAuthor){
+  ctx.fillText(author,W/2,authorBaseline);
+  const half=authorMetrics.width/2;
+  window.__editorialSecondaryTextBounds={left:W/2-half,right:W/2+half,top:authorTop,bottom:authorBaseline+authorDescent};
+ }
  ctx.font='500 30px "Inter",Arial,sans-serif';
  drawFooter('#FFFFFF',footerBaseline);
  ctx.textAlign='left';
@@ -512,6 +519,7 @@ el('size').addEventListener('keydown',event=>{
 });
 el('size').addEventListener('keyup',()=>setSizeAdjusting(false));
 function render(includeHover=true){
+ window.__editorialSecondaryTextBounds=null;
 try{
  if(pageBlank){ctx.clearRect(0,0,W,H);ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,H);photoBottom=H;return;}
 headlineHitRegions=[];
@@ -525,8 +533,9 @@ const footerAscent=footerMetrics.actualBoundingBoxAscent||29;
 const footerDescent=footerMetrics.actualBoundingBoxDescent||0;
 const footerBaseline=H-80-footerDescent;
 const footerTop=footerBaseline-footerAscent;
+const textPadding=50*Number(el('headlineSpacing').value);
 if(['quote','quote-blue'].includes(el('theme').value)){
- renderQuoteVariant(size,footerBaseline,footerTop,includeHover);
+ renderQuoteVariant(size,footerBaseline,footerTop,textPadding,includeHover);
  return;
 }
 // Construir las líneas en orden visual y posicionarlas desde abajo.
@@ -539,15 +548,15 @@ const lineMetrics=lines.map(line=>{
 const baselines=new Array(lines.length);
 if(lines.length){
  const last=lines.length-1;
- baselines[last]=footerTop-50-lineMetrics[last].descent;
+ baselines[last]=footerTop-textPadding-lineMetrics[last].descent;
  for(let i=last-1;i>=0;i--){
   const groupGap=!lines[i].quote&&lines[i+1].quote?20:0;
   baselines[i]=baselines[i+1]-lineHeight-groupGap;
  }
 }
-const firstBaseline=baselines[0]??footerTop-50;
+const firstBaseline=baselines[0]??footerTop-textPadding;
 const firstAscent=lineMetrics[0]?.ascent??size;
-const boxTop=Math.max(80,firstBaseline-firstAscent-50);
+const boxTop=Math.max(80,firstBaseline-firstAscent-textPadding);
 photoBottom=boxTop-GRADIENT_BAR_HEIGHT;
 ctx.clearRect(0,0,W,H);
 ctx.fillStyle='#aeb4bc';ctx.fillRect(0,0,W,photoBottom);
@@ -713,6 +722,7 @@ function loadPhoto(file,side=photoLayout==='split'?activePhotoSide:null){
  const revision=++photoRevision;
  if(target)target.revision=revision;
  const url=URL.createObjectURL(file),img=new Image();
+ window.EditorialDrafts?.remember(img,file);
  img.onload=()=>{
   if(target){
    if(target.revision===revision){target.image=img;target.zoom=1;target.x=0;target.y=0;setPhotoSide(side);render()}
@@ -826,10 +836,12 @@ el('photoZoom').addEventListener('input',event=>{if(circleEditing)circlePhoto.zo
  canvas.addEventListener('pointerleave',()=>photoStage.classList.remove('hover-left','hover-right'));
  canvas.addEventListener('pointerup',()=>{dragging=false});
  canvas.addEventListener('pointercancel',()=>{dragging=false});
+el('headlineSpacing').addEventListener('input',()=>render());
 el('clearAll').addEventListener('click',()=>{
+ el('headlineSpacing').value='1';
  footerStyle='center';document.querySelectorAll('[data-footer-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.footerStyle===footerStyle)));
  circleEditing=false;circlePhoto=newCirclePhoto();
- el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
+ el('articleUrl').value='';el('headline').value='Una artista sorprendió con un *anuncio inesperado* y emocionó a sus seguidores';el('quoteAuthor').value='Una artista invitada';el('quoteAuthor').dataset.sizeOffset=0;el('showQuoteAuthor').checked=true;el('quoteAuthorInputField').hidden=false;el('file').value='';for(const id of ['file','fileLeft','fileRight']){el(id).value='';updatePhotoPicker(id,null)}
  selectedTexture='1';halftone=halftoneAssets['1']||null;document.querySelectorAll('.texture-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.texture==='1')));
  setVariant('pink');
  forceUppercase=false;syncUppercaseUI();
@@ -1388,8 +1400,8 @@ setPreviewContext('text');
 installCirclePhoto();
 window.DiarioShowEditor={
  getPageState(){return {variant:pageBlank?'blank':el('theme').value,theme:el('theme').value,
- headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,showQuoteAuthor:el('showQuoteAuthor').checked,
- size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
+ headline:el('headline').value,quoteAuthor:el('quoteAuthor').value,authorSizeOffset:Number(el('quoteAuthor').dataset.sizeOffset||0),showQuoteAuthor:el('showQuoteAuthor').checked,
+ headlineSpacing:el('headlineSpacing').value,size:el('size').value,dots:el('dots').value,alignment:textAlignment,uppercase:forceUppercase,
  image,zoom,offsetX,offsetY,photoLayout,activePhotoSide,
  splitPhotos:{left:{...splitPhotos.left},right:{...splitPhotos.right}},
  selectedLogo,logoPosition,footerStyle,selectedTexture,circlePhoto:{...circlePhoto}};},
@@ -1398,9 +1410,10 @@ window.DiarioShowEditor={
   if(s.circlePhoto&&s.circlePhoto.positioned===undefined)circlePhoto.positioned=true;
   setVariant(s.theme||'pink');
   pageBlank=s.variant==='blank';document.documentElement.dataset.editorPlateVariant=s.variant;
-  el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';
+  el('headline').value=s.headline||'';el('quoteAuthor').value=s.quoteAuthor||'';el('quoteAuthor').dataset.sizeOffset=s.authorSizeOffset??0;
   el('showQuoteAuthor').checked=Boolean(s.showQuoteAuthor);
   el('quoteAuthorInputField').hidden=!s.showQuoteAuthor;
+  el('headlineSpacing').value=s.headlineSpacing||'1';
   el('size').value=s.size||'70';el('dots').value=s.dots||'5';
   textAlignment=s.alignment||'center';
   el('alignLeft').setAttribute('aria-pressed',String(textAlignment==='left'));

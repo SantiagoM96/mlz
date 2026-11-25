@@ -5,7 +5,7 @@
  const mq=window.matchMedia('(min-width:701px)');
  // QA y vista convencional pueden desactivar el recorrido con ?onboarding=off.
  if(new URLSearchParams(location.search).get('onboarding')==='off')return;
- const storageKey='cronica-tour-desktop-v1';
+ const storageKey='cronica-dev-tour-desktop-v1';
  const qs=s=>document.querySelector(s);
  const steps=[
   {selector:"section.carousel-panel",title:"Organizá las páginas",description:"Agregá, seleccioná o eliminá las páginas del carrusel. La portada y las internas se editan de manera independiente.",group:'slides'},

@@ -37,8 +37,8 @@ function editorialDevRoutes(): Plugin {
         (item) => item.type === 'chunk' && item.isEntry && item.name === editorialMobileEntry,
       );
       if (!entry) this.error('Missing editorial mobile entry');
-      for (const brand of editorBrands) {
-        const fileName = `${brand}-dev/index.html`;
+      for (const route of editorBrands.flatMap((brand) => [brand, brand + '-dev'])) {
+        const fileName = `${route}/index.html`;
         const html = readEditorialHtml(fileName);
         this.emitFile({
           type: 'asset',
@@ -53,7 +53,7 @@ function editorialDevRoutes(): Plugin {
         const path = url.split('?')[0];
         if (path === editorialMobileAsset) {
           req.url = url.replace(path, editorialMobileSource);
-        } else if (req.method === 'GET' && path && /^\/(cronica|bae|diarioshow)-dev\/(index\.html)?$/.test(path)) {
+        } else if (req.method === 'GET' && path && /^\/(cronica|bae|diarioshow)(-dev)?\/(index\.html)?$/.test(path)) {
           const fileName = path.endsWith('/') ? path.slice(1) + 'index.html' : path.slice(1);
           res.setHeader('Content-Type', 'text/html; charset=utf-8');
           res.end(readEditorialHtml(fileName));
