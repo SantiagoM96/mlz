@@ -72,3 +72,26 @@ test('Deportes: la URL pública directa del formulario no queda en blanco', asyn
   await expect(page.locator('body')).not.toBeEmpty();
   expect(errors).toEqual([]);
 });
+
+test('Deportes: la declaración de salud y los adjuntos se muestran según la respuesta', async ({ page }) => {
+  await page.goto(prototype + '#03_formulario_inscripcion.html?ficha=act-003-gimnasio-de-deportes-de-combate&comision=1&paso=form');
+  const form = page.locator('#signup');
+  await expect(form).toBeVisible();
+  await expect(form.locator('#medaltura, #medpeso, #sangre, #rh, #archivo_frente, #archivo_dorso')).toHaveCount(0);
+  await expect(form.locator('[data-health-show="condicionSalud"]')).toBeHidden();
+  await form.locator('[name="condicionSalud"][value="Si"]').check();
+  await expect(form.locator('[data-health-show="condicionSalud"]')).toBeVisible();
+  await form.locator('[name="patologias"][value="Otra condición"]').check();
+  await expect(form.locator('#otraCondicion')).toBeVisible();
+  await form.locator('#otraCondicion').fill('Dato ficticio');
+  await form.locator('[name="condicionSalud"][value="No"]').check();
+  await expect(form.locator('#otraCondicion')).toBeHidden();
+  await expect(form.locator('#otraCondicion')).toHaveValue('');
+  await form.locator('[name="medicamentosRespuesta"][value="Si"]').check();
+  await expect(form.locator('#medicamentos')).toBeVisible();
+  await form.locator('[name="cud"][value="Si"]').check();
+  await expect(form.locator('#archivo_cud')).toBeEnabled();
+  await form.locator('[name="cud"][value="No"]').check();
+  await expect(form.locator('#archivo_cud')).toBeDisabled();
+  await expect(form.locator('[name="urgencia"]:checked, [name="imagenes"]:checked')).toHaveCount(0);
+});
