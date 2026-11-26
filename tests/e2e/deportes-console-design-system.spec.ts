@@ -123,3 +123,25 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
  await form.locator('[name="cud"][value="No"]').check();
  await expect(form.locator('#en-archivo-cud')).toBeDisabled();
 });
+
+test('Consola Deportes: el catálogo tardío no reinicia la inscripción asistida',async ({page})=>{
+ let release!: (body:string)=>void;
+ const payload=new Promise<string>(resolve=>{release=resolve;});
+ await page.route('**/rest/v1/mlz_sports_state?**',async route=>{
+  await route.fulfill({status:200,contentType:'application/json',body:await payload});
+ });
+ await page.goto(url,{waitUntil:'domcontentloaded'});
+ await page.locator('[data-action="registrations"]').first().click();
+ await page.locator('[data-action="enroll-new"]').click();
+ await page.locator('[data-action="en-pick"]').first().click();
+ await page.locator('[name="en-option"]').first().check();
+ await page.locator('[data-action="en-next"]').click();
+ const form=page.locator('#en-form');
+ await form.locator('[name="alergiasRespuesta"][value="Si"]').check();
+ await form.locator('#en-alergias').fill('Ejemplo ficticio');
+ const activities=await page.evaluate('JSON.stringify(records)');
+ release(JSON.stringify([{activities:JSON.parse(String(activities)),revision:999}]));
+ await expect(page.locator('.mlz-demo-status')).toContainText('Revisión 999');
+ await expect(form.locator('#en-alergias')).toHaveValue('Ejemplo ficticio');
+ await expect(form.locator('[name="alergiasRespuesta"][value="Si"]')).toBeChecked();
+});
