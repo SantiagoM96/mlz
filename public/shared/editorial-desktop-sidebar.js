@@ -44,14 +44,76 @@
     collapse.firstElementChild.remove();
     collapse.setAttribute('aria-expanded', 'true');
     top.append(collapse);
-    if (logo.classList.contains('editorial-header-home--bae')) {
-      const compact = document.createElement('span');
-      compact.className = 'editorial-bae-compact-logo';
-      compact.setAttribute('aria-hidden', 'true');
-      compact.innerHTML = '<span>BAE</span><span>Negocios</span>';
+    const brand = ['cronica', 'diarioshow', 'bae'].find(name =>
+      logo.classList.contains('editorial-header-home--' + name));
+    if (brand) {
+      const compact = document.createElement('img');
+      compact.className = 'editorial-compact-logo';
+      compact.alt = '';
+      compact.src = new URL('../shared/editorial-compact-' + brand + '.svg', document.baseURI);
       logo.append(compact);
     }
-    layout.prepend(top, rail, footer, release);
+
+    const resize = document.createElement('div');
+    resize.className = 'editorial-sidebar-resize';
+    resize.tabIndex = 0;
+    resize.setAttribute('role', 'separator');
+    resize.setAttribute('aria-orientation', 'vertical');
+    resize.setAttribute('aria-label', 'Ancho de la barra lateral');
+    layout.prepend(top, rail, footer, release, resize);
+
+    const minimumWidth = 380;
+    const maximumWidth = () => Math.min(550, layout.clientWidth - 320);
+    let preferredWidth;
+    let drag;
+
+    function fitSidebar() {
+      if (!desktop.matches) return;
+      const max = Math.max(minimumWidth, maximumWidth());
+      const width = Math.round(Math.min(max, Math.max(minimumWidth, preferredWidth ?? layout.clientWidth * 0.29)));
+      layout.style.setProperty('--editorial-sidebar-expanded-width', width + 'px');
+      resize.setAttribute('aria-valuemin', String(minimumWidth));
+      resize.setAttribute('aria-valuemax', String(max));
+      resize.setAttribute('aria-valuenow', String(width));
+      scheduleFit();
+    }
+
+    resize.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || drag) return;
+      event.preventDefault();
+      resize.focus({ preventScroll: true });
+      resize.setPointerCapture(event.pointerId);
+      drag = { id: event.pointerId, x: event.clientX, width: top.offsetWidth };
+      layout.classList.add('editorial-sidebar-resizing');
+    });
+    resize.addEventListener('pointermove', event => {
+      if (drag?.id !== event.pointerId) return;
+      preferredWidth = Math.min(maximumWidth(), Math.max(minimumWidth, drag.width + event.clientX - drag.x));
+      fitSidebar();
+    });
+    resize.addEventListener('lostpointercapture', () => {
+      drag = undefined;
+      layout.classList.remove('editorial-sidebar-resizing');
+    });
+    resize.addEventListener('keydown', event => {
+      const step = event.shiftKey ? 32 : 8;
+      const width = top.offsetWidth;
+      const widths = { ArrowLeft: width - step, ArrowRight: width + step, Home: minimumWidth, End: maximumWidth() };
+      if (!Object.hasOwn(widths, event.key)) return;
+      event.preventDefault();
+      preferredWidth = Math.min(maximumWidth(), Math.max(minimumWidth, widths[event.key]));
+      fitSidebar();
+    });
+
+    function syncShadows() {
+      const scroller = collapsed ? rail : panel;
+      layout.classList.toggle('editorial-sidebar-shadow-top', scroller.scrollTop > 1);
+      layout.classList.toggle('editorial-sidebar-shadow-bottom',
+        scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 1);
+    }
+
+    panel.addEventListener('scroll', syncShadows, { passive: true });
+    rail.addEventListener('scroll', syncShadows, { passive: true });
 
     const pagesCard = document.createElement('div');
     pagesCard.className = 'editorial-sidebar-pages';
@@ -183,6 +245,7 @@
       frame = requestAnimationFrame(() => {
         frame = 0;
         if (!desktop.matches) return;
+        syncShadows();
         const visible = [...preview.children].filter(node => getComputedStyle(node).display !== 'none' &&
           getComputedStyle(node).position !== 'fixed' && getComputedStyle(node).position !== 'absolute');
         const styles = getComputedStyle(preview);
@@ -201,6 +264,9 @@
 
     const sizes = new ResizeObserver(scheduleFit);
     sizes.observe(preview);
+    sizes.observe(panel);
+    sizes.observe(rail);
+    for (const { card } of definitions) sizes.observe(card);
     for (const child of preview.children) {
       if (child !== stage) sizes.observe(child);
     }
@@ -218,7 +284,7 @@
         document.body.classList.add('editorial-desktop-workspace');
         layout.classList.add('editorial-desktop-layout');
         syncModules();
-        scheduleFit();
+        fitSidebar();
       } else {
         for (const [node, marker] of moves.splice(0)) marker.replaceWith(node);
         pagesCard.remove();
@@ -229,7 +295,7 @@
     }
 
     desktop.addEventListener('change', syncViewport);
-    window.addEventListener('resize', scheduleFit);
+    window.addEventListener('resize', fitSidebar);
     syncViewport();
   }
 
