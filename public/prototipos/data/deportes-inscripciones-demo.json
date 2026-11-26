@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "description": "Datos 100% sintéticos para prototipo; documentos y contactos no corresponden a personas reales",
+  "schemaVersion": 2,
+  "description": "96 inscripciones completamente ficticias para el prototipo simplificado de Deportes. No contienen datos reales ni provienen del Excel histórico.",
   "registrations": [
     {
       "id": "INS-DEMO-0001",
@@ -21,7 +21,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -35,44 +34,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-001-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0001"
+      "commissionId": "COM-0001",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0002",
@@ -93,7 +79,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -107,44 +92,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0043"
+      "commissionId": "COM-0043",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0003",
@@ -165,11 +134,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -179,44 +147,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0066"
+      "commissionId": "COM-0066",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0004",
@@ -237,7 +187,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -251,44 +200,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-044-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0214"
+      "commissionId": "COM-0214",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0005",
@@ -309,7 +242,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -323,44 +255,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-015-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0039"
+      "commissionId": "COM-0039",
+      "authorizations": {
+        "urgencia": "No",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0006",
@@ -381,12 +300,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Avanzado",
+        "tipo": "Federado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -395,44 +313,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico federado",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-032-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0061"
+      "commissionId": "COM-0061",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0007",
@@ -453,7 +358,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -467,44 +371,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-049-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0178"
+      "commissionId": "COM-0178",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0008",
@@ -525,12 +413,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -539,44 +426,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-012-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0036"
+      "commissionId": "COM-0036",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0009",
@@ -597,12 +471,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
         "tipo": "Competitivo",
-        "condicion": "Avanzado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -611,44 +484,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-029-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0056"
+      "commissionId": "COM-0056",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0010",
@@ -669,7 +529,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -683,44 +542,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-046-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0168"
+      "commissionId": "COM-0168",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0011",
@@ -741,11 +582,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Intermedio",
         "cud": "No"
       },
@@ -755,44 +595,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-009-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0024"
+      "commissionId": "COM-0024",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0012",
@@ -813,12 +635,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Avanzado",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -827,44 +648,33 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-026-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0053"
+      "commissionId": "COM-0053",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0013",
@@ -885,7 +695,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -899,44 +708,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-043-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0124"
+      "commissionId": "COM-0124",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0014",
@@ -957,12 +748,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -971,44 +761,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-006-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0017"
+      "commissionId": "COM-0017",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0015",
@@ -1029,11 +806,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -1043,44 +819,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0050"
+      "commissionId": "COM-0050",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0016",
@@ -1101,7 +861,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -1115,44 +874,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-040-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0083"
+      "commissionId": "COM-0083",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0017",
@@ -1173,7 +914,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -1187,44 +927,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-003-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0011"
+      "commissionId": "COM-0011",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0018",
@@ -1245,7 +969,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -1259,44 +982,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0046"
+      "commissionId": "COM-0046",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0019",
@@ -1317,11 +1022,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
+        "tipo": "Recreativo",
         "condicion": "Principiante",
         "cud": "No"
       },
@@ -1331,44 +1035,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0068"
+      "commissionId": "COM-0068",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0020",
@@ -1389,12 +1075,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Federado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -1403,44 +1088,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico federado",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-051-gimnasio-de-alto-rendimiento",
-      "commissionId": "COM-0228"
+      "commissionId": "COM-0228",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0021",
@@ -1461,7 +1133,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -1475,44 +1146,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0041"
+      "commissionId": "COM-0041",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0022",
@@ -1533,7 +1186,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -1547,44 +1199,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0065"
+      "commissionId": "COM-0065",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0023",
@@ -1605,7 +1241,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -1619,44 +1254,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-043-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0204"
+      "commissionId": "COM-0204",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0024",
@@ -1677,12 +1294,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Avanzado",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -1691,44 +1307,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-014-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0038"
+      "commissionId": "COM-0038",
+      "authorizations": {
+        "urgencia": "No",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0025",
@@ -1749,7 +1356,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -1763,44 +1369,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0058"
+      "commissionId": "COM-0058",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0026",
@@ -1821,12 +1409,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
         "tipo": "Competitivo",
-        "condicion": "Intermedio",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -1835,44 +1422,37 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-048-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0171"
+      "commissionId": "COM-0171",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0027",
@@ -1893,7 +1473,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -1907,44 +1486,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-011-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0034"
+      "commissionId": "COM-0034",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0028",
@@ -1965,12 +1528,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Principiante",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -1979,44 +1541,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
+          "tipo": "Apto médico competitivo",
           "estado": "No adjuntado"
         }
       ],
       "activityId": "act-028-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0055"
+      "commissionId": "COM-0055",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0029",
@@ -2037,7 +1586,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -2051,44 +1599,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-045-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0165"
+      "commissionId": "COM-0165",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0030",
@@ -2109,7 +1644,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -2123,44 +1657,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-008-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0023"
+      "commissionId": "COM-0023",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0031",
@@ -2181,11 +1697,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Principiante",
         "cud": "No"
       },
@@ -2195,44 +1710,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0052"
+      "commissionId": "COM-0052",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0032",
@@ -2253,7 +1750,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -2267,44 +1763,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-042-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0114"
+      "commissionId": "COM-0114",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0033",
@@ -2325,11 +1805,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -2339,44 +1818,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-005-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0014"
+      "commissionId": "COM-0014",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0034",
@@ -2397,12 +1858,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Principiante",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -2411,44 +1871,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
+          "tipo": "Apto médico competitivo",
           "estado": "No adjuntado"
         }
       ],
       "activityId": "act-022-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0049"
+      "commissionId": "COM-0049",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0035",
@@ -2469,7 +1920,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -2483,44 +1933,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-039-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0078"
+      "commissionId": "COM-0078",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0036",
@@ -2541,7 +1973,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -2555,44 +1986,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-002-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0004"
+      "commissionId": "COM-0004",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0037",
@@ -2613,7 +2026,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -2627,44 +2039,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0044"
+      "commissionId": "COM-0044",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0038",
@@ -2685,12 +2081,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -2699,44 +2094,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-036-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0067"
+      "commissionId": "COM-0067",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0039",
@@ -2757,11 +2139,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -2771,44 +2152,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-050-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0227"
+      "commissionId": "COM-0227",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0040",
@@ -2829,7 +2192,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -2843,44 +2205,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0040"
+      "commissionId": "COM-0040",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0041",
@@ -2901,12 +2245,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -2915,44 +2258,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-033-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0063"
+      "commissionId": "COM-0063",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0042",
@@ -2973,7 +2303,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -2987,44 +2316,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-041-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0182"
+      "commissionId": "COM-0182",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0043",
@@ -3045,11 +2358,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Principiante",
         "cud": "No"
       },
@@ -3059,44 +2371,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-013-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0037"
+      "commissionId": "COM-0037",
+      "authorizations": {
+        "urgencia": "No",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0044",
@@ -3117,12 +2411,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -3131,44 +2424,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-030-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0057"
+      "commissionId": "COM-0057",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0045",
@@ -3189,12 +2469,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Competitivo / Federado",
-        "condicion": "Avanzado",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -3203,44 +2482,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-047-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0169"
+      "commissionId": "COM-0169",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0046",
@@ -3261,12 +2527,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Principiante",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -3275,44 +2540,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
+          "tipo": "Apto médico competitivo",
           "estado": "No adjuntado"
         }
       ],
       "activityId": "act-010-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0029"
+      "commissionId": "COM-0029",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0047",
@@ -3333,11 +2585,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Intermedio",
         "cud": "No"
       },
@@ -3347,44 +2598,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-027-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0054"
+      "commissionId": "COM-0054",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0048",
@@ -3405,7 +2640,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -3419,44 +2653,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-044-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0144"
+      "commissionId": "COM-0144",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0049",
@@ -3477,7 +2695,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -3491,44 +2708,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-007-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0021"
+      "commissionId": "COM-0021",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0050",
@@ -3549,12 +2748,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -3563,44 +2761,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-024-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0051"
+      "commissionId": "COM-0051",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0051",
@@ -3621,7 +2806,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -3635,44 +2819,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-041-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0088"
+      "commissionId": "COM-0088",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0052",
@@ -3693,7 +2859,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -3707,44 +2872,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-004-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0013"
+      "commissionId": "COM-0013",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0053",
@@ -3765,7 +2914,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -3779,44 +2927,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-021-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0047"
+      "commissionId": "COM-0047",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0054",
@@ -3837,7 +2967,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -3851,44 +2980,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-038-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0070"
+      "commissionId": "COM-0070",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0055",
@@ -3909,7 +3025,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -3923,44 +3038,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-001-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0001"
+      "commissionId": "COM-0001",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0056",
@@ -3981,7 +3083,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -3995,44 +3096,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0043"
+      "commissionId": "COM-0043",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0057",
@@ -4053,11 +3136,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -4067,44 +3149,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0066"
+      "commissionId": "COM-0066",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0058",
@@ -4125,7 +3191,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -4139,44 +3204,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-044-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0218"
+      "commissionId": "COM-0218",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0059",
@@ -4197,7 +3244,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -4211,44 +3257,33 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-015-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0039"
+      "commissionId": "COM-0039",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0060",
@@ -4269,12 +3304,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Avanzado",
+        "tipo": "Federado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -4283,44 +3317,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico federado",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-032-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0061"
+      "commissionId": "COM-0061",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0061",
@@ -4341,7 +3362,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -4355,44 +3375,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-049-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0178"
+      "commissionId": "COM-0178",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0062",
@@ -4413,12 +3415,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -4427,44 +3428,33 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-012-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0036"
+      "commissionId": "COM-0036",
+      "authorizations": {
+        "urgencia": "No",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0063",
@@ -4485,12 +3475,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
         "tipo": "Competitivo",
-        "condicion": "Avanzado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -4499,44 +3488,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-029-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0056"
+      "commissionId": "COM-0056",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0064",
@@ -4557,7 +3533,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -4571,44 +3546,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-046-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0168"
+      "commissionId": "COM-0168",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0065",
@@ -4629,11 +3586,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Intermedio",
         "cud": "No"
       },
@@ -4643,44 +3599,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-009-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0027"
+      "commissionId": "COM-0027",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0066",
@@ -4701,12 +3639,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Avanzado",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -4715,44 +3652,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-026-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0053"
+      "commissionId": "COM-0053",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0067",
@@ -4773,7 +3697,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -4787,44 +3710,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-043-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0127"
+      "commissionId": "COM-0127",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0068",
@@ -4845,12 +3752,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -4859,44 +3765,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-006-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0020"
+      "commissionId": "COM-0020",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0069",
@@ -4917,11 +3810,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -4931,44 +3823,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0050"
+      "commissionId": "COM-0050",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0070",
@@ -4989,7 +3863,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -5003,44 +3876,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-040-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0086"
+      "commissionId": "COM-0086",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0071",
@@ -5061,7 +3918,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -5075,44 +3931,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-003-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0011"
+      "commissionId": "COM-0011",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0072",
@@ -5133,7 +3971,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -5147,44 +3984,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0046"
+      "commissionId": "COM-0046",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0073",
@@ -5205,11 +4026,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
+        "tipo": "Recreativo",
         "condicion": "Principiante",
         "cud": "No"
       },
@@ -5219,44 +4039,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0068"
+      "commissionId": "COM-0068",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0074",
@@ -5277,12 +4079,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Federado",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -5291,44 +4092,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico federado",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-051-gimnasio-de-alto-rendimiento",
-      "commissionId": "COM-0228"
+      "commissionId": "COM-0228",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0075",
@@ -5349,7 +4137,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -5363,44 +4150,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0041"
+      "commissionId": "COM-0041",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0076",
@@ -5421,7 +4190,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -5435,44 +4203,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0065"
+      "commissionId": "COM-0065",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0077",
@@ -5493,7 +4243,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -5507,44 +4256,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-043-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0198"
+      "commissionId": "COM-0198",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0078",
@@ -5565,12 +4298,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Avanzado",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -5579,44 +4311,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-014-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0038"
+      "commissionId": "COM-0038",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0079",
@@ -5637,7 +4360,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -5651,44 +4373,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0058"
+      "commissionId": "COM-0058",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0080",
@@ -5709,12 +4413,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
         "tipo": "Competitivo",
-        "condicion": "Intermedio",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -5723,44 +4426,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-048-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0171"
+      "commissionId": "COM-0171",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0081",
@@ -5781,7 +4475,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
@@ -5795,44 +4488,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-011-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0034"
+      "commissionId": "COM-0034",
+      "authorizations": {
+        "urgencia": "No",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0082",
@@ -5853,12 +4530,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Principiante",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -5867,44 +4543,33 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
+          "tipo": "Apto médico competitivo",
           "estado": "No adjuntado"
         }
       ],
       "activityId": "act-028-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0055"
+      "commissionId": "COM-0055",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0083",
@@ -5925,7 +4590,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -5939,44 +4603,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "estado": "No adjuntado (opcional)"
         }
       ],
       "activityId": "act-045-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0165"
+      "commissionId": "COM-0165",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0084",
@@ -5997,7 +4648,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -6011,44 +4661,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-008-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0023"
+      "commissionId": "COM-0023",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0085",
@@ -6069,11 +4701,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Principiante",
         "cud": "No"
       },
@@ -6083,44 +4714,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0052"
+      "commissionId": "COM-0052",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0086",
@@ -6141,7 +4754,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": true
       },
       "sport": {
@@ -6155,44 +4767,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-042-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0114"
+      "commissionId": "COM-0114",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0087",
@@ -6213,11 +4807,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -6227,44 +4820,28 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Asma"
+        ],
+        "otraCondicion": "",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-005-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0014"
+      "commissionId": "COM-0014",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0088",
@@ -6285,12 +4862,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
-        "condicion": "Principiante",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "Sí"
       },
       "emergency": {
@@ -6299,44 +4875,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
           "tipo": "CUD",
-          "estado": "No adjuntado"
+          "estado": "Adjunto ficticio"
         },
         {
-          "tipo": "Apto médico",
+          "tipo": "Apto médico competitivo",
           "estado": "No adjuntado"
         }
       ],
       "activityId": "act-022-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0049"
+      "commissionId": "COM-0049",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0089",
@@ -6357,7 +4924,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -6371,44 +4937,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-039-natatorio-jorge-omar-rossi",
-      "commissionId": "COM-0078"
+      "commissionId": "COM-0078",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0090",
@@ -6429,7 +4977,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -6443,44 +4990,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-002-gimnasio-de-deportes-de-combate",
-      "commissionId": "COM-0004"
+      "commissionId": "COM-0004",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0091",
@@ -6501,7 +5030,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": true
       },
       "sport": {
@@ -6515,44 +5043,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0044"
+      "commissionId": "COM-0044",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0092",
@@ -6573,12 +5083,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -6587,44 +5096,33 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
-        "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "condicionSalud": "Sí",
+        "patologias": [
+          "Otra condición"
+        ],
+        "otraCondicion": "Condición ficticia de ejemplo",
+        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "Sí",
+        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-036-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0067"
+      "commissionId": "COM-0067",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0093",
@@ -6645,11 +5143,10 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo",
+        "tipo": "Recreativo",
         "condicion": "Avanzado",
         "cud": "No"
       },
@@ -6659,44 +5156,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-050-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0227"
+      "commissionId": "COM-0227",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0094",
@@ -6717,7 +5196,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -6731,44 +5209,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "Sí",
+        "alergias": "Ejemplo ficticio: látex.",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0040"
+      "commissionId": "COM-0040",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     },
     {
       "id": "INS-DEMO-0095",
@@ -6789,12 +5249,11 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "Sí",
         "menor": false
       },
       "sport": {
-        "tipo": "Recreativo / Competitivo / Federado",
-        "condicion": "Intermedio",
+        "tipo": "Competitivo",
+        "condicion": "",
         "cud": "No"
       },
       "emergency": {
@@ -6803,44 +5262,31 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "Sí",
+        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "Sí",
+        "asistencia": "Ejemplo ficticio: acceso sin escalones."
       },
       "documents": [
         {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
+          "tipo": "Apto médico competitivo",
+          "estado": "Adjunto ficticio"
         }
       ],
       "activityId": "act-033-parque-de-lomas-parque-municipal-eva-per-n",
-      "commissionId": "COM-0063"
+      "commissionId": "COM-0063",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "Sí"
+      }
     },
     {
       "id": "INS-DEMO-0096",
@@ -6861,7 +5307,6 @@
         "altura": "—",
         "piso": "",
         "departamento": "",
-        "imagenAutorizacion": "No",
         "menor": false
       },
       "sport": {
@@ -6875,44 +5320,26 @@
         "telefono": "No informado"
       },
       "medical": {
-        "altura": "No informado",
-        "peso": "No informado",
-        "tension": "No informado",
-        "pulso": "No informado",
-        "sangre": "No informado",
-        "rh": "No informado",
-        "diagnostico": "No informado",
-        "indicaciones": "No informado",
-        "urgencia": "Sí",
+        "condicionSalud": "No",
         "patologias": [],
-        "alergias": "No informado",
-        "otros": "No informado",
-        "cirugias": "No informado",
-        "intolerancia": "No informado",
-        "medicamentos": "No informado",
-        "limitacion": "No informado",
-        "marcha": "No informado"
+        "otraCondicion": "",
+        "saludDetalle": "",
+        "alergiasRespuesta": "No",
+        "alergias": "",
+        "medicamentosRespuesta": "No",
+        "medicamentos": "",
+        "restriccionesRespuesta": "No",
+        "restricciones": "",
+        "asistenciaRespuesta": "No",
+        "asistencia": ""
       },
-      "documents": [
-        {
-          "tipo": "DNI frente",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "DNI dorso",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "CUD",
-          "estado": "No adjuntado"
-        },
-        {
-          "tipo": "Apto médico",
-          "estado": "No adjuntado"
-        }
-      ],
+      "documents": [],
       "activityId": "act-041-natatorio-gregorio-guyo-sember",
-      "commissionId": "COM-0183"
+      "commissionId": "COM-0183",
+      "authorizations": {
+        "urgencia": "Sí",
+        "imagenes": "No"
+      }
     }
   ]
 }
