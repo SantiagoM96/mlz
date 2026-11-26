@@ -154,8 +154,13 @@ try {
     const expandedPosition = await collapse.boundingBox();
     const expandedSidebar = await header.boundingBox();
     assert.ok(Math.abs(expandedSidebar.x + expandedSidebar.width - expandedPosition.x - expandedPosition.width - 12) <= 1);
+    await grip.focus();
+    await page.keyboard.press('Tab');
+    assert.equal(await collapse.evaluate(button => button === document.activeElement && getComputedStyle(button).outlineStyle === 'solid'), true);
     await collapse.click();
-    const collapsedPosition = await page.getByRole('button', { name: 'Expandir barra lateral' }).boundingBox();
+    const expand = page.getByRole('button', { name: 'Expandir barra lateral' });
+    const collapsedPosition = await expand.boundingBox();
+    assert.equal(await expand.evaluate(button => getComputedStyle(button).outlineStyle), 'none');
     assert.ok(collapsedPosition.x < expandedPosition.x);
     const collapsedSidebar = await header.boundingBox();
     const sidebarEdge = collapsedSidebar.x + collapsedSidebar.width;
@@ -218,7 +223,8 @@ try {
     await dragHandle(floatingPages.getByRole('button', { name: 'Mover Diapositivas' }), 29, shortcutPosition.y + 15);
     await pagesShortcut.waitFor();
     assert.equal(await floatingPages.count(), 0);
-    await page.getByRole('button', { name: 'Expandir barra lateral' }).click();
+    await expand.click();
+    assert.equal(await collapse.evaluate(button => getComputedStyle(button).outlineStyle), 'none');
     await pages.waitFor();
 
     const design = page.locator('aside.editor-panel > :is(.modern-design-group, .ds-plate-design-group)');
