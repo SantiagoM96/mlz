@@ -526,6 +526,7 @@
         layout.classList.add('editorial-desktop-layout');
         syncModules();
         fitSidebar();
+        document.documentElement.removeAttribute('data-editorial-starting');
       } else {
         for (const module of definitions) closeWindow(module);
         for (const [node, marker] of moves.splice(0)) marker.replaceWith(node);
@@ -550,5 +551,5 @@
   }
 
   if (document.readyState === 'complete') connect();
-  else window.addEventListener('load', connect, { once: true });
+  else document.addEventListener('DOMContentLoaded', connect, { once: true });
 })();
