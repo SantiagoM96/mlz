@@ -23,7 +23,7 @@ try {
    const header = page.locator(mobile ? 'header .header-inner' : '.editorial-sidebar-top');
    await header.waitFor();
    const logo = header.getByRole('img', { name: brand, exact: true });
-   assert.equal(await header.locator('img').count(), 1);
+   assert.equal(await header.locator('img:not(.editorial-compact-logo)').count(), 1);
    const badge = page.locator(mobile ? 'header .editorial-build-badge' : '.editorial-workspace-version .editorial-build-badge');
    const time = badge.locator('time');
    assert.equal(await badge.locator('strong').textContent(), revision.slice(-3).toUpperCase());
@@ -76,6 +76,25 @@ try {
       return node.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2));
     }), slug + ': menú de sesión sobre los módulos');
     await session.press('Escape');
+    const grip = page.getByRole('separator', { name: 'Ancho de la barra lateral' });
+    const minWidth = Number(await grip.getAttribute('aria-valuemin'));
+    const maxWidth = Number(await grip.getAttribute('aria-valuemax'));
+    await grip.press('Home');
+    assert.equal((await header.boundingBox()).width, minWidth);
+    const handle = await grip.boundingBox();
+    await page.mouse.move(handle.x + handle.width / 2, handle.y + 200);
+    await page.mouse.down();
+    await page.mouse.move(handle.x + handle.width / 2 + 220, handle.y + 200);
+    await page.mouse.up();
+    assert.equal((await header.boundingBox()).width, maxWidth);
+    await grip.press('Home');
+    const surfaces = await page.evaluate(() => ['.editorial-sidebar-top', 'aside.editor-panel', '.editorial-sidebar-footer']
+      .map(selector => {
+        const style = getComputedStyle(document.querySelector(selector));
+        return [style.backgroundColor, style.borderTopWidth, style.borderBottomWidth];
+      }));
+    assert.deepEqual(surfaces[0], surfaces[1]);
+    assert.deepEqual(surfaces[0], surfaces[2]);
     const collapse = page.getByRole('button', { name: 'Contraer barra lateral' });
     const expandedPosition = await collapse.boundingBox();
     await collapse.click();
@@ -85,10 +104,11 @@ try {
     assert.ok(Math.abs(collapsedPosition.x + collapsedPosition.width / 2 - sidebarEdge) <= 1);
     assert.equal(await addPage.isVisible(), false);
     assert.equal(await page.locator('.editorial-sidebar-rail').evaluate(rail => getComputedStyle(rail).scrollbarWidth), 'none');
-    if (slug === 'bae-dev') {
-      await header.getByText('Negocios', { exact: true }).waitFor();
-      assert.equal(await logo.isVisible(), false);
-    }
+    const compactLogo = header.locator('.editorial-compact-logo');
+    await compactLogo.waitFor();
+    await compactLogo.evaluate(image => image.decode());
+    assert.equal(await logo.isVisible(), false);
+    assert.equal(await header.locator('.editorial-draft-status').isVisible(), false);
     assert.equal(collapsedPosition.y, expandedPosition.y);
     await page.getByRole('navigation', { name: 'Módulos del editor' })
       .getByRole('button', { name: 'Diapositivas' }).click();
