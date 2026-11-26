@@ -14,6 +14,15 @@ const editors = [
  { slug: 'bae-dev', brand: 'BAE Negocios', mobileWidth: 148 },
 ];
 
+async function dragHandle(handle, x, y) {
+ await handle.scrollIntoViewIfNeeded();
+ const rect = await handle.boundingBox();
+ await page.mouse.move(rect.x + rect.width / 2, rect.y + rect.height / 2);
+ await page.mouse.down();
+ await page.mouse.move(x, y, { steps: 8 });
+ await page.mouse.up();
+}
+
 try {
  for (const width of [390, 432, 768, 1415]) {
   await page.setViewportSize({ width, height: 900 });
@@ -130,8 +139,36 @@ try {
     await addPage.waitFor();
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('.editorial-sidebar-pages:popover-open').count(), 0);
+    await page.getByRole('navigation', { name: 'Módulos del editor' })
+      .getByRole('button', { name: 'Diapositivas' }).click();
+    await dragHandle(pages.getByRole('button', { name: 'Mover Diapositivas' }), 240, 170);
+    const floatingPages = page.locator('.editorial-sidebar-pages.editorial-floating-module:popover-open');
+    await floatingPages.waitFor();
+    const resize = floatingPages.getByRole('separator', { name: 'Ancho de Diapositivas' });
+    const beforeResize = await floatingPages.boundingBox();
+    const widthGrip = await resize.boundingBox();
+    await dragHandle(resize, widthGrip.x + 36, widthGrip.y + 42);
+    const afterResize = await floatingPages.boundingBox();
+    assert.ok(afterResize.width > beforeResize.width);
+    assert.equal(afterResize.x, beforeResize.x);
+    const originalSlides = await thumbnails.count();
+    await addPage.click();
+    assert.equal(await thumbnails.count(), originalSlides + 1);
+    await deletePage.click();
+    await floatingPages.getByRole('button', { name: 'Devolver Diapositivas a la barra' }).click();
+    assert.equal(await floatingPages.count(), 0);
     await page.getByRole('button', { name: 'Expandir barra lateral' }).click();
     await pages.waitFor();
+
+    const design = page.locator('aside.editor-panel > :is(.modern-design-group, .ds-plate-design-group)');
+    const designHandle = design.locator('.editorial-module-handle');
+    await dragHandle(designHandle, minWidth + 42, 200);
+    await design.locator(':scope > button[aria-label^="Devolver"]').waitFor();
+    assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
+    await page.mouse.click(10, 75);
+    assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
+    await design.locator(':scope > button[aria-label^="Devolver"]').click();
+    assert.equal(await design.evaluate(card => card.matches(':popover-open')), false);
    }
    console.log('PASS', slug, width);
   }

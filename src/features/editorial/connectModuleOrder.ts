@@ -22,12 +22,13 @@ export function connectModuleOrder() {
 
   const mobile = matchMedia(mobileQuery);
   const storageKey = 'editorial-module-order:' + location.pathname.replace(/index\.html$/, '');
-  const orderedCards = () => [...panel.querySelectorAll<HTMLElement>(selector)].filter(card => titles.has(card));
-  const visibleCards = () => orderedCards().filter(card => card.getClientRects().length > 0);
+  const orderedCards = () => [...titles.keys()].filter(card => card.parentElement === panel)
+    .sort((first, second) => first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+  const visibleCards = () => orderedCards().filter(card => card.getClientRects().length > 0 && !card.matches(':popover-open'));
 
   function applyOrder(order: HTMLElement[]) {
     const current = orderedCards();
-    order.forEach((card, index) => {
+    order.filter(card => current.includes(card)).forEach((card, index) => {
       if (card === current[index]) return;
       current[index]?.before(card);
       current.splice(current.indexOf(card), 1);
@@ -35,15 +36,21 @@ export function connectModuleOrder() {
     });
   }
 
-  let desktopOrder = original;
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
-    if (Array.isArray(saved)) {
-      const byTitle = new Map(original.map(card => [titles.get(card), card]));
-      const restored = saved.map(title => byTitle.get(title)).filter(card => card !== undefined);
-      desktopOrder = [...new Set([...restored, ...original])];
-    }
-  } catch { /* El orden sigue disponible durante la sesión. */ }
+  function readOrder() {
+    try {
+      const saved: unknown = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
+      if (Array.isArray(saved)) {
+        const byTitle = new Map(original.map(card => [titles.get(card), card]));
+        const restored = saved.map(title => byTitle.get(title)).filter(card => card !== undefined);
+        const added = original.filter(card => !restored.includes(card) &&
+          card.matches('.editorial-sidebar-pages, .modern-design-group, .ds-plate-design-group'));
+        return [...new Set([...added, ...restored, ...original])];
+      }
+    } catch { /* El orden sigue disponible durante la sesión. */ }
+    return [...original];
+  }
+
+  let desktopOrder = readOrder();
 
   const status = document.createElement('span');
   status.className = 'editorial-order-status';
@@ -120,11 +127,16 @@ export function connectModuleOrder() {
   function scrollWhileDragging() {
     if (!drag) return;
     const edge = 56;
-    const delta = drag.y < edge ? drag.y - edge : Math.max(0, drag.y - innerHeight + edge);
+    const internal = Boolean(panel.closest('.editorial-desktop-layout'));
+    const boundary = internal ? panel.getBoundingClientRect() : { top: 0, bottom: innerHeight };
+    const upper = boundary.top + edge, lower = boundary.bottom - edge;
+    const delta = drag.y < upper ? drag.y - upper : Math.max(0, drag.y - lower);
     if (delta) {
-      const previous = window.scrollY;
-      window.scrollBy({ top: Math.max(-18, Math.min(18, delta / 4)), behavior: 'instant' });
-      if (window.scrollY !== previous) {
+      const scroller = internal ? panel : window;
+      const position = () => internal ? panel.scrollTop : window.scrollY;
+      const previous = position();
+      scroller.scrollBy({ top: Math.max(-18, Math.min(18, delta / 4)), behavior: 'instant' });
+      if (position() !== previous) {
         drag.direction = Math.sign(delta);
         updateDrag();
       }
@@ -147,10 +159,10 @@ export function connectModuleOrder() {
       animations.clear();
       applyOrder(desktopOrder);
     }
-    if (!mobile.matches) card.querySelector<HTMLElement>('.editorial-module-handle')?.focus({ preventScroll: true });
+    if (!mobile.matches && !card.matches(':popover-open')) card.querySelector<HTMLElement>('.editorial-module-handle')?.focus({ preventScroll: true });
   }
 
-  for (const [card, title] of titles) {
+  function installHandle(card: HTMLElement, title: string) {
     card.classList.add('editorial-reorderable-module');
     const handle = document.createElement('button');
     handle.type = 'button';
@@ -192,8 +204,33 @@ export function connectModuleOrder() {
     });
   }
 
+  for (const [card, title] of titles) installHandle(card, title);
+
+  panel.addEventListener('editorial:register-sidebar-module', event => {
+    if (!(event instanceof CustomEvent)) return;
+    const { card, title } = event.detail;
+    if (!(card instanceof HTMLElement) || card.parentElement !== panel || typeof title !== 'string') return;
+    if (!titles.has(card)) {
+      titles.set(card, title);
+      if (card.classList.contains('editorial-sidebar-pages')) original.unshift(card);
+      else original.splice(original[0]?.classList.contains('editorial-sidebar-pages') ? 1 : 0, 0, card);
+      installHandle(card, title);
+      desktopOrder = readOrder();
+    }
+    applyOrder(desktopOrder);
+  });
+
   panel.addEventListener('pointermove', event => {
-    if (!drag || drag.pointerId !== event.pointerId || drag.y === event.clientY) return;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (panel.closest('.editorial-desktop-layout') && event.clientX > panel.getBoundingClientRect().right + 12) {
+      const { card, grabOffset } = drag;
+      finishDrag(true);
+      card.dispatchEvent(new CustomEvent('editorial:float-module', {
+        detail: { pointerId: event.pointerId, x: event.clientX, y: event.clientY, grabOffset },
+      }));
+      return;
+    }
+    if (drag.y === event.clientY) return;
     drag.direction = Math.sign(event.clientY - drag.y);
     drag.y = event.clientY;
     updateDrag();
