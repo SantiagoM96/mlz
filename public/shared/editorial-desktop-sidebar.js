@@ -43,7 +43,6 @@
     collapse.classList.add('editorial-sidebar-collapse');
     collapse.firstElementChild.remove();
     collapse.setAttribute('aria-expanded', 'true');
-    top.append(collapse);
     const brand = ['cronica', 'diarioshow', 'bae'].find(name =>
       logo.classList.contains('editorial-header-home--' + name));
     if (brand) {
@@ -60,7 +59,7 @@
     resize.setAttribute('role', 'separator');
     resize.setAttribute('aria-orientation', 'vertical');
     resize.setAttribute('aria-label', 'Ancho de la barra lateral');
-    layout.prepend(top, rail, footer, release, resize);
+    layout.prepend(top, rail, footer, release, resize, collapse);
 
     const minimumWidth = 380;
     const maximumWidth = () => Math.min(550, layout.clientWidth - 320);
@@ -280,6 +279,12 @@
         move(logo, top, true);
         move(status, top);
         move(controls, footer);
+        const reset = controls?.querySelector('[data-reset]');
+        const sessionSummary = controls?.querySelector('.editorial-session-summary');
+        if (reset && sessionSummary) {
+          reset.title = reset.textContent.replace('restart_alt', '').trim();
+          move(reset, sessionSummary);
+        }
         move(badge, release);
         document.body.classList.add('editorial-desktop-workspace');
         layout.classList.add('editorial-desktop-layout');
