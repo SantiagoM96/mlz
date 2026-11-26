@@ -160,7 +160,7 @@
 
     function positionWindow(module, x, y, width, resizing = false) {
       const edge = top.getBoundingClientRect().right + 12;
-      const minimum = module.card.matches('.modern-design-group, .ds-plate-design-group') ? 380 : 300;
+      const minimum = module.minimumWidth ?? 300;
       const available = innerWidth - (resizing ? x : edge) - 12;
       const nextWidth = Math.min(620, available, Math.max(minimum, width));
       const left = Math.max(edge, Math.min(x, innerWidth - nextWidth - 12));
@@ -173,15 +173,11 @@
 
     function closeWindow(module, focus = false) {
       if (!module.card.matches('.editorial-floating-module')) return;
-      const { card, navButton, button } = module;
+      const { card, navButton } = module;
       card.hidePopover();
       card.removeAttribute('popover');
       card.classList.remove('editorial-floating-module', 'editorial-sidebar-popup');
       for (const property of ['x', 'y', 'width']) card.style.removeProperty('--editorial-window-' + property);
-      if (button) {
-        if (module.buttonLabel === null) button.removeAttribute('aria-label');
-        else button.setAttribute('aria-label', module.buttonLabel);
-      }
       navButton.setAttribute('aria-expanded', 'false');
       if (focus) {
         if (collapsed) navButton.focus();
@@ -190,19 +186,54 @@
       scheduleFit();
     }
 
-    function floatModule(module, drag) {
-      const { card, button, navButton } = module;
-      if (active === module) active = undefined;
-      if (button?.getAttribute('aria-expanded') === 'false') button.click();
-      card.classList.add('editorial-sidebar-popup', 'editorial-floating-module');
-      card.setAttribute('popover', 'manual');
-      if (!card.matches(':popover-open')) card.showPopover();
-      navButton.setAttribute('aria-expanded', 'true');
-      if (button) {
-        module.buttonLabel = button.getAttribute('aria-label');
-        button.setAttribute('aria-label', 'Devolver ' + module.title + ' a la barra');
+    function previewUndock(drag, dx, dy) {
+      const { module, left, top: fromTop, width, height } = drag;
+      const { card } = module;
+      if (!card.classList.contains('editorial-undocking-module')) {
+        if (active !== module) {
+          drag.slot = document.createElement('div');
+          drag.slot.style.height = height + 'px';
+          drag.slot.style.marginBlock = getComputedStyle(card).marginBlock;
+          card.before(drag.slot);
+        }
+        card.classList.add('editorial-sidebar-popup', 'editorial-undocking-module');
+        card.setAttribute('popover', 'manual');
+        if (!card.matches(':popover-open')) card.showPopover();
       }
-      positionWindow(module, drag.x - 24, drag.y - drag.grabOffset, drag.width);
+      const x = Math.max(0, Math.min(left + dx, innerWidth - width - 12));
+      const y = Math.max(0, Math.min(fromTop + dy, innerHeight - 48));
+      card.style.setProperty('--editorial-window-x', x + 'px');
+      card.style.setProperty('--editorial-window-y', y + 'px');
+      card.style.setProperty('--editorial-window-width', width + 'px');
+      if (!drag.detached && dx >= width * 0.25) {
+        drag.detached = true;
+        module.minimumWidth = Math.min(width, module.card.matches('.modern-design-group, .ds-plate-design-group') ? 380 : 300);
+        drag.slot?.remove();
+        if (active === module) active = undefined;
+        if (module.button?.getAttribute('aria-expanded') === 'false') module.button.click();
+        card.classList.add('editorial-floating-module');
+        module.navButton.setAttribute('aria-expanded', 'true');
+        module.widthHandle.setAttribute('aria-valuenow', String(Math.round(width)));
+      }
+    }
+
+    function finishWindowDrag(event) {
+      if (windowDrag?.id !== event.pointerId) return;
+      const drag = windowDrag;
+      windowDrag = undefined;
+      const { module } = drag;
+      if (drag.mode !== 'undock') return;
+      const { card } = module;
+      card.classList.remove('editorial-undocking-module');
+      drag.slot?.remove();
+      if (!drag.detached) {
+        for (const property of ['x', 'y', 'width']) card.style.removeProperty('--editorial-window-' + property);
+        if (active !== module && card.matches(':popover-open')) {
+          card.hidePopover();
+          card.removeAttribute('popover');
+          card.classList.remove('editorial-sidebar-popup');
+        }
+      }
       scheduleFit();
     }
 
@@ -212,27 +243,24 @@
       event.stopImmediatePropagation();
       const rect = module.card.getBoundingClientRect();
       windowDrag = { module, mode, id: event.pointerId, x: event.clientX, y: event.clientY,
-        left: rect.left, top: rect.top, width: rect.width, grabOffset: event.clientY - rect.top };
+        left: rect.left, top: rect.top, width: rect.width, height: rect.height };
       layout.setPointerCapture(event.pointerId);
     }
 
     layout.addEventListener('pointermove', event => {
       if (windowDrag?.id !== event.pointerId) return;
-      const { module, mode, x, y, left, top: fromTop, width, grabOffset } = windowDrag;
+      const { module, mode, x, y, left, top: fromTop, width } = windowDrag;
+      const dx = event.clientX - x;
+      const dy = event.clientY - y;
       if (mode === 'undock') {
-        if (event.clientX < top.getBoundingClientRect().right + 12 || event.clientX - x < 12) return;
-        floatModule(module, { x: event.clientX, y: event.clientY, width, grabOffset });
-        const rect = module.card.getBoundingClientRect();
-        Object.assign(windowDrag, { mode: 'move', x: event.clientX, y: event.clientY, left: rect.left, top: rect.top, width: rect.width });
-      } else {
-        const dx = event.clientX - x;
-        if (mode === 'resize') positionWindow(module, left, fromTop, width + dx, true);
-        else positionWindow(module, left + dx, fromTop + event.clientY - y, width);
-      }
+        if (dx > 3 || module.card.classList.contains('editorial-undocking-module')) previewUndock(windowDrag, dx, dy);
+      } else if (mode === 'resize') positionWindow(module, left, fromTop, width + dx, true);
+      else positionWindow(module, left + dx, fromTop + dy, width);
     });
 
+    layout.addEventListener('pointerup', finishWindowDrag);
     layout.addEventListener('lostpointercapture', event => {
-      if (windowDrag?.id === event.pointerId) windowDrag = undefined;
+      if (event.target === layout) finishWindowDrag(event);
     });
 
     const pagesHeading = pages.querySelector('.carousel-heading, .editor-slide-heading');
@@ -278,13 +306,11 @@
       rail.append(button);
 
       const { card } = module;
-      if (!module.button) {
-        const close = iconButton('', 'Devolver ' + module.title + ' a la barra');
-        close.className = 'editorial-floating-close';
-        close.firstElementChild.remove();
-        close.addEventListener('click', () => closeWindow(module, true));
-        card.append(close);
-      }
+      const close = iconButton('', 'Devolver ' + module.title + ' a la barra');
+      close.className = 'editorial-floating-close';
+      close.firstElementChild.remove();
+      close.addEventListener('click', () => closeWindow(module, true));
+      card.append(close);
 
       const widthHandle = document.createElement('div');
       widthHandle.className = 'editorial-floating-resize';
@@ -308,18 +334,17 @@
       }, true);
 
       card.addEventListener('editorial:float-module', event => {
-        const { pointerId, x, y, grabOffset } = event.detail;
-        const width = card.getBoundingClientRect().width;
-        floatModule(module, { x, y, width, grabOffset });
+        const { pointerId, startX, startY, x, y } = event.detail;
         const rect = card.getBoundingClientRect();
-        windowDrag = { module, mode: 'move', id: pointerId, x, y, left: rect.left, top: rect.top, width: rect.width };
+        windowDrag = { module, mode: 'undock', id: pointerId, x: startX, y: startY,
+          left: rect.left, top: rect.top, width: rect.width, height: rect.height };
         layout.setPointerCapture(pointerId);
+        previewUndock(windowDrag, x - startX, y - startY);
       });
       module.button?.addEventListener('click', event => {
         if (!card.matches('.editorial-floating-module')) return;
         event.preventDefault();
         event.stopImmediatePropagation();
-        closeWindow(module, true);
       }, true);
     }
 
@@ -414,6 +439,7 @@
     }
 
     function syncViewport() {
+      if (windowDrag) finishWindowDrag({ pointerId: windowDrag.id });
       closePopup();
       if (desktop.matches) {
         if (moves.length) return;
