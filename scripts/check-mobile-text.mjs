@@ -139,11 +139,11 @@ try{
   const spacing=page.locator('.editorial-text-dialog').getByRole('group',{name:'Espaciado del texto'});
   const textTop=()=>page.locator('.modern-text-hit,#dsHeadlineHitButton').evaluate(node=>node.style.top);
   const standardTop=await textTop();
-  assert.equal(await spacing.getByRole('button',{name:'S · Estándar'}).getAttribute('aria-pressed'),'true');
-  await spacing.getByRole('button',{name:'L · 100 % más'}).click();
-  assert.equal(await page.locator('#headlineSpacing').inputValue(),'2');
+  assert.equal(await spacing.getByRole('button',{name:'XS · 50 px'}).getAttribute('aria-pressed'),'true');
+  await spacing.getByRole('button',{name:'XL · 150 px'}).click();
+  assert.equal(await page.locator('#headlineSpacing').inputValue(),'3');
   assert.notEqual(await textTop(),standardTop,brand+' spacing repositions text on canvas');
-  await spacing.getByRole('button',{name:'S · Estándar'}).click();
+  await spacing.getByRole('button',{name:'XS · 50 px'}).click();
   assert.equal(await textTop(),standardTop);
   const headerActions=page.locator('.editorial-text-header-actions');
   assert.equal(await headerActions.evaluate(node=>getComputedStyle(node).gap),'8px');
@@ -203,13 +203,13 @@ try{
   assert.equal(await page.locator('.editorial-text-sheet').getAttribute('hidden'),'');
   assert.equal(await page.locator('.editorial-text-tools .typography-row').count(),0);
   const desktopSpacing=page.locator('.editorial-spacing-desktop');
-  const medium=desktopSpacing.getByRole('button',{name:'M · 50 % más'});
-  if(!(await medium.isVisible())){
+  const small=desktopSpacing.getByRole('button',{name:'S · 75 px'});
+  if(!(await small.isVisible())){
    await page.locator('main .editor-panel :is(.modern-text-card,.ds-texts-group)').first().locator(':scope > button').click();
   }
-  await medium.click();
+  await small.click();
   assert.equal(await page.locator('#headlineSpacing').inputValue(),'1.5');
-  assert.equal(await medium.getAttribute('aria-pressed'),'true');
+  assert.equal(await small.getAttribute('aria-pressed'),'true');
   assert.deepEqual(errors,[]);
   console.log(brand+': editing, formatting, alignment, close/reopen and desktop restore OK; page errors: '+JSON.stringify(errors));
   await page.close();

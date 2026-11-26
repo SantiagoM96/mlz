@@ -2,9 +2,11 @@ import { useId, useSyncExternalStore } from "react";
 import { renderEvent } from "./legacyEditor";
 
 const options = [
-  { value: "1", label: "S", title: "Estándar" },
-  { value: "1.5", label: "M", title: "50 % más" },
-  { value: "2", label: "L", title: "100 % más" },
+  { value: "1", label: "XS", title: "50 px" },
+  { value: "1.5", label: "S", title: "75 px" },
+  { value: "2", label: "M", title: "100 px" },
+  { value: "2.5", label: "L", title: "125 px" },
+  { value: "3", label: "XL", title: "150 px" },
 ];
 
 function subscribe(sync: () => void) {
