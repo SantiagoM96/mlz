@@ -135,7 +135,7 @@
     }
 
     const definitions = [
-      { card: pagesCard, icon: 'view_carousel', title: 'Diapositivas' },
+      { card: pagesCard, icon: 'description', title: 'Diapositivas' },
       ...[...panel.querySelectorAll(':scope > .modern-card, :scope > .ds-control-card')].map(card => {
         const button = card.querySelector(':scope > .modern-toggle, :scope > .ds-control-card-toggle');
         const label = [...(button?.querySelectorAll('span:not([aria-hidden])') ?? [])]
@@ -275,7 +275,7 @@
       const pagesIcon = document.createElement('span');
       pagesIcon.className = 'editorial-pages-icon material-symbols-outlined';
       pagesIcon.setAttribute('aria-hidden', 'true');
-      pagesIcon.textContent = 'view_carousel';
+      pagesIcon.textContent = 'description';
       pagesHeading.prepend(pagesIcon);
     }
 
