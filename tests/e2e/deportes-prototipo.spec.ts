@@ -95,3 +95,20 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await expect(form.locator('#archivo_cud')).toBeDisabled();
   await expect(form.locator('[name="urgencia"]:checked, [name="imagenes"]:checked')).toHaveCount(0);
 });
+
+test('Deportes: una respuesta tardía del catálogo no borra la inscripción', async ({ page }) => {
+  let release!: (body: string) => void;
+  const payload = new Promise<string>(resolve => { release = resolve; });
+  await page.route('**/rest/v1/mlz_sports_state?**', async route => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: await payload });
+  });
+  await page.goto(prototype + '#03_formulario_inscripcion.html?ficha=act-003-gimnasio-de-deportes-de-combate&comision=1&paso=form', {waitUntil:'domcontentloaded'});
+  const form = page.locator('#signup');
+  await form.locator('[name="alergiasRespuesta"][value="Si"]').check();
+  await form.locator('#alergias').fill('Ejemplo ficticio');
+  const activities = await page.evaluate('JSON.stringify(ACTIVITIES)');
+  release(JSON.stringify([{activities:JSON.parse(String(activities)),revision:999}]));
+  await expect.poll(() => page.evaluate('mlzLastPublicRevision')).toBe(999);
+  await expect(form.locator('#alergias')).toHaveValue('Ejemplo ficticio');
+  await expect(form.locator('[name="alergiasRespuesta"][value="Si"]')).toBeChecked();
+});
