@@ -242,6 +242,11 @@
     inset-inline-start: calc(var(--editorial-sidebar-width) + 16px);
   }
 
+  .editorial-desktop-layout .editorial-sidebar-collapse[data-pointer-origin]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
   .editorial-sidebar-collapse::before {
     content: '';
     width: 8px;

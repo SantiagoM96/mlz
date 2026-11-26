@@ -414,6 +414,10 @@
       if (button) visibility.observe(button, { attributes: true, attributeFilter: ['aria-expanded'] });
     }
 
+    collapse.addEventListener('pointerdown', () => collapse.setAttribute('data-pointer-origin', ''));
+    const clearCollapsePointerOrigin = () => collapse.removeAttribute('data-pointer-origin');
+    collapse.addEventListener('blur', clearCollapsePointerOrigin);
+    collapse.addEventListener('keydown', clearCollapsePointerOrigin);
     collapse.addEventListener('click', () => {
       closePopup();
       collapsed = !collapsed;
