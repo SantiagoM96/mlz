@@ -71,6 +71,15 @@ try {
     await session.click();
     const menu = page.locator('.editorial-sidebar-footer .editorial-profile-options');
     await menu.waitFor();
+    const footer = await page.locator('.editorial-sidebar-footer').boundingBox();
+    assert.equal((await session.boundingBox()).width, footer.width - 24);
+    assert.equal((await menu.boundingBox()).width, (await session.boundingBox()).width);
+    const reset = menu.getByRole('button', { name: 'Empezar de cero' });
+    const rename = menu.locator('[data-rename]');
+    const device = await menu.locator('[data-session-device]').boundingBox();
+    const activity = await menu.locator('time[data-session-activity]').boundingBox();
+    assert.ok((await reset.boundingBox()).x > (await rename.boundingBox()).x);
+    assert.ok(activity.x > device.x && Math.abs(activity.y - device.y) <= 1);
     assert.ok(await menu.evaluate(node => {
       const rect = node.getBoundingClientRect();
       return node.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2));
@@ -84,6 +93,11 @@ try {
     const handle = await grip.boundingBox();
     await page.mouse.move(handle.x + handle.width / 2, handle.y + 200);
     await page.mouse.down();
+    assert.deepEqual(await grip.evaluate(handle => [
+      getComputedStyle(handle.closest('main'), '::before').backgroundColor,
+      getComputedStyle(handle, '::after').content,
+      getComputedStyle(handle.closest('main'), '::before').width,
+    ]), ['rgb(243, 245, 248)', 'none', '1px']);
     await page.mouse.move(handle.x + handle.width / 2 + 220, handle.y + 200);
     await page.mouse.up();
     assert.equal((await header.boundingBox()).width, maxWidth);
