@@ -2959,3 +2959,25 @@ html[data-editor-plate-variant="blank"] body .preview #photoStage>#dsHeadlineHit
 .preview #photoStage>.ds-circle-photo-hit>.ds-circle-preview-canvas{
  box-shadow:none!important;filter:none!important;
 }
+
+
+.ds-import-group .article-label-row > label {
+  flex: none;
+  white-space: nowrap;
+}
+
+.ds-import-group .newspaper-link {
+  min-width: 0;
+}
+
+.ds-import-group .newspaper-link-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-import-group .newspaper-link > .material-icons {
+  flex: 0 0 1em;
+  width: 1em;
+  overflow: hidden;
+}
