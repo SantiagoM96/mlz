@@ -1,3 +1,4 @@
+.editorial-pages-icon, .editorial-floating-close, .editorial-floating-resize { display: none; }
 .editorial-header-home .editorial-compact-logo { display: none; }
 
 @media (min-width: 701px) {
@@ -297,16 +298,73 @@
     width: min(380px, calc(100vw - 84px));
     max-height: calc(100dvh - 24px);
     margin: 0 !important;
-    padding: 8px;
     overflow: hidden auto;
     scrollbar-width: none;
     overscroll-behavior: contain;
-    border: 1px solid #373940;
-    border-radius: 12px;
-    background: #1b1c20;
-    color: #f3f5f8;
-    box-shadow: 0 12px 32px #0008;
   }
+
+  .editorial-sidebar-pages.editorial-sidebar-popup:popover-open {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .editorial-desktop-layout .editorial-floating-module:popover-open {
+    inset: var(--editorial-window-y, 12px) auto auto var(--editorial-window-x, 72px);
+    width: var(--editorial-window-width, 380px);
+  }
+
+  .editorial-floating-module > :is(.modern-toggle, .ds-control-card-toggle) :is(.modern-chevron, .ds-control-card-chevron) {
+    display: none;
+  }
+
+  .editorial-floating-module > :is(.modern-toggle, .ds-control-card-toggle)::after,
+  .editorial-floating-close::before {
+    content: '×';
+    font-size: 22px;
+    line-height: 1;
+    margin-inline-start: auto;
+  }
+
+  .editorial-sidebar-pages { position: relative; }
+  .editorial-sidebar-pages > :is(.cronica-preview-pages, .editor-slide-nav) :is(.carousel-heading, .editor-slide-heading) {
+    padding-inline-start: 46px !important;
+  }
+  .editorial-sidebar-pages .editorial-pages-icon {
+    display: block;
+    position: absolute;
+    inset-block-start: 12px;
+    inset-inline-start: 37px;
+    color: #c3c7d0;
+    font-size: 19px;
+  }
+  .editorial-sidebar-pages.editorial-floating-module :is(.carousel-heading, .editor-slide-heading) {
+    padding-inline-end: 26px !important;
+  }
+  .editorial-sidebar-pages.editorial-floating-module > .editorial-floating-close {
+    position: absolute;
+    inset-block-start: 6px;
+    inset-inline-end: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    background: transparent;
+  }
+  .editorial-floating-close::before { margin: 0; }
+
+  .editorial-floating-module > .editorial-floating-resize {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    z-index: 6;
+    display: block;
+    width: 7px;
+    cursor: col-resize;
+    touch-action: none;
+  }
+  .editorial-floating-resize:is(:hover, :focus-visible) { background: #f4f4f545; }
 
   .editorial-desktop-layout section.preview {
     grid-area: 1 / 2 / -1;

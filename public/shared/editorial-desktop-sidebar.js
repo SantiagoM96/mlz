@@ -144,6 +144,7 @@
     let active;
     let collapsed = false;
     let frame = 0;
+    let windowDrag;
 
     function closePopup(restoreFocus = false) {
       if (!active) return;
@@ -157,8 +158,94 @@
       if (restoreFocus) navButton.focus();
     }
 
+    function positionWindow(module, x, y, width, resizing = false) {
+      const edge = top.getBoundingClientRect().right + 12;
+      const minimum = module.card.matches('.modern-design-group, .ds-plate-design-group') ? 380 : 300;
+      const available = innerWidth - (resizing ? x : edge) - 12;
+      const nextWidth = Math.min(620, available, Math.max(minimum, width));
+      const left = Math.max(edge, Math.min(x, innerWidth - nextWidth - 12));
+      const nextTop = Math.max(12, Math.min(y, innerHeight - Math.min(module.card.offsetHeight, innerHeight - 24) - 12));
+      module.card.style.setProperty('--editorial-window-x', left + 'px');
+      module.card.style.setProperty('--editorial-window-y', nextTop + 'px');
+      module.card.style.setProperty('--editorial-window-width', nextWidth + 'px');
+      module.widthHandle.setAttribute('aria-valuenow', String(Math.round(nextWidth)));
+    }
+
+    function closeWindow(module, focus = false) {
+      if (!module.card.matches('.editorial-floating-module')) return;
+      const { card, navButton, button } = module;
+      card.hidePopover();
+      card.removeAttribute('popover');
+      card.classList.remove('editorial-floating-module', 'editorial-sidebar-popup');
+      for (const property of ['x', 'y', 'width']) card.style.removeProperty('--editorial-window-' + property);
+      if (button) {
+        if (module.buttonLabel === null) button.removeAttribute('aria-label');
+        else button.setAttribute('aria-label', module.buttonLabel);
+      }
+      navButton.setAttribute('aria-expanded', 'false');
+      if (focus) {
+        if (collapsed) navButton.focus();
+        else card.querySelector('.editorial-module-handle')?.focus();
+      }
+      scheduleFit();
+    }
+
+    function floatModule(module, drag) {
+      const { card, button, navButton } = module;
+      if (active === module) active = undefined;
+      if (button?.getAttribute('aria-expanded') === 'false') button.click();
+      card.classList.add('editorial-sidebar-popup', 'editorial-floating-module');
+      card.setAttribute('popover', 'manual');
+      if (!card.matches(':popover-open')) card.showPopover();
+      navButton.setAttribute('aria-expanded', 'true');
+      if (button) {
+        module.buttonLabel = button.getAttribute('aria-label');
+        button.setAttribute('aria-label', 'Devolver ' + module.title + ' a la barra');
+      }
+      positionWindow(module, drag.x - 24, drag.y - drag.grabOffset, drag.width);
+      scheduleFit();
+    }
+
+    function captureWindowDrag(module, event, mode) {
+      if (windowDrag || !desktop.matches || event.button !== 0) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const rect = module.card.getBoundingClientRect();
+      windowDrag = { module, mode, id: event.pointerId, x: event.clientX, y: event.clientY,
+        left: rect.left, top: rect.top, width: rect.width, grabOffset: event.clientY - rect.top };
+      layout.setPointerCapture(event.pointerId);
+    }
+
+    layout.addEventListener('pointermove', event => {
+      if (windowDrag?.id !== event.pointerId) return;
+      const { module, mode, x, y, left, top: fromTop, width, grabOffset } = windowDrag;
+      if (mode === 'undock') {
+        if (event.clientX < top.getBoundingClientRect().right + 12 || event.clientX - x < 12) return;
+        floatModule(module, { x: event.clientX, y: event.clientY, width, grabOffset });
+        const rect = module.card.getBoundingClientRect();
+        Object.assign(windowDrag, { mode: 'move', x: event.clientX, y: event.clientY, left: rect.left, top: rect.top, width: rect.width });
+      } else {
+        const dx = event.clientX - x;
+        if (mode === 'resize') positionWindow(module, left, fromTop, width + dx, true);
+        else positionWindow(module, left + dx, fromTop + event.clientY - y, width);
+      }
+    });
+
+    layout.addEventListener('lostpointercapture', event => {
+      if (windowDrag?.id === event.pointerId) windowDrag = undefined;
+    });
+
+    const pagesHeading = pages.querySelector('.carousel-heading, .editor-slide-heading');
+    if (pagesHeading) {
+      const pagesIcon = document.createElement('span');
+      pagesIcon.className = 'editorial-pages-icon material-symbols-outlined';
+      pagesIcon.setAttribute('aria-hidden', 'true');
+      pagesIcon.textContent = 'view_carousel';
+      pagesHeading.prepend(pagesIcon);
+    }
+
     function openModule(module, toggle = false) {
-      if (!module || module.card.hidden || !desktop.matches) return;
+      if (!module || module.card.hidden || !desktop.matches || module.card.matches('.editorial-floating-module')) return;
       if (active === module && toggle) {
         closePopup();
         return;
@@ -189,6 +276,51 @@
       module.navButton = button;
       button.addEventListener('click', () => openModule(module, true));
       rail.append(button);
+
+      const { card } = module;
+      if (!module.button) {
+        const close = iconButton('', 'Devolver ' + module.title + ' a la barra');
+        close.className = 'editorial-floating-close';
+        close.firstElementChild.remove();
+        close.addEventListener('click', () => closeWindow(module, true));
+        card.append(close);
+      }
+
+      const widthHandle = document.createElement('div');
+      widthHandle.className = 'editorial-floating-resize';
+      widthHandle.tabIndex = 0;
+      widthHandle.setAttribute('role', 'separator');
+      widthHandle.setAttribute('aria-orientation', 'vertical');
+      widthHandle.setAttribute('aria-label', 'Ancho de ' + module.title);
+      widthHandle.addEventListener('pointerdown', event => captureWindowDrag(module, event, 'resize'));
+      widthHandle.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        const rect = card.getBoundingClientRect();
+        positionWindow(module, rect.left, rect.top, rect.width + (event.key === 'ArrowLeft' ? -16 : 16), true);
+      });
+      module.widthHandle = widthHandle;
+      card.append(widthHandle);
+
+      card.addEventListener('pointerdown', event => {
+        if (!event.target.closest?.('.editorial-module-handle') || !card.matches(':popover-open')) return;
+        captureWindowDrag(module, event, card.matches('.editorial-floating-module') ? 'move' : 'undock');
+      }, true);
+
+      card.addEventListener('editorial:float-module', event => {
+        const { pointerId, x, y, grabOffset } = event.detail;
+        const width = card.getBoundingClientRect().width;
+        floatModule(module, { x, y, width, grabOffset });
+        const rect = card.getBoundingClientRect();
+        windowDrag = { module, mode: 'move', id: pointerId, x, y, left: rect.left, top: rect.top, width: rect.width };
+        layout.setPointerCapture(pointerId);
+      });
+      module.button?.addEventListener('click', event => {
+        if (!card.matches('.editorial-floating-module')) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        closeWindow(module, true);
+      }, true);
     }
 
     function syncModules() {
@@ -197,13 +329,24 @@
         module.navButton.style.order = [...panel.children].indexOf(module.card);
       }
       if (active?.navButton.hidden) closePopup();
+      for (const module of definitions) if (module.navButton.hidden) closeWindow(module);
     }
 
-    const visibility = new MutationObserver(() => { if (desktop.matches) syncModules(); });
+    const visibility = new MutationObserver(() => {
+      if (!desktop.matches) return;
+      for (const module of definitions) {
+        if (module.card.matches('.editorial-floating-module') && module.button?.getAttribute('aria-expanded') === 'false') {
+          module.button.setAttribute('aria-expanded', 'true');
+          module.card.querySelector(':scope > .modern-body, :scope > .ds-control-card-body').hidden = false;
+        }
+      }
+      syncModules();
+    });
     visibility.observe(panel, { childList: true });
     visibility.observe(document.documentElement, { attributes: true, attributeFilter: ['data-editor-plate-variant'] });
-    for (const { card } of definitions) {
-      visibility.observe(card, { attributes: true, attributeFilter: ['hidden', 'style'] });
+    for (const { card, button } of definitions) {
+      visibility.observe(card, { attributes: true, attributeFilter: ['hidden'] });
+      if (button) visibility.observe(button, { attributes: true, attributeFilter: ['aria-expanded'] });
     }
 
     collapse.addEventListener('click', () => {
@@ -276,6 +419,10 @@
         if (moves.length) return;
         panel.prepend(pagesCard);
         move(pages, pagesCard);
+        for (const module of definitions) {
+          if (module.card !== pagesCard && !module.card.matches('.modern-design-group, .ds-plate-design-group')) continue;
+          panel.dispatchEvent(new CustomEvent('editorial:register-sidebar-module', { detail: module }));
+        }
         move(logo, top, true);
         move(status, top);
         move(controls, footer);
@@ -291,6 +438,7 @@
         syncModules();
         fitSidebar();
       } else {
+        for (const module of definitions) closeWindow(module);
         for (const [node, marker] of moves.splice(0)) marker.replaceWith(node);
         pagesCard.remove();
         document.body.classList.remove('editorial-desktop-workspace');
@@ -300,7 +448,15 @@
     }
 
     desktop.addEventListener('change', syncViewport);
-    window.addEventListener('resize', fitSidebar);
+    function fitWindows() {
+      for (const module of definitions) {
+        if (!module.card.matches('.editorial-floating-module')) continue;
+        const rect = module.card.getBoundingClientRect();
+        positionWindow(module, rect.left, rect.top, rect.width);
+      }
+    }
+    window.addEventListener('resize', () => { fitSidebar(); fitWindows(); });
+    new ResizeObserver(fitWindows).observe(top);
     syncViewport();
   }
 
