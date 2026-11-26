@@ -120,6 +120,7 @@ export function connectDrawer(
       panel.inert = false;
       measureClosedHeight();
       workArea.classList.add("has-editorial-mobile-drawer");
+      document.documentElement.removeAttribute("data-editorial-starting");
       return;
     }
     if (drawer.hidden) return;
