@@ -392,23 +392,32 @@
         navButton.style.order = order.indexOf(windowDrag?.module === module && windowDrag.slot?.parentNode
           ? windowDrag.slot : card);
         navButton.setAttribute('aria-expanded', String(active === module));
-        if (unavailable && floating) closeWindow(module);
+        if (!floating) continue;
+        if (unavailable) {
+          card.hidePopover();
+          card.removeAttribute('popover');
+          continue;
+        }
+        if (module.button?.getAttribute('aria-expanded') === 'false') {
+          module.button.setAttribute('aria-expanded', 'true');
+          card.querySelector(':scope > .modern-body, :scope > .ds-control-card-body').hidden = false;
+        }
+        if (!card.matches(':popover-open')) {
+          card.setAttribute('popover', 'manual');
+          card.showPopover();
+        }
       }
       if (active?.navButton.hidden) closePopup();
     }
 
     const visibility = new MutationObserver(() => {
-      if (!desktop.matches) return;
-      for (const module of definitions) {
-        if (module.card.matches('.editorial-floating-module') && module.button?.getAttribute('aria-expanded') === 'false') {
-          module.button.setAttribute('aria-expanded', 'true');
-          module.card.querySelector(':scope > .modern-body, :scope > .ds-control-card-body').hidden = false;
-        }
-      }
-      syncModules();
+      if (desktop.matches) syncModules();
     });
     visibility.observe(panel, { childList: true });
-    visibility.observe(document.documentElement, { attributes: true, attributeFilter: ['data-editor-plate-variant'] });
+    visibility.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-editor-plate-variant', 'data-cronica-variant'],
+    });
     for (const { card, button } of definitions) {
       visibility.observe(card, { attributes: true, attributeFilter: ['hidden'] });
       if (button) visibility.observe(button, { attributes: true, attributeFilter: ['aria-expanded'] });
@@ -524,7 +533,7 @@
     desktop.addEventListener('change', syncViewport);
     function fitWindows() {
       for (const module of definitions) {
-        if (!module.card.matches('.editorial-floating-module')) continue;
+        if (!module.card.matches('.editorial-floating-module:popover-open') || !module.card.offsetWidth) continue;
         const rect = module.card.getBoundingClientRect();
         positionWindow(module, rect.left, rect.top, rect.width);
       }
