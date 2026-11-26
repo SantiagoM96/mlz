@@ -215,11 +215,10 @@
 
       const sidebar = (collapsed ? rail : panel).getBoundingClientRect();
       const overlap = Math.min(width, sidebar.width) * 0.2;
-      const leaving = drag.mode === 'undock' && !drag.leftSidebar;
-      const threshold = leaving ? left + width * 0.2 : sidebar.right - overlap;
       const pointerY = drag.y + dy;
-      const docked = left + dx <= threshold && (leaving ||
-        (pointerY >= sidebar.top && pointerY <= sidebar.bottom));
+      const docked = drag.mode === 'undock'
+        ? dx < width * 0.25
+        : left + dx <= sidebar.right - overlap && pointerY >= sidebar.top && pointerY <= sidebar.bottom;
       if (docked) {
         if (!drag.leftSidebar) {
           card.before(drag.slot);
