@@ -167,7 +167,8 @@
 
     function positionWindow(module, x, y, width, resizing = false) {
       const edge = top.getBoundingClientRect().right + 12;
-      const minimum = module.minimumWidth ?? 300;
+      const minimum = module.card.matches('.modern-text-card, .ds-texts-group')
+        ? 360 : module.minimumWidth ?? 300;
       const available = innerWidth - (resizing ? x : edge) - 12;
       const nextWidth = Math.min(620, available, Math.max(minimum, width));
       const left = Math.max(edge, Math.min(x, innerWidth - nextWidth - 12));
@@ -181,6 +182,7 @@
     function closeWindow(module, focus = false) {
       if (!module.card.matches('.editorial-floating-module')) return;
       const { card, navButton } = module;
+      module.floating = false;
       card.hidePopover();
       card.removeAttribute('popover');
       card.classList.remove('editorial-floating-module', 'editorial-sidebar-popup');
@@ -252,6 +254,7 @@
       const { card } = module;
       const docked = cancel ? drag.mode === 'undock' : Boolean(slot.parentNode);
       card.classList.remove('editorial-undocking-module');
+      module.floating = !docked;
       if (docked) {
         card.hidePopover();
         card.removeAttribute('popover');
@@ -387,7 +390,10 @@
       for (const module of definitions) {
         const { card, navButton } = module;
         const unavailable = card.hidden || (card !== pagesCard && getComputedStyle(card).display === 'none');
-        const floating = card.matches('.editorial-floating-module');
+        const floating = windowDrag?.module === module && windowDrag.slot
+          ? card.matches('.editorial-floating-module')
+          : Boolean(module.floating);
+        if (floating) card.classList.add('editorial-floating-module', 'editorial-sidebar-popup');
         navButton.hidden = unavailable || floating;
         navButton.style.order = order.indexOf(windowDrag?.module === module && windowDrag.slot?.parentNode
           ? windowDrag.slot : card);

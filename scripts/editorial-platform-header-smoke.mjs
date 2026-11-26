@@ -153,7 +153,7 @@ try {
     const collapse = page.getByRole('button', { name: 'Contraer barra lateral' });
     const expandedPosition = await collapse.boundingBox();
     const expandedSidebar = await header.boundingBox();
-    assert.ok(Math.abs(expandedSidebar.x + expandedSidebar.width - expandedPosition.x - expandedPosition.width - 12) <= 1);
+    assert.ok(Math.abs(expandedSidebar.x + expandedSidebar.width - expandedPosition.x - expandedPosition.width - 16) <= 1);
     await grip.focus();
     await page.keyboard.press('Tab');
     assert.equal(await collapse.evaluate(button => button === document.activeElement && getComputedStyle(button).outlineStyle === 'solid'), true);
@@ -261,24 +261,41 @@ try {
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), false);
 
     const texts = page.locator('aside.editor-panel > :is(.modern-text-card, .ds-texts-group)');
-    const textHandle = texts.locator('.editorial-module-handle');
-    await dragHandle(textHandle, width - 185, 165);
-    await texts.locator('.editorial-floating-close').waitFor();
-    const textWindow = await texts.boundingBox();
+    const floatingCards = [texts];
+    await dragHandle(texts.locator('.editorial-module-handle'), width - 185, 165);
+    const resizeText = texts.getByRole('separator');
+    await resizeText.waitFor();
+    for (let step = 0; step < 8; step++) await resizeText.press('ArrowLeft');
+    const formatAndAlign = await texts.locator('.typography-row').evaluate(row => {
+      const trash = row.querySelector('#formatClear').getBoundingClientRect();
+      const align = row.querySelector('.align-buttons').getBoundingClientRect();
+      return Math.max(align.left - trash.right, align.top - trash.bottom);
+    });
+    assert.ok(formatAndAlign >= 10, slug + ': separación entre el tacho y alineación');
+    if (slug === 'diarioshow-dev') {
+      const importCard = page.locator('aside.editor-panel > .ds-import-group');
+      await dragHandle(importCard.locator('.editorial-module-handle'), width - 185, 615);
+      floatingCards.push(importCard);
+    }
+    const positions = await Promise.all(floatingCards.map(card => card.boundingBox()));
     const dockedCards = page.locator('aside.editor-panel > :is(.modern-card, .ds-control-card):not(.editorial-floating-module)');
     const sidebarOrder = await dockedCards.evaluateAll(cards => cards.map(card => card.className));
     await addPage.click();
-    await texts.waitFor({ state: 'hidden' });
-    assert.equal(await texts.evaluate(card => card.matches(':popover-open')), false);
+    for (const card of floatingCards) {
+      await card.waitFor({ state: 'hidden' });
+      assert.equal(await card.evaluate(node => node.matches(':popover-open')), false);
+    }
     assert.equal(await dockedCards.filter({ visible: true }).count(), 1);
     await design.locator('[data-page-variant="cover"], .ds-variant-option[data-variant="pink"], .theme-swatch[data-theme="dark"]').click();
-    await texts.locator('.editorial-floating-close').waitFor();
-    const restoredTextWindow = await texts.boundingBox();
-    for (const dimension of ['x', 'y', 'width']) {
-      assert.ok(Math.abs(restoredTextWindow[dimension] - textWindow[dimension]) <= 1);
+    for (const [index, card] of floatingCards.entries()) {
+      await card.locator('.editorial-floating-close').waitFor();
+      const restored = await card.boundingBox();
+      for (const dimension of ['x', 'y', 'width']) {
+        assert.ok(Math.abs(restored[dimension] - positions[index][dimension]) <= 1);
+      }
     }
     assert.deepEqual(await dockedCards.evaluateAll(cards => cards.map(card => card.className)), sidebarOrder);
-    await texts.locator('.editorial-floating-close').click();
+    for (const card of floatingCards.reverse()) await card.locator('.editorial-floating-close').click();
 
     await page.setViewportSize({ width, height: 280 });
     await page.waitForFunction(() => document.querySelector('#photoStage').getBoundingClientRect().width <
