@@ -52,7 +52,10 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollHeight), 900);
     await badge.waitFor();
     assert.ok((await preview.boundingBox()).x >= (await header.boundingBox()).width);
-    assert.equal(await page.locator('aside.editor-panel').evaluate(panel => getComputedStyle(panel).padding), '16px');
+    assert.deepEqual(await page.locator('aside.editor-panel').evaluate(panel => {
+      const style = getComputedStyle(panel);
+      return [style.padding, style.overflowX, style.scrollbarWidth];
+    }), ['16px', 'hidden', 'none']);
     await header.locator('.editorial-draft-status').waitFor();
     const addPage = pages.locator('#addPage, .editor-slide-add-fixed');
     await addPage.waitFor();
@@ -77,11 +80,20 @@ try {
     const expandedPosition = await collapse.boundingBox();
     await collapse.click();
     const collapsedPosition = await page.getByRole('button', { name: 'Expandir barra lateral' }).boundingBox();
-    assert.equal(collapsedPosition.x, expandedPosition.x);
+    assert.ok(collapsedPosition.x < expandedPosition.x);
+    const sidebarEdge = (await header.boundingBox()).width;
+    assert.ok(Math.abs(collapsedPosition.x + collapsedPosition.width / 2 - sidebarEdge) <= 1);
+    assert.equal(await addPage.isVisible(), false);
+    assert.equal(await page.locator('.editorial-sidebar-rail').evaluate(rail => getComputedStyle(rail).scrollbarWidth), 'none');
+    if (slug === 'bae-dev') {
+      await header.getByText('Negocios', { exact: true }).waitFor();
+      assert.equal(await logo.isVisible(), false);
+    }
     assert.equal(collapsedPosition.y, expandedPosition.y);
     await page.getByRole('navigation', { name: 'Módulos del editor' })
       .getByRole('button', { name: 'Diapositivas' }).click();
     await page.locator('.editorial-sidebar-pages:popover-open').waitFor();
+    await addPage.waitFor();
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('.editorial-sidebar-pages:popover-open').count(), 0);
     await page.getByRole('button', { name: 'Expandir barra lateral' }).click();

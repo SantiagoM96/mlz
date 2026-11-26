@@ -1,3 +1,5 @@
+.editorial-bae-compact-logo { display: none; }
+
 @media (min-width: 701px) {
   body.editorial-desktop-workspace {
     position: fixed;
@@ -40,6 +42,9 @@
 
   .editorial-sidebar-top {
     grid-area: 1 / 1;
+    position: relative;
+    z-index: 3;
+    height: 68px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -57,9 +62,9 @@
     margin: 0;
     border-radius: 0;
     isolation: isolate;
-    overflow: auto;
+    overflow: hidden auto;
     overscroll-behavior: contain;
-    scrollbar-width: thin;
+    scrollbar-width: none;
   }
 
   .editorial-desktop-workspace main.editorial-desktop-layout:not(.editorial-sidebar-collapsed) aside.editor-panel {
@@ -82,8 +87,6 @@
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
-    align-items: end;
     gap: 8px;
     padding: 12px;
     border-top: 1px solid #373940;
@@ -105,6 +108,44 @@
     border-radius: 8px;
     color: #f3f5f8;
     background: #222429;
+  }
+
+  .editorial-sidebar-top::after,
+  .editorial-sidebar-footer::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    height: 12px;
+    pointer-events: none;
+  }
+  .editorial-sidebar-top::after {
+    inset-block-start: 100%;
+    background: linear-gradient(to bottom, #090a0c66, transparent);
+  }
+  .editorial-sidebar-footer::before {
+    inset-block-end: 100%;
+    background: linear-gradient(to top, #090a0c66, transparent);
+  }
+
+  .editorial-sidebar-top .editorial-sidebar-collapse {
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: -16px;
+    inset-block-start: calc(50% - 16px);
+    transform: none !important;
+    width: 32px;
+    height: 32px;
+  }
+  .editorial-sidebar-collapse::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-block-end: 2px solid currentColor;
+    border-inline-start: 2px solid currentColor;
+    transform: translateX(2px) rotate(45deg);
+  }
+  .editorial-sidebar-collapse[aria-expanded="false"]::before {
+    transform: translateX(-2px) rotate(225deg);
   }
 
   .editorial-sidebar-button[hidden] { display: none; }
@@ -132,16 +173,35 @@
     align-items: center;
     gap: 6px;
     padding: 8px 0;
-    overflow: auto;
-    scrollbar-width: thin;
+    overflow: hidden auto;
+    scrollbar-width: none;
   }
 
-  .editorial-sidebar-collapsed .editorial-sidebar-footer {
-    grid-template-columns: 40px;
-    padding-inline: 12px 11px;
+  .editorial-sidebar-collapsed .editorial-sidebar-footer { justify-items: center; padding-inline: 4px; }
+
+  .editorial-sidebar-collapsed .editorial-sidebar-pages:not(:popover-open) { display: none; }
+
+  .editorial-sidebar-collapsed .editorial-sidebar-top { flex-direction: row; justify-content: center; }
+  .editorial-sidebar-collapsed .editorial-sidebar-top .editorial-header-home {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    min-height: 0;
+    aspect-ratio: 1;
   }
-  .editorial-sidebar-collapsed .editorial-sidebar-footer .editorial-sidebar-button { grid-row: 2; }
-  .editorial-sidebar-collapsed .editorial-sidebar-footer .editorial-draft-tools { grid-row: 1; }
+  .editorial-sidebar-collapsed .editorial-sidebar-top .editorial-draft-status {
+    position: absolute;
+    inset-block-start: 4px;
+    inset-inline-end: 4px;
+  }
+  .editorial-sidebar-collapsed .editorial-draft-status .material-symbols-outlined { font-size: 12px; }
+  .editorial-sidebar-collapsed .editorial-header-home--bae img { display: none; }
+  .editorial-sidebar-collapsed .editorial-bae-compact-logo {
+    display: grid;
+    text-align: center;
+    color: #fff;
+    font: 700 9px/1.15 Inter, system-ui, sans-serif;
+  }
   .editorial-sidebar-collapsed .editorial-draft-status > span:last-child { display: none; }
   .editorial-sidebar-collapsed .editorial-profile-trigger { width: 40px; height: 40px; padding: 0; justify-content: center; }
   .editorial-sidebar-collapsed .editorial-profile-trigger > :not(.editorial-session-menu-icon) { display: none; }
@@ -166,7 +226,8 @@
     max-height: calc(100dvh - 24px);
     margin: 0 !important;
     padding: 8px;
-    overflow: auto;
+    overflow: hidden auto;
+    scrollbar-width: none;
     overscroll-behavior: contain;
     border: 1px solid #373940;
     border-radius: 12px;

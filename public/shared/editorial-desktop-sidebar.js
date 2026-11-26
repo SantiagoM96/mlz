@@ -39,8 +39,18 @@
       return button;
     }
 
-    const collapse = iconButton('left_panel_close', 'Contraer barra lateral');
-    footer.append(collapse);
+    const collapse = iconButton('', 'Contraer barra lateral');
+    collapse.classList.add('editorial-sidebar-collapse');
+    collapse.firstElementChild.remove();
+    collapse.setAttribute('aria-expanded', 'true');
+    top.append(collapse);
+    if (logo.classList.contains('editorial-header-home--bae')) {
+      const compact = document.createElement('span');
+      compact.className = 'editorial-bae-compact-logo';
+      compact.setAttribute('aria-hidden', 'true');
+      compact.innerHTML = '<span>BAE</span><span>Negocios</span>';
+      logo.append(compact);
+    }
     layout.prepend(top, rail, footer, release);
 
     const pagesCard = document.createElement('div');
@@ -122,7 +132,7 @@
 
     function syncModules() {
       for (const module of definitions) {
-        module.navButton.hidden = module.card.hidden || getComputedStyle(module.card).display === 'none';
+        module.navButton.hidden = module.card.hidden || (module.card !== pagesCard && getComputedStyle(module.card).display === 'none');
         module.navButton.style.order = [...panel.children].indexOf(module.card);
       }
       if (active?.navButton.hidden) closePopup();
@@ -142,7 +152,7 @@
       const label = collapsed ? 'Expandir barra lateral' : 'Contraer barra lateral';
       collapse.title = label;
       collapse.setAttribute('aria-label', label);
-      collapse.firstElementChild.textContent = collapsed ? 'left_panel_open' : 'left_panel_close';
+      collapse.setAttribute('aria-expanded', String(!collapsed));
       scheduleFit();
     });
 
