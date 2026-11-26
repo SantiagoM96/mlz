@@ -260,6 +260,26 @@ try {
     await closeDesign.click();
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), false);
 
+    const texts = page.locator('aside.editor-panel > :is(.modern-text-card, .ds-texts-group)');
+    const textHandle = texts.locator('.editorial-module-handle');
+    await dragHandle(textHandle, width - 185, 165);
+    await texts.locator('.editorial-floating-close').waitFor();
+    const textWindow = await texts.boundingBox();
+    const dockedCards = page.locator('aside.editor-panel > :is(.modern-card, .ds-control-card):not(.editorial-floating-module)');
+    const sidebarOrder = await dockedCards.evaluateAll(cards => cards.map(card => card.className));
+    await addPage.click();
+    await texts.waitFor({ state: 'hidden' });
+    assert.equal(await texts.evaluate(card => card.matches(':popover-open')), false);
+    assert.equal(await dockedCards.filter({ visible: true }).count(), 1);
+    await design.locator('[data-page-variant="cover"], .ds-variant-option[data-variant="pink"], .theme-swatch[data-theme="dark"]').click();
+    await texts.locator('.editorial-floating-close').waitFor();
+    const restoredTextWindow = await texts.boundingBox();
+    for (const dimension of ['x', 'y', 'width']) {
+      assert.ok(Math.abs(restoredTextWindow[dimension] - textWindow[dimension]) <= 1);
+    }
+    assert.deepEqual(await dockedCards.evaluateAll(cards => cards.map(card => card.className)), sidebarOrder);
+    await texts.locator('.editorial-floating-close').click();
+
     await page.setViewportSize({ width, height: 280 });
     await page.waitForFunction(() => document.querySelector('#photoStage').getBoundingClientRect().width <
       document.querySelector('.preview-actions').getBoundingClientRect().width);
