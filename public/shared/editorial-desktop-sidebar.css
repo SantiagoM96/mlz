@@ -15,6 +15,7 @@
 
   main.editorial-desktop-layout {
     --editorial-sidebar-background: #1b1c20;
+    --editorial-sidebar-panel-padding: 16px;
     --editorial-sidebar-width: var(--editorial-sidebar-expanded-width, 380px);
     position: relative;
     display: grid !important;
@@ -101,7 +102,7 @@
   }
 
   .editorial-desktop-workspace main.editorial-desktop-layout:not(.editorial-sidebar-collapsed) aside.editor-panel {
-    padding: 16px !important;
+    padding: var(--editorial-sidebar-panel-padding) !important;
     background: var(--editorial-sidebar-background) !important;
   }
 
@@ -232,7 +233,7 @@
   .editorial-desktop-layout .editorial-sidebar-collapse {
     position: absolute;
     z-index: 7;
-    inset-inline-start: calc(var(--editorial-sidebar-width) - 32px - 12px);
+    inset-inline-start: calc(var(--editorial-sidebar-width) - 32px - var(--editorial-sidebar-panel-padding));
     inset-block-start: 18px;
     transform: none !important;
     width: 32px;
@@ -365,6 +366,18 @@
   .editorial-sidebar-popup:popover-open {
     color-scheme: dark;
     color: #f3f5f8;
+  }
+
+  .editorial-sidebar-popup:popover-open:is(.modern-text-card, .ds-texts-group) .typography-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .editorial-sidebar-popup:popover-open:is(.modern-text-card, .ds-texts-group) .typography-row > .control-field {
+    flex: 0 0 auto;
+    width: max-content;
+    max-width: 100%;
   }
 
   .editorial-sidebar-popup:popover-open :is(label, .help-label) {
