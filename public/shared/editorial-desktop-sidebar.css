@@ -222,12 +222,16 @@
   .editorial-desktop-layout .editorial-sidebar-collapse {
     position: absolute;
     z-index: 7;
-    inset-inline-start: calc(var(--editorial-sidebar-width) - 16px);
+    inset-inline-start: calc(var(--editorial-sidebar-width) - 32px - 12px);
     inset-block-start: 18px;
     transform: none !important;
     width: 32px;
     height: 32px;
   }
+  .editorial-desktop-layout.editorial-sidebar-collapsed .editorial-sidebar-collapse {
+    inset-inline-start: calc(var(--editorial-sidebar-width) + 16px);
+  }
+
   .editorial-sidebar-collapse::before {
     content: '';
     width: 8px;
