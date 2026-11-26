@@ -88,6 +88,11 @@ try {
     const rename = menu.locator('[data-rename]');
     const device = await menu.locator('[data-session-device]').boundingBox();
     const activity = await menu.locator('time[data-session-activity]').boundingBox();
+    const deviceIcon = await footer.getByRole('img', { name: 'Dispositivo' }).boundingBox();
+    assert.ok(device.x - deviceIcon.x - deviceIcon.width >= 8);
+    for (const action of [rename, reset]) {
+      assert.equal(await action.locator('.material-symbols-outlined').evaluate(icon => getComputedStyle(icon).fontSize), '16px');
+    }
     assert.ok((await reset.boundingBox()).x > (await rename.boundingBox()).x);
     assert.ok(activity.x > device.x && Math.abs(activity.y - device.y) <= 1);
     assert.ok(await menu.evaluate(node => {
@@ -157,9 +162,15 @@ try {
     await dragHandle(pages.getByRole('button', { name: 'Mover Diapositivas' }), 240, 170);
     const floatingPages = page.locator('.editorial-sidebar-pages.editorial-floating-module:popover-open');
     await floatingPages.waitFor();
-    const glyph = await floatingPages.locator('.editorial-pages-icon').boundingBox();
+    const pageIcon = floatingPages.locator('.editorial-pages-icon');
+    assert.equal(await pageIcon.textContent(), 'description');
+    const glyph = await pageIcon.boundingBox();
     const close = await floatingPages.locator('.editorial-floating-close').boundingBox();
     assert.ok(Math.abs(glyph.y + glyph.height / 2 - close.y - close.height / 2) <= 2);
+    const indication = await floatingPages.locator('#pageIndicator, .editor-slide-indicator').boundingBox();
+    assert.ok(close.x - indication.x - indication.width >= 8, slug + ': espacio entre indicador y X');
+    const dragIcon = await floatingPages.locator('.editorial-module-handle').boundingBox();
+    assert.ok(glyph.x - dragIcon.x - dragIcon.width >= 6, slug + ': espacio entre agarrador e ícono');
     const resize = floatingPages.getByRole('separator', { name: 'Ancho de Diapositivas' });
     const beforeResize = await floatingPages.boundingBox();
     const widthGrip = await resize.boundingBox();
