@@ -224,6 +224,10 @@ export function connectModuleOrder() {
     applyOrder(desktopOrder);
   });
 
+  panel.addEventListener('editorial:commit-module-order', event => {
+    if (event instanceof CustomEvent && titles.has(event.detail)) saveOrder(event.detail);
+  });
+
   panel.addEventListener('pointermove', event => {
     if (!drag || drag.pointerId !== event.pointerId) return;
     if (panel.closest('.editorial-desktop-layout') && event.clientX - drag.x >= 5 && event.clientX - drag.x > Math.abs(event.clientY - drag.startY)) {

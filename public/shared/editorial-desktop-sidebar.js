@@ -186,61 +186,90 @@
       card.classList.remove('editorial-floating-module', 'editorial-sidebar-popup');
       for (const property of ['x', 'y', 'width']) card.style.removeProperty('--editorial-window-' + property);
       navButton.setAttribute('aria-expanded', 'false');
-      if (focus) {
-        if (collapsed) navButton.focus();
-        else card.querySelector('.editorial-module-handle')?.focus();
-      }
+      if (focus && !collapsed) card.querySelector('.editorial-module-handle')?.focus();
+      syncModules();
+      if (focus && collapsed) navButton.focus();
       scheduleFit();
     }
 
-    function previewUndock(drag, dx, dy) {
+    function previewWindowDrag(drag, dx, dy) {
       const { module, left, top: fromTop, width, height } = drag;
       const { card } = module;
-      if (!card.classList.contains('editorial-undocking-module')) {
-        if (active !== module) {
-          drag.slot = document.createElement('div');
-          drag.slot.style.height = height + 'px';
-          drag.slot.style.marginBlock = getComputedStyle(card).marginBlock;
-          card.before(drag.slot);
-        }
+      if (!drag.slot) {
+        drag.slot = document.createElement('div');
+        drag.slot.className = 'editorial-sidebar-drop-slot';
+        drag.slot.setAttribute('aria-hidden', 'true');
+        drag.slot.style.height = height + 'px';
+        drag.slot.style.marginBlock = getComputedStyle(card).marginBlock;
         card.classList.add('editorial-sidebar-popup', 'editorial-undocking-module');
         card.setAttribute('popover', 'manual');
         if (!card.matches(':popover-open')) card.showPopover();
+        if (active === module) active = undefined;
       }
+
       const x = Math.max(0, Math.min(left + dx, innerWidth - width - 12));
       const y = Math.max(0, Math.min(fromTop + dy, innerHeight - 48));
       card.style.setProperty('--editorial-window-x', x + 'px');
       card.style.setProperty('--editorial-window-y', y + 'px');
       card.style.setProperty('--editorial-window-width', width + 'px');
-      if (!drag.detached && dx >= width * 0.25) {
-        drag.detached = true;
-        module.minimumWidth = Math.min(width, module.card.matches('.modern-design-group, .ds-plate-design-group') ? 380 : 300);
-        drag.slot?.remove();
-        if (active === module) active = undefined;
-        if (module.button?.getAttribute('aria-expanded') === 'false') module.button.click();
-        card.classList.add('editorial-floating-module');
-        module.navButton.setAttribute('aria-expanded', 'true');
-        module.widthHandle.setAttribute('aria-valuenow', String(Math.round(width)));
+
+      const sidebar = (collapsed ? rail : panel).getBoundingClientRect();
+      const overlap = Math.min(width, sidebar.width) * 0.2;
+      const leaving = drag.mode === 'undock' && !drag.leftSidebar;
+      const threshold = leaving ? left + width * 0.2 : sidebar.right - overlap;
+      const pointerY = drag.y + dy;
+      const docked = left + dx <= threshold && (leaving ||
+        (pointerY >= sidebar.top && pointerY <= sidebar.bottom));
+      if (docked) {
+        if (!drag.leftSidebar) {
+          card.before(drag.slot);
+        } else {
+          const next = [...panel.children].find(peer => {
+            const definition = definitions.find(item => item.card === peer);
+            if (!definition || definition === module || definition.navButton.hidden) return false;
+            const target = collapsed ? definition.navButton : peer;
+            const rect = target.getBoundingClientRect();
+            return pointerY < rect.top + rect.height / 2;
+          });
+          panel.insertBefore(drag.slot, next ?? null);
+        }
+      } else {
+        drag.leftSidebar = true;
+        drag.slot.remove();
       }
+      card.classList.toggle('editorial-floating-module', !docked);
+      module.minimumWidth = Math.min(width, card.matches('.modern-design-group, .ds-plate-design-group') ? 380 : 300);
+      module.widthHandle.setAttribute('aria-valuenow', String(Math.round(width)));
+      syncModules();
+      scheduleFit();
     }
 
-    function finishWindowDrag(event) {
+    function finishWindowDrag(event, cancel = false) {
       if (windowDrag?.id !== event.pointerId) return;
       const drag = windowDrag;
       windowDrag = undefined;
-      const { module } = drag;
-      if (drag.mode !== 'undock') return;
+      if (!drag.slot) return;
+      const { module, slot } = drag;
       const { card } = module;
+      const docked = cancel ? drag.mode === 'undock' : Boolean(slot.parentNode);
       card.classList.remove('editorial-undocking-module');
-      drag.slot?.remove();
-      if (!drag.detached) {
+      if (docked) {
+        card.hidePopover();
+        card.removeAttribute('popover');
+        card.classList.remove('editorial-floating-module', 'editorial-sidebar-popup');
         for (const property of ['x', 'y', 'width']) card.style.removeProperty('--editorial-window-' + property);
-        if (active !== module && card.matches(':popover-open')) {
-          card.hidePopover();
-          card.removeAttribute('popover');
-          card.classList.remove('editorial-sidebar-popup');
+        if (!cancel && drag.leftSidebar) {
+          slot.before(card);
+          panel.dispatchEvent(new CustomEvent('editorial:commit-module-order', { detail: card }));
         }
+        if (collapsed && !drag.leftSidebar && !cancel) openModule(module);
+      } else {
+        card.classList.add('editorial-floating-module');
+        const rect = card.getBoundingClientRect();
+        positionWindow(module, cancel ? drag.left : rect.left, cancel ? drag.top : rect.top, drag.width);
       }
+      slot.remove();
+      syncModules();
       scheduleFit();
     }
 
@@ -259,15 +288,14 @@
       const { module, mode, x, y, left, top: fromTop, width } = windowDrag;
       const dx = event.clientX - x;
       const dy = event.clientY - y;
-      if (mode === 'undock') {
-        if (dx > 3 || module.card.classList.contains('editorial-undocking-module')) previewUndock(windowDrag, dx, dy);
-      } else if (mode === 'resize') positionWindow(module, left, fromTop, width + dx, true);
-      else positionWindow(module, left + dx, fromTop + dy, width);
+      if (mode === 'resize') positionWindow(module, left, fromTop, width + dx, true);
+      else if (windowDrag.slot || Math.hypot(dx, dy) > 3) previewWindowDrag(windowDrag, dx, dy);
     });
 
-    layout.addEventListener('pointerup', finishWindowDrag);
+    layout.addEventListener('pointerup', event => finishWindowDrag(event));
+    layout.addEventListener('pointercancel', event => finishWindowDrag(event, true));
     layout.addEventListener('lostpointercapture', event => {
-      if (event.target === layout) finishWindowDrag(event);
+      if (event.target === layout) finishWindowDrag(event, true);
     });
 
     const pagesHeading = pages.querySelector('.carousel-heading, .editor-slide-heading');
@@ -346,7 +374,7 @@
         windowDrag = { module, mode: 'undock', id: pointerId, x: startX, y: startY,
           left: rect.left, top: rect.top, width: rect.width, height: rect.height };
         layout.setPointerCapture(pointerId);
-        previewUndock(windowDrag, x - startX, y - startY);
+        previewWindowDrag(windowDrag, x - startX, y - startY);
       });
       module.button?.addEventListener('click', event => {
         if (!card.matches('.editorial-floating-module')) return;
@@ -356,12 +384,18 @@
     }
 
     function syncModules() {
+      const order = [...panel.children];
       for (const module of definitions) {
-        module.navButton.hidden = module.card.hidden || (module.card !== pagesCard && getComputedStyle(module.card).display === 'none');
-        module.navButton.style.order = [...panel.children].indexOf(module.card);
+        const { card, navButton } = module;
+        const unavailable = card.hidden || (card !== pagesCard && getComputedStyle(card).display === 'none');
+        const floating = card.matches('.editorial-floating-module');
+        navButton.hidden = unavailable || floating;
+        navButton.style.order = order.indexOf(windowDrag?.module === module && windowDrag.slot?.parentNode
+          ? windowDrag.slot : card);
+        navButton.setAttribute('aria-expanded', String(active === module));
+        if (unavailable && floating) closeWindow(module);
       }
       if (active?.navButton.hidden) closePopup();
-      for (const module of definitions) if (module.navButton.hidden) closeWindow(module);
     }
 
     const visibility = new MutationObserver(() => {
@@ -408,7 +442,10 @@
           !event.target.closest?.(hotspots)) closePopup();
     });
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && active) {
+      if (event.key === 'Escape' && windowDrag) {
+        event.preventDefault();
+        finishWindowDrag({ pointerId: windowDrag.id }, true);
+      } else if (event.key === 'Escape' && active) {
         event.preventDefault();
         closePopup(true);
       }
@@ -446,7 +483,7 @@
     }
 
     function syncViewport() {
-      if (windowDrag) finishWindowDrag({ pointerId: windowDrag.id });
+      if (windowDrag) finishWindowDrag({ pointerId: windowDrag.id }, true);
       closePopup();
       if (desktop.matches) {
         if (moves.length) return;
