@@ -25,6 +25,7 @@ const asMarkup=chars=>{
  }
  return out;
 };
+const caretAnchor='\u200b';
 const editors=[];
 let selectionControlsActive=false;
 
@@ -54,7 +55,7 @@ function fromDOM(editor){
  const items=[];
  const walk=(node,state)=>{
   if(node.nodeType===Node.TEXT_NODE){
-   for(const c of node.nodeValue||'')items.push({c,...state});
+   for(const c of (node.nodeValue||'').replaceAll(caretAnchor,''))items.push({c,...state});
    return;
   }
   if(node.nodeType!==Node.ELEMENT_NODE)return;
@@ -92,14 +93,21 @@ function offsets(editor){
  if(!editor.contains(range.startContainer)||!editor.contains(range.endContainer))return null;
  const start=document.createRange();start.selectNodeContents(editor);start.setEnd(range.startContainer,range.startOffset);
  const end=document.createRange();end.selectNodeContents(editor);end.setEnd(range.endContainer,range.endOffset);
- return [start.toString().length,end.toString().length];
+ return [start,end].map(range=>range.toString().replaceAll(caretAnchor,'').length);
 }
 function setSelection(editor,start,end){
  const walker=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT);
  const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
  const point=index=>{
   let rest=index;
-  for(const n of nodes){if(rest<=n.nodeValue.length)return[n,rest];rest-=n.nodeValue.length}
+  for(const n of nodes){
+   for(let i=0;i<n.length;i++){
+    if(n.nodeValue[i]===caretAnchor)continue;
+    if(rest===0)return[n,i];
+    rest--;
+   }
+   if(rest===0)return[n,n.length];
+  }
   const last=nodes.at(-1);return last?[last,last.nodeValue.length]:[editor,0];
  };
  const [s,so]=point(start),[e,eo]=point(end);
@@ -158,12 +166,50 @@ function makeEditor(textarea){
   document.execCommand('insertText',false,value);
  });
  editor.addEventListener('beforeinput',event=>{
-  if(event.inputType!=='insertParagraph'&&event.inputType!=='insertLineBreak')return;
+  if(!event.cancelable||event.isComposing)return;
+  const enter=event.inputType==='insertParagraph'||event.inputType==='insertLineBreak';
+  const space=event.inputType==='insertText'&&event.data===' ';
+  const backspace=event.inputType==='deleteContentBackward';
+  if(!enter&&!space&&!backspace)return;
+  const bounds=offsets(editor);
+  if(!bounds)return;
+  const [start,end]=bounds;
+  const text=fromDOM(editor).map(item=>item.c).join('').replaceAll('\u00a0',' ');
+  const lineStart=start ? text.lastIndexOf('\n',start-1)+1 : 0;
+  const prefix=text.slice(lineStart,start);
+  const bullet='• ';
+  let replaceStart=start, replacement='\n';
+  if(space){
+   if(start!==end||prefix!=='-')return;
+   replaceStart=lineStart;
+   replacement=bullet;
+  }else if(backspace){
+   if(start!==end||prefix!==bullet)return;
+   replaceStart=lineStart;
+   replacement='';
+  }else if(event.inputType==='insertParagraph'&&prefix.startsWith(bullet)){
+   if(prefix===bullet&&start===end&&(end===text.length||text[end]==='\n')){
+    replaceStart=lineStart;
+    replacement='';
+   }else replacement='\n'+bullet;
+  }
   event.preventDefault();
-  const sel=window.getSelection();if(!sel?.rangeCount)return;
-  const range=sel.getRangeAt(0);range.deleteContents();
-  const node=document.createTextNode('\n');range.insertNode(node);
-  range.setStartAfter(node);range.collapse(true);sel.removeAllRanges();sel.addRange(range);
+  if(replaceStart!==start)setSelection(editor,replaceStart,end);
+  // Use the browser's editing transaction so replacements participate in Undo.
+  if(space){
+   const applied=document.execCommand('insertText',false,replacement);
+   if(applied)return;
+  }
+  const sel=window.getSelection();
+  const range=sel.getRangeAt(0);
+  range.deleteContents();
+  {
+   const anchor=(!replacement||replacement.endsWith('\n'))?caretAnchor:'';
+   const node=document.createTextNode(replacement+anchor);
+   range.insertNode(node);
+   range.setStart(node,replacement.length);
+  }
+  range.collapse(true);sel.removeAllRanges();sel.addRange(range);
   publish(editor);
  });
  return editor;
