@@ -159,7 +159,19 @@ try {
     assert.equal(await page.locator('.editorial-sidebar-pages:popover-open').count(), 0);
     await page.getByRole('navigation', { name: 'Módulos del editor' })
       .getByRole('button', { name: 'Diapositivas' }).click();
-    await dragHandle(pages.getByRole('button', { name: 'Mover Diapositivas' }), 240, 170);
+    const pagesShortcut = page.locator('.editorial-sidebar-rail button[aria-label="Diapositivas"]');
+    const shortcutPosition = await pagesShortcut.boundingBox();
+    const pagesHandle = await pages.getByRole('button', { name: 'Mover Diapositivas' }).boundingBox();
+    await page.mouse.move(pagesHandle.x + 13, pagesHandle.y + 14);
+    await page.mouse.down();
+    await page.mouse.move(240, 170);
+    assert.equal(await pagesShortcut.isVisible(), false);
+    assert.equal(await pages.evaluate(card => getComputedStyle(card).outlineStyle), 'solid');
+    await page.mouse.move(29, shortcutPosition.y + 15);
+    assert.equal(await pagesShortcut.isVisible(), true);
+    await page.mouse.move(240, 170);
+    assert.equal(await pagesShortcut.isVisible(), false);
+    await page.mouse.up();
     const floatingPages = page.locator('.editorial-sidebar-pages.editorial-floating-module:popover-open');
     await floatingPages.waitFor();
     const pageIcon = floatingPages.locator('.editorial-pages-icon');
@@ -182,7 +194,8 @@ try {
     await addPage.click();
     assert.equal(await thumbnails.count(), originalSlides + 1);
     await deletePage.click();
-    await floatingPages.getByRole('button', { name: 'Devolver Diapositivas a la barra' }).click();
+    await dragHandle(floatingPages.getByRole('button', { name: 'Mover Diapositivas' }), 29, shortcutPosition.y + 15);
+    await pagesShortcut.waitFor();
     assert.equal(await floatingPages.count(), 0);
     await page.getByRole('button', { name: 'Expandir barra lateral' }).click();
     await pages.waitFor();

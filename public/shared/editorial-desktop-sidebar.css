@@ -322,6 +322,27 @@
     width: var(--editorial-window-width, 380px);
   }
 
+  .editorial-desktop-layout {
+    --editorial-drag-accent: #ed0000;
+  }
+
+  .editorial-desktop-layout:has(.editorial-header-home--diarioshow) {
+    --editorial-drag-accent: #e6008d;
+  }
+
+  .editorial-desktop-layout:has(.editorial-header-home--bae) {
+    --editorial-drag-accent: #d82626;
+  }
+
+  .editorial-desktop-layout :is(.editorial-module-dragging, .editorial-undocking-module:popover-open) {
+    outline: 2px solid var(--editorial-drag-accent);
+    outline-offset: -2px;
+    border-radius: 10px;
+    cursor: grabbing;
+  }
+
+  .editorial-sidebar-collapsed .editorial-sidebar-drop-slot { display: none; }
+
   .editorial-sidebar-popup:popover-open {
     color-scheme: dark;
     color: #f3f5f8;
