@@ -1161,7 +1161,7 @@ function status(a){return a._hidden?'Oculta':'Activa'}
 function f(label,name,value='',type='text',other=''){return '<div class="field"><label for="'+name+'">'+e(label)+'</label><input id="'+name+'" name="'+name+'" type="'+type+'" value="'+e(value)+'" '+other+'></div>'}
 function sel(label,name,items,value){return '<div class="field"><label for="'+name+'">'+e(label)+'</label><select name="'+name+'" id="'+name+'">'+options(items,value)+'</select></div>'}
 window.addEventListener('storage',event=>{
- if(event.key===SHARED_SPORTS_KEY&&view!=='edit'&&!modalType){records=reconcileDemoRecords(load());render()}
+ if(event.key===SHARED_SPORTS_KEY&&view!=='edit'&&!modalType){records=reconcileDemoRecords(load());if(view!=='enroll')render()}
 });
 
 // Supabase: fuente compartida de prueba MLZ (solo catálogo ficticio).
@@ -1195,6 +1195,8 @@ async function mlzCheckAdmin(){
 }
 async function mlzBootstrap(){
  try{await mlzLoadShared()}catch(error){mlzConnected=false;mlzError='No se pudieron cargar los datos compartidos: '+error.message}
+ // No reemplazar el DOM si el operador está completando un formulario.
+ if(view==='enroll'||view==='edit'||modalType){const status=app.querySelector('.mlz-demo-status');if(status)status.outerHTML=mlzAccessPanel();return}
  render();
 }
 function mlzRequireEditor(){
