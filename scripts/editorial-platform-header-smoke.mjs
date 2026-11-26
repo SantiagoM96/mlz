@@ -162,12 +162,28 @@ try {
 
     const design = page.locator('aside.editor-panel > :is(.modern-design-group, .ds-plate-design-group)');
     const designHandle = design.locator('.editorial-module-handle');
-    await dragHandle(designHandle, minWidth + 42, 200);
-    await design.locator(':scope > button[aria-label^="Devolver"]').waitFor();
+    await designHandle.scrollIntoViewIfNeeded();
+    const handleStart = await designHandle.boundingBox();
+    const designStart = await design.boundingBox();
+    const startX = handleStart.x + handleStart.width / 2;
+    const startY = handleStart.y + handleStart.height / 2;
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX + 24, startY, { steps: 4 });
+    const inMotion = await design.boundingBox();
+    assert.equal(inMotion.width, designStart.width);
+    assert.ok(Math.abs(inMotion.x - designStart.x - 24) < 1);
+    assert.equal(await design.evaluate(card => card.classList.contains('editorial-floating-module')), false);
+    await page.mouse.move(startX + designStart.width * 0.26, startY);
+    await page.mouse.up();
+    const closeDesign = design.getByRole('button', { name: /^Devolver/ });
+    await closeDesign.waitFor();
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
     await page.mouse.click(10, 75);
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
-    await design.locator(':scope > button[aria-label^="Devolver"]').click();
+    await design.locator(':scope > :is(.modern-toggle, .ds-control-card-toggle)').click({ position: { x: 100, y: 18 } });
+    assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
+    await closeDesign.click();
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), false);
    }
    console.log('PASS', slug, width);

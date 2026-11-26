@@ -63,6 +63,8 @@ export function connectModuleOrder() {
     card: HTMLElement;
     pointerId: number;
     grabOffset: number;
+    x: number;
+    startY: number;
     y: number;
     translation: number;
     direction: number;
@@ -181,6 +183,8 @@ export function connectModuleOrder() {
         card,
         pointerId: event.pointerId,
         grabOffset: event.clientY - card.getBoundingClientRect().top,
+        x: event.clientX,
+        startY: event.clientY,
         y: event.clientY,
         translation: 0,
         direction: 0,
@@ -222,11 +226,11 @@ export function connectModuleOrder() {
 
   panel.addEventListener('pointermove', event => {
     if (!drag || drag.pointerId !== event.pointerId) return;
-    if (panel.closest('.editorial-desktop-layout') && event.clientX > panel.getBoundingClientRect().right + 12) {
-      const { card, grabOffset } = drag;
+    if (panel.closest('.editorial-desktop-layout') && event.clientX - drag.x >= 5 && event.clientX - drag.x > Math.abs(event.clientY - drag.startY)) {
+      const { card, x, startY } = drag;
       finishDrag(true);
       card.dispatchEvent(new CustomEvent('editorial:float-module', {
-        detail: { pointerId: event.pointerId, x: event.clientX, y: event.clientY, grabOffset },
+        detail: { pointerId: event.pointerId, startX: x, startY, x: event.clientX, y: event.clientY },
       }));
       return;
     }
