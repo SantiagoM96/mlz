@@ -3786,7 +3786,8 @@ async function loadSharedActivities(){
   }
   ACTIVITIES=state.activities.filter(a=>a._hidden!==true);
   mlzLastPublicRevision=Number(state.revision);
-  renderRoute();
+  // Una respuesta tardía del catálogo no debe reconstruir una inscripción abierta.
+  if(!location.hash.startsWith('#03_formulario_inscripcion.html'))renderRoute();
  }catch(error){
   console.warn('MLZ Deportes: no se pudieron cargar los datos compartidos. Se utiliza el catálogo de respaldo.',error);
  }
