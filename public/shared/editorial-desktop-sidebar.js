@@ -25,6 +25,13 @@
     rail.setAttribute('aria-label', 'Módulos del editor');
     footer.className = 'editorial-sidebar-footer';
 
+    const deviceIcon = document.createElement('span');
+    deviceIcon.className = 'editorial-footer-device material-symbols-outlined';
+    deviceIcon.setAttribute('role', 'img');
+    deviceIcon.setAttribute('aria-label', 'Dispositivo');
+    deviceIcon.textContent = 'devices';
+    footer.append(deviceIcon);
+
     function iconButton(icon, label) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -457,6 +464,7 @@
         if (reset && sessionSummary) {
           reset.title = reset.textContent.replace('restart_alt', '').trim();
           move(reset, sessionSummary);
+          move(sessionSummary, controls);
         }
         move(badge, release);
         document.body.classList.add('editorial-desktop-workspace');
