@@ -59,6 +59,17 @@ try {
       return rect.height > 0 && rect.top >= 0 && rect.bottom <= innerHeight;
     });
     assert.equal(await page.evaluate(() => document.documentElement.scrollHeight), 900);
+    const stage = preview.locator('#photoStage');
+    const actions = preview.locator('.preview-actions');
+    const clear = actions.locator('#clearAll');
+    const exportButton = actions.locator('#download');
+    const stageBox = await stage.boundingBox();
+    const actionsBox = await actions.boundingBox();
+    const clearBox = await clear.boundingBox();
+    const exportBox = await exportButton.boundingBox();
+    assert.ok(Math.abs(stageBox.width - actionsBox.width) <= 1);
+    assert.ok(Math.abs(stageBox.x - exportBox.x) <= 1);
+    assert.ok(Math.abs(stageBox.x + stageBox.width - clearBox.x - clearBox.width) <= 1);
     await badge.waitFor();
     assert.ok((await preview.boundingBox()).x >= (await header.boundingBox()).width);
     assert.deepEqual(await page.locator('aside.editor-panel').evaluate(panel => {
@@ -91,7 +102,13 @@ try {
     const deviceIcon = await footer.getByRole('img', { name: 'Dispositivo' }).boundingBox();
     assert.ok(device.x - deviceIcon.x - deviceIcon.width >= 8);
     for (const action of [rename, reset]) {
-      assert.equal(await action.locator('.material-symbols-outlined').evaluate(icon => getComputedStyle(icon).fontSize), '16px');
+      const glyph = action.locator('.material-symbols-outlined');
+      assert.equal(await glyph.evaluate(icon => getComputedStyle(icon).fontSize), '16px');
+      const buttonBox = await action.boundingBox();
+      const glyphBox = await glyph.boundingBox();
+      for (const [axis, size] of [['x', 'width'], ['y', 'height']]) {
+        assert.ok(Math.abs(buttonBox[axis] + buttonBox[size] / 2 - glyphBox[axis] - glyphBox[size] / 2) <= 1);
+      }
     }
     assert.ok((await reset.boundingBox()).x > (await rename.boundingBox()).x);
     assert.ok(activity.x > device.x && Math.abs(activity.y - device.y) <= 1);
@@ -236,6 +253,15 @@ try {
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), true);
     await closeDesign.click();
     assert.equal(await design.evaluate(card => card.matches(':popover-open')), false);
+
+    await page.setViewportSize({ width, height: 280 });
+    await page.waitForFunction(() => document.querySelector('#photoStage').getBoundingClientRect().width <
+      document.querySelector('.preview-actions').getBoundingClientRect().width);
+    const shortExport = await exportButton.boundingBox();
+    assert.ok(shortExport.width < exportBox.width);
+    assert.equal(await exportButton.evaluate(button => getComputedStyle(button).whiteSpace), 'nowrap');
+    assert.ok(Math.abs(shortExport.height - exportBox.height) <= 1);
+    await page.setViewportSize({ width, height: 900 });
    }
    console.log('PASS', slug, width);
   }
