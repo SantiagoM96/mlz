@@ -182,9 +182,10 @@
     const options = controls.querySelector('.editorial-profile-options');
     const rename = options.querySelector('[data-rename]');
     const sessionNames = controls.querySelectorAll('[data-session-name]');
+    const sessionTitle = options.querySelector('.editorial-session-summary-title');
     const showSessionName = name => {
       sessionNames.forEach(label => { label.textContent = name; });
-      options.querySelector('.editorial-session-summary-title').hidden = name === defaultName;
+      sessionTitle.hidden = name === defaultName;
     };
     showSessionName(defaultName);
     const device = browserLabel();
@@ -282,7 +283,7 @@
       busy = value;
       if (value) cancelFeedback();
       main.inert = value;
-      trigger.disabled = value || !session;
+      trigger.disabled = rename.disabled = reset.disabled = value || !session;
     }
 
     function closeOptions(restoreFocus = false) {
@@ -349,6 +350,7 @@
     }
 
     function showRename() {
+      if (busy || !session) return;
       closeOptions();
       nameField.value = session.name;
       nameError.textContent = '';
@@ -387,7 +389,7 @@
     renameDialog.querySelector('[data-close]').addEventListener('click', () => renameDialog.close());
     renameDialog.addEventListener('close', () => {
       form.reset();
-      if (!resetDialog.open) trigger.focus();
+      if (!resetDialog.open) (trigger.getClientRects().length ? trigger : rename).focus();
     });
     form.addEventListener('submit', async event => {
       event.preventDefault();
@@ -410,7 +412,7 @@
 
     resetDialog.addEventListener('close', async () => {
       if (resetDialog.returnValue !== 'reset' || busy) {
-        trigger.focus();
+        (trigger.getClientRects().length ? trigger : reset).focus();
         return;
       }
       setBusy(true);
@@ -427,7 +429,7 @@
         report('No se pudo eliminar el borrador.');
       } finally {
         setBusy(false);
-        trigger.focus();
+        (trigger.getClientRects().length ? trigger : reset).focus();
       }
     });
 
@@ -438,6 +440,7 @@
       showSessionName(session.name);
       draftKey = [tool, 'browser-session', session.id];
       activityKey = ['browser-session-activity', session.id];
+      transact(db, 'readonly', store => store.get(activityKey)).then(showActivity, () => {});
       const draft = await migrateDraft(db, draftKey, [tool, legacyProfile(tool)]);
       if (draft.version !== 1 || (draft.state !== null && (!Array.isArray(draft.state?.pages) || !draft.state.pages.length))) {
         throw new Error('El borrador tiene un formato incompatible.');
