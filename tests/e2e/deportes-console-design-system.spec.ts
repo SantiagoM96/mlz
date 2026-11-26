@@ -91,3 +91,35 @@ test('Consola Deportes: abrir dropdown no desplaza la página y scroll exterior 
  await expect(page.locator('.deportes-menu')).toHaveCount(0);
  await expect(field).toHaveAttribute('aria-expanded','false');
 });
+
+test('Consola Deportes: historial ficticio e inscripción asistida usan la declaración simplificada', async ({page})=>{
+ await page.goto(url,{waitUntil:'domcontentloaded'});
+ await page.locator('[data-action="registrations"]').first().click();
+ const rows=page.locator('.registration-admin-table tbody [data-action="registration-detail"]');
+ await expect(rows).toHaveCount(96);
+ await rows.first().click();
+ await expect(page.getByText('Información de salud',{exact:true})).toBeVisible();
+ await expect(page.getByText('Autorizaciones',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Cerrar',exact:true}).last().click();
+ await page.locator('[data-action="enroll-new"]').click();
+ await page.locator('[data-action="en-pick"]').first().click();
+ await page.locator('[name="en-option"]').first().check();
+ await page.locator('[data-action="en-next"]').click();
+ const form=page.locator('#en-form');
+ await expect(form).toBeVisible();
+ await expect(form.locator('[name="medaltura"],[name="sangre"],[name="diagnostico"]')).toHaveCount(0);
+ await expect(form.locator('[data-health-show="condicionSalud"]')).toBeHidden();
+ await form.locator('[name="condicionSalud"][value="Si"]').check();
+ await form.locator('[name="patologias"][value="Otra condición"]').check();
+ await expect(form.locator('#en-otraCondicion')).toBeVisible();
+ await form.locator('#en-otraCondicion').fill('Dato ficticio');
+ await form.locator('[name="condicionSalud"][value="No"]').check();
+ await expect(form.locator('#en-otraCondicion')).toHaveValue('');
+ await expect(form.locator('#en-otraCondicion')).toBeDisabled();
+ await form.locator('[name="alergiasRespuesta"][value="Si"]').check();
+ await expect(form.locator('#en-alergias')).toBeVisible();
+ await form.locator('[name="cud"][value="Si"]').check();
+ await expect(form.locator('#en-archivo-cud')).toBeEnabled();
+ await form.locator('[name="cud"][value="No"]').check();
+ await expect(form.locator('#en-archivo-cud')).toBeDisabled();
+});
