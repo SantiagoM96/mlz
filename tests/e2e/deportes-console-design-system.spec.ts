@@ -232,9 +232,9 @@ test('Consola Deportes: una actividad sin comisiones no puede activarse',async (
  const empty={...original,id:'qa-sin-comisiones',name:'QA sin comisiones',_hidden:false,commissions:[]};
  const full={...original,id:'qa-lista-espera',name:'QA lista de espera',_hidden:false,commissions:[{...original.commissions[0],cupos:0}]};
  await page.unroute('**/rest/v1/mlz_sports_state?**');
- let saved:any;
+ let saved: {revision:number;activities:Array<{id:string;_hidden?:boolean}>}|undefined;
  await page.route('**/rest/v1/mlz_sports_state?**',async route=>{
-  if(route.request().method()==='PATCH'){saved=route.request().postDataJSON();await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{revision:saved.revision}])});return;}
+  if(route.request().method()==='PATCH'){const payload=route.request().postDataJSON() as {revision:number;activities:Array<{id:string;_hidden?:boolean}>};saved=payload;await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{revision:payload.revision}])});return;}
   await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{activities:[empty,full],revision:100}])});
  });
  await page.evaluate('mlzBootstrap()');
