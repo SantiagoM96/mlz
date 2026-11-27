@@ -80,7 +80,14 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await expect(form.locator('#medaltura, #medpeso, #sangre, #rh, #archivo_frente, #archivo_dorso')).toHaveCount(0);
 
   await expect(form.locator('[data-health-show="health"]')).toBeHidden();
+  const healthSwitch = form.getByRole('switch', {name:'Condiciones de salud',exact:true});
+  await expect(healthSwitch).toHaveCSS('width','44px');
+  await expect(healthSwitch).toHaveCSS('height','26px');
+  await expect(healthSwitch).toHaveCSS('background-color','rgb(210, 217, 223)');
   await form.locator('[name="healthTopics"][value="health"]').check();
+  await expect(healthSwitch).toHaveCSS('background-color','rgb(0, 110, 255)');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-width','0px');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgb(245, 248, 250)');
   await expect(form.locator('[data-health-show="health"]')).toBeVisible();
   await form.locator('[name="health_health_options"][value="Asma"]').check();
   await form.locator('[name="health_health_options"][value="other"]').check();
