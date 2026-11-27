@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "description": "96 inscripciones completamente ficticias para el prototipo simplificado de Deportes. No contienen datos reales ni provienen del Excel histórico.",
+  "schemaVersion": 3,
+  "description": "96 inscripciones ficticias; declaración de salud con categorías, opciones, otros y detalles. No contiene datos del Excel histórico.",
   "registrations": [
     {
       "id": "INS-DEMO-0001",
@@ -34,18 +34,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -92,20 +83,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
@@ -147,18 +137,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
@@ -200,20 +191,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health",
+          "restrictions"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-044-natatorio-gregorio-guyo-sember",
@@ -255,18 +253,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "medication",
+          "support"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          },
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [
         {
@@ -313,18 +320,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          }
+        }
       },
       "documents": [
         {
@@ -371,20 +379,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-049-natatorio-gregorio-guyo-sember",
@@ -426,18 +433,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "other"
+            ],
+            "other": "Lesión de hombro (ejemplo ficticio)",
+            "detail": "Ejemplo ficticio: adaptar ejercicios de brazos."
+          }
+        }
       },
       "documents": [
         {
@@ -484,18 +492,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -542,18 +541,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-046-natatorio-gregorio-guyo-sember",
@@ -595,18 +595,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-009-gimnasio-de-deportes-de-combate",
@@ -648,20 +639,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "restrictions"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -708,18 +706,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-043-natatorio-jorge-omar-rossi",
@@ -761,18 +750,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [
         {
@@ -819,20 +809,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health",
+          "support"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          },
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
@@ -874,18 +871,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-040-natatorio-jorge-omar-rossi",
@@ -927,20 +915,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "allergy"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-003-gimnasio-de-deportes-de-combate",
@@ -982,18 +977,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1035,18 +1021,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1088,18 +1075,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -1146,18 +1134,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1199,20 +1178,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1254,18 +1232,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-043-natatorio-gregorio-guyo-sember",
@@ -1307,18 +1286,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [
         {
@@ -1369,18 +1349,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "support"
+        ],
+        "groups": {
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1422,20 +1403,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          }
+        }
       },
       "documents": [
         {
@@ -1486,20 +1466,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "surgery"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "surgery": {
+            "options": [
+              "other"
+            ],
+            "other": "Lesión de hombro (ejemplo ficticio)",
+            "detail": "Ejemplo ficticio: adaptar ejercicios de brazos."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-011-gimnasio-de-deportes-de-combate",
@@ -1541,18 +1528,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -1599,18 +1587,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -1657,18 +1636,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-008-gimnasio-de-deportes-de-combate",
@@ -1710,18 +1680,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
@@ -1763,20 +1734,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "surgery",
+          "medication"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          },
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-042-natatorio-jorge-omar-rossi",
@@ -1818,18 +1804,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-005-gimnasio-de-deportes-de-combate",
@@ -1871,18 +1848,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -1933,18 +1901,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "support"
+        ],
+        "groups": {
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-039-natatorio-jorge-omar-rossi",
@@ -1986,18 +1955,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-002-gimnasio-de-deportes-de-combate",
@@ -2039,20 +2009,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
@@ -2094,18 +2063,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [
         {
@@ -2152,18 +2122,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-050-natatorio-gregorio-guyo-sember",
@@ -2205,18 +2166,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
@@ -2258,18 +2210,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [
         {
@@ -2316,20 +2269,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-041-natatorio-gregorio-guyo-sember",
@@ -2371,18 +2323,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-013-parque-de-lomas-parque-municipal-eva-per-n",
@@ -2424,18 +2367,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -2482,18 +2426,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "allergy",
+          "surgery",
+          "support"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          },
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          },
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [
         {
@@ -2540,18 +2501,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "other"
+            ],
+            "other": "Lesión de hombro (ejemplo ficticio)",
+            "detail": "Ejemplo ficticio: adaptar ejercicios de brazos."
+          }
+        }
       },
       "documents": [
         {
@@ -2598,20 +2560,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-027-parque-de-lomas-parque-municipal-eva-per-n",
@@ -2653,20 +2614,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          }
+        }
       },
       "documents": [],
       "activityId": "act-044-natatorio-jorge-omar-rossi",
@@ -2708,18 +2668,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-007-gimnasio-de-deportes-de-combate",
@@ -2761,18 +2712,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [
         {
@@ -2819,18 +2771,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-041-natatorio-jorge-omar-rossi",
@@ -2872,20 +2815,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "allergy",
+          "restrictions"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-004-gimnasio-de-deportes-de-combate",
@@ -2927,18 +2885,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-021-parque-de-lomas-parque-municipal-eva-per-n",
@@ -2980,18 +2929,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -3038,18 +2978,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "support"
+        ],
+        "groups": {
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [
         {
@@ -3096,18 +3037,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-018-parque-de-lomas-parque-municipal-eva-per-n",
@@ -3149,20 +3081,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-035-parque-de-lomas-parque-municipal-eva-per-n",
@@ -3204,18 +3135,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-044-natatorio-gregorio-guyo-sember",
@@ -3257,20 +3189,35 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health",
+          "allergy",
+          "medication"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          },
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          },
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [
         {
@@ -3317,18 +3264,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -3375,18 +3323,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-049-natatorio-gregorio-guyo-sember",
@@ -3428,20 +3367,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [
         {
@@ -3488,18 +3426,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -3546,18 +3475,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-046-natatorio-gregorio-guyo-sember",
@@ -3599,18 +3519,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "surgery",
+          "support"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "other"
+            ],
+            "other": "Lesión de hombro (ejemplo ficticio)",
+            "detail": "Ejemplo ficticio: adaptar ejercicios de brazos."
+          },
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-009-gimnasio-de-deportes-de-combate",
@@ -3652,18 +3581,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [
         {
@@ -3710,20 +3640,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-043-natatorio-jorge-omar-rossi",
@@ -3765,18 +3694,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication",
+          "restrictions"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -3823,18 +3761,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-023-parque-de-lomas-parque-municipal-eva-per-n",
@@ -3876,20 +3805,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          }
+        }
       },
       "documents": [],
       "activityId": "act-040-natatorio-jorge-omar-rossi",
@@ -3931,18 +3859,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-003-gimnasio-de-deportes-de-combate",
@@ -3984,20 +3913,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-020-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4039,18 +3967,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-037-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4092,18 +4021,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -4150,18 +4070,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "support"
+        ],
+        "groups": {
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-017-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4203,18 +4124,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "restrictions"
+        ],
+        "groups": {
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-034-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4256,20 +4178,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "medication"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-043-natatorio-gregorio-guyo-sember",
@@ -4311,18 +4240,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -4373,18 +4293,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-031-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4426,18 +4337,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [
         {
@@ -4488,20 +4400,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": ""
+          }
+        }
       },
       "documents": [],
       "activityId": "act-011-gimnasio-de-deportes-de-combate",
@@ -4543,20 +4454,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          }
+        }
       },
       "documents": [
         {
@@ -4603,18 +4513,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -4661,18 +4562,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "surgery",
+          "restrictions"
+        ],
+        "groups": {
+          "surgery": {
+            "options": [
+              "Rodilla, meniscos o ligamentos"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar saltos durante la actividad."
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-008-gimnasio-de-deportes-de-combate",
@@ -4714,18 +4624,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "support"
+        ],
+        "groups": {
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-025-parque-de-lomas-parque-municipal-eva-per-n",
@@ -4767,18 +4678,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "medication"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-042-natatorio-jorge-omar-rossi",
@@ -4820,20 +4732,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Asma"
+        "none": false,
+        "topics": [
+          "health",
+          "allergy"
         ],
-        "otraCondicion": "",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "Asma"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-005-gimnasio-de-deportes-de-combate",
@@ -4875,18 +4794,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [
         {
@@ -4937,18 +4847,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-039-natatorio-jorge-omar-rossi",
@@ -4990,18 +4891,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-002-gimnasio-de-deportes-de-combate",
@@ -5043,18 +4935,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-019-parque-de-lomas-parque-municipal-eva-per-n",
@@ -5096,20 +4979,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "Sí",
-        "patologias": [
-          "Otra condición"
+        "none": false,
+        "topics": [
+          "health",
+          "restrictions"
         ],
-        "otraCondicion": "Condición ficticia de ejemplo",
-        "saludDetalle": "Ejemplo ficticio: evitar exposición al polvo.",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "Sí",
-        "restricciones": "Ejemplo ficticio: evitar ejercicios de alto impacto.",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "groups": {
+          "health": {
+            "options": [
+              "other"
+            ],
+            "other": "Condición ficticia de ejemplo",
+            "detail": "Ejemplo ficticio: evitar exposición al polvo."
+          },
+          "restrictions": {
+            "options": [
+              "Evitar ejercicios de alto impacto"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: evitar ejercicios de alto impacto."
+          }
+        }
       },
       "documents": [
         {
@@ -5156,18 +5046,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-050-natatorio-gregorio-guyo-sember",
@@ -5209,18 +5090,19 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "Sí",
-        "alergias": "Ejemplo ficticio: látex.",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": false,
+        "topics": [
+          "allergy"
+        ],
+        "groups": {
+          "allergy": {
+            "options": [
+              "Látex"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: látex."
+          }
+        }
       },
       "documents": [],
       "activityId": "act-016-parque-de-lomas-parque-municipal-eva-per-n",
@@ -5262,18 +5144,27 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "Sí",
-        "medicamentos": "Medicación de rescate ficticia; consultar indicaciones de ejemplo.",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "Sí",
-        "asistencia": "Ejemplo ficticio: acceso sin escalones."
+        "none": false,
+        "topics": [
+          "medication",
+          "support"
+        ],
+        "groups": {
+          "medication": {
+            "options": [
+              "other"
+            ],
+            "other": "Medicación de rescate de ejemplo",
+            "detail": "Medicación de rescate ficticia; consultar indicaciones de ejemplo."
+          },
+          "support": {
+            "options": [
+              "Acceso sin escaleras"
+            ],
+            "other": "",
+            "detail": "Ejemplo ficticio: acceso sin escalones."
+          }
+        }
       },
       "documents": [
         {
@@ -5320,18 +5211,9 @@
         "telefono": "No informado"
       },
       "medical": {
-        "condicionSalud": "No",
-        "patologias": [],
-        "otraCondicion": "",
-        "saludDetalle": "",
-        "alergiasRespuesta": "No",
-        "alergias": "",
-        "medicamentosRespuesta": "No",
-        "medicamentos": "",
-        "restriccionesRespuesta": "No",
-        "restricciones": "",
-        "asistenciaRespuesta": "No",
-        "asistencia": ""
+        "none": true,
+        "topics": [],
+        "groups": {}
       },
       "documents": [],
       "activityId": "act-041-natatorio-gregorio-guyo-sember",
