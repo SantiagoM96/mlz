@@ -117,7 +117,13 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
   await form.locator('[name="healthTopics"][value="health"]').check();
   await expect(healthSwitch).toHaveCSS('background-color','rgb(0, 110, 255)');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-width','0px');
-  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgb(245, 248, 250)');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('padding-left','0px');
+  const switchRow=healthSwitch.locator('..');
+  await expect(switchRow.locator('strong')).toHaveCSS('font-size','18px');
+  await expect(switchRow.locator('strong')).toHaveCSS('font-weight','700');
+  await expect(switchRow.locator('.health-hint')).toHaveCSS('font-size','18px');
+  await expect(switchRow.locator('.health-hint')).toHaveCSS('font-weight','400');
   await expect(form.locator('[data-health-show="health"]')).toBeVisible();
   await form.locator('[name="health_health_options"][value="Asma"]').check();
   await form.locator('[name="health_health_options"][value="other"]').check();
@@ -150,6 +156,9 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
   const file=form.locator('#en-archivo_cud'.replace('en-archivo_cud','en-archivo-cud'));
   const attachment=file.locator('xpath=../..');
   await expect(attachment.locator('.mlz-attachment-control')).toHaveCSS('height','48px');
+  const documentWidths=await attachment.evaluate(el=>({field:el.getBoundingClientRect().width,container:el.parentElement!.getBoundingClientRect().width,control:el.querySelector('.mlz-attachment-control')!.getBoundingClientRect().width}));
+  expect(Math.abs(documentWidths.field-documentWidths.container)).toBeLessThan(1);
+  expect(Math.abs(documentWidths.control-documentWidths.field)).toBeLessThan(1);
   await file.setInputFiles({name:'invalido.txt',mimeType:'text/plain',buffer:Buffer.from('demo')});
   await expect(attachment.locator('.mlz-attachment-error')).toContainText('Formato no compatible');
   await file.setInputFiles({name:'certificado.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4 demo')});
