@@ -109,6 +109,9 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
  await expect(form).toBeVisible();
  await expect(form.locator('[name="medaltura"],[name="sangre"],[name="diagnostico"]')).toHaveCount(0);
 
+  await expect(form.locator('.health-topics > legend')).toHaveCSS('font-size','18px');
+  await expect(form.locator('.health-topics > legend')).toHaveCSS('font-weight','700');
+  await expect(form.locator('.health-topics > .health-hint')).toHaveCSS('font-size','18px');
   await expect(form.locator('[data-health-show="health"]')).toBeHidden();
   const healthSwitch = form.getByRole('switch', {name:'Condiciones de salud',exact:true});
   await expect(healthSwitch).toHaveCSS('width','44px');
@@ -138,12 +141,14 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
   await form.locator('[name="healthTopics"][value="allergy"]').check();
   await expect(form.locator('#en-health_allergy_detail')).toBeVisible();
   await expect(form.locator('[name="healthTopics"][value="health"]')).toBeChecked();
-  await form.locator('[name="healthNone"]').check();
+  await expect(form.locator('[name="healthNone"]')).toHaveCount(0);
+  await expect(form.locator('.health-topic').last().getByRole('switch',{name:'Apoyos y adaptaciones',exact:true})).toBeVisible();
+  await form.locator('[name="healthTopics"][value="health"]').uncheck();
+  await form.locator('[name="healthTopics"][value="allergy"]').uncheck();
   await expect(form.locator('[name="healthTopics"]:checked')).toHaveCount(0);
   await expect(form.locator('#en-health_health_detail')).toBeHidden();
   await expect(form.locator('#en-health_health_detail')).toHaveValue('');
   await form.locator('[name="healthTopics"][value="surgery"]').check();
-  await expect(form.locator('[name="healthNone"]')).not.toBeChecked();
   await expect(form.locator('#en-health_surgery_detail')).toBeVisible();
   await form.locator('[name="health_surgery_options"][value="other"]').check();
   await expect(form.locator('#en-health_surgery_other')).toBeVisible();
@@ -153,7 +158,6 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
   await expect(form.locator('#en-health_surgery_detail')).toHaveValue('Cuidado adicional ficticio');
  await form.locator('[name="cud"][value="Si"]').check();
  await expect(form.locator('#en-archivo-cud')).toBeEnabled();
-  await expect(form.locator('[name="healthNone"]')).toHaveAttribute('type','radio');
   await expect(form.locator('[name="cud"][value="Si"]').locator('..').locator('.mlz-selection-symbol')).toHaveCSS('color','rgb(0, 110, 255)');
   const file=form.locator('#en-archivo_cud'.replace('en-archivo_cud','en-archivo-cud'));
   const attachment=file.locator('xpath=../..');
