@@ -109,6 +109,16 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
  await expect(form).toBeVisible();
  await expect(form.locator('[name="medaltura"],[name="sangre"],[name="diagnostico"]')).toHaveCount(0);
 
+  const healthAlert=form.locator('.mlz-health-alert');
+  await expect(healthAlert).toBeVisible();
+  await expect(healthAlert.locator('strong')).toHaveText('Cuidemos tu salud');
+  await expect(healthAlert.locator('strong')).toHaveCSS('font-size','18px');
+  await expect(healthAlert.locator('strong')).toHaveCSS('font-weight','700');
+  await expect(healthAlert.locator('p')).toHaveCSS('font-size','18px');
+  await expect(healthAlert.locator('p')).toHaveCSS('font-weight','400');
+  await expect(healthAlert).toHaveCSS('background-color','rgb(229, 240, 255)');
+  await expect(healthAlert).toHaveCSS('padding-top','16px');
+  await expect(healthAlert.locator('xpath=following-sibling::*[1]')).toHaveClass('health-topics');
   await expect(form.locator('.health-topics > legend')).toHaveCSS('font-size','18px');
   await expect(form.locator('.health-topics > legend')).toHaveCSS('font-weight','700');
   await expect(form.locator('.health-topics > .health-hint')).toHaveCSS('font-size','18px');

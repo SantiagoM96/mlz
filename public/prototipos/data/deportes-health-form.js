@@ -161,7 +161,7 @@ const MLZHealthForm = (() => {
  }
  function render(prefix=''){
   const fieldId=(g,suffix)=>prefix+'health_'+g.id+'_'+suffix;
-  return '<fieldset class="health-topics" data-health-root><legend>Seleccioná las situaciones que correspondan a tu caso.</legend><p class="health-hint">Podés seleccionar más de una opción.</p>'+
+  return '<aside class="mlz-health-alert" aria-labelledby="'+prefix+'health-alert-title"><span class="mlz-health-alert-icon" aria-hidden="true">error</span><div class="mlz-health-alert-body"><strong id="'+prefix+'health-alert-title">Cuidemos tu salud</strong><p>Sos responsable de la información que declarás. Te pedimos que sea verdadera y esté actualizada para que podamos brindarte los cuidados que necesitás.</p></div></aside><fieldset class="health-topics" data-health-root><legend>Seleccioná las situaciones que correspondan a tu caso.</legend><p class="health-hint">Podés seleccionar más de una opción.</p>'+
   groups.map(g=>{
    const panelId=fieldId(g,'panel'),otherId=fieldId(g,'other'),detailId=fieldId(g,'detail'),topicId=fieldId(g,'topic'),descId=fieldId(g,'desc');
    const opts=g.options.map((value,i)=>choice('checkbox','health_'+g.id+'_options',value,value,'id="'+fieldId(g,'opt_'+i)+'"')).join('');
