@@ -3031,7 +3031,7 @@ body.form-page .enrollment-guide .enrollment-guide-followup p{
  body.form-page .enrollment-guide .enrollment-guide-followup{padding:14px;gap:10px;}
 }
 </style><style id="prefilled-personal-info-and-switches">
-body.form-page #signup .personal-source-note{margin:-6px 0 20px;font-size:15px;line-height:23px;color:#626d75;}
+body.form-page #signup .personal-source-note{margin:0 0 16px;font-size:18px;line-height:26px;font-weight:400;color:#3d3d3d;}
 body.form-page #signup .personal-source-note[hidden]{display:none!important;}
 body.form-page #signup .personal-data-fields.is-account-data input:disabled,
 body.form-page #signup .personal-data-fields.is-account-data select:disabled,
@@ -3770,9 +3770,9 @@ body.form-page #signup .health-disclosure .checkline{margin-bottom:16px}
 .health-topic{padding:16px 0;border-bottom:1px solid #dce4ea}
 .health-topic-label,.health-option{display:flex;align-items:flex-start;gap:8px;cursor:pointer;color:#3d3d3d;font-size:16px;line-height:24px}
 .health-topic-label>span{min-width:0}
-.health-topic-label strong{display:block;font-size:16px;line-height:24px;color:#236999;margin-bottom:4px}
+.health-topic-label strong{display:block;font-size:18px;line-height:26px;font-weight:700;color:#236999;margin-bottom:4px}
 .health-none{padding-top:16px}
-.health-topics .health-disclosure{margin:16px 0 0;padding:16px;border:0;border-radius:4px;background:#f5f8fa}
+.health-topics .health-disclosure{margin:24px 0 0;padding:0;border:0;border-radius:0;background:transparent}
 .health-option-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;margin:12px 0 20px}
 .health-option span{overflow-wrap:anywhere}
 .health-topics .health-other{margin-bottom:20px}
@@ -3784,9 +3784,10 @@ body.form-page #signup .health-disclosure .checkline{margin-bottom:16px}
 .health-topics input[type=checkbox]:checked{color:#006eff}
 .health-topics input[type=checkbox]:checked::after{content:"check_box"}
 .health-topics input[type=checkbox]:focus-visible{outline:2px solid #006eff;outline-offset:2px;border-radius:4px}
-@media(max-width:680px){.health-option-list{grid-template-columns:1fr}.health-topics .health-disclosure{padding:12px}}
+@media(max-width:680px){.health-option-list{grid-template-columns:1fr}}
 .health-topics .health-switch-row{align-items:center;justify-content:space-between;gap:16px;min-height:44px}
 .health-topics .health-switch-row>span{flex:1;min-width:0}
+:is(#signup,#en-form) .health-switch-row .health-hint{font-size:18px;line-height:26px;font-weight:400}
 :is(#signup,#en-form) .health-topics .health-switch-row>input[role="switch"]{appearance:none;-webkit-appearance:none;position:relative;display:block;flex:0 0 44px;width:44px;height:26px;min-width:44px;min-height:26px;margin:0;padding:0;border:0;border-radius:999px;background:#d2d9df;cursor:pointer;transition:background-color .15s}
 :is(#signup,#en-form) .health-topics .health-switch-row>input[role="switch"]::before{content:none}
 :is(#signup,#en-form) .health-topics .health-switch-row>input[role="switch"]::after{content:"";position:absolute;display:block;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0002;transform:none;transition:transform .15s}
@@ -3811,7 +3812,9 @@ body :is(#signup#signup,#en-form#en-form) .mlz-selection>input::before,body :is(
 :is(#signup,#en-form) .mlz-selection:has(input:disabled){opacity:.5;cursor:not-allowed}
 :is(#signup,#en-form) .mlz-selection-label{min-width:0;overflow-wrap:anywhere}
 :is(#signup,#en-form) .health-none{padding-top:16px}
-body :is(#signup#signup,#en-form#en-form) .mlz-documents:has([data-mlz-attachment]:not([hidden])){margin-top:24px;gap:24px!important}
+body :is(#signup#signup,#en-form#en-form) .mlz-documents{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%;min-width:0;gap:24px!important}
+body :is(#signup#signup,#en-form#en-form) .mlz-documents:has([data-mlz-attachment]:not([hidden])){margin-top:24px}
+body :is(#signup#signup,#en-form#en-form) .mlz-documents>[data-mlz-attachment]{grid-column:1/-1;width:100%;min-width:0}
 :is(#signup,#en-form) .mlz-attachment{display:flex;flex-direction:column;gap:8px;min-width:0;width:100%}
 :is(#signup,#en-form) .mlz-attachment[hidden],:is(#signup,#en-form) .mlz-attachment [hidden]{display:none!important}
 :is(#signup,#en-form) .mlz-attachment-title{font-size:16px;line-height:22px;font-weight:700;color:#236999}
