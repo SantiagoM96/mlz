@@ -102,6 +102,7 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await expect(healthSwitch).toHaveCSS('background-color','rgb(0, 110, 255)');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-width','1px');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-top-width','1px');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-top-left-radius','8px');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-color','rgb(220, 228, 234)');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgb(255, 255, 255)');
   await expect(form.locator('[data-health-show="health"]')).toHaveCSS('padding-left',(page.viewportSize()?.width??1440)<=680?'12px':'16px');
