@@ -192,5 +192,25 @@ const MLZHealthForm = (() => {
   root.addEventListener('change',sync);
   sync();
  }
- return {groups,render,bind,choice,attachment,bindAttachments,setAttachmentVisible};
+
+ // La modalidad se configura en la actividad, no en cada comisión.
+ function sportTypes(activity,commission){
+  const allowed=['Recreativo','Competitivo','Federado'];
+  const source=String(activity?.tipo||commission?.tipo||'');
+  const types=allowed.filter(type=>new RegExp('(?:^|[^a-z])'+type+'(?:$|[^a-z])','i').test(source));
+  return types.length?types:['Recreativo'];
+ }
+ function syncSportTypes(select,activity,commission){
+  if(!select||!activity)return false;
+  const types=sportTypes(activity,commission),previous=select.value;
+  const old=Array.from(select.options).map(o=>o.value).filter(Boolean);
+  const disabled=types.length===1;
+  if(old.join('|')===types.join('|')&&select.disabled===disabled&&types.includes(previous))return false;
+  select.replaceChildren(new Option('Seleccionar',''),...types.map(type=>new Option(type,type)));
+  select.value=types.includes(previous)?previous:types[0];
+  select.disabled=disabled;
+  select.dispatchEvent(new Event('change',{bubbles:true}));
+  return true;
+ }
+ return {groups,render,bind,choice,attachment,bindAttachments,setAttachmentVisible,sportTypes,syncSportTypes};
 })();
