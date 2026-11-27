@@ -212,5 +212,21 @@ const MLZHealthForm = (() => {
   select.dispatchEvent(new Event('change',{bubbles:true}));
   return true;
  }
- return {groups,render,bind,choice,attachment,bindAttachments,setAttachmentVisible,sportTypes,syncSportTypes};
+
+ // Publicación: tener comisiones es obligatorio; tener cupos no lo es.
+ function hasCommissions(activity){return Array.isArray(activity?.commissions)&&activity.commissions.length>0;}
+ function isPublished(activity){return hasCommissions(activity)&&activity._hidden!==true;}
+ function enforcePublication(activity){if(!hasCommissions(activity))activity._hidden=true;return activity;}
+ function setEnrollmentAvailable(form,available){
+  if(!form)return;
+  let warning=form.querySelector('[data-enrollment-unavailable]');
+  if(!available&&!warning){
+   warning=document.createElement('p');warning.dataset.enrollmentUnavailable='';warning.className='hint';warning.setAttribute('role','status');
+   warning.textContent='Esta actividad o comisión ya no está disponible para inscribirse. Volvé a la agenda o seleccioná otra actividad.';
+   form.prepend(warning);
+  }
+  if(warning)warning.hidden=available;
+  form.querySelectorAll('button[type=submit]').forEach(button=>{button.disabled=!available;});
+ }
+ return {groups,render,bind,choice,attachment,bindAttachments,setAttachmentVisible,sportTypes,syncSportTypes,hasCommissions,isPublished,enforcePublication,setEnrollmentAvailable};
 })();
