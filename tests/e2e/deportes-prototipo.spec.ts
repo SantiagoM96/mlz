@@ -112,12 +112,14 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await form.locator('[name="healthTopics"][value="allergy"]').check();
   await expect(form.locator('#health_allergy_detail')).toBeVisible();
   await expect(form.locator('[name="healthTopics"][value="health"]')).toBeChecked();
-  await form.locator('[name="healthNone"]').check();
+  await expect(form.locator('[name="healthNone"]')).toHaveCount(0);
+  await expect(form.locator('.health-topic').last().getByRole('switch',{name:'Apoyos y adaptaciones',exact:true})).toBeVisible();
+  await form.locator('[name="healthTopics"][value="health"]').uncheck();
+  await form.locator('[name="healthTopics"][value="allergy"]').uncheck();
   await expect(form.locator('[name="healthTopics"]:checked')).toHaveCount(0);
   await expect(form.locator('#health_health_detail')).toBeHidden();
   await expect(form.locator('#health_health_detail')).toHaveValue('');
   await form.locator('[name="healthTopics"][value="surgery"]').check();
-  await expect(form.locator('[name="healthNone"]')).not.toBeChecked();
   await expect(form.locator('#health_surgery_detail')).toBeVisible();
   await form.locator('[name="health_surgery_options"][value="other"]').check();
   await expect(form.locator('#health_surgery_other')).toBeVisible();
@@ -127,7 +129,6 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await expect(form.locator('#health_surgery_detail')).toHaveValue('Cuidado adicional ficticio');
   await form.locator('[name="cud"][value="Si"]').check();
   await expect(form.locator('#archivo_cud')).toBeEnabled();
-  await expect(form.locator('[name="healthNone"]')).toHaveAttribute('type','radio');
   await expect(form.locator('[name="cud"][value="Si"]').locator('..').locator('.mlz-selection-symbol')).toHaveCSS('color','rgb(0, 110, 255)');
   const file=form.locator('#archivo_cud'.replace('en-archivo_cud','en-archivo-cud'));
   const attachment=file.locator('xpath=../..');
