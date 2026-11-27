@@ -21,7 +21,7 @@ test('Consola de Deportes: DS MLZ en formulario, selects, botones y navegación'
  await expect(name).toHaveValue('Actividad de muestra');
  await name.focus();
  await expect(name).toHaveCSS('border-top-color','rgb(0, 110, 255)');
- const trigger=page.locator('#activity-form .deportes-select-trigger').first();
+ const trigger=page.locator('#activity-form #category').locator('..').locator('.deportes-select-trigger');
  await expect(trigger).toBeVisible();
  await expect(trigger.locator('.mi')).toHaveCSS('color','rgb(35, 105, 153)');
  await trigger.click();
@@ -78,7 +78,7 @@ test('Consola Deportes: checkboxes no tienen cajas y conservan la selección',as
 test('Consola Deportes: abrir dropdown no desplaza la página y scroll exterior lo cierra',async ({page})=>{
  await page.goto(url);
  await page.getByRole('button',{name:/Agregar actividad/}).first().click();
- const field=page.locator('#activity-form .deportes-select-trigger').first();
+ const field=page.locator('#activity-form #category').locator('..').locator('.deportes-select-trigger');
  await field.scrollIntoViewIfNeeded();
  const previousY=await page.evaluate(()=>window.scrollY);
  await field.click();
@@ -222,4 +222,36 @@ test('Consola Deportes: el catálogo tardío no reinicia la inscripción asistid
  await expect(form.locator('#en-archivo-fed')).toBeDisabled();
  await expect(form.locator('#en-health_allergy_detail')).toHaveValue('Ejemplo ficticio');
  await expect(form.locator('[name="healthTopics"][value="allergy"]')).toBeChecked();
+});
+
+test('Consola Deportes: una actividad sin comisiones no puede activarse',async ({page})=>{
+ await page.route('**/rest/v1/mlz_sports_state?**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.goto(url);
+ const sample=await page.evaluate('JSON.stringify(INITIAL[0])');
+ const original=JSON.parse(String(sample));
+ const empty={...original,id:'qa-sin-comisiones',name:'QA sin comisiones',_hidden:false,commissions:[]};
+ const full={...original,id:'qa-lista-espera',name:'QA lista de espera',_hidden:false,commissions:[{...original.commissions[0],cupos:0}]};
+ await page.unroute('**/rest/v1/mlz_sports_state?**');
+ let saved:any;
+ await page.route('**/rest/v1/mlz_sports_state?**',async route=>{
+  if(route.request().method()==='PATCH'){saved=route.request().postDataJSON();await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{revision:saved.revision}])});return;}
+  await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{activities:[empty,full],revision:100}])});
+ });
+ await page.evaluate('mlzBootstrap()');
+ const emptyRow=page.locator('.activity-admin-table tbody tr').filter({hasText:'QA sin comisiones'});
+ await expect(emptyRow.locator('.activity-status-chip')).toHaveText('Oculta');
+ await expect(emptyRow.getByRole('button',{name:'Inscribir persona'})).toBeDisabled();
+ const fullRow=page.locator('.activity-admin-table tbody tr').filter({hasText:'QA lista de espera'});
+ await expect(fullRow.locator('.activity-status-chip')).toHaveText('Activa');
+ await fullRow.getByRole('link',{name:'Abrir actividad QA lista de espera'}).click();
+ const form=page.locator('#activity-form');
+ await expect(form.locator('#state')).toHaveValue('Activa');
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-action="remove-commission"]').first().click();
+ await expect(form.locator('#state')).toHaveValue('Oculta');
+ await expect(form.locator('#state')).toBeDisabled();
+ await expect(form.locator('#activity-state-help')).toBeVisible();
+ await page.locator('[data-action="save-activity"]').click();
+ await expect.poll(()=>saved?.activities.find((a:{id:string})=>a.id==='qa-lista-espera')?._hidden).toBe(true);
+ await expect(page.locator('.activity-admin-table tbody tr').filter({hasText:'QA lista de espera'}).locator('.activity-status-chip')).toHaveText('Oculta');
 });

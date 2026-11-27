@@ -194,3 +194,30 @@ test('Deportes: una respuesta tardía del catálogo no borra la inscripción', a
   await expect(form.locator('#health_allergy_detail')).toHaveValue('Ejemplo ficticio');
   await expect(form.locator('[name="healthTopics"][value="allergy"]')).toBeChecked();
 });
+
+test('Deportes: no publica actividades sin comisiones y conserva las completas',async ({page})=>{
+ await page.route('**/rest/v1/mlz_sports_state?**',route=>route.fulfill({status:200,contentType:'application/json',body:'[]'}));
+ await page.goto(prototype+'#01_buscador.html');
+ const sample=await page.evaluate('JSON.stringify(BASE_ACTIVITIES[0])');
+ const base=JSON.parse(String(sample));
+ const without={...base,id:'qa-sin-comisiones',name:'QA sin comisiones',_hidden:false,commissions:[]};
+ const full={...base,id:'qa-lista-espera',name:'QA lista de espera',_hidden:false,commissions:[{...base.commissions[0],cupos:0}]};
+ const hidden={...base,id:'qa-oculta',name:'QA oculta',_hidden:true};
+ await page.unroute('**/rest/v1/mlz_sports_state?**');
+ await page.route('**/rest/v1/mlz_sports_state?**',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{revision:101,activities:[without,full,hidden]}])}));
+ await page.evaluate('loadSharedActivities()');
+ await expect.poll(()=>page.evaluate('ACTIVITIES.map(a=>a.id)')).toEqual(['qa-lista-espera']);
+ await expect(page.getByText('QA lista de espera',{exact:true})).toBeVisible();
+ await expect(page.getByText('QA sin comisiones',{exact:true})).toHaveCount(0);
+ await page.goto(prototype+'#02_seleccion_horario.html?ficha=qa-lista-espera');
+ await expect(page.locator('.d-title')).toHaveText('QA lista de espera');
+ if((page.viewportSize()?.width??1440)<=850)await page.locator('.mobile-view-schedules').click();
+ await page.locator('.option').first().click();
+ await expect(page.locator('#continue')).toHaveText('Anotarme en lista de espera');
+ await expect(page.locator('#continue')).toBeEnabled();
+ await page.goto(prototype+'#02_seleccion_horario.html?ficha=qa-sin-comisiones');
+ await expect(page).toHaveURL(/#01_buscador.html$/);
+ await page.goto(prototype+'#03_formulario_inscripcion.html?ficha=qa-sin-comisiones&comision=0&paso=form');
+ await expect(page).toHaveURL(/#01_buscador.html$/);
+ await expect(page.locator('#signup')).toHaveCount(0);
+});
