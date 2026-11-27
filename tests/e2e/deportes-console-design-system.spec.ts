@@ -109,6 +109,9 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
  await expect(form).toBeVisible();
  await expect(form.locator('[name="medaltura"],[name="sangre"],[name="diagnostico"]')).toHaveCount(0);
 
+  await expect(form.locator('.health-topics > legend')).toHaveCSS('font-size','18px');
+  await expect(form.locator('.health-topics > legend')).toHaveCSS('font-weight','700');
+  await expect(form.locator('.health-topics > .health-hint')).toHaveCSS('font-size','18px');
   await expect(form.locator('[data-health-show="health"]')).toBeHidden();
   const healthSwitch = form.getByRole('switch', {name:'Condiciones de salud',exact:true});
   await expect(healthSwitch).toHaveCSS('width','44px');
