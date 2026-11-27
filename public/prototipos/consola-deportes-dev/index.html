@@ -1044,7 +1044,7 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .health-topic-label>span{min-width:0}
 .health-topic-label strong{display:block;font-size:18px;line-height:26px;font-weight:700;color:#236999;margin-bottom:4px}
 .health-none{padding-top:16px}
-.health-topics .health-disclosure{margin:24px 0 0;padding:0;border:0;border-radius:0;background:transparent}
+.health-topics .health-disclosure{margin:24px 0 0;padding:16px;border:1px solid #dce4ea;border-radius:4px;background:#fff}
 .health-option-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;margin:12px 0 20px}
 .health-option span{overflow-wrap:anywhere}
 .health-topics .health-other{margin-bottom:20px}
@@ -1056,7 +1056,7 @@ label:has(>input[type="checkbox"]:checked)>.outlined-check::before{content:"chec
 .health-topics input[type=checkbox]:checked{color:#006eff}
 .health-topics input[type=checkbox]:checked::after{content:"check_box"}
 .health-topics input[type=checkbox]:focus-visible{outline:2px solid #006eff;outline-offset:2px;border-radius:4px}
-@media(max-width:680px){.health-option-list{grid-template-columns:1fr}}
+@media(max-width:680px){.health-option-list{grid-template-columns:1fr}.health-topics .health-disclosure{padding:12px}}
 .health-topics .health-switch-row{align-items:center;justify-content:space-between;gap:16px;min-height:44px}
 .health-topics .health-switch-row>span{flex:1;min-width:0}
 :is(#signup,#en-form) .health-switch-row .health-hint{font-size:18px;line-height:26px;font-weight:400}
