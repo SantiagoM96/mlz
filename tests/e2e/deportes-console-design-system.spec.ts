@@ -145,6 +145,22 @@ test('Consola Deportes: historial ficticio e inscripción asistida usan la decla
   await expect(form.locator('#en-health_surgery_detail')).toHaveValue('Cuidado adicional ficticio');
  await form.locator('[name="cud"][value="Si"]').check();
  await expect(form.locator('#en-archivo-cud')).toBeEnabled();
+  await expect(form.locator('[name="healthNone"]')).toHaveAttribute('type','radio');
+  await expect(form.locator('[name="cud"][value="Si"]').locator('..').locator('.mlz-selection-symbol')).toHaveCSS('color','rgb(0, 110, 255)');
+  const file=form.locator('#en-archivo_cud'.replace('en-archivo_cud','en-archivo-cud'));
+  const attachment=file.locator('xpath=../..');
+  await expect(attachment.locator('.mlz-attachment-control')).toHaveCSS('height','48px');
+  await file.setInputFiles({name:'invalido.txt',mimeType:'text/plain',buffer:Buffer.from('demo')});
+  await expect(attachment.locator('.mlz-attachment-error')).toContainText('Formato no compatible');
+  await file.setInputFiles({name:'certificado.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4 demo')});
+  await expect(attachment.locator('.mlz-attachment-control')).toHaveAttribute('data-phase','uploading');
+  await expect(attachment.locator('.mlz-attachment-control')).toHaveAttribute('data-phase','completed',{timeout:10000});
+  await expect(attachment.locator('.mlz-attachment-value')).toHaveText('certificado.pdf');
+  await expect(attachment.getByRole('button',{name:'Cambiar',exact:true})).toBeVisible();
+  await attachment.getByRole('button',{name:'Quitar certificado.pdf'}).click();
+  await expect(attachment.locator('.mlz-attachment-control')).toHaveAttribute('data-phase','empty');
+  await expect(file).toHaveValue('');
+
  await form.locator('[name="cud"][value="No"]').check();
  await expect(form.locator('#en-archivo-cud')).toBeDisabled();
 });
