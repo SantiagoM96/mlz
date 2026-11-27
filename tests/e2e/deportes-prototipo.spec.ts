@@ -87,9 +87,11 @@ test('Deportes: la declaración de salud y los adjuntos se muestran según la re
   await expect(healthSwitch).toHaveCSS('background-color','rgb(210, 217, 223)');
   await form.locator('[name="healthTopics"][value="health"]').check();
   await expect(healthSwitch).toHaveCSS('background-color','rgb(0, 110, 255)');
-  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-width','0px');
-  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgba(0, 0, 0, 0)');
-  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('padding-left','0px');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-width','1px');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-top-width','1px');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('border-left-color','rgb(220, 228, 234)');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('background-color','rgb(255, 255, 255)');
+  await expect(form.locator('[data-health-show="health"]')).toHaveCSS('padding-left',(page.viewportSize()?.width??1440)<=680?'12px':'16px');
   const switchRow=healthSwitch.locator('..');
   await expect(switchRow.locator('strong')).toHaveCSS('font-size','18px');
   await expect(switchRow.locator('strong')).toHaveCSS('font-weight','700');
