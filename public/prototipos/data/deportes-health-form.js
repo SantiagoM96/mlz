@@ -169,12 +169,11 @@ const MLZHealthForm = (() => {
    '<div class="health-disclosure" data-health-show="'+g.id+'" id="'+panelId+'" hidden><fieldset class="health-options"><legend>Seleccioná las opciones que correspondan</legend><div class="health-option-list">'+opts+choice('checkbox','health_'+g.id+'_options','other',g.other,'aria-controls="'+otherId+'-wrap"')+'</div></fieldset>'+
    '<div class="field health-other" data-health-other="'+g.id+'" id="'+otherId+'-wrap" hidden><label for="'+otherId+'">'+escape(g.other)+'</label><input id="'+otherId+'" name="health_'+g.id+'_other" placeholder="Especificar"></div>'+
    '<div class="field health-details"><label for="'+detailId+'">Detalles y cuidados adicionales</label><p class="health-hint" id="'+detailId+'-hint">'+escape(g.detail)+'</p><textarea id="'+detailId+'" name="health_'+g.id+'_detail" aria-describedby="'+detailId+'-hint '+detailId+'-example" placeholder="Ingresar detalle (opcional)" rows="3"></textarea><p class="health-hint health-example" id="'+detailId+'-example">'+escape(g.example)+'</p></div></div></div>';
-  }).join('')+
-  '<div class="health-none">'+choice('radio','healthNone','none','Ninguna de las anteriores')+'</div></fieldset>';
+  }).join('')+'</fieldset>';
  }
  function bind(form){
   const root=form.querySelector('[data-health-root]');if(!root)return;
-  const topics=[...root.querySelectorAll('[name="healthTopics"]')],none=root.querySelector('[name="healthNone"]');
+  const topics=[...root.querySelectorAll('[name="healthTopics"]')];
   const clear=el=>{if(el.type==='checkbox')el.checked=false;else el.value='';};
   function sync(){
    for(const topic of topics){
@@ -190,11 +189,7 @@ const MLZHealthForm = (() => {
     });
    }
   }
-  root.addEventListener('change',event=>{
-   if(event.target===none&&none.checked)topics.forEach(t=>{t.checked=false;});
-   else if(topics.includes(event.target)&&event.target.checked)none.checked=false;
-   sync();
-  });
+  root.addEventListener('change',sync);
   sync();
  }
  return {groups,render,bind,choice,attachment,bindAttachments,setAttachmentVisible};
