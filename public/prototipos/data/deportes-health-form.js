@@ -113,10 +113,10 @@ const MLZHealthForm = (() => {
  function bindAttachments(form){
   for(const root of form.querySelectorAll('[data-mlz-attachment]')){
    const input=root.querySelector('input[type=file]'),control=root.querySelector('.mlz-attachment-control'),action=root.querySelector('.mlz-attachment-action'),change=root.querySelector('.mlz-attachment-change'),value=root.querySelector('.mlz-attachment-value'),progress=root.querySelector('.mlz-attachment-progress'),remove=root.querySelector('.mlz-attachment-remove'),glyph=root.querySelector('.mlz-attachment-icon'),error=root.querySelector('.mlz-attachment-error'),status=root.querySelector('.mlz-attachment-status');
-   let phase='empty',filename='',frame=0,timer=0,generation=0;
+   let filename='',frame=0,timer=0,generation=0;
    const cancel=()=>{generation++;cancelAnimationFrame(frame);clearTimeout(timer);};
    function paint(next,message=''){
-    phase=next;control.dataset.phase=next;
+    control.dataset.phase=next;
     const selecting=next==='empty'||next==='error',loading=next==='uploading',processing=next==='processing',completed=next==='completed';
     action.hidden=!selecting;change.hidden=selecting;remove.hidden=!(completed||next==='error');
     input.classList.toggle('is-hidden-file',!selecting);input.tabIndex=selecting?0:-1;
@@ -138,7 +138,7 @@ const MLZHealthForm = (() => {
     const max=Number(input.dataset.max),extension=file.name.split('.').pop()?.toLowerCase()||'';
     const message=file.size>max*1024*1024?'El archivo supera los '+max+' MB. Seleccioná uno más pequeño.':!['pdf','jpg','jpeg','png'].includes(extension)?'Formato no compatible. Usá PDF, JPG o PNG.':'';
     if(message){input.value='';input.setCustomValidity(message);paint('error',message);return;}
-    filename=file.name;paint('uploading');
+    filename=file.name;progress.firstElementChild.style.width='0%';progress.setAttribute('aria-valuenow','0');paint('uploading');
     const token=generation;let start;
     function tick(now){
      if(token!==generation||!root.isConnected)return;
